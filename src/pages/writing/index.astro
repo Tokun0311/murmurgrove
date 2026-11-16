@@ -6,7 +6,6 @@ const posts = (await getCollection('entries', ({data}) => !data.draft))
 ---
 <Base title="Writing | TOW ARCHIVE" description="Essays, reviews and research notes by Tow Deng.">
   <section class="archive writing-archive">
-    <p class="eyebrow">TOW ARCHIVE / WRITING</p>
     <h1 class="section-title">Writing</h1>
     <p class="section-lead">Essays, exhibition reviews, and research notes. 中文 / 日本語 / English.</p>
     {posts.length > 0 ? (
