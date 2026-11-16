@@ -1,3 +1,4 @@
+---
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
 const items=(await getCollection('institutions')).sort((a,b)=>a.data.name.localeCompare(b.data.name));
