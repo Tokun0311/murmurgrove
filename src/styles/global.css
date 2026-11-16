@@ -1,10 +1,10 @@
 /* Tow Archive: white background, vivid emerald-green ink and soft green rules. */
-:root { --paper:#fff; --ink:#087f5b; --quiet:#568471; --rule:#c6dfd2; --page-heading-size:clamp(30px,3.8vw,44px); font-family:Arial,'Helvetica Neue','Noto Sans',sans-serif; color:var(--ink); background:var(--paper); font-synthesis:none }
+:root { --paper:#fff; --ink:#087f5b; --quiet:#568471; --rule:#c6dfd2; --page-heading-size:clamp(30px,3.8vw,44px); font-family:'Noto Sans SC','Noto Sans CJK SC','Source Han Sans SC','PingFang SC','Microsoft YaHei',sans-serif; color:var(--ink); background:var(--paper); font-synthesis:none }
 * { box-sizing:border-box }
 body { margin:0; background:var(--paper) }
 a { color:inherit; text-decoration:none }
 a:hover { text-decoration:underline; text-underline-offset:4px }
-button, select { font:inherit }
+button, select, input, textarea { font:inherit }
 .frame { max-width:1280px; margin:0 auto; padding:28px 42px 70px }
 .mast { display:flex; justify-content:space-between; align-items:baseline; gap:24px; padding:0 0 23px; border-bottom:1px solid var(--ink) }
 .brand { font-size:clamp(19px,2.4vw,25px); font-weight:500; letter-spacing:-.045em }
@@ -33,8 +33,8 @@ button, select { font:inherit }
 .article .lead,.note,.eyebrow { color:var(--quiet) }
 .article .lead { line-height:1.7 }
 .eyebrow { font-size:12px;letter-spacing:.07em }
-.prose { font-family:Georgia,'Noto Serif',serif;font-size:17px;line-height:1.85;margin:43px 0 }
-.prose h2 { font-family:Arial,sans-serif;font-size:24px; margin-top:40px;font-weight:500 }
+.prose { font-family:inherit;font-size:17px;line-height:1.85;margin:43px 0 }
+.prose h2 { font-family:inherit;font-size:24px; margin-top:40px;font-weight:500 }
 .prose a { text-decoration:underline }
 .tags { display:flex;flex-wrap:wrap;gap:10px }
 .tag { border:1px solid var(--rule);font-size:12px;padding:4px 9px }
@@ -136,3 +136,6 @@ button.calendar-cell:focus-visible { z-index:2; outline:2px solid var(--ink); ou
 .calendar-noscript a { text-decoration:underline }
 @media(max-width:850px) { .calendar-layout { grid-template-columns:1fr; gap:42px } .calendar-main { max-width:760px } }
 @media(max-width:650px) { .calendar-home { padding:32px 0 50px }.calendar-intro { display:block; margin-bottom:30px }.calendar-tally { margin-top:18px }.calendar-cell { padding:8px 6px }.calendar-number { font-size:14px }.calendar-nav { gap:8px }.calendar-nav h3 { font-size:25px }.calendar-day-panel { min-height:160px } }
+
+/* Consistent CJK glyphs, with locale-specific Japanese shapes when marked lang=ja. */
+:lang(ja) { font-family:'Noto Sans JP','Noto Sans CJK JP','Yu Gothic','Hiragino Kaku Gothic ProN',sans-serif; }
