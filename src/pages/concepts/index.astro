@@ -57,22 +57,11 @@ const mobileOrder = [
 const nodeById = new Map(nodes.map(node => [node.id,node]));
 const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   ...nodes.filter(node=>!mobileOrder.includes(node.id))];
-const mobileNodes = mobileSorted.map((node,i)=>({
-  ...node,
-  x: i % 2 === 0 ? 101 : 289,
-  y: 82 + Math.floor(i / 2) * 112,
-}));
-const mobileById = new Map(mobileNodes.map(node=>[node.id,node]));
-const mobileEdges = edges.filter(edge=>edge.count>=2).map(edge=>({
-  ...edge, from:mobileById.get(edge.a),to:mobileById.get(edge.b),
-})).filter(edge=>edge.from && edge.to);
-const mobileHeight = 82 + Math.floor((mobileNodes.length-1)/2)*112 + 72;
 
 ---
 <Base title="Themes & Concepts | TOW ARCHIVE">
   <section class="archive concept-archive">
     <h1 class="section-title">Themes & Concepts</h1>
-    <p class="section-lead">A map of ideas across the archive. Select any term to explore its related exhibitions.</p>
     <div class="concept-map-scroll" aria-label="Concept network">
       <svg class="concept-map concept-map-desktop" viewBox={`0 0 1120 ${maxY}`} role="group" aria-label="Interactive concept network" xmlns="http://www.w3.org/2000/svg">
         <g class="concept-links" aria-hidden="true">
@@ -87,18 +76,14 @@ const mobileHeight = 82 + Math.floor((mobileNodes.length-1)/2)*112 + 72;
         </g>
       </svg>
 
-      <svg class="concept-map concept-map-mobile" viewBox={`0 0 390 ${mobileHeight}`} role="group" aria-label="Vertical interactive concept network" xmlns="http://www.w3.org/2000/svg">
-        <g class="concept-links" aria-hidden="true">
-          {mobileEdges.map(edge=><line class="concept-link" data-a={edge.a} data-b={edge.b} x1={edge.from.x} y1={edge.from.y-20} x2={edge.to.x} y2={edge.to.y-20} stroke-width={Math.min(1.8, .55 + .4*edge.count)}/>) }
-        </g>
-        <g class="concept-nodes">
-          {mobileNodes.map(node=><a class="concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} aria-label={`${node.title}, ${node.count} related exhibitions`}>
-            <title>{`${node.title} · ${node.count} exhibitions`}</title>
-            <circle cx={node.x} cy={node.y-22} r="3" />
-            <text x={node.x} y={node.y+10} text-anchor="middle" class={node.count>=5?'concept-term concept-term-major':'concept-term'}>{node.title}</text>
-          </a>)}
-        </g>
-      </svg>
+      <div class="concept-mobile-network" aria-label="Vertical concept network">
+        {mobileSorted.map((node, i) => (
+          <a class="mobile-concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} style={`--index:${i};--weight:${node.count>=5?1:0};`}>
+            <span class="mobile-concept-dot" aria-hidden="true"></span>
+            <span class="mobile-concept-term">{node.title}</span>
+          </a>
+        ))}
+      </div>
     </div>
     <p class="concept-note">Lines connect concepts tagged in the same exhibition. Larger words appear more frequently in the archive. Select a term to open its page.</p>
   </section>
@@ -108,7 +93,7 @@ const mobileHeight = 82 + Math.floor((mobileNodes.length-1)/2)*112 + 72;
   .concept-map-scroll { width:100%; overflow:hidden; border-block:1px solid var(--rule); }
   .concept-map { display:block; width:100%; height:auto; overflow:visible; }
   .concept-map-desktop { min-width:0; }
-  .concept-map-mobile { display:none; }
+  .concept-mobile-network { display:none; }
   .concept-link { stroke:var(--ink); opacity:.18; vector-effect:non-scaling-stroke; transition:opacity .16s ease; }
   .concept-node { color:var(--ink); text-decoration:none; outline:none; }
   .concept-node circle { fill:var(--ink); opacity:.55; }
@@ -122,11 +107,16 @@ const mobileHeight = 82 + Math.floor((mobileNodes.length-1)/2)*112 + 72;
   .concept-note { color:var(--quiet); font-size:12px; line-height:1.7; margin:16px 0 0; }
   @media(max-width:650px){
     .concept-map-desktop { display:none; }
-    .concept-map-mobile { display:block; width:100%; max-width:480px; margin:0 auto; min-width:0; }
-    .concept-map-scroll { margin:0; width:100%; overflow:hidden; }
-    .concept-map-mobile .concept-term { font-size:18px; stroke-width:6px; letter-spacing:0; }
-    .concept-map-mobile .concept-term-major { font-size:21px; }
-    .concept-map-mobile .concept-link { opacity:.13; }
+    .concept-map-scroll { margin:0; width:100%; overflow:visible; }
+    .concept-mobile-network { display:grid; grid-template-columns:minmax(0,1fr); padding:10px 0 16px; max-width:100%; }
+    .mobile-concept-node { display:flex; align-items:center; gap:12px; min-width:0; width:calc(100% - 20px); margin:0 0 0 0; padding:14px 9px 14px 14px; color:var(--ink); text-decoration:none; border-bottom:1px solid #e0eee6; position:relative; overflow-wrap:anywhere; }
+    .mobile-concept-node:nth-child(even){ margin-left:20px; }
+    .mobile-concept-node:focus-visible { outline:2px solid var(--ink); outline-offset:-2px; }
+    .mobile-concept-node:hover .mobile-concept-term { text-decoration:underline; text-underline-offset:4px; }
+    .mobile-concept-dot { flex:0 0 6px; height:6px; background:var(--ink); border-radius:50%; }
+    .mobile-concept-term { min-width:0; font-size:clamp(15px,4.35vw,19px); line-height:1.45; font-weight:400; }
+    .mobile-concept-node[style*="--weight:1"] .mobile-concept-term { font-weight:500; }
+    .concept-mobile-network::before { content:none; }
   }
   @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } }
 </style>

@@ -1,5 +1,5 @@
 /* Tow Archive: white background, vivid emerald-green ink and soft green rules. */
-:root { --paper:#fff; --ink:#087f5b; --quiet:#568471; --rule:#c6dfd2; --page-heading-size:clamp(30px,3.8vw,44px); font-family:'Noto Sans SC','Noto Sans CJK SC','Source Han Sans SC','PingFang SC','Microsoft YaHei',sans-serif; color:var(--ink); background:var(--paper); font-synthesis:none }
+:root { --paper:#fff; --ink:#087f5b; --quiet:#568471; --rule:#c6dfd2; --page-heading-size:clamp(30px,3.8vw,44px); font-family:'Noto Sans SC','Microsoft YaHei','PingFang SC','Source Han Sans SC',sans-serif; color:var(--ink); background:var(--paper); font-synthesis:none }
 * { box-sizing:border-box }
 body { margin:0; background:var(--paper) }
 a { color:inherit; text-decoration:none }
@@ -138,4 +138,4 @@ button.calendar-cell:focus-visible { z-index:2; outline:2px solid var(--ink); ou
 @media(max-width:650px) { .calendar-home { padding:32px 0 50px }.calendar-intro { display:block; margin-bottom:30px }.calendar-tally { margin-top:18px }.calendar-cell { padding:8px 6px }.calendar-number { font-size:14px }.calendar-nav { gap:8px }.calendar-nav h3 { font-size:25px }.calendar-day-panel { min-height:160px } }
 
 /* Consistent CJK glyphs, with locale-specific Japanese shapes when marked lang=ja. */
-:lang(ja) { font-family:'Noto Sans JP','Noto Sans CJK JP','Yu Gothic','Hiragino Kaku Gothic ProN',sans-serif; }
+:lang(ja) { font-family:'Yu Gothic','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; }
