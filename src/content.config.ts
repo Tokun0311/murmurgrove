@@ -17,6 +17,7 @@ const exhibitions = defineCollection({
     artists: z.array(z.string()).default([]),
     concepts: z.array(z.string()).default([]),
     institution: z.string().optional(),
+    relatedInstitutions: z.array(z.string()).default([]),
     exhibitionEnd: z.coerce.date().optional(),
     verification: z.enum(['recorded','needs-review']).default('needs-review')
   })

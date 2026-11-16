@@ -9,6 +9,7 @@ const institutions = await getCollection('institutions');
 const concepts = await getCollection('concepts');
 const personById = new Map(people.map(x=>[x.id,x]));
 const inst = institutions.find(x=>x.id===item.data.institution);
+const relatedInst = item.data.relatedInstitutions.map(id=>institutions.find(x=>x.id===id)).filter(Boolean);
 const conceptById = new Map(concepts.map(x=>[x.id,x]));
 ---
 <Base title={`${item.data.title} | TOW ARCHIVE`}>
@@ -22,6 +23,7 @@ const conceptById = new Map(concepts.map(x=>[x.id,x]));
       <div><dt>Archive status</dt><dd>{item.data.verification==='needs-review'?'Details to verify':'Reviewed archive entry'}</dd></div>
       {inst && <div><dt>Institution</dt><dd><a href={`/institutions/${inst.id}/`}>{inst.data.name}</a></dd></div>}
     </dl>
+    {relatedInst.length > 0 && <div class="tags">{relatedInst.map(i=><a class="tag" href={`/institutions/${i.id}/`}>{i.data.name}</a>)}</div>}
     <div class="tags">
       {item.data.artists.map((id)=>personById.get(id)).filter(Boolean).map(p=><a class="tag" href={`/people/${p.id}/`}>{p.data.name}</a>)}
       {item.data.concepts.map((id)=>conceptById.get(id)).filter(Boolean).map(c=><a class="tag" href={`/concepts/${c.id}/`}>{c.data.title}</a>)}
