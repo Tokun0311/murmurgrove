@@ -38,21 +38,32 @@ const unmapped = items.filter(item => !item.data.city || !cities[item.data.city]
 
     <section class="world-map-section" aria-label="Institution locations around the world">
       <div class="map-heading"><span>WORLD MAP</span><span>{groups.length} cities · {items.length} entries</span></div>
-      <div class="world-map" id="institution-world-map" role="group" aria-label="World map of institutions, grouped by city">
-        {groups.map(({city, entries, x, y}) => (
-          <div class="map-city" style={`left:${x}%;top:${y}%;`} data-city={city}>
-            <button type="button" class="map-pin" aria-label={`${city}: ${entries.length} ${entries.length===1?'entry':'entries'}`} aria-expanded="false" title={`${city} · ${entries.length} ${entries.length===1?'entry':'entries'}`}>
-              <span class="map-dot" aria-hidden="true"></span>
-              {entries.length > 1 && <span class="map-count" aria-hidden="true">{entries.length}</span>}
-            </button>
-            <div class="map-popup" role="group" aria-label={`Institutions in ${city}`}>
-              <div class="map-popup-city">{city}<span>{entries.length}</span></div>
-              <ul>{entries.map(item=><li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}</ul>
-            </div>
+      <div class="map-shell" id="institution-map-shell">
+        <div class="map-controls" aria-label="Map navigation">
+          <button type="button" class="map-control" data-map-action="in" title="Zoom in" aria-label="Zoom in">+</button>
+          <button type="button" class="map-control" data-map-action="out" title="Zoom out" aria-label="Zoom out">−</button>
+          <button type="button" class="map-control map-japan" data-map-action="japan" title="Focus on Japan">Japan</button>
+          <button type="button" class="map-control map-reset" data-map-action="reset" title="Show the whole world">World</button>
+        </div>
+        <div class="world-map" id="institution-world-map" role="group" aria-label="Interactive world map of institutions, grouped by city" tabindex="0">
+          <div class="map-stage" id="institution-map-stage">
+            {groups.map(({city, entries, x, y}) => (
+              <div class="map-city" style={`left:${x}%;top:${y}%;`} data-city={city}>
+                <button type="button" class="map-pin" aria-label={`${city}: ${entries.length} ${entries.length===1?'entry':'entries'}`} aria-expanded="false" title={`${city} · ${entries.length} ${entries.length===1?'entry':'entries'}`}>
+                  <span class="map-dot" aria-hidden="true"></span>
+                  {entries.length > 1 && <span class="map-count" aria-hidden="true">{entries.length}</span>}
+                </button>
+                <div class="map-popup" hidden>
+                  <div class="map-popup-city">{city}<span>{entries.length}</span></div>
+                  <ul>{entries.map(item=><li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}</ul>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+        <div class="map-tooltip" id="institution-map-tooltip" hidden aria-live="polite"></div>
       </div>
-      <p class="map-note">City-level locations only. Hover or select a dot to see institutions and open their pages.</p>
+      <p class="map-note">City-level locations only. Use + / −, scroll to zoom, or drag to move. Hover or tap a dot to open its city list.</p>
     </section>
 
     <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries</span></div>
@@ -64,55 +75,132 @@ const unmapped = items.filter(item => !item.data.city || !cities[item.data.city]
 <style>
   .world-map-section{margin:2.1rem 0 2.8rem}
   .map-heading{display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.72rem;letter-spacing:.12em;color:#668075;text-transform:uppercase;margin:0 0 .9rem}
-  .world-map{position:relative;width:100%;aspect-ratio:1200/520;overflow:visible;background:#f4f7f5 url('/world-institutions.svg') center/100% 100% no-repeat;border:1px solid #dbe7df;border-radius:3px;isolation:isolate}
+  .map-shell{position:relative;border:1px solid #dbe7df;border-radius:3px;background:#f4f7f5;isolation:isolate}
+  .world-map{position:relative;width:100%;aspect-ratio:1200/520;overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px}
+  .world-map.is-dragging{cursor:grabbing}
+  .map-stage{position:absolute;inset:0;background:#f4f7f5 url('/world-institutions.svg') center/100% 100% no-repeat;transform-origin:0 0;will-change:transform}
   .map-city{position:absolute;transform:translate(-50%,-50%);z-index:1}
-  .map-city:hover,.map-city:focus-within,.map-city.is-open{z-index:30}
-  .map-pin{display:flex;align-items:center;justify-content:center;position:relative;padding:0;border:0;background:transparent;cursor:pointer;min-width:26px;min-height:26px;transform:translate(0,0)}
+  .map-pin{display:flex;align-items:center;justify-content:center;position:relative;padding:0;border:0;background:transparent;cursor:pointer;min-width:26px;min-height:26px}
   .map-dot{display:block;width:11px;height:11px;box-sizing:border-box;background:#24765c;border:2px solid #fafdfb;border-radius:50%;box-shadow:0 0 0 1px #24765c,0 1px 4px #586e6440;transition:transform .15s}
   .map-pin:hover .map-dot,.map-pin:focus-visible .map-dot,.map-city.is-open .map-dot{transform:scale(1.4);background:#145b45}
   .map-count{position:absolute;top:-5px;right:-7px;min-width:14px;padding:1px 3px;border-radius:9px;font:600 9px/1.1 sans-serif;background:#fff;color:#24664f;box-shadow:0 1px 3px #6c847322}
-  .map-popup{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);min-width:200px;max-width:min(310px,80vw);max-height:260px;overflow-y:auto;background:#fff;border:1px solid #bdd4c5;box-shadow:0 7px 24px #354b3e26;padding:12px 14px;text-align:left}
-  .map-city:hover .map-popup,.map-city:focus-within .map-popup,.map-city.is-open .map-popup{display:block}
+  .map-popup{display:none}
+  .map-controls{position:absolute;top:12px;left:12px;z-index:20;display:flex;gap:5px;align-items:center}
+  .map-control{min-width:31px;height:31px;padding:0 8px;background:#fff;border:1px solid #bed3c5;color:#225c49;font:500 15px/1 inherit;cursor:pointer;border-radius:3px;box-shadow:0 1px 5px #24493513}
+  .map-japan,.map-reset{font-size:12px}
+  .map-control:hover,.map-control:focus-visible{background:#eaf3ed;border-color:#78a18a}
+  .map-tooltip{position:absolute;right:12px;top:53px;z-index:21;width:min(280px,calc(100% - 24px));max-height:min(315px,calc(100% - 64px));overflow:auto;background:#fff;border:1px solid #bdd4c5;box-shadow:0 7px 24px #354b3e26;padding:12px 14px;text-align:left}
+  .map-tooltip[hidden]{display:none}
   .map-popup-city{display:flex;justify-content:space-between;gap:1rem;color:#175f47;font-size:.86rem;font-weight:650;margin-bottom:.5rem}
   .map-popup-city span{color:#789084;font-weight:400}
-  .map-popup ul{list-style:none;margin:0;padding:0}
-  .map-popup li+li{border-top:1px solid #ecf1ec}
-  .map-popup li a{display:block;padding:.44rem 0;font-size:.83rem;line-height:1.4;text-decoration:none;color:#24372d}
-  .map-popup li a:hover,.map-popup li a:focus-visible{color:#087d55;text-decoration:underline;text-underline-offset:3px}
+  .map-tooltip ul{list-style:none;margin:0;padding:0}
+  .map-tooltip li+li{border-top:1px solid #ecf1ec}
+  .map-tooltip li a{display:block;padding:.44rem 0;font-size:.83rem;line-height:1.4;text-decoration:none;color:#24372d}
+  .map-tooltip li a:hover,.map-tooltip li a:focus-visible{color:#087d55;text-decoration:underline;text-underline-offset:3px}
   .map-note{font-size:.78rem;color:#738479;margin-top:.65rem;line-height:1.6}
   .archive-list-heading{margin-bottom:0}
-  @media(max-width:680px){.world-map{aspect-ratio:1.6}.world-map-section{margin:1.5rem 0 2rem}.map-pin{min-width:27px;min-height:27px}.map-dot{width:9px;height:9px}.map-popup{min-width:175px;max-width:min(250px,74vw)}.map-city{transform:translate(-50%,-50%)}.map-heading{font-size:.64rem}}
+  @media(max-width:680px){.world-map{aspect-ratio:1.35}.world-map-section{margin:1.5rem 0 2rem}.map-pin{min-width:27px;min-height:27px}.map-dot{width:9px;height:9px}.map-heading{font-size:.64rem}.map-control{min-width:32px;height:32px}.map-tooltip{top:52px;max-height:calc(100% - 62px)}}
   @media(prefers-reduced-motion:reduce){.map-dot{transition:none}}
 </style>
 <script>
   const map = document.getElementById('institution-world-map');
-  if (map) {
-    map.querySelectorAll('.map-city').forEach((city) => {
-      const pin = city.querySelector('.map-pin');
-      pin?.addEventListener('click', (e) => {
+  const stage = document.getElementById('institution-map-stage');
+  const shell = document.getElementById('institution-map-shell');
+  const tooltip = document.getElementById('institution-map-tooltip');
+  if (map && stage && shell && tooltip) {
+    let zoom = 1, tx = 0, ty = 0;
+    let activeCity = null, locked = false, closeTimer;
+    let drag = null, moved = false;
+    const pins = [...stage.querySelectorAll('.map-city')];
+    const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+    function render() {
+      const {width:w,height:h} = map.getBoundingClientRect();
+      // Keep some map visible, even after dragging towards its edges.
+      tx=clamp(tx, w*.15-w*zoom, w*.85);
+      ty=clamp(ty, h*.15-h*zoom, h*.85);
+      stage.style.transform=`translate(${tx}px, ${ty}px) scale(${zoom})`;
+    }
+    function hideTip() {
+      clearTimeout(closeTimer);
+      activeCity?.classList.remove('is-open');
+      activeCity?.querySelector('.map-pin')?.setAttribute('aria-expanded','false');
+      activeCity=null;locked=false;tooltip.hidden=true;tooltip.replaceChildren();
+    }
+    function showTip(city, keep=false) {
+      if (activeCity === city && !keep) return;
+      clearTimeout(closeTimer);
+      activeCity?.classList.remove('is-open');
+      activeCity?.querySelector('.map-pin')?.setAttribute('aria-expanded','false');
+      activeCity=city;locked=keep;
+      city.classList.add('is-open');
+      city.querySelector('.map-pin')?.setAttribute('aria-expanded','true');
+      tooltip.replaceChildren(...[...city.querySelector('.map-popup').children].map(child=>child.cloneNode(true)));
+      tooltip.hidden=false;
+    }
+    function zoomAt(next, x, y) {
+      next=clamp(next,1,8);
+      const ratio=next/zoom;
+      tx=x-(x-tx)*ratio;ty=y-(y-ty)*ratio;
+      zoom=next;hideTip();render();
+    }
+    function focusJapan() {
+      zoom=5.2;
+      const r=map.getBoundingClientRect();
+      // Japanese archipelago, city markers use intentionally small display offsets.
+      tx=r.width*(.5-.88*zoom);
+      ty=r.height*(.5-.355*zoom);
+      hideTip();render();
+    }
+    shell.querySelectorAll('[data-map-action]').forEach(button=>button.addEventListener('click',()=>{
+      const a=button.dataset.mapAction;
+      if(a==='in')zoomAt(zoom*1.65,map.clientWidth/2,map.clientHeight/2);
+      if(a==='out')zoomAt(zoom/1.65,map.clientWidth/2,map.clientHeight/2);
+      if(a==='japan')focusJapan();
+      if(a==='reset'){zoom=1;tx=0;ty=0;hideTip();render();}
+    }));
+    map.addEventListener('wheel',e=>{
+      e.preventDefault();
+      const r=map.getBoundingClientRect();
+      zoomAt(zoom*(e.deltaY<0?1.25:.8),e.clientX-r.left,e.clientY-r.top);
+    },{passive:false});
+    map.addEventListener('pointerdown',e=>{
+      if(e.button!==0 || e.target.closest('.map-pin'))return;
+      drag={id:e.pointerId,x:e.clientX,y:e.clientY,tx,ty}; moved=false;
+      map.setPointerCapture(e.pointerId);map.classList.add('is-dragging');
+    });
+    map.addEventListener('pointermove',e=>{
+      if(!drag||drag.id!==e.pointerId)return;
+      if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>4)moved=true;
+      tx=drag.tx+e.clientX-drag.x;ty=drag.ty+e.clientY-drag.y;render();
+    });
+    function endDrag(e){if(drag?.id===e.pointerId){drag=null;map.classList.remove('is-dragging');}}
+    map.addEventListener('pointerup',endDrag);map.addEventListener('pointercancel',endDrag);
+    pins.forEach(city=>{
+      const pin=city.querySelector('.map-pin');
+      city.addEventListener('mouseenter',()=>{if(!locked)showTip(city);});
+      city.addEventListener('mouseleave',()=>{if(!locked)closeTimer=setTimeout(()=>{if(!tooltip.matches(':hover'))hideTip();},180);});
+      pin?.addEventListener('focus',()=>showTip(city,true));
+      pin?.addEventListener('click',e=>{
         e.stopPropagation();
-        const opening = !city.classList.contains('is-open');
-        map.querySelectorAll('.map-city.is-open').forEach(other => {
-          other.classList.remove('is-open');
-          other.querySelector('.map-pin')?.setAttribute('aria-expanded','false');
-        });
-        city.classList.toggle('is-open', opening);
-        pin.setAttribute('aria-expanded', String(opening));
+        if(activeCity===city && locked)hideTip();else showTip(city,true);
       });
     });
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.map-city')) {
-        map.querySelectorAll('.map-city.is-open').forEach(city => {
-          city.classList.remove('is-open');
-          city.querySelector('.map-pin')?.setAttribute('aria-expanded','false');
-        });
+    tooltip.addEventListener('mouseenter',()=>clearTimeout(closeTimer));
+    tooltip.addEventListener('mouseleave',()=>{if(!locked)hideTip();});
+    document.addEventListener('pointerdown',e=>{if(!shell.contains(e.target))hideTip();});
+    map.addEventListener('click',e=>{if(!e.target.closest('.map-pin') && !moved)hideTip();moved=false;});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')hideTip();});
+    map.addEventListener('keydown',e=>{
+      if(e.target!==map)return;
+      if(e.key==='+'||e.key==='='){e.preventDefault();zoomAt(zoom*1.4,map.clientWidth/2,map.clientHeight/2);}
+      if(e.key==='-'){e.preventDefault();zoomAt(zoom/1.4,map.clientWidth/2,map.clientHeight/2);}
+      if(['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key)){
+        e.preventDefault();const d=42;
+        tx+=e.key==='ArrowRight'?-d:e.key==='ArrowLeft'?d:0;
+        ty+=e.key==='ArrowDown'?-d:e.key==='ArrowUp'?d:0;render();
       }
     });
-    document.addEventListener('keydown', (e) => {
-      if(e.key==='Escape') map.querySelectorAll('.map-city.is-open').forEach(city => {
-        city.classList.remove('is-open');
-        city.querySelector('.map-pin')?.setAttribute('aria-expanded','false');
-      });
-    });
+    window.addEventListener('resize',render);
+    render();
   }
 </script>
