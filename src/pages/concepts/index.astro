@@ -1,6 +1,103 @@
 ---
 import Base from '../../layouts/Base.astro';
-import {getCollection} from 'astro:content';
-const items=(await getCollection('concepts')).sort((a,b)=>a.data.title.localeCompare(b.data.title));
+import { getCollection } from 'astro:content';
+const items = (await getCollection('concepts')).sort((a,b)=>a.data.title.localeCompare(b.data.title));
+const exhibitions = await getCollection('exhibitions');
+const frequency = new Map(items.map(item => [item.id, 0]));
+const connections = new Map();
+for (const e of exhibitions) {
+  const concepts = [...new Set(e.data.concepts)].filter(id => frequency.has(id));
+  concepts.forEach(id => frequency.set(id, (frequency.get(id) ?? 0) + 1));
+  for(let i=0; i<concepts.length; i++) for(let j=i+1; j<concepts.length; j++) {
+    const [a,b] = [concepts[i], concepts[j]].sort();
+    const key = `${a}|${b}`;
+    connections.set(key, (connections.get(key) ?? 0) + 1);
+  }
+}
+// Fixed, intentionally irregular positions avoid animation, hydration and layout jumps.
+// Stable slugs keep positions predictable when existing entries are edited.
+const locations = {
+ 'institutional-studies':[550,305], 'curatorial-practices':[290,170],
+ 'site-specificity':[285,410], 'transcultural-studies':[795,175],
+ 'politics-of-representation':[795,345], 'artist-residency':[535,75],
+ 'collective-practices':[365,65], 'performance':[118,270],
+ 'photography':[945,95], 'identity-and-representation':[965,255],
+ 'memory-and-place':[155,505], 'material-and-memory':[365,550],
+ 'sound-and-technology':[145,100], 'technology-and-body':[975,460],
+ 'ecology':[540,505], 'care-and-design':[290,285],
+ 'postwar-art':[760,540], 'printmaking':[970,565],
+ 'moving-image':[110,405],
+};
+// Any new concept also receives an automatic place without changing the saved layout.
+const known = new Set(Object.keys(locations));
+let extra = 0;
+const nodes = items.map(item => {
+ const position = locations[item.id] ?? [130 + (extra % 5)*205, 620 + Math.floor(extra++/5)*105];
+ return {id:item.id, title:item.data.title, x:position[0], y:position[1], count:frequency.get(item.id) ?? 0};
+});
+const positionById = new Map(nodes.map(node=>[node.id,node]));
+const edges = [...connections].map(([key,count])=>{
+ const [a,b] = key.split('|');
+ return {a,b,count,from:positionById.get(a),to:positionById.get(b)};
+}).filter(edge => edge.from && edge.to);
+const maxY = Math.max(620, ...nodes.map(node=>node.y+55));
 ---
-<Base title="Themes & Concepts | TOW ARCHIVE"><section class="archive"><h1 class="section-title">Themes & Concepts</h1><p class="section-lead">Browse connected records.</p><ol class="archive-list">{items.map(item=><li class="archive-entry"><span class="eyebrow">INDEX</span><a href={`/concepts/${item.id}/`}>{item.data.title}</a></li>)}</ol></section></Base>
+<Base title="Themes & Concepts | TOW ARCHIVE">
+  <section class="archive concept-archive">
+    <h1 class="section-title">Themes & Concepts</h1>
+    <p class="section-lead">A map of ideas across the archive. Select any term to explore its related exhibitions.</p>
+    <div class="concept-map-scroll" aria-label="Concept network, scroll horizontally on smaller screens">
+      <svg class="concept-map" viewBox={`0 0 1120 ${maxY}`} role="group" aria-label="Interactive concept network" xmlns="http://www.w3.org/2000/svg">
+        <g class="concept-links" aria-hidden="true">
+          {edges.map(edge=><line class="concept-link" data-a={edge.a} data-b={edge.b} x1={edge.from.x} y1={edge.from.y} x2={edge.to.x} y2={edge.to.y} stroke-width={Math.min(2.2, .65 + .55*edge.count)}/>) }
+        </g>
+        <g class="concept-nodes">
+          {nodes.map(node=><a class="concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} aria-label={`${node.title}, ${node.count} related exhibitions`}>
+            <title>{`${node.title} · ${node.count} exhibitions`}</title>
+            <circle cx={node.x} cy={node.y} r="3.5" />
+            <text x={node.x+10} y={node.y+5} class={node.count>=5?'concept-term concept-term-major':'concept-term'}>{node.title}</text>
+          </a>)}
+        </g>
+      </svg>
+    </div>
+    <p class="concept-note">Lines connect concepts tagged in the same exhibition. Larger words appear more frequently in the archive. Select a term to open its page.</p>
+  </section>
+</Base>
+<style>
+  .concept-archive { min-height:70vh; }
+  .concept-map-scroll { width:100%; overflow-x:auto; overflow-y:hidden; border-block:1px solid var(--rule); scrollbar-color:var(--rule) transparent; }
+  .concept-map { display:block; width:100%; min-width:820px; height:auto; overflow:visible; }
+  .concept-link { stroke:var(--ink); opacity:.18; vector-effect:non-scaling-stroke; transition:opacity .16s ease; }
+  .concept-node { color:var(--ink); text-decoration:none; outline:none; }
+  .concept-node circle { fill:var(--ink); opacity:.55; }
+  .concept-term { fill:var(--ink); stroke:#fff; stroke-width:9px; stroke-linejoin:round; paint-order:stroke; font-family:Arial,'Helvetica Neue','Noto Sans',sans-serif; font-weight:400; font-size:20px; letter-spacing:-.025em; }
+  .concept-term-major { font-size:26px; }
+  .concept-node:hover .concept-term, .concept-node:focus-visible .concept-term { fill:#005b3b; text-decoration:underline; }
+  .concept-node:focus-visible .concept-term { stroke:#d9f1e3; }
+  .concept-node:hover circle, .concept-node:focus-visible circle { opacity:1; r:5; }
+  .concept-link.is-related { opacity:.63; }
+  .concept-link.is-muted { opacity:.06; }
+  .concept-note { color:var(--quiet); font-size:12px; line-height:1.7; margin:16px 0 0; }
+  @media(max-width:650px){ .concept-map { min-width:960px; } .concept-map-scroll { margin-right:-18px; width:calc(100% + 18px); } }
+  @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } }
+</style>
+<script>
+  const map = document.querySelector('.concept-map');
+  if(map){
+    const links = Array.from(map.querySelectorAll('.concept-link'));
+    const focus = (id: string | null) => {
+      for(const link of links){
+        const connected = id && (link.getAttribute('data-a') === id || link.getAttribute('data-b') === id);
+        link.classList.toggle('is-related', Boolean(connected));
+        link.classList.toggle('is-muted', Boolean(id && !connected));
+      }
+    };
+    for (const node of map.querySelectorAll('.concept-node')) {
+      const id = node.getAttribute('data-concept');
+      node.addEventListener('pointerenter',()=>focus(id));
+      node.addEventListener('pointerleave',()=>focus(null));
+      node.addEventListener('focus',()=>focus(id));
+      node.addEventListener('blur',()=>focus(null));
+    }
+  }
+</script>
