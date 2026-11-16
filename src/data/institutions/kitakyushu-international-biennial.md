@@ -1,4 +1,5 @@
 ---
+city: Kitakyushu
 name: 北九州国際ビエンナーレ
 ---
 

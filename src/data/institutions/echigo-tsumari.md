@@ -1,4 +1,5 @@
 ---
+city: Tokamachi
 name: 奴奈川キャンパス
 ---
 

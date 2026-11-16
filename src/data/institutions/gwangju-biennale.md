@@ -1,4 +1,5 @@
 ---
+city: Gwangju
 name: 光州
 ---
 

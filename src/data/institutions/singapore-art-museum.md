@@ -1,4 +1,5 @@
 ---
+city: Singapore
 name: Singapore Art Museum
 ---
 

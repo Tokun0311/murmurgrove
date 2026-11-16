@@ -1,4 +1,5 @@
 ---
+city: Kitakyushu
 name: GALLERY SOAP
 ---
 

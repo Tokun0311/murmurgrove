@@ -1,4 +1,5 @@
 ---
+city: Tokyo
 name: 国立新美術館
 ---
 

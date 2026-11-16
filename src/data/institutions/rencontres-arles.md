@@ -1,4 +1,5 @@
 ---
+city: Arles
 name: Rencontres d’Arles / 阿尔勒国际摄影节
 ---
 

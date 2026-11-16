@@ -1,4 +1,5 @@
 ---
+city: Yokohama
 name: パシフィコ横浜
 ---
 

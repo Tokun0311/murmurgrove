@@ -1,4 +1,5 @@
 ---
+city: Hiroshima
 name: ヒロシマ賞 / Hiroshima Art Prize
 ---
 

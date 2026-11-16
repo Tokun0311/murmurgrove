@@ -1,4 +1,5 @@
 ---
+city: Seoul
 name: Seoul Museum of Art (SeMA)
 ---
 

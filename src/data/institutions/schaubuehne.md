@@ -1,4 +1,5 @@
 ---
+city: Berlin
 name: Schaubühne
 ---
 

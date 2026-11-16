@@ -1,4 +1,5 @@
 ---
+city: Tokyo
 name: 東京都写真美術館
 ---
 

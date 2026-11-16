@@ -1,4 +1,5 @@
 ---
+city: Fukuoka
 name: 福岡アジア美術館
 ---
 

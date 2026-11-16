@@ -2,5 +2,117 @@
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
 const items=(await getCollection('institutions')).sort((a,b)=>a.data.name.localeCompare(b.data.name));
+// City centers, not individual building locations. Small offsets avoid overlapping dots at world scale.
+const cities = {
+  'Tokyo': { lon: 139.69, lat: 35.68, dx: 1.7, dy: -0.8 },
+  'Yokohama': { lon: 139.64, lat: 35.45, dx: 2.3, dy: 1.9 },
+  'Fukuoka': { lon: 130.42, lat: 33.59, dx: -1.1, dy: 2.3 },
+  'Kitakyushu': { lon: 130.88, lat: 33.88, dx: -1.4, dy: 0.4 },
+  'Kyoto': { lon: 135.77, lat: 35.02, dx: -0.3, dy: -1.0 },
+  'Hiroshima': { lon: 132.46, lat: 34.4, dx: -0.1, dy: 1.4 },
+  'Gero': { lon: 137.24, lat: 35.8, dx: 1, dy: -2.1 },
+  'Tokamachi': { lon: 138.76, lat: 37.13, dx: 2.1, dy: -2.4 },
+  'Seoul': { lon: 126.98, lat: 37.57, dx: -0.6, dy: -1.8 },
+  'Gwangju': { lon: 126.85, lat: 35.16, dx: -1.4, dy: 0.2 },
+  'Busan': { lon: 129.07, lat: 35.18, dx: 0.6, dy: 1.1 },
+  'Hong Kong': { lon: 114.17, lat: 22.3, dx: 0, dy: 0 },
+  'Singapore': { lon: 103.82, lat: 1.35, dx: 0, dy: 0 },
+  'East Java': { lon: 112.74, lat: -7.26, dx: 0, dy: 0 },
+  'Phuket': { lon: 98.39, lat: 7.89, dx: 0, dy: 0 },
+  'Berlin': { lon: 13.4, lat: 52.52, dx: 0, dy: 0 },
+  'Copenhagen': { lon: 12.57, lat: 55.68, dx: 0, dy: 0 },
+  'London': { lon: -0.12, lat: 51.51, dx: 0, dy: 0 },
+  'Arles': { lon: 4.63, lat: 43.68, dx: 0, dy: 0 },
+};
+const groups = Object.entries(Object.groupBy(items.filter(item => item.data.city && cities[item.data.city]), item => item.data.city))
+  .map(([city, entries]) => {
+    const p = cities[city];
+    return { city, entries: entries.sort((a,b)=>a.data.name.localeCompare(b.data.name)), x: (p.lon + 180)/360*100 + p.dx, y: (90-p.lat)/155*100 + p.dy };
+  });
+const unmapped = items.filter(item => !item.data.city || !cities[item.data.city]);
 ---
-<Base title="Institutions & Spaces | TOW ARCHIVE"><section class="archive"><h1 class="section-title">Institutions & Spaces</h1><p class="section-lead">Browse connected records.</p><ol class="archive-list">{items.map(item=><li class="archive-entry"><span class="eyebrow">INDEX</span><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}</ol></section></Base>
+<Base title="Institutions & Spaces | TOW ARCHIVE">
+  <section class="archive institutions-page">
+    <h1 class="section-title">Institutions & Spaces</h1>
+    <p class="section-lead">An evolving geography of places and projects in the archive.</p>
+
+    <section class="world-map-section" aria-label="Institution locations around the world">
+      <div class="map-heading"><span>WORLD MAP</span><span>{groups.length} cities · {items.length} entries</span></div>
+      <div class="world-map" id="institution-world-map" role="group" aria-label="World map of institutions, grouped by city">
+        {groups.map(({city, entries, x, y}) => (
+          <div class="map-city" style={`left:${x}%;top:${y}%;`} data-city={city}>
+            <button type="button" class="map-pin" aria-label={`${city}: ${entries.length} ${entries.length===1?'entry':'entries'}`} aria-expanded="false" title={`${city} · ${entries.length} ${entries.length===1?'entry':'entries'}`}>
+              <span class="map-dot" aria-hidden="true"></span>
+              {entries.length > 1 && <span class="map-count" aria-hidden="true">{entries.length}</span>}
+            </button>
+            <div class="map-popup" role="group" aria-label={`Institutions in ${city}`}>
+              <div class="map-popup-city">{city}<span>{entries.length}</span></div>
+              <ul>{entries.map(item=><li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}</ul>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p class="map-note">City-level locations only. Hover or select a dot to see institutions and open their pages.</p>
+    </section>
+
+    <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries</span></div>
+    <ol class="archive-list">{items.map(item=><li class="archive-entry"><span class="eyebrow">{item.data.city ?? 'INDEX'}</span><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}</ol>
+    {unmapped.length>0 && <p class="map-note">Some entries have no city marker yet; all are included in the index below.</p>}
+  </section>
+</Base>
+
+<style>
+  .world-map-section{margin:2.1rem 0 2.8rem}
+  .map-heading{display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.72rem;letter-spacing:.12em;color:#668075;text-transform:uppercase;margin:0 0 .9rem}
+  .world-map{position:relative;width:100%;aspect-ratio:1200/520;overflow:visible;background:#f4f7f5 url('/world-institutions.svg') center/100% 100% no-repeat;border:1px solid #dbe7df;border-radius:3px;isolation:isolate}
+  .map-city{position:absolute;transform:translate(-50%,-50%);z-index:1}
+  .map-city:hover,.map-city:focus-within,.map-city.is-open{z-index:30}
+  .map-pin{display:flex;align-items:center;justify-content:center;position:relative;padding:0;border:0;background:transparent;cursor:pointer;min-width:26px;min-height:26px;transform:translate(0,0)}
+  .map-dot{display:block;width:11px;height:11px;box-sizing:border-box;background:#24765c;border:2px solid #fafdfb;border-radius:50%;box-shadow:0 0 0 1px #24765c,0 1px 4px #586e6440;transition:transform .15s}
+  .map-pin:hover .map-dot,.map-pin:focus-visible .map-dot,.map-city.is-open .map-dot{transform:scale(1.4);background:#145b45}
+  .map-count{position:absolute;top:-5px;right:-7px;min-width:14px;padding:1px 3px;border-radius:9px;font:600 9px/1.1 sans-serif;background:#fff;color:#24664f;box-shadow:0 1px 3px #6c847322}
+  .map-popup{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);min-width:200px;max-width:min(310px,80vw);max-height:260px;overflow-y:auto;background:#fff;border:1px solid #bdd4c5;box-shadow:0 7px 24px #354b3e26;padding:12px 14px;text-align:left}
+  .map-city:hover .map-popup,.map-city:focus-within .map-popup,.map-city.is-open .map-popup{display:block}
+  .map-popup-city{display:flex;justify-content:space-between;gap:1rem;color:#175f47;font-size:.86rem;font-weight:650;margin-bottom:.5rem}
+  .map-popup-city span{color:#789084;font-weight:400}
+  .map-popup ul{list-style:none;margin:0;padding:0}
+  .map-popup li+li{border-top:1px solid #ecf1ec}
+  .map-popup li a{display:block;padding:.44rem 0;font-size:.83rem;line-height:1.4;text-decoration:none;color:#24372d}
+  .map-popup li a:hover,.map-popup li a:focus-visible{color:#087d55;text-decoration:underline;text-underline-offset:3px}
+  .map-note{font-size:.78rem;color:#738479;margin-top:.65rem;line-height:1.6}
+  .archive-list-heading{margin-bottom:0}
+  @media(max-width:680px){.world-map{aspect-ratio:1.6}.world-map-section{margin:1.5rem 0 2rem}.map-pin{min-width:27px;min-height:27px}.map-dot{width:9px;height:9px}.map-popup{min-width:175px;max-width:min(250px,74vw)}.map-city{transform:translate(-50%,-50%)}.map-heading{font-size:.64rem}}
+  @media(prefers-reduced-motion:reduce){.map-dot{transition:none}}
+</style>
+<script>
+  const map = document.getElementById('institution-world-map');
+  if (map) {
+    map.querySelectorAll('.map-city').forEach((city) => {
+      const pin = city.querySelector('.map-pin');
+      pin?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const opening = !city.classList.contains('is-open');
+        map.querySelectorAll('.map-city.is-open').forEach(other => {
+          other.classList.remove('is-open');
+          other.querySelector('.map-pin')?.setAttribute('aria-expanded','false');
+        });
+        city.classList.toggle('is-open', opening);
+        pin.setAttribute('aria-expanded', String(opening));
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.map-city')) {
+        map.querySelectorAll('.map-city.is-open').forEach(city => {
+          city.classList.remove('is-open');
+          city.querySelector('.map-pin')?.setAttribute('aria-expanded','false');
+        });
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if(e.key==='Escape') map.querySelectorAll('.map-city.is-open').forEach(city => {
+        city.classList.remove('is-open');
+        city.querySelector('.map-pin')?.setAttribute('aria-expanded','false');
+      });
+    });
+  }
+</script>

@@ -1,4 +1,5 @@
 ---
+city: Yokohama
 name: 日ノ出町ワイキキSTUDIO
 ---
 

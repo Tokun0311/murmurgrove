@@ -1,4 +1,5 @@
 ---
+city: Phuket
 name: Phuket
 ---
 

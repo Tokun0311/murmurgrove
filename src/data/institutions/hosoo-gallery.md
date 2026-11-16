@@ -1,4 +1,5 @@
 ---
+city: Kyoto
 name: HOSOO GALLERY
 ---
 

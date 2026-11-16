@@ -1,4 +1,5 @@
 ---
+city: Tokyo
 name: 寺田倉庫
 ---
 

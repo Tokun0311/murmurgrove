@@ -1,4 +1,5 @@
 ---
+city: Tokyo
 name: 早稲田大学
 ---
 

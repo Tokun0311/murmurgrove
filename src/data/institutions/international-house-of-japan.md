@@ -1,4 +1,5 @@
 ---
+city: Tokyo
 name: 国際文化会館（International House of Japan）
 ---
 

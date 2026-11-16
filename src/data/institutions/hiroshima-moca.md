@@ -1,4 +1,5 @@
 ---
+city: Hiroshima
 name: 広島市現代美術館
 ---
 

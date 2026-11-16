@@ -1,4 +1,5 @@
 ---
+city: Yokohama
 name: 横浜美術館
 ---
 

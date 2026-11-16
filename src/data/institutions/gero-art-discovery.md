@@ -1,4 +1,5 @@
 ---
+city: Gero
 name: 岐阜・下呂
 ---
 

@@ -1,4 +1,5 @@
 ---
+city: Fukuoka
 name: SYNDICATE
 ---
 

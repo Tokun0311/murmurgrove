@@ -1,4 +1,5 @@
 ---
+city: Tokyo
 name: 世田谷美術館
 ---
 

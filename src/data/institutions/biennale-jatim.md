@@ -1,4 +1,5 @@
 ---
+city: East Java
 name: Biennale Jatim / 東ジャワビエンナーレ
 ---
 

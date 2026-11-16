@@ -1,4 +1,5 @@
 ---
+city: Tokyo
 name: NTT InterCommunication Center (ICC)
 ---
 
