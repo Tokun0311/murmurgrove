@@ -378,3 +378,60 @@ body:has(.institutions-page) main{position:relative;z-index:1;}
   .home-sections>a span { max-width:105px; }
   .people-index #people-list { grid-template-columns:1fr; }
 }
+
+/* Mobile refinement 2026-11-17 v2. Desktop is intentionally untouched. */
+@media (max-width:650px) {
+  /* A quiet three-line icon replaces the Explore word. */
+  .mast .mobile-nav summary { width:44px; height:44px; min-height:44px; padding:0; justify-content:center; border-radius:8px; }
+  .mast .mobile-nav summary > span:first-child { display:none; }
+  .mast .mobile-nav-symbol { width:21px; height:15px; flex:0 0 21px; }
+  .mast .mobile-nav-symbol::after { top:6.5px; }
+  .mast .mobile-nav[open] .mobile-nav-symbol { height:1px; transform:rotate(45deg); }
+  .mast .mobile-nav[open] .mobile-nav-symbol::after { top:0; transform:rotate(90deg); }
+  /* Reuse the soft radial highlight language of the desktop active link. */
+  .mast .mobile-nav nav a[aria-current="page"] { position:relative; isolation:isolate; font-weight:400; color:#075e43; background:none; }
+  .mast .mobile-nav nav a[aria-current="page"]::before {
+    display:block; content:""; position:absolute; pointer-events:none; z-index:-1;
+    inset:-7px -5px; border-radius:50%;
+    background:radial-gradient(ellipse at 30% 50%,rgba(102,235,113,.33),rgba(118,237,128,.17) 49%,transparent 80%);
+    filter:blur(8px); opacity:.95;
+  }
+  .mast .mobile-nav nav a { min-height:46px; display:flex; align-items:center; box-sizing:border-box; }
+  .mast .mobile-nav nav { max-height:min(75vh,410px); overflow-y:auto; overscroll-behavior:contain; }
+
+  /* The masthead already supplies the first separator on the small layout. */
+  .exhibition-index .exhibition-index-divider { display:none; }
+  .exhibition-index .exhibition-index-heading { margin-top:0; padding-top:0; }
+  .exhibition-index .exhibition-filters { gap:12px; }
+  .exhibition-index .filter-languages { display:flex; flex-wrap:wrap; column-gap:7px; row-gap:8px; }
+  .exhibition-index .filter-languages button { flex:0 0 auto; max-width:100%; overflow-wrap:anywhere; min-height:42px; }
+  .exhibition-index .sort-label { max-width:100%; }
+
+  /* Country browser: two consistent columns, count separated from title. */
+  .institutions-page .geo-index { display:block; min-width:0; }
+  .institutions-page .geo-index-group { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:0 0 22px; }
+  .institutions-page .geo-index-group h2 { grid-column:1/-1; margin:0 0 3px; }
+  .institutions-page .geo-country { display:block; min-width:0; margin:0; }
+  .institutions-page .geo-country-button { display:flex; box-sizing:border-box; width:100%; min-width:0; min-height:48px; gap:9px; align-items:center; justify-content:space-between; padding:10px 12px; border:1px solid #d9e8df; border-radius:4px; background:transparent; line-height:1.3; }
+  .institutions-page .geo-country-button span { flex:1 1 auto; min-width:0; overflow-wrap:break-word; font-size:12px; line-height:1.35; }
+  .institutions-page .geo-country-button small { flex:0 0 auto; display:inline-grid; place-items:center; min-width:26px; height:26px; padding:0 5px; box-sizing:border-box; border-radius:14px; background:#eef5f0; color:#4c7760; font-size:11px; font-variant-numeric:tabular-nums; line-height:1; }
+  .institutions-page .geo-country-button.is-active, .institutions-page .geo-country-button[aria-pressed="true"] { background:#eaf5ed; border-color:#7bac92; }
+  .institutions-page .geo-country-button[aria-pressed="true"] small { background:#d8ecdf; color:#075e43; }
+  .institutions-page .geo-all-button { display:flex; box-sizing:border-box; width:100%; justify-content:space-between; align-items:center; gap:12px; min-height:48px; margin:0 0 23px; padding:10px 13px; }
+  .institutions-page .geo-all-button span { display:inline-grid; place-items:center; min-width:28px; padding:4px 7px; border-radius:16px; background:#e1f0e6; font-variant-numeric:tabular-nums; }
+  .institutions-page .geo-country-button:focus-visible, .institutions-page .geo-all-button:focus-visible { outline:2px solid #075e43; outline-offset:2px; }
+  .institutions-page .institution-country-group { scroll-margin-top:20px; }
+
+  /* Keep long names, counts and controls within the viewport. */
+  .archive, .exhibition-index, .people-index, .institutions-page, .concept-archive { min-width:0; }
+  .archive-list, .institution-geography-index { min-width:0; }
+  .mobile-calendar-toggle { margin-top:25px; }
+  .mobile-calendar-toggle[aria-expanded="true"] { border-bottom-color:transparent; }
+  .mobile-nav nav a:active, .institution-city-list a:active { background-color:rgba(110,197,130,.08); }
+}
+@media(max-width:360px) {
+  .institutions-page .geo-index-group { gap:6px; }
+  .institutions-page .geo-country-button { padding:9px 8px; gap:5px; }
+  .institutions-page .geo-country-button span { font-size:11px; }
+  .institutions-page .geo-country-button small { min-width:23px; height:23px; padding:0 4px; }
+}
