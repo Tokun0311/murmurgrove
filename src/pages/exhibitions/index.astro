@@ -13,6 +13,7 @@ const lastDate = calendarDates[0] || '2026-01-01';
     <h1 class="section-title">Exhibitions & Events</h1>
     <p class="section-lead">Art encounters, exhibitions, performances and research visits. {items.length} records, 2026.</p>
 
+    <div class="exhibition-date-explorer">
     <section class="exhibition-calendar" aria-label="Browse exhibitions by date">
       <div class="exhibition-calendar-heading">
         <div>
@@ -28,11 +29,32 @@ const lastDate = calendarDates[0] || '2026-01-01';
       <div class="exhibition-weekdays" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
       <div id="exhibition-calendar-grid" class="exhibition-calendar-grid" aria-label="Dates with exhibition records"></div>
       <div class="exhibition-calendar-footer">
-        <p id="exhibition-date-status" role="status" aria-live="polite">Select a marked date to filter exhibitions.</p>
-        <button id="exhibition-date-clear" type="button" hidden>Clear date <span aria-hidden="true">×</span></button>
+        <p id="exhibition-date-status" role="status" aria-live="polite">Select a marked date to view exhibitions.</p>
+        <button id="exhibition-date-clear" type="button" hidden>Clear selection <span aria-hidden="true">×</span></button>
       </div>
     </section>
 
+    <section class="exhibition-day-preview" aria-labelledby="exhibition-preview-heading">
+      <div class="exhibition-preview-heading">
+        <p class="eyebrow">SELECTED DATE</p>
+        <h2 id="exhibition-preview-heading" aria-live="polite">{lastDate.replaceAll('-', '.')}</h2>
+      </div>
+      <p id="exhibition-preview-count" class="exhibition-preview-count" aria-live="polite"></p>
+      <ol id="exhibition-preview-list" class="exhibition-preview-list">
+        {items.map(item=><li class="exhibition-preview-entry" data-preview-date={isoDay(item.data.visitedOn)} hidden>
+          <a href={`/exhibitions/${item.id}/`}>{item.data.title}</a>
+          <span>{item.data.region}</span>
+        </li>)}
+      </ol>
+      <p id="exhibition-preview-empty" class="exhibition-preview-empty" hidden>Choose a highlighted date in the calendar to see its exhibitions here.</p>
+    </section>
+    </div>
+
+    <div class="exhibition-index-divider" aria-hidden="true"></div>
+    <div class="exhibition-index-heading">
+      <h2>All exhibitions</h2>
+      <p>Browse the full archive by region and date order.</p>
+    </div>
     <div class="filters exhibition-filters">
       <div class="filter-languages" aria-label="Region filters">
         <button type="button" data-region="all" aria-pressed="true">All</button>
@@ -50,6 +72,10 @@ const lastDate = calendarDates[0] || '2026-01-01';
 <script type="application/json" id="exhibition-calendar-data" set:html={JSON.stringify({dates:calendarDates, firstDate,lastDate}).replace(/</g,'\\u003c')} />
 <script>
   const rows=[...document.querySelectorAll<HTMLLIElement>('.archive-entry')];
+  const previewRows=[...document.querySelectorAll<HTMLLIElement>('.exhibition-preview-entry')];
+  const previewHeading=document.querySelector<HTMLElement>('#exhibition-preview-heading');
+  const previewCount=document.querySelector<HTMLElement>('#exhibition-preview-count');
+  const previewEmpty=document.querySelector<HTMLElement>('#exhibition-preview-empty');
   const list=document.querySelector<HTMLOListElement>('#archive-list');
   const regionBtns=[...document.querySelectorAll<HTMLButtonElement>('[data-region]')];
   const sorter=document.querySelector<HTMLSelectElement>('#date-sort');
@@ -67,7 +93,7 @@ const lastDate = calendarDates[0] || '2026-01-01';
   const next=document.querySelector<HTMLButtonElement>('#exhibition-next');
   const latest=document.querySelector<HTMLButtonElement>('#exhibition-latest');
   let selectedRegion='all';
-  let selectedDate:string|null=null;
+  let selectedDate:string|null=config.lastDate||null;
   let currentMonth=config.lastDate.slice(0,7);
   const firstMonth=config.firstDate.slice(0,7);
   const lastMonth=config.lastDate.slice(0,7);
@@ -81,7 +107,7 @@ const lastDate = calendarDates[0] || '2026-01-01';
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`;
   };
   function updateList(){
-    const visible=rows.filter(row=>(selectedRegion==='all'||row.dataset.region===selectedRegion)&&(!selectedDate||row.dataset.date===selectedDate));
+    const visible=rows.filter(row=>selectedRegion==='all'||row.dataset.region===selectedRegion);
     rows.forEach(row=>{row.hidden=!visible.includes(row)});
     visible.sort((a,b)=>{
       const cmp=(a.dataset.date||'').localeCompare(b.dataset.date||'');
@@ -89,13 +115,20 @@ const lastDate = calendarDates[0] || '2026-01-01';
     }).forEach(row=>list?.appendChild(row));
     if(empty) empty.hidden=visible.length!==0;
     if(results) results.textContent=`${visible.length} ${visible.length===1?'record':'records'}`;
-    if(status) status.textContent=selectedDate?`Showing ${selectedDate.replaceAll('-','.')} · ${dateCounts.get(selectedDate)||0} recorded`:'Select a marked date to filter exhibitions.';
-    if(clear) clear.hidden=!selectedDate;
+  }
+  function updatePreview(){
+    const visible=previewRows.filter(row=>Boolean(selectedDate)&&row.dataset.previewDate===selectedDate);
+    previewRows.forEach(row=>{row.hidden=!visible.includes(row)});
+    if(previewHeading)previewHeading.textContent=selectedDate?selectedDate.replaceAll('-','.'):'No date selected';
+    if(previewCount)previewCount.textContent=selectedDate?`${visible.length} ${visible.length===1?'exhibition':'exhibitions'}`:'';
+    if(previewEmpty)previewEmpty.hidden=Boolean(selectedDate);
+    if(status)status.textContent=selectedDate?`${selectedDate.replaceAll('-','.')} selected`:'Choose a highlighted date to view exhibitions.';
+    if(clear)clear.hidden=!selectedDate;
   }
   function selectDate(date:string|null){
     selectedDate=selectedDate===date?null:date;
     renderCalendar();
-    updateList();
+    updatePreview();
   }
   function renderCalendar(){
     if(!grid||!heading)return;
@@ -136,5 +169,5 @@ const lastDate = calendarDates[0] || '2026-01-01';
     updateList();
   }));
   sorter?.addEventListener('change',updateList);
-  renderCalendar();updateList();
+  renderCalendar();updateList();updatePreview();
 </script>
