@@ -11,179 +11,41 @@ const organism=createMurmurgrove({
   institutions:institutions.map(x=>({id:x.id,data:x.data as Record<string,any>})),
   concepts:concepts.map(x=>({id:x.id,data:x.data as Record<string,any>})),
 });
-const sectionItems=[
-  {id:'exhibitions',name:'Exhibitions',desc:'Encounters in time',index:1},
-  {id:'institutions',name:'Institutions',desc:'Art in place',index:2},
-  {id:'people',name:'People',desc:'Lives & practices',index:3},
-  {id:'concepts',name:'Concepts',desc:'Ideas in circulation',index:4},
-] as const;
 const pageData={marks:organism.marks,counts:organism.counts,relationDensity:organism.relationDensity,fingerprint:organism.fingerprint};
 ---
 <Base title="TOW ARCHIVE | Murmurgrove" description="An evolving archive of encounters, institutions, people and concepts. A living form shaped by the archive as a whole.">
-  <section class="grove-home" aria-labelledby="grove-intro-title">
-    <div class="grove-intro">
-      <div class="grove-intro-copy">
-        <p class="grove-eyebrow">AN EVOLVING RESEARCH ARCHIVE <span aria-hidden="true">/</span> MURMURGROVE</p>
-        <h2 id="grove-intro-title">An archive<br/>in the making<span class="grove-period">.</span></h2>
-        <p class="grove-intro-text">Encounters accumulate. Relations take root. The archive moves as it grows.</p>
-      </div>
-      <div class="grove-intro-aside"><span class="grove-small-cross" aria-hidden="true">✳</span><span>One form, continually shaped<br/>by four ways of looking.</span></div>
-    </div>
-
+  <section class="grove-home" aria-label="Murmurgrove, a living archive">
     <div class="grove-figure" id="murmurgrove" data-fingerprint={organism.fingerprint}>
-      <div class="grove-figure-top">
-        <span>FIG. 01 <span class="grove-separator">/</span> ARCHIVE MORPHOLOGY</span>
-        <span class="grove-status"><span class="grove-status-dot" aria-hidden="true"></span> CONTINUALLY FORMING</span>
-      </div>
       <div class="grove-canvas-area" id="grove-canvas-area">
         <div class="grove-haze" aria-hidden="true"></div>
         <canvas id="grove-canvas" aria-label="Animated organic illustration representing the connected archive. Its changing form is derived from exhibitions, institutions, people and concepts." role="img"></canvas>
-        <div class="grove-watermark grove-watermark-top" aria-hidden="true">ROOTED IN ENCOUNTERS</div>
-        <div class="grove-watermark grove-watermark-bottom" aria-hidden="true">SHAPED BY RELATIONS</div>
-        <div class="grove-figure-legend" aria-hidden="true"><span class="grove-legend-dash"></span> A living form generated from the archive</div>
-      </div>
-      <div class="grove-figure-foot">
-        <div class="grove-modes" role="group" aria-label="Explore the organism through different views">
-          <button type="button" class="grove-mode is-selected" data-mode="whole" aria-pressed="true">Whole archive</button>
-          <button type="button" class="grove-mode" data-mode="growth" aria-pressed="false">Recent growth</button>
-          <button type="button" class="grove-mode" data-mode="movement" aria-pressed="false">Movement</button>
-        </div>
-        <div class="grove-mode-description" id="grove-mode-description" aria-live="polite">The form of the archive, held together by accumulated encounters.</div>
       </div>
     </div>
 
-    <div class="grove-ways" aria-label="Enter the archive">
-      <div class="grove-ways-heading"><span>FOUR WAYS INTO THE ARCHIVE</span><span>01 — 04</span></div>
-      <div class="grove-ways-grid">
-        {sectionItems.map(section=>(
-          <div class="grove-way">
-            <a class="grove-way-main" href={`/${section.id}/`} aria-label={`Explore ${section.name}`}>
-              <span class="grove-way-index">0{section.index}</span>
-              <span class="grove-way-title">{section.name}</span>
-              <span class="grove-way-arrow" aria-hidden="true">↗</span>
-            </a>
-            <div class="grove-way-meta"><span>{section.desc}</span><span>{organism.counts[section.id]} records</span></div>
-            <div class="grove-entrances">
-              {(organism.entrances[section.id]||[]).slice(0,2).map(entry=>(<a href={entry.url}>{entry.title} <span aria-hidden="true">↗</span></a>))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <div class="grove-recent">
-      <div class="grove-recent-intro"><p class="grove-eyebrow">RECENT ENCOUNTERS</p><h2>The archive continues.</h2><p>New records change the form above, without replacing what came before.</p><a href="/exhibitions/">All exhibition records <span aria-hidden="true">↗</span></a></div>
-      <ol class="grove-recent-list">
-        {organism.latest.map(item=>(
-          <li><time datetime={new Date(item.visitedOn).toISOString().slice(0,10)}>{new Date(item.visitedOn).toISOString().slice(0,10).replaceAll('-','.')}</time><a href={`/exhibitions/${item.id}/`}>{item.title}</a><span class="grove-recent-region">{item.region}</span></li>
-        ))}
-      </ol>
-    </div>
-    <div class="grove-outro"><span>MURMURGROVE</span><p>Neither a finished map nor a complete account. An ongoing form of looking, connecting, and returning.</p><a href="/about/">About the archive ↗</a></div>
   </section>
   <script type="application/json" id="grove-data" set:html={JSON.stringify(pageData).replace(/</g,'\\u003c')}></script>
 </Base>
 <style>
-.grove-home{padding:var(--section-start-gap,32px) 0 56px;color:var(--ink)}
-.grove-intro{display:flex;justify-content:space-between;gap:32px;align-items:flex-end;padding:18px 0 25px}
-.grove-intro-copy{max-width:780px}
-.grove-eyebrow{font-size:10px;font-weight:500;letter-spacing:.125em;margin:0 0 20px;color:#538b73}
-.grove-eyebrow span{padding:0 8px;color:#9ec8af}
-.grove-intro h2{font-size:clamp(42px,7.5vw,99px);font-weight:400;line-height:1.025;letter-spacing:-.072em;margin:0 0 22px;color:#087a55}
-.grove-period{color:#80ba90}
-.grove-intro-text{font-size:clamp(13px,1.35vw,16px);line-height:1.65;letter-spacing:-.015em;margin:0;max-width:37ch;color:#608b75}
-.grove-intro-aside{align-self:flex-end;display:flex;align-items:flex-start;gap:10px;color:#80a895;font-size:11px;line-height:1.6;text-align:left;white-space:nowrap;padding-bottom:4px}
-.grove-small-cross{font-size:23px;line-height:1;color:#83bf9e}
-.grove-figure{margin-top:14px;border-top:1px solid #6ba989;border-bottom:1px solid #9fc6b2;isolation:isolate}
-.grove-figure-top{display:flex;justify-content:space-between;gap:12px;font-size:10px;letter-spacing:.11em;color:#7ca58f;padding:14px 0 7px}
-.grove-separator{padding:0 5px;color:#b5d0bd}
-.grove-status{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.grove-status-dot{width:5px;height:5px;border-radius:50%;background:#4fb78a;box-shadow:0 0 10px #84c5a6;animation:grove-pulse 3.6s infinite}
-@keyframes grove-pulse{0%,100%{opacity:.5}50%{opacity:1}}
-.grove-canvas-area{position:relative;height:clamp(410px,56vw,690px);overflow:hidden;touch-action:pan-y;background:radial-gradient(ellipse 52% 40% at 50% 52%,rgba(183,233,201,.075),rgba(255,255,255,0) 80%)}
-.grove-haze{pointer-events:none;position:absolute;inset:5% 6%;z-index:0;background:radial-gradient(ellipse at 48% 48%,rgba(185,239,198,.075),transparent 57%)}
-#grove-canvas{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:1}
-.grove-watermark{position:absolute;z-index:2;pointer-events:none;color:#a5c6b6;font-size:9px;letter-spacing:.14em;writing-mode:vertical-rl}
-.grove-watermark-top{top:16%;left:1px}.grove-watermark-bottom{right:1px;bottom:15%;transform:rotate(180deg)}
-.grove-figure-legend{position:absolute;bottom:16px;left:0;display:flex;gap:8px;align-items:center;color:#7baa90;font-size:10px;z-index:2}
-.grove-legend-dash{display:block;height:1px;width:21px;background:#a2ccb3}
-.grove-figure-foot{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:16px 0 19px;min-height:72px;border-top:1px solid #e1eee5}
-.grove-modes{display:flex;flex-wrap:wrap;gap:6px}
-.grove-mode{color:#598b72;border:1px solid #d2e6d9;background:transparent;border-radius:100px;font-size:11px;padding:8px 13px;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
-.grove-mode:hover{border-color:#80b79c;background:#f3faf5}
-.grove-mode.is-selected{background:#e9f6ee;border-color:#aad3ba;color:#087a55}
-.grove-mode:focus-visible,.grove-way a:focus-visible,.grove-entrances a:focus-visible{outline:2px solid #159569;outline-offset:3px}
-.grove-mode-description{max-width:320px;font-size:11px;color:#86a898;text-align:right;line-height:1.5}
-.grove-ways{margin:82px 0 85px}
-.grove-ways-heading{display:flex;justify-content:space-between;border-bottom:1px solid #91bea4;padding-bottom:16px;color:#62987c;font-size:11px;letter-spacing:.1em}
-.grove-ways-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
-.grove-way{min-width:0;border-bottom:1px solid #d8e8df;padding:26px 0 23px}
-.grove-way-main{display:flex;align-items:baseline;gap:12px;text-decoration:none}
-.grove-way-index{align-self:flex-start;transform:translateY(7px);color:#94beaa;font-size:11px;font-variant-numeric:tabular-nums}
-.grove-way-title{color:#087a55;line-height:1.1;letter-spacing:-.045em;font-size:clamp(25px,3.2vw,44px);font-weight:400}
-.grove-way-arrow{margin-left:auto;font-size:24px;font-weight:300;line-height:1;color:#9bc7ab;transition:transform .2s ease}
-.grove-way-main:hover .grove-way-arrow{transform:translate(3px,-3px)}
-.grove-way-meta{display:flex;justify-content:space-between;gap:10px;margin:11px 0 15px;padding-left:29px;font-size:11px;color:#8da995}
-.grove-entrances{padding-left:29px;display:flex;gap:5px 22px;flex-wrap:wrap;align-items:center}
-.grove-entrances a{display:inline-block;font-size:12px;line-height:1.5;color:#508c70;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.grove-entrances a span{color:#99c5aa}
-.grove-recent{display:grid;grid-template-columns:minmax(210px,.85fr) minmax(0,1.7fr);gap:55px;padding:34px 0 67px;border-top:1px solid #91bea4}
-.grove-recent-intro .grove-eyebrow{margin-bottom:15px}
-.grove-recent-intro h2{font-size:clamp(25px,3.3vw,42px);letter-spacing:-.05em;font-weight:400;line-height:1.13;margin:0 0 17px}
-.grove-recent-intro p:not(.grove-eyebrow){font-size:12px;color:#81a48c;line-height:1.65;max-width:25ch}
-.grove-recent-intro>a{display:inline-block;font-size:12px;margin-top:18px;text-decoration:underline;text-decoration-color:#b4d9c1;text-underline-offset:5px}
-.grove-recent-list{list-style:none;padding:0;margin:0}
-.grove-recent-list li{display:grid;grid-template-columns:95px minmax(0,1fr) 115px;gap:16px;align-items:baseline;border-bottom:1px solid #e2eee6;padding:17px 0}
-.grove-recent-list li:first-child{padding-top:0}
-.grove-recent-list time{font-size:11px;color:#89a994;font-variant-numeric:tabular-nums}
-.grove-recent-list a{font-size:16px;line-height:1.45;letter-spacing:-.02em;overflow-wrap:anywhere}
-.grove-recent-region{font-size:11px;text-align:right;color:#9bb7a4}
-.grove-outro{display:flex;align-items:baseline;gap:25px;border-top:1px solid #d2e6d9;padding-top:23px}
-.grove-outro>span{font-size:10px;color:#8bae98;letter-spacing:.12em;white-space:nowrap}
-.grove-outro p{font-size:12px;color:#8eab99;max-width:440px;line-height:1.6;margin:0}
-.grove-outro a{margin-left:auto;white-space:nowrap;font-size:12px;color:#548e71}
-@media(max-width:800px){
-.grove-intro-aside{display:none}
-.grove-figure-foot{align-items:flex-start;flex-direction:column;gap:9px}
-.grove-mode-description{text-align:left;max-width:none}
-.grove-ways-grid{column-gap:24px}
-.grove-recent{gap:25px}
-.grove-recent-list li{grid-template-columns:88px minmax(0,1fr)}
-.grove-recent-region{display:none}
+/* The archive's living form is the entire homepage; main navigation remains in Base. */
+.grove-home { padding:0; min-height:calc(100svh - 150px); }
+.grove-figure { isolation:isolate; }
+.grove-canvas-area {
+  position:relative;
+  width:100%;
+  height:max(540px,calc(100svh - 170px));
+  overflow:hidden;
+  touch-action:pan-y;
+  background:radial-gradient(ellipse 52% 40% at 50% 52%,rgba(183,233,201,.075),transparent 80%);
 }
-@media(max-width:650px){
-.grove-home{padding-top:24px}
-.grove-intro{padding:9px 0 17px}
-.grove-eyebrow{font-size:9px;letter-spacing:.09em;margin-bottom:15px}
-.grove-eyebrow span{padding:0 3px}
-.grove-intro h2{font-size:clamp(40px,11vw,58px);line-height:1.03;margin:0 0 17px}
-.grove-intro-text{font-size:12px;max-width:34ch}
-.grove-figure{margin-top:8px}
-.grove-figure-top{font-size:9px;letter-spacing:.055em}
-.grove-canvas-area{height:min(116vw,500px);min-height:340px}
-.grove-watermark{font-size:8px}
-.grove-figure-legend{font-size:9px;bottom:8px}
-.grove-figure-foot{padding:12px 0 14px}
-.grove-modes{gap:5px}
-.grove-mode{padding:8px 10px;font-size:10px}
-.grove-ways{margin:55px 0 58px}
-.grove-ways-heading{font-size:9px;padding-bottom:12px}
-.grove-ways-grid{grid-template-columns:1fr}
-.grove-way{padding:19px 0 17px}
-.grove-way-title{font-size:29px}
-.grove-way-meta{margin:9px 0 9px}
-.grove-entrances a{max-width:47%;font-size:11px}
-.grove-recent{grid-template-columns:1fr;gap:28px;padding:25px 0 48px}
-.grove-recent-intro h2{font-size:29px}
-.grove-recent-intro p:not(.grove-eyebrow){max-width:40ch}
-.grove-recent-intro>a{margin-top:8px}
-.grove-recent-list li{grid-template-columns:82px minmax(0,1fr);gap:9px;padding:13px 0}
-.grove-recent-list a{font-size:14px}
-.grove-outro{flex-wrap:wrap;gap:10px}
-.grove-outro>span{width:100%}
-.grove-outro a{margin-left:0}
+.grove-haze {
+  pointer-events:none;position:absolute;inset:5% 6%;z-index:0;
+  background:radial-gradient(ellipse at 48% 48%,rgba(185,239,198,.075),transparent 57%);
 }
-@media(prefers-reduced-motion:reduce){.grove-status-dot{animation:none}}
+#grove-canvas { display:block;position:absolute;inset:0;width:100%;height:100%;z-index:1; }
+@media(max-width:650px) {
+  .grove-home { min-height:calc(100svh - 110px); }
+  .grove-canvas-area { height:max(420px,calc(100svh - 130px)); }
+}
 </style>
 <script>
   type Mark={key:string;section:string;strength:number;recency:number;related:number;x:number;y:number;seed:number};
@@ -196,10 +58,6 @@ const pageData={marks:organism.marks,counts:organism.counts,relationDensity:orga
     if(ctx){
       const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
       const fine=window.matchMedia('(pointer: fine)');
-      const buttons=Array.from(document.querySelectorAll<HTMLButtonElement>('.grove-mode'));
-      const description=document.getElementById('grove-mode-description');
-      const descriptions:Record<string,string>={whole:'The form of the archive, held together by accumulated encounters.',growth:'Recent encounters gently illuminate the places where the archive is growing.',movement:'Collective motion reveals a living system: responsive, but never random.'};
-      let mode='whole';
       let frame=0,last=0,visible=true,width=0,height=0,dpr=1;
       let pointer={x:-500,y:-500,active:false};
       const TAU=Math.PI*2;
@@ -240,7 +98,7 @@ const pageData={marks:organism.marks,counts:organism.counts,relationDensity:orga
         const mobile=width<560;
         const sx=width*(mobile ? .93 : .85), sy=height*(mobile ? .85 : .87);
         const cX=width*.5,cY=height*.49;
-        const growth=mode==='growth',movement=mode==='movement';
+        const growth=false,movement=false;
         // Slow translucent tissue layers form a single continuous body.
         const layers=5;
         for(let layer=layers-1;layer>=0;layer--){
@@ -347,12 +205,6 @@ const pageData={marks:organism.marks,counts:organism.counts,relationDensity:orga
           if(!reduce.matches)frame=requestAnimationFrame(tick);
         }
       };
-      buttons.forEach(button=>button.addEventListener('click',()=>{
-        mode=button.dataset.mode||'whole';
-        buttons.forEach(b=>{const selected=b===button;b.classList.toggle('is-selected',selected);b.setAttribute('aria-pressed',String(selected));});
-        if(description)description.textContent=descriptions[mode]||descriptions.whole;
-        sync();
-      }));
       let contactTimer=0;
       area.addEventListener('pointerdown',e=>{
         const rect=area.getBoundingClientRect();

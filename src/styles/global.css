@@ -633,3 +633,10 @@ body:has(.institutions-page) main{position:relative;z-index:1;}
   .exhibition-index .exhibition-preview-count { margin:9px 0 13px; }
   .exhibition-index .exhibition-preview-entry { padding:12px 0;gap:4px; }
 }
+
+/* Gentle archival-green text selection, replacing the browser blue. */
+::selection { background:rgba(118,214,149,.35);color:#075c40;text-shadow:0 0 6px rgba(97,207,124,.3) }
+::-moz-selection { background:rgba(118,214,149,.35);color:#075c40;text-shadow:0 0 6px rgba(97,207,124,.3) }
+
+/* The living homepage has no extra masthead divider; interior sections retain theirs. */
+body:has(.grove-home) .mast { border-bottom:0 }
