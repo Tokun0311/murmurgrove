@@ -1,6 +1,8 @@
 ---
 city: Tokyo
 name: WHAT MUSEUM
+addressStatus: needs-review
+locationType: city
 ---
 
-该机构相关的艺术活动记录。
+WHAT MUSEUM 位于东京天王洲，展示当代艺术及收藏相关专题项目。

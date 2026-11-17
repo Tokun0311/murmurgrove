@@ -28,7 +28,7 @@ const people = defineCollection({
 });
 const institutions = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/institutions' }),
-  schema: z.object({ name: z.string(), city: z.string().optional(), longitude: z.number().optional(), latitude: z.number().optional(), locationType: z.enum(['site','city','variable']).optional() })
+  schema: z.object({ name: z.string(), city: z.string().optional(), longitude: z.number().optional(), latitude: z.number().optional(), locationType: z.enum(['site','city','variable']).optional(), address: z.string().optional(), addressStatus: z.enum(['verified','needs-review']).optional(), addressSource: z.string().url().optional() })
 });
 const concepts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/concepts' }),

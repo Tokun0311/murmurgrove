@@ -1,6 +1,8 @@
 ---
 city: Tokyo
 name: 東京オペラシティ アートギャラリー
+addressStatus: needs-review
+locationType: city
 ---
 
-该机构相关的艺术活动记录。
+东京歌剧城美术馆位于新宿东京歌剧城，举办现代及当代艺术展览。

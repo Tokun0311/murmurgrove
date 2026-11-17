@@ -5,4 +5,4 @@ sortName: Umeda Tetsuya
 kind: artist
 ---
 
-关联展览索引。
+日本声音与装置艺术家，利用日常物品、声响、建筑空间及现场行为创造具有场域性的体验。

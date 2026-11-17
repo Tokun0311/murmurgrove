@@ -1,6 +1,8 @@
 ---
 city: Berlin
 name: Schaubühne
+addressStatus: needs-review
+locationType: city
 ---
 
-该机构相关的艺术活动记录。
+Schaubühne 是柏林剧院，以当代戏剧制作、国际合作及导演创作为重要特色。

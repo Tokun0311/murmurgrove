@@ -5,4 +5,8 @@ sortName: Sato Keiichi
 kind: organizer
 ---
 
+与福冈独立艺术空间 IAF SHOP* 相关的艺术从业者。本档案记录了关于独立空间运营及地方艺术生态的交流。
+
+### 档案补充记录
+
 IAF SHOP* 的运营者，相关笔记记录其对福冈独立空间生存条件的观察。

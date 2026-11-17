@@ -1,6 +1,8 @@
 ---
 city: Tokyo
 name: MIDORI.so
+addressStatus: needs-review
+locationType: city
 ---
 
-该机构相关的艺术活动记录。
+MIDORI.so 是东京的创意工作及社群空间，亦参与艺术与设计相关交流活动。

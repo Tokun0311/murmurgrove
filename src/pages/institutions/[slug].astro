@@ -6,4 +6,11 @@ const {item}=Astro.props;
 const {Content}=await render(item);
 const exhibitions=(await getCollection('exhibitions')).filter(e=>e.data.institution===item.id || e.data.relatedInstitutions.includes(item.id)).sort((a,b)=>b.data.visitedOn.valueOf()-a.data.visitedOn.valueOf());
 ---
-<Base title={`${item.data.name} | TOW ARCHIVE`}><article class="article"><a class="eyebrow" href="/institutions/">← Institutions & Spaces</a><h1>{item.data.name}</h1><div class="prose"><Content/></div><h2>Related exhibitions & events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{e.data.visitedOn.toISOString().slice(0,10)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></article></Base>
+<Base title={`${item.data.name} | TOW ARCHIVE`}><article class="article"><a class="eyebrow" href="/institutions/">← Institutions & Spaces</a><h1>{item.data.name}</h1>
+  <div class="institution-location-info">
+    <p><strong>Location</strong> · {item.data.city || 'Not specified'}</p>
+    {item.data.address ? <p><strong>Address</strong> · {item.data.address} {item.data.addressSource && <a href={item.data.addressSource} target="_blank" rel="noopener noreferrer">Source</a>}</p> :
+      <p><strong>Street address</strong> · {item.data.locationType === 'variable' ? 'Multiple / non-fixed venues' : 'Not yet verified (city only)'}</p>}
+  </div><div class="prose"><Content/></div><h2>Related exhibitions & events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{e.data.visitedOn.toISOString().slice(0,10)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></article></Base>
+
+<style>.institution-location-info{margin:1rem 0 2rem;color:var(--quiet);font-size:.85rem;line-height:1.7}.institution-location-info p{margin:.15rem 0}.institution-location-info strong{font-weight:500;color:var(--ink)}.institution-location-info a{margin-left:.45rem;text-underline-offset:3px}</style>

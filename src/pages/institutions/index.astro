@@ -241,6 +241,17 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-location-precision{font-size:.69rem;line-height:1.45;color:#748d80;margin:-.2rem 0 .8rem}
   .map-tooltip{background:rgba(255,255,255,.97);backdrop-filter:blur(6px)}
   @media(max-width:700px){.globe-index-layout .geo-index{padding-left:0!important}}
+
+  /* Final layout overrides: cleaner single layout pass for the globe section. */
+  .world-map-section .globe-index-layout{position:relative!important;display:block!important;min-height:clamp(500px,50vw,650px)!important;gap:0!important}
+  .world-map-section .map-shell{position:absolute!important;inset:0 auto 0 -6%!important;width:79%!important;height:100%!important;background:transparent!important;border:0!important;overflow:visible!important;z-index:0!important}
+  .world-map-section .world-map{position:relative!important;width:100%!important;height:100%!important;background:transparent!important}
+  .world-map-section .geo-index{position:relative!important;z-index:5!important;margin-left:auto!important;width:min(44%,560px)!important;min-height:100%!important;padding:26px 0 30px 34px!important;background:none!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.4rem 1.1rem!important;align-content:start!important}
+  .world-map-section .map-reset-minimal{background:rgba(255,255,255,.76)!important;border-radius:0!important;backdrop-filter:none!important}
+  .world-map-section .map-tooltip{right:calc(44% + 12px)!important;top:18px!important;max-width:280px!important}
+  @media(max-width:960px){.world-map-section .map-shell{left:-8%!important;width:83%!important}.world-map-section .geo-index{width:48%!important;padding-left:22px!important}.world-map-section .map-tooltip{right:calc(48% + 8px)!important}}
+  @media(max-width:700px){.world-map-section .globe-index-layout{display:flex!important;flex-direction:column!important;min-height:0!important}.world-map-section .map-shell{position:relative!important;left:0!important;inset:auto!important;width:100%!important;height:360px!important}.world-map-section .geo-index{width:100%!important;padding:10px 0 0!important}.world-map-section .map-tooltip{right:0!important;top:0!important}}
+
 </style>
 <script>
   const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
@@ -286,6 +297,25 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     let longitude = 75 * PI / 180, latitude = 19 * PI / 180, zoom = 1;
     let selectedGlobeCountry:string|null=null;
     const defaultGlobe={lon:longitude,lat:latitude,zoom:1};
+    function getCountryFocus(country:string){
+      const pts=focusCities.filter(p=>p.country===country);
+      if(!pts.length)return {lon:defaultGlobe.lon,lat:defaultGlobe.lat,zoom:1};
+      const mean=pts.reduce((acc,p)=>{
+        const lon=p.lon*PI/180,lat=p.lat*PI/180;
+        acc.x+=Math.sin(lon)*Math.cos(lat)*p.count;
+        acc.y+=Math.sin(lat)*p.count;
+        acc.z+=Math.cos(lon)*Math.cos(lat)*p.count;
+        return acc;
+      },{x:0,y:0,z:0});
+      const focusLon=Math.atan2(mean.x,mean.z);
+      const focusLat=Math.atan2(mean.y,Math.hypot(mean.x,mean.z));
+      const lons=pts.map(p=>p.lon), lats=pts.map(p=>p.lat);
+      const lonRange=Math.max(...lons)-Math.min(...lons);
+      const latRange=Math.max(...lats)-Math.min(...lats);
+      const span=Math.max(Math.max(6.5,lonRange*1.25),Math.max(5.5,latRange*1.85));
+      const focusZoom=clamp(34/span,2.25,4.15);
+      return {lon:focusLon,lat:clamp(focusLat,-PI*.44,PI*.44),zoom:focusZoom};
+    }
     const resetButton=shell.querySelector<HTMLButtonElement>('[data-map-action="reset"]');
     let width=1,height=1,cx=0,cy=0,radius=1;
     let dragging: {id:number,x:number,y:number,lon:number,lat:number}|null=null;
@@ -381,12 +411,11 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         hideTip();
         selectedGlobeCountry=country==='all'?null:country;
         resetButton?.toggleAttribute('hidden',!selectedGlobeCountry);
-        const chosen=cities.find(c=>c.country===country);
-        const targetLon=chosen?chosen.lon*PI/180:defaultGlobe.lon;
-        const targetLat=chosen?clamp(chosen.lat*PI/180,-PI*.46,PI*.46):defaultGlobe.lat;
-        // Keep the Earth spherical: enlarge the sphere itself, never flatten/stretch it.
-        // Small countries still get a geographic close-up; city dots appear when selected.
-        const targetZoom=chosen?(country==='Japan'?2.25:country==='South Korea'?2.55:2.35):1;
+        const focus=selectedGlobeCountry?getCountryFocus(selectedGlobeCountry):defaultGlobe;
+        const targetLon=focus.lon;
+        const targetLat=focus.lat;
+        // Adjust zoom by the country's recorded geographic spread so the overall country area reads more clearly.
+        const targetZoom=focus.zoom;
         const shift=Math.atan2(Math.sin(targetLon-longitude),Math.cos(targetLon-longitude));
         const startLon=longitude,startLat=latitude,startZoom=zoom;
         if(reducedMotion.matches){longitude+=shift;latitude=targetLat;zoom=targetZoom;resize();return;}
@@ -492,8 +521,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         width=Math.max(1,Math.round(b.width*dpr));height=Math.max(1,Math.round(b.height*dpr));
         canvas.width=width;canvas.height=height;
         dotsCanvas.width=width;dotsCanvas.height=height;
-        cx=width/2;cy=height/2;
-        radius=Math.min(width*.30,height*.40)*zoom;
+        const centerXFactor=selectedGlobeCountry?0.395:0.435;
+        cx=width*centerXFactor;cy=height*0.55;
+        radius=Math.min(width*.32,height*.41)*zoom;
         requestDraw();
       }
       function hideTip(){clearTimeout(closeTimer);activeCountry=null;pinned=false;tooltip.hidden=true;tooltip.replaceChildren()}
