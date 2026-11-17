@@ -165,9 +165,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
 <style>
   /* Tow Archive geographic index: one map plane, one text grid, no nested cards. */
   .institutions-page { position:relative; isolation:auto; }
-  .world-map-section { position:relative; margin:0 0 18px; min-height:0; }
+  .world-map-section { position:relative; margin:0; min-height:0; }
+  .institutions-page.archive { padding-top:clamp(12px,1.6vw,22px); }
   .map-heading { display:none; }
-  .globe-index-layout { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr); gap:clamp(20px,3.6vw,64px); min-height:clamp(540px,50vw,680px); align-items:center; position:relative; }
+  .globe-index-layout { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr); gap:clamp(20px,3.6vw,64px); min-height:clamp(510px,calc(100dvh - 230px),620px); align-items:center; position:relative; }
   /* The canvas starts at the actual browser edge, *behind* the header, and stops before the institution list. */
   .map-shell { position:absolute; inset:auto; top:calc(-1 * var(--globe-page-overlap, 145px)); left:calc(50% - 50vw); width:100vw; height:calc(100% + var(--globe-page-overlap, 145px)); z-index:0; background:transparent; pointer-events:none; }
   .world-map { position:absolute; inset:0; width:100%; height:100%; overflow:hidden; background:transparent; cursor:grab; touch-action:none; outline-offset:-6px; user-select:none; -webkit-user-select:none; pointer-events:auto; }
@@ -201,13 +202,14 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-popup-group li a,.cluster-city-link{display:block;padding:.42rem 0;font-size:.82rem;line-height:1.45;color:#244d39;text-decoration:none;}
   .map-popup-group li a:hover,.cluster-city-link:hover{text-decoration:underline;text-underline-offset:3px;}
   .cluster-city-link{background:none;border:0;text-align:left;cursor:pointer;}
-  .globe-zoom-controls{position:absolute;top:calc(var(--globe-page-overlap, 145px) + 8px);left:clamp(20px,5vw,90px);z-index:8;display:flex;gap:6px;pointer-events:auto;}
+  .globe-zoom-controls{position:absolute;top:calc(var(--globe-page-overlap, 145px) + 10px);left:clamp(24px,6vw,100px);z-index:8;display:flex;gap:4px;align-items:center;pointer-events:auto;}
   .globe-zoom-controls[hidden]{display:none;}
-  .globe-zoom-controls button{width:34px;height:34px;border:1px solid rgba(83,149,121,.35);background:rgba(255,255,255,.58);color:#216347;font:400 20px/1 system-ui,sans-serif;cursor:pointer;}
-  .globe-zoom-controls button:hover{background:rgba(229,246,236,.8);}
+  .globe-zoom-controls button{width:36px;height:36px;padding:0;border:0;border-radius:50%;background:transparent;color:#26674c;font:400 22px/1 system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;transition:color .18s ease,transform .18s ease;}
+  .globe-zoom-controls button:hover{color:#0b8a58;transform:scale(1.13);}
+  .globe-zoom-controls button:focus-visible{outline:1px solid #5b9776;outline-offset:-3px;}
   /* The white list is a clean continuation: country | city | three institution names. */
   .institution-filter-count {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
-  .institution-geography-index{position:relative;z-index:2;background:#fff;padding-top:22px;}
+  .institution-geography-index{position:relative;z-index:2;background:#fff;padding-top:0;}
   .institution-country-group[hidden]{display:none!important;}
   .institution-country-group{display:grid;grid-template-columns:clamp(105px,11.5vw,166px) minmax(0,1fr);gap:clamp(12px,2vw,30px);padding:21px 0 27px;border-top:1px solid #d6e5da;}
   .institution-country-header{margin:0;min-width:0;}
@@ -504,7 +506,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         const baseRadius=Math.min(width*.205,height*.37);
         radius=baseRadius*zoom;
         cx=width*.285;
-        cy=height*.59;
+        cy=height*.52;
       }
       function resize(){
         const b=map.getBoundingClientRect();
