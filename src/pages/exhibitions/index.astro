@@ -17,7 +17,11 @@ const lastDate = calendarDates[0] || '2026-01-01';
       <div class="exhibition-calendar-heading">
         <div>
           <p class="eyebrow">BY DATE</p>
-          <h2 id="exhibition-month-label" aria-live="polite"></h2>
+          <div class="exhibition-month-pickers" aria-label="Choose calendar month and year">
+            <label><span class="sr-only">Month</span><select id="exhibition-month-select" aria-label="Calendar month"></select></label>
+            <label><span class="sr-only">Year</span><select id="exhibition-year-select" aria-label="Calendar year"></select></label>
+          </div>
+          <h2 id="exhibition-month-label" class="sr-only" aria-live="polite"></h2>
         </div>
         <div class="exhibition-calendar-controls">
           <button type="button" id="exhibition-prev" aria-label="Previous month">←</button>
@@ -85,6 +89,8 @@ const lastDate = calendarDates[0] || '2026-01-01';
   const dateCounts=new Map<string,number>();
   for(const date of config.dates||[]) dateCounts.set(date,(dateCounts.get(date)||0)+1);
   const heading=document.querySelector<HTMLElement>('#exhibition-month-label');
+  const monthSelect=document.querySelector<HTMLSelectElement>('#exhibition-month-select');
+  const yearSelect=document.querySelector<HTMLSelectElement>('#exhibition-year-select');
   const grid=document.querySelector<HTMLElement>('#exhibition-calendar-grid');
   const status=document.querySelector<HTMLElement>('#exhibition-date-status');
   const clear=document.querySelector<HTMLButtonElement>('#exhibition-date-clear');
@@ -96,6 +102,36 @@ const lastDate = calendarDates[0] || '2026-01-01';
   let currentMonth=config.lastDate.slice(0,7);
   const firstMonth=config.firstDate.slice(0,7);
   const lastMonth=config.lastDate.slice(0,7);
+  const monthNames=Array.from({length:12},(_,i)=>new Intl.DateTimeFormat('en',{month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(2026,i,1))));
+  if(yearSelect && monthSelect){
+    const firstYear=Number(firstMonth.slice(0,4));
+    const lastYear=Number(lastMonth.slice(0,4));
+    for(let year=firstYear;year<=lastYear;year++){
+      const option=document.createElement('option');option.value=String(year);option.textContent=String(year);yearSelect.add(option);
+    }
+    monthNames.forEach((name,index)=>{
+      const option=document.createElement('option');option.value=String(index+1).padStart(2,'0');option.textContent=name;monthSelect.add(option);
+    });
+  }
+  function synchronizeMonthSelectors(){
+    if(yearSelect) yearSelect.value=currentMonth.slice(0,4);
+    if(monthSelect){
+      monthSelect.value=currentMonth.slice(5,7);
+      const chosenYear=yearSelect?.value || currentMonth.slice(0,4);
+      for(const option of Array.from(monthSelect.options)){
+        const candidate=`${chosenYear}-${option.value}`;
+        option.disabled=candidate<firstMonth||candidate>lastMonth;
+      }
+    }
+  }
+  function changeCalendarMonth(){
+    if(!yearSelect||!monthSelect)return;
+    const candidate=`${yearSelect.value}-${monthSelect.value}`;
+    currentMonth=candidate<firstMonth?firstMonth:candidate>lastMonth?lastMonth:candidate;
+    renderCalendar();
+  }
+  yearSelect?.addEventListener('change',changeCalendarMonth);
+  monthSelect?.addEventListener('change',changeCalendarMonth);
   const monthTitle=(month:string)=>{
     const [y,m]=month.split('-').map(Number);
     return new Intl.DateTimeFormat('en',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(y,m-1,1)));
@@ -132,6 +168,7 @@ const lastDate = calendarDates[0] || '2026-01-01';
   function renderCalendar(){
     if(!grid||!heading)return;
     heading.textContent=monthTitle(currentMonth);
+    synchronizeMonthSelectors();
     grid.replaceChildren();
     const [year,month]=currentMonth.split('-').map(Number);
     const firstWeekday=(new Date(Date.UTC(year,month-1,1)).getUTCDay()+6)%7;
@@ -145,9 +182,12 @@ const lastDate = calendarDates[0] || '2026-01-01';
       const date=`${currentMonth}-${String(day).padStart(2,'0')}`;
       const count=dateCounts.get(date)||0;
       if(!count){
-        const cell=document.createElement('span');cell.className='exhibition-calendar-day';cell.textContent=String(day);grid.append(cell);continue;
+        const cell=document.createElement('span');cell.className='exhibition-calendar-day';
+        const numeral=document.createElement('span');numeral.className='exhibition-calendar-numeral';numeral.textContent=String(day);cell.append(numeral);
+        grid.append(cell);continue;
       }
-      const button=document.createElement('button');button.type='button';button.className='exhibition-calendar-day has-records';button.textContent=String(day);
+      const button=document.createElement('button');button.type='button';button.className='exhibition-calendar-day has-records';
+      const numeral=document.createElement('span');numeral.className='exhibition-calendar-numeral';numeral.textContent=String(day);button.append(numeral);
       button.dataset.date=date;
       button.setAttribute('aria-label',`${date}, ${count} exhibition ${count===1?'record':'records'}`);
       button.setAttribute('aria-pressed',String(selectedDate===date));
