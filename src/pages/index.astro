@@ -20,32 +20,45 @@ const pageData={marks:organism.marks,counts:organism.counts,relationDensity:orga
         <div class="grove-haze" aria-hidden="true"></div>
         <canvas id="grove-canvas" aria-label="Animated organic illustration representing the connected archive. Its changing form is derived from exhibitions, institutions, people and concepts." role="img"></canvas>
       </div>
+      <div class="grove-controls" role="group" aria-label="Observe Murmurgrove">
+        <button type="button" class="grove-mode is-selected" data-mode="whole" aria-pressed="true" aria-label="Whole archive" title="Whole archive">Whole</button>
+        <button type="button" class="grove-mode" data-mode="growth" aria-pressed="false" aria-label="Recent growth" title="Recent growth">Growth</button>
+        <button type="button" class="grove-mode" data-mode="movement" aria-pressed="false" aria-label="Collective movement" title="Collective movement">Movement</button>
+      </div>
+      <details class="grove-info">
+        <summary aria-label="About this living form" title="About this living form">i</summary>
+        <p>This living form is generated from exhibitions, institutions, people and concepts. Its structure changes when the archive is updated; its movement continues between updates.</p>
+      </details>
+      <span class="sr-only" id="grove-announcement" aria-live="polite"></span>
     </div>
-
   </section>
   <script type="application/json" id="grove-data" set:html={JSON.stringify(pageData).replace(/</g,'\\u003c')}></script>
 </Base>
 <style>
-/* The archive's living form is the entire homepage; main navigation remains in Base. */
-.grove-home { padding:0; min-height:calc(100svh - 150px); }
-.grove-figure { isolation:isolate; }
-.grove-canvas-area {
-  position:relative;
-  width:100%;
-  height:max(540px,calc(100svh - 170px));
-  overflow:hidden;
-  touch-action:pan-y;
-  background:radial-gradient(ellipse 52% 40% at 50% 52%,rgba(183,233,201,.075),transparent 80%);
+/* Preserve the shared masthead divider from Base; no extra section borders. */
+.grove-home{padding:0;min-height:calc(100svh - 150px)}
+.grove-figure{position:relative;isolation:isolate;min-height:calc(100svh - 150px)}
+.grove-canvas-area{position:relative;width:100%;height:max(510px,calc(100svh - 155px));overflow:hidden;touch-action:pan-y;background:radial-gradient(ellipse 55% 46% at 50% 50%,rgba(183,233,201,.075),transparent 80%)}
+.grove-haze{pointer-events:none;position:absolute;inset:5% 6%;z-index:0;background:radial-gradient(ellipse at 48% 48%,rgba(185,239,198,.075),transparent 57%)}
+#grove-canvas{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.grove-controls{position:absolute;z-index:3;bottom:clamp(14px,3.3vh,34px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:4px;white-space:nowrap;padding:4px;border-radius:40px;background:rgba(255,255,255,.72);border:1px solid rgba(145,191,163,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.grove-mode{appearance:none;border:1px solid transparent;background:transparent;color:#63957a;border-radius:32px;font:inherit;font-size:11px;line-height:1.3;letter-spacing:.01em;padding:7px 13px;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.grove-mode:hover{background:rgba(226,245,232,.7);color:#087a55}
+.grove-mode.is-selected{background:rgba(220,242,227,.7);border-color:rgba(124,190,148,.34);color:#087a55}
+.grove-mode:focus-visible,.grove-info summary:focus-visible{outline:2px solid #168760;outline-offset:3px}
+.grove-info{position:absolute;z-index:4;bottom:clamp(20px,3.9vh,40px);right:clamp(8px,2vw,28px);font:inherit;color:#679b7c}
+.grove-info summary{list-style:none;display:grid;place-items:center;border:1px solid rgba(137,187,155,.42);width:23px;height:23px;border-radius:50%;font-size:12px;font-family:Georgia,serif;font-style:italic;cursor:pointer;background:rgba(255,255,255,.72)}
+.grove-info summary::-webkit-details-marker{display:none}
+.grove-info p{position:absolute;right:0;bottom:29px;width:min(285px,76vw);padding:13px 15px;margin:0;background:rgba(255,255,255,.96);border:1px solid #d9e9df;border-radius:8px;color:#54866b;font-size:11px;line-height:1.75;box-shadow:0 9px 24px rgba(49,98,64,.04)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:650px){
+  .grove-home,.grove-figure{min-height:calc(100svh - 116px)}
+  .grove-canvas-area{height:max(400px,calc(100svh - 120px))}
+  .grove-controls{bottom:25px;gap:1px;padding:3px}
+  .grove-mode{font-size:10px;padding:7px 10px}
+  .grove-info{bottom:34px;right:7px}
 }
-.grove-haze {
-  pointer-events:none;position:absolute;inset:5% 6%;z-index:0;
-  background:radial-gradient(ellipse at 48% 48%,rgba(185,239,198,.075),transparent 57%);
-}
-#grove-canvas { display:block;position:absolute;inset:0;width:100%;height:100%;z-index:1; }
-@media(max-width:650px) {
-  .grove-home { min-height:calc(100svh - 110px); }
-  .grove-canvas-area { height:max(420px,calc(100svh - 130px)); }
-}
+@media(prefers-reduced-motion:reduce){.grove-mode{transition:none}}
 </style>
 <script>
   type Mark={key:string;section:string;strength:number;recency:number;related:number;x:number;y:number;seed:number};
@@ -58,6 +71,10 @@ const pageData={marks:organism.marks,counts:organism.counts,relationDensity:orga
     if(ctx){
       const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
       const fine=window.matchMedia('(pointer: fine)');
+      const buttons=Array.from(document.querySelectorAll<HTMLButtonElement>('.grove-mode'));
+      const announcement=document.getElementById('grove-announcement');
+      const names:Record<string,string>={whole:'Whole archive: accumulated records',growth:'Recent growth: newer encounters highlighted',movement:'Movement: collective motion emphasized'};
+      let mode:'whole'|'growth'|'movement'='whole';
       let frame=0,last=0,visible=true,width=0,height=0,dpr=1;
       let pointer={x:-500,y:-500,active:false};
       const TAU=Math.PI*2;
@@ -98,7 +115,7 @@ const pageData={marks:organism.marks,counts:organism.counts,relationDensity:orga
         const mobile=width<560;
         const sx=width*(mobile ? .93 : .85), sy=height*(mobile ? .85 : .87);
         const cX=width*.5,cY=height*.49;
-        const growth=false,movement=false;
+        const growth=mode==='growth',movement=mode==='movement';
         // Slow translucent tissue layers form a single continuous body.
         const layers=5;
         for(let layer=layers-1;layer>=0;layer--){
@@ -205,6 +222,14 @@ const pageData={marks:organism.marks,counts:organism.counts,relationDensity:orga
           if(!reduce.matches)frame=requestAnimationFrame(tick);
         }
       };
+      buttons.forEach(button=>button.addEventListener('click',()=>{
+        const next=button.dataset.mode;
+        if(next!=='whole'&&next!=='growth'&&next!=='movement')return;
+        mode=next;
+        buttons.forEach(b=>{const active=b===button;b.classList.toggle('is-selected',active);b.setAttribute('aria-pressed',String(active));});
+        if(announcement)announcement.textContent=names[mode];
+        draw(last||0);
+      }));
       let contactTimer=0;
       area.addEventListener('pointerdown',e=>{
         const rect=area.getBoundingClientRect();

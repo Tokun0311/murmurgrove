@@ -638,5 +638,3 @@ body:has(.institutions-page) main{position:relative;z-index:1;}
 ::selection { background:rgba(118,214,149,.35);color:#075c40;text-shadow:0 0 6px rgba(97,207,124,.3) }
 ::-moz-selection { background:rgba(118,214,149,.35);color:#075c40;text-shadow:0 0 6px rgba(97,207,124,.3) }
 
-/* The living homepage has no extra masthead divider; interior sections retain theirs. */
-body:has(.grove-home) .mast { border-bottom:0 }
