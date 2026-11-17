@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-const { title = 'TOW ARCHIVE', description = 'Writing, photography and research by Lichuan Tow Deng.' } = Astro.props;
+const { title = 'TOW ARCHIVE', description = 'A personal archive of exhibitions, art institutions, people and research concepts.' } = Astro.props;
 const isHome = Astro.url.pathname === '/';
 const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
 ---
@@ -26,7 +26,6 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
         )}
         <nav aria-label="Main navigation">
           <a href="/exhibitions/" aria-current={activeSection === 'exhibitions' ? 'page' : undefined}>Exhibitions</a>
-          <a href="/writing/" aria-current={activeSection === 'writing' ? 'page' : undefined}>Writing</a>
           <a href="/people/" aria-current={activeSection === 'people' ? 'page' : undefined}>People</a>
           <a href="/institutions/" aria-current={activeSection === 'institutions' ? 'page' : undefined}>Institutions</a>
           <a href="/concepts/" aria-current={activeSection === 'concepts' ? 'page' : undefined}>Concepts</a>
