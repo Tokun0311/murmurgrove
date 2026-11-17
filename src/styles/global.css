@@ -95,9 +95,8 @@ a, button, select, label, summary, [role="button"], input[type="submit"], input[
 
 /* Calendar home: preserves the archive's clean, green typographic system. */
 .calendar-home { padding:45px 0 66px; min-height:72vh }
-.calendar-intro { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:42px }
+.calendar-intro { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:28px }
 .calendar-intro .eyebrow { margin:0 0 15px; letter-spacing:.035em }
-.calendar-title { font-size:var(--page-heading-size); font-weight:400; letter-spacing:-.04em; margin:0 0 12px; line-height:1.2 }
 .calendar-description { max-width:490px; font-size:14px; color:var(--quiet); line-height:1.6; margin:0 }
 .calendar-tally { color:var(--quiet); font-size:12px; white-space:nowrap; margin:0 0 3px }
 .calendar-layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(290px,1fr); align-items:start; gap:clamp(32px,5vw,76px) }

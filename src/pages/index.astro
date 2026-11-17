@@ -18,11 +18,10 @@ const lastDate = items[0]?.date || '2026-11-01';
 const initialDate = lastDate;
 const countDates = new Set(items.map(item => item.date)).size;
 ---
-<Base title="TOW ARCHIVE | Calendar" description="Browse Tow Archive by date: exhibitions, performances, writing and photography.">
-  <section class="calendar-home" aria-labelledby="calendar-title">
+<Base title="TOW ARCHIVE" description="Browse exhibitions, performances, writing and photography by date.">
+  <section class="calendar-home" aria-label="Archive entries by date">
     <div class="calendar-intro">
       <div>
-        <h2 id="calendar-title" class="calendar-title">Calendar</h2>
         <p class="calendar-description">Select a date to explore exhibitions, performances and notes from that day.</p>
       </div>
       <p class="calendar-tally">{exhibitions.length} exhibitions <span aria-hidden="true">·</span> {countDates} recorded days</p>
