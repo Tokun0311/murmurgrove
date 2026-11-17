@@ -2,29 +2,139 @@
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 const items = (await getCollection('exhibitions')).sort((a,b)=>b.data.visitedOn.valueOf()-a.data.visitedOn.valueOf());
-const regions = [...new Set(items.map(x=>x.data.region))];
+const regions = [...new Set(items.map(x=>x.data.region))].sort((a,b)=>a.localeCompare(b));
+const isoDay = (d: Date) => d.toISOString().slice(0,10);
+const calendarDates = items.map(item=>isoDay(item.data.visitedOn));
+const firstDate = calendarDates.at(-1) || '2026-01-01';
+const lastDate = calendarDates[0] || '2026-01-01';
 ---
-<Base title="Exhibitions | TOW ARCHIVE">
-  <section class="archive">
+<Base title="Exhibitions | TOW ARCHIVE" description="Exhibitions and events in the Tow Archive, explored by date and region.">
+  <section class="archive exhibition-index">
     <h1 class="section-title">Exhibitions & Events</h1>
     <p class="section-lead">Art encounters, exhibitions, performances and research visits. {items.length} records, 2026.</p>
-    <div class="filters"><div class="filter-languages" aria-label="Region filters">
-      <button data-region="all" aria-pressed="true">All</button>
-      {regions.map(r=><button data-region={r} aria-pressed="false">{r}</button>)}
-    </div><label class="sort-label">Sort <select id="date-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label></div>
+
+    <section class="exhibition-calendar" aria-label="Browse exhibitions by date">
+      <div class="exhibition-calendar-heading">
+        <div>
+          <p class="eyebrow">BY DATE</p>
+          <h2 id="exhibition-month-label" aria-live="polite"></h2>
+        </div>
+        <div class="exhibition-calendar-controls">
+          <button type="button" id="exhibition-prev" aria-label="Previous month">←</button>
+          <button type="button" id="exhibition-latest">Latest</button>
+          <button type="button" id="exhibition-next" aria-label="Next month">→</button>
+        </div>
+      </div>
+      <div class="exhibition-weekdays" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+      <div id="exhibition-calendar-grid" class="exhibition-calendar-grid" aria-label="Dates with exhibition records"></div>
+      <div class="exhibition-calendar-footer">
+        <p id="exhibition-date-status" role="status" aria-live="polite">Select a marked date to filter exhibitions.</p>
+        <button id="exhibition-date-clear" type="button" hidden>Clear date <span aria-hidden="true">×</span></button>
+      </div>
+    </section>
+
+    <div class="filters exhibition-filters">
+      <div class="filter-languages" aria-label="Region filters">
+        <button type="button" data-region="all" aria-pressed="true">All</button>
+        {regions.map(r=><button type="button" data-region={r} aria-pressed="false">{r}</button>)}
+      </div>
+      <label class="sort-label">Sort <select id="date-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
+    </div>
+    <p class="exhibition-result-count" id="exhibition-result-count" aria-live="polite"></p>
     <ol class="archive-list" id="archive-list">
-      {items.map((item)=><li class="archive-entry" data-region={item.data.region} data-date={item.data.visitedOn.toISOString()}><time datetime={item.data.visitedOn.toISOString().slice(0,10)}>{item.data.dateLabel.replaceAll('-', '.')}</time><a href={`/exhibitions/${item.id}/`}>{item.data.title}</a><span class="entry-type">{item.data.region}</span></li>)}
-    </ol><p id="empty-message" hidden>No matching entries.</p>
+      {items.map(item=><li class="archive-entry" data-region={item.data.region} data-date={isoDay(item.data.visitedOn)}><time datetime={isoDay(item.data.visitedOn)}>{item.data.dateLabel.replaceAll('-', '.')}</time><a href={`/exhibitions/${item.id}/`}>{item.data.title}</a><span class="entry-type">{item.data.region}</span></li>)}
+    </ol>
+    <p id="empty-message" class="empty-message" hidden>No matching entries. Try another date or region.</p>
   </section>
 </Base>
+<script type="application/json" id="exhibition-calendar-data" set:html={JSON.stringify({dates:calendarDates, firstDate,lastDate}).replace(/</g,'\\u003c')} />
 <script>
   const rows=[...document.querySelectorAll<HTMLLIElement>('.archive-entry')];
   const list=document.querySelector<HTMLOListElement>('#archive-list');
   const regionBtns=[...document.querySelectorAll<HTMLButtonElement>('[data-region]')];
   const sorter=document.querySelector<HTMLSelectElement>('#date-sort');
   const empty=document.querySelector<HTMLElement>('#empty-message');
-  let selected='all';
-  function update(){const visible=rows.filter(x=>selected==='all'||x.dataset.region===selected);rows.forEach(x=>x.hidden=!visible.includes(x));visible.sort((a,b)=>{const x=Date.parse(a.dataset.date||''),y=Date.parse(b.dataset.date||'');return sorter?.value==='oldest'?x-y:y-x;}).forEach(x=>list?.appendChild(x));if(empty)empty.hidden=visible.length!==0;}
-  regionBtns.forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.region||'all';regionBtns.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));update();}));
-  sorter?.addEventListener('change',update);
+  const results=document.querySelector<HTMLElement>('#exhibition-result-count');
+  const dataSource=document.querySelector<HTMLElement>('#exhibition-calendar-data');
+  const config=JSON.parse(dataSource?.textContent||'{}') as {dates:string[];firstDate:string;lastDate:string};
+  const dateCounts=new Map<string,number>();
+  for(const date of config.dates||[]) dateCounts.set(date,(dateCounts.get(date)||0)+1);
+  const heading=document.querySelector<HTMLElement>('#exhibition-month-label');
+  const grid=document.querySelector<HTMLElement>('#exhibition-calendar-grid');
+  const status=document.querySelector<HTMLElement>('#exhibition-date-status');
+  const clear=document.querySelector<HTMLButtonElement>('#exhibition-date-clear');
+  const prev=document.querySelector<HTMLButtonElement>('#exhibition-prev');
+  const next=document.querySelector<HTMLButtonElement>('#exhibition-next');
+  const latest=document.querySelector<HTMLButtonElement>('#exhibition-latest');
+  let selectedRegion='all';
+  let selectedDate:string|null=null;
+  let currentMonth=config.lastDate.slice(0,7);
+  const firstMonth=config.firstDate.slice(0,7);
+  const lastMonth=config.lastDate.slice(0,7);
+  const monthTitle=(month:string)=>{
+    const [y,m]=month.split('-').map(Number);
+    return new Intl.DateTimeFormat('en',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(y,m-1,1)));
+  };
+  const moveMonth=(delta:number)=>{
+    const [y,m]=currentMonth.split('-').map(Number);
+    const d=new Date(Date.UTC(y,m-1+delta,1));
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`;
+  };
+  function updateList(){
+    const visible=rows.filter(row=>(selectedRegion==='all'||row.dataset.region===selectedRegion)&&(!selectedDate||row.dataset.date===selectedDate));
+    rows.forEach(row=>{row.hidden=!visible.includes(row)});
+    visible.sort((a,b)=>{
+      const cmp=(a.dataset.date||'').localeCompare(b.dataset.date||'');
+      return sorter?.value==='oldest'?cmp:-cmp;
+    }).forEach(row=>list?.appendChild(row));
+    if(empty) empty.hidden=visible.length!==0;
+    if(results) results.textContent=`${visible.length} ${visible.length===1?'record':'records'}`;
+    if(status) status.textContent=selectedDate?`Showing ${selectedDate.replaceAll('-','.')} · ${dateCounts.get(selectedDate)||0} recorded`:'Select a marked date to filter exhibitions.';
+    if(clear) clear.hidden=!selectedDate;
+  }
+  function selectDate(date:string|null){
+    selectedDate=selectedDate===date?null:date;
+    renderCalendar();
+    updateList();
+  }
+  function renderCalendar(){
+    if(!grid||!heading)return;
+    heading.textContent=monthTitle(currentMonth);
+    grid.replaceChildren();
+    const [year,month]=currentMonth.split('-').map(Number);
+    const firstWeekday=(new Date(Date.UTC(year,month-1,1)).getUTCDay()+6)%7;
+    const numberOfDays=new Date(Date.UTC(year,month,0)).getUTCDate();
+    const cells=Math.ceil((firstWeekday+numberOfDays)/7)*7;
+    for(let index=0;index<cells;index++){
+      const day=index-firstWeekday+1;
+      if(day<1||day>numberOfDays){
+        const spacer=document.createElement('span');spacer.className='exhibition-calendar-day outside';spacer.setAttribute('aria-hidden','true');grid.append(spacer);continue;
+      }
+      const date=`${currentMonth}-${String(day).padStart(2,'0')}`;
+      const count=dateCounts.get(date)||0;
+      if(!count){
+        const cell=document.createElement('span');cell.className='exhibition-calendar-day';cell.textContent=String(day);grid.append(cell);continue;
+      }
+      const button=document.createElement('button');button.type='button';button.className='exhibition-calendar-day has-records';button.textContent=String(day);
+      button.dataset.date=date;
+      button.setAttribute('aria-label',`${date}, ${count} exhibition ${count===1?'record':'records'}`);
+      button.setAttribute('aria-pressed',String(selectedDate===date));
+      if(selectedDate===date)button.classList.add('selected');
+      if(count>1){const marker=document.createElement('small');marker.textContent=String(count);marker.setAttribute('aria-hidden','true');button.append(marker);}
+      button.addEventListener('click',()=>selectDate(date));grid.append(button);
+    }
+    if(prev)prev.disabled=currentMonth<=firstMonth;
+    if(next)next.disabled=currentMonth>=lastMonth;
+  }
+  prev?.addEventListener('click',()=>{currentMonth=moveMonth(-1);renderCalendar()});
+  next?.addEventListener('click',()=>{currentMonth=moveMonth(1);renderCalendar()});
+  latest?.addEventListener('click',()=>{currentMonth=lastMonth;renderCalendar()});
+  clear?.addEventListener('click',()=>selectDate(null));
+  regionBtns.forEach(button=>button.addEventListener('click',()=>{
+    selectedRegion=button.dataset.region||'all';
+    regionBtns.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    updateList();
+  }));
+  sorter?.addEventListener('change',updateList);
+  renderCalendar();updateList();
 </script>

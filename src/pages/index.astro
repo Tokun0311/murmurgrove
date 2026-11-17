@@ -1,178 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
-
-const exhibitions = await getCollection('exhibitions');
-const writing = await getCollection('entries', ({ data }) => !data.draft);
-const photography = await getCollection('photographs', ({ data }) => !data.draft);
-
-// Use the local calendar date as recorded in frontmatter, never the visitor's timezone.
-const day = (date: Date) => date.toISOString().slice(0, 10);
-const items = [
-  ...exhibitions.map(item => ({ date: day(item.data.visitedOn), title: item.data.title, type: 'Exhibition', url: `/exhibitions/${item.id}/` })),
-  ...writing.map(item => ({ date: day(item.data.date), title: item.data.title, type: 'Writing', url: `/writing/${item.id}/` })),
-  ...photography.map(item => ({ date: day(item.data.date), title: item.data.title, type: 'Photography', url: `/photography/${item.id}/` })),
-].sort((a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
-const firstDate = items.at(-1)?.date || '2026-01-01';
-const lastDate = items[0]?.date || '2026-11-01';
-const initialDate = lastDate;
-const countDates = new Set(items.map(item => item.date)).size;
+const exhibitions=(await getCollection('exhibitions')).sort((a,b)=>b.data.visitedOn.valueOf()-a.data.visitedOn.valueOf());
+const latest=exhibitions.slice(0,6);
 ---
-<Base title="TOW ARCHIVE" description="Browse exhibitions, performances, writing and photography by date.">
-  <section class="calendar-home" aria-label="Archive entries by date">
-    <div class="calendar-intro">
-      <div>
-        <p class="calendar-description">Select a date to explore exhibitions, performances and notes from that day.</p>
-      </div>
-      <p class="calendar-tally">{exhibitions.length} exhibitions <span aria-hidden="true">·</span> {countDates} recorded days</p>
+<Base title="TOW ARCHIVE" description="A personal archive of exhibitions, art institutions, people and research concepts.">
+  <section class="home-index" aria-label="Tow Archive index">
+    <h2 class="section-title">An archive of looking and thinking.</h2>
+    <p class="section-lead">Exhibitions, encounters and research notes, connected through people, places and concepts.</p>
+    <div class="home-sections">
+      <a href="/exhibitions/">Exhibitions <span>Browse by date and region ↗</span></a>
+      <a href="/institutions/">Institutions <span>Explore places ↗</span></a>
+      <a href="/concepts/">Concepts <span>Explore connections ↗</span></a>
+      <a href="/people/">People <span>Browse people ↗</span></a>
+      <a href="/writing/">Writing <span>Read notes ↗</span></a>
     </div>
-
-    <div class="calendar-layout">
-      <div class="calendar-main">
-        <div class="calendar-nav">
-          <h3 id="month-heading" aria-live="polite"></h3>
-          <div class="calendar-nav-buttons">
-            <button type="button" id="month-prev" aria-label="Previous month" title="Previous month">←</button>
-            <button type="button" id="month-today" aria-label="Jump to latest entry">Latest</button>
-            <button type="button" id="month-next" aria-label="Next month" title="Next month">→</button>
-          </div>
-        </div>
-        <div class="calendar-weekdays" aria-hidden="true">
-          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-        </div>
-        <div id="calendar-grid" class="calendar-grid" aria-label="Archive calendar"></div>
-        <p class="calendar-legend"><span class="legend-mark" aria-hidden="true"></span> Dates with entries are marked in green.</p>
-      </div>
-
-      <aside class="calendar-day-panel" aria-labelledby="selected-heading">
-        <p class="eyebrow">On this day</p>
-        <h3 id="selected-heading" aria-live="polite"></h3>
-        <p id="selected-count" class="selected-count"></p>
-        <ol id="day-entries" class="calendar-day-entries"></ol>
-        <p id="day-empty" class="calendar-day-empty" hidden>No entries recorded on this day.</p>
-      </aside>
-    </div>
-    <noscript><p class="calendar-noscript">Enable JavaScript to use the interactive calendar. You can still browse the <a href="/exhibitions/">Exhibitions archive</a>.</p></noscript>
+    <div class="home-recent-heading"><h2>Recent exhibitions</h2><a href="/exhibitions/">View all</a></div>
+    <ol class="archive-list">
+      {latest.map(item=><li class="archive-entry"><time datetime={item.data.visitedOn.toISOString().slice(0,10)}>{item.data.dateLabel.replaceAll('-','.')}</time><a href={`/exhibitions/${item.id}/`}>{item.data.title}</a><span class="entry-type">{item.data.region}</span></li>)}
+    </ol>
   </section>
 </Base>
-<script type="application/json" id="calendar-records" set:html={JSON.stringify({ items, firstDate, lastDate, initialDate }).replace(/</g, '\\u003c')} />
-<script>
-  type Entry = { date: string; title: string; type: string; url: string };
-  const source = document.getElementById('calendar-records');
-  if (source) {
-    const config = JSON.parse(source.textContent || '{}') as { items: Entry[]; firstDate: string; lastDate: string; initialDate: string };
-    const byDate = new Map<string, Entry[]>();
-    for (const entry of config.items) {
-      const group = byDate.get(entry.date) || [];
-      group.push(entry);
-      byDate.set(entry.date, group);
-    }
-
-    const monthHeading = document.getElementById('month-heading')!;
-    const grid = document.getElementById('calendar-grid')!;
-    const selectedHeading = document.getElementById('selected-heading')!;
-    const selectedCount = document.getElementById('selected-count')!;
-    const dayEntries = document.getElementById('day-entries')!;
-    const empty = document.getElementById('day-empty')!;
-    const prev = document.getElementById('month-prev') as HTMLButtonElement;
-    const next = document.getElementById('month-next') as HTMLButtonElement;
-    const latest = document.getElementById('month-today') as HTMLButtonElement;
-    let selected = config.initialDate;
-    let currentMonth = selected.slice(0, 7);
-    const minMonth = config.firstDate.slice(0, 7);
-    const maxMonth = config.lastDate.slice(0, 7);
-    const dateParts = (s: string) => s.split('-').map(Number);
-    const key = (year: number, month: number, d: number) => `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const monthLabel = (s: string) => {
-      const [y, m] = dateParts(s);
-      return new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(y,m-1,1)));
-    };
-    const fullDate = (s: string) => {
-      const [y, m, d] = dateParts(s);
-      return new Intl.DateTimeFormat('en', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(y,m-1,d)));
-    };
-    const moveMonth = (offset: number) => {
-      const [y, m] = dateParts(currentMonth);
-      const target = new Date(Date.UTC(y, m - 1 + offset, 1));
-      return key(target.getUTCFullYear(), target.getUTCMonth() + 1, 1).slice(0,7);
-    };
-    function showDay(date: string) {
-      selected = date;
-      selectedHeading.textContent = fullDate(date);
-      const entries = byDate.get(date) || [];
-      selectedCount.textContent = entries.length ? `${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}` : '';
-      dayEntries.replaceChildren();
-      for (const entry of entries) {
-        const li = document.createElement('li');
-        const type = document.createElement('span');
-        type.className = 'day-entry-type';
-        type.textContent = entry.type;
-        const link = document.createElement('a');
-        link.href = entry.url;
-        link.textContent = entry.title;
-        li.append(type, link);
-        dayEntries.append(li);
-      }
-      empty.hidden = entries.length > 0;
-      for (const button of grid.querySelectorAll<HTMLButtonElement>('button[data-date]')) {
-        const active = button.dataset.date === date;
-        button.classList.toggle('is-selected', active);
-        button.setAttribute('aria-pressed', String(active));
-      }
-    }
-    function renderMonth() {
-      const [year, month] = dateParts(currentMonth);
-      monthHeading.textContent = monthLabel(currentMonth);
-      grid.replaceChildren();
-      const leading = (new Date(Date.UTC(year, month-1, 1)).getUTCDay() + 6) % 7;
-      const days = new Date(Date.UTC(year, month, 0)).getUTCDate();
-      const rows = Math.ceil((leading + days) / 7) * 7;
-      for (let i = 0; i < rows; i++) {
-        const n = i - leading + 1;
-        if (n < 1 || n > days) {
-          const spacer = document.createElement('span');
-          spacer.className = 'calendar-cell is-outside';
-          spacer.setAttribute('aria-hidden', 'true');
-          grid.append(spacer);
-          continue;
-        }
-        const date = key(year,month,n);
-        const entries = byDate.get(date) || [];
-        if (!entries.length) {
-          const cell = document.createElement('span');
-          cell.className = 'calendar-cell';
-          const number = document.createElement('span');
-          number.className = 'calendar-number';
-          number.textContent = String(n);
-          cell.append(number);
-          grid.append(cell);
-          continue;
-        }
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'calendar-cell has-entries';
-        button.dataset.date = date;
-        button.setAttribute('aria-label', `${fullDate(date)}, ${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`);
-        button.setAttribute('aria-pressed', String(selected === date));
-        button.classList.toggle('is-selected', selected === date);
-        const number = document.createElement('span');
-        number.className = 'calendar-number';
-        number.textContent = String(n);
-        const dots = document.createElement('span');
-        dots.className = 'calendar-dots';
-        dots.setAttribute('aria-hidden', 'true');
-        dots.textContent = entries.length > 1 ? String(entries.length) : '•';
-        button.append(number, dots);
-        button.addEventListener('click', () => showDay(date));
-        grid.append(button);
-      }
-      prev.disabled = currentMonth <= minMonth;
-      next.disabled = currentMonth >= maxMonth;
-    }
-    prev.addEventListener('click', () => { currentMonth = moveMonth(-1); renderMonth(); });
-    next.addEventListener('click', () => { currentMonth = moveMonth(1); renderMonth(); });
-    latest.addEventListener('click', () => { currentMonth = maxMonth; renderMonth(); showDay(config.lastDate); });
-    renderMonth();
-    showDay(selected);
-  }
-</script>
