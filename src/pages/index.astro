@@ -54,374 +54,223 @@ const pageData={marks:organism.marks,counts:organism.counts,relationDensity:orga
   <script type="application/json" id="grove-data" set:html={JSON.stringify(pageData).replace(/</g,'\u003c')}></script>
 </Base>
 <style>
-.grove-home{padding:0;min-height:calc(100svh - 155px)}
-.grove-figure{position:relative;min-height:calc(100svh - 155px);isolation:isolate;display:flex;flex-direction:column}
-.grove-canvas-area{position:relative;width:100%;height:clamp(460px,69svh,820px);overflow:hidden;touch-action:pan-y;background:radial-gradient(ellipse 55% 46% at 50% 50%,rgba(183,233,201,.075),transparent 80%)}
-.grove-haze{pointer-events:none;position:absolute;inset:5% 6%;z-index:0;background:radial-gradient(ellipse at 48% 48%,rgba(185,239,198,.075),transparent 57%)}
-#grove-canvas{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:1;cursor:zoom-in}
-.grove-record-tooltip{position:absolute;z-index:4;width:max-content;max-width:min(310px,80vw);padding:9px 13px;border:1px solid #c9e5d1;border-radius:8px;background:rgba(255,255,255,.97);box-shadow:0 8px 25px rgba(49,98,64,.09);pointer-events:auto;font-size:12px;line-height:1.5;transform:translate(10px,12px)}
-.grove-record-tooltip[hidden]{display:none}
+/* The organism is the entire viewport atmosphere, never a framed illustration. */
+.grove-home{position:fixed;inset:0;width:100%;height:100svh;z-index:0;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse 58% 55% at 51% 53%,rgba(185,239,202,.075),transparent 79%)}
+.grove-figure,.grove-canvas-area{position:absolute;inset:0;min-height:0;width:100%;height:100%}
+.grove-canvas-area{touch-action:none;overflow:hidden}
+.grove-haze{pointer-events:none;position:absolute;inset:6%;background:radial-gradient(ellipse 60% 52% at 50% 55%,rgba(155,225,178,.07),transparent 77%)}
+#grove-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+#grove-canvas:active{cursor:grabbing}
+.grove-footer{position:absolute;z-index:5;bottom:max(22px,env(safe-area-inset-bottom));left:clamp(18px,5vw,76px);right:clamp(18px,5vw,76px);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;pointer-events:none}
+.grove-footer>*{pointer-events:auto}
+.grove-controls{display:flex;align-items:center;gap:3px;white-space:nowrap;padding:4px;border-radius:40px;background:rgba(255,255,255,.78);border:1px solid rgba(145,191,163,.28);backdrop-filter:blur(9px)}
+.grove-mode,.grove-tiny{appearance:none;border:1px solid transparent;background:transparent;color:#63957a;font:inherit;font-size:11px;line-height:1.3;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.grove-mode{border-radius:32px;padding:7px 13px}
+.grove-mode:hover,.grove-tiny:hover{background:rgba(226,245,232,.7);color:#087a55}
+.grove-mode.is-selected{background:rgba(220,242,227,.75);border-color:rgba(124,190,148,.34);color:#087a55}
+.grove-mode:focus-visible,.grove-tiny:focus-visible,.grove-info summary:focus-visible{outline:2px solid #168760;outline-offset:3px}
+.grove-tiny{padding:7px 9px;border-radius:22px;white-space:nowrap}
+.grove-history-toggle{justify-self:start;border:1px solid rgba(145,191,163,.25);background:rgba(255,255,255,.72);backdrop-filter:blur(8px)}
+.grove-tools{display:flex;align-items:center;justify-self:end;gap:3px;background:rgba(255,255,255,.65);border-radius:30px;backdrop-filter:blur(8px)}
+#grove-zoom-label{font-size:10px;color:#82a892;min-width:32px;text-align:center;font-variant-numeric:tabular-nums}
+.grove-info{position:relative;color:#679b7c}
+.grove-info summary{list-style:none;display:grid;place-items:center;border:1px solid rgba(137,187,155,.42);width:23px;height:23px;border-radius:50%;font-size:12px;font-family:Georgia,serif;font-style:italic;cursor:pointer;background:rgba(255,255,255,.75)}
+.grove-info summary::-webkit-details-marker{display:none}
+.grove-info p{position:absolute;right:0;bottom:35px;width:min(290px,77vw);padding:13px 15px;margin:0;background:rgba(255,255,255,.97);border:1px solid #d9e9df;border-radius:8px;color:#54866b;font-size:11px;line-height:1.7;box-shadow:0 9px 24px rgba(49,98,64,.06)}
+.grove-history-panel{position:absolute;z-index:6;bottom:clamp(83px,12vh,125px);left:clamp(18px,5vw,76px);right:clamp(18px,5vw,76px);display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 18px;border:1px solid #d9e9df;border-radius:12px;background:rgba(255,255,255,.93);backdrop-filter:blur(12px);font-size:11px;color:#6b9a7b}
+.grove-history-panel[hidden],.grove-record-tooltip[hidden]{display:none}
+.grove-history-panel input{accent-color:#268e62;flex:1;min-width:120px}
+.grove-history-panel label{white-space:nowrap}
+#grove-history-date{color:#087b55}
+#grove-history-meta{font-size:10px;color:#82a892}
+.grove-record-tooltip{position:absolute;z-index:7;max-width:min(315px,80vw);padding:10px 13px;border:1px solid #c9e5d1;border-radius:8px;background:rgba(255,255,255,.97);box-shadow:0 8px 25px rgba(49,98,64,.09);font-size:12px;line-height:1.5;pointer-events:auto;transform:translate(12px,12px)}
 #grove-record-type{font-size:9px;text-transform:uppercase;letter-spacing:.11em;color:#79a28b;display:block;margin-bottom:3px}
 #grove-record-link{color:#087b55;text-decoration:none;display:block;overflow-wrap:anywhere}
 #grove-record-link:hover{text-decoration:underline}
-.grove-footer{position:relative;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;margin:clamp(44px,6.5vh,78px) 2.5% 16px;min-height:42px}
-.grove-controls{display:flex;align-items:center;gap:3px;white-space:nowrap;padding:4px;border-radius:40px;background:rgba(255,255,255,.78);border:1px solid rgba(145,191,163,.27)}
-.grove-mode,.grove-tiny{appearance:none;border:1px solid transparent;background:transparent;color:#63957a;font:inherit;font-size:11px;line-height:1.3;letter-spacing:.01em;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
-.grove-mode{border-radius:32px;padding:7px 13px}
-.grove-mode:hover,.grove-tiny:hover{background:rgba(226,245,232,.7);color:#087a55}
-.grove-mode.is-selected{background:rgba(220,242,227,.7);border-color:rgba(124,190,148,.34);color:#087a55}
-.grove-mode:focus-visible,.grove-tiny:focus-visible,.grove-info summary:focus-visible{outline:2px solid #168760;outline-offset:3px}
-.grove-tiny{padding:6px 8px;border-radius:20px;white-space:nowrap}
-.grove-tools{display:flex;align-items:center;justify-self:end;gap:4px;color:#679b7c}
-.grove-history-toggle{justify-self:start;border:1px solid rgba(145,191,163,.25);padding:8px 12px}
-#grove-zoom-label{font-size:10px;color:#82a892;min-width:32px;text-align:center;font-variant-numeric:tabular-nums}
-.grove-info{position:relative;color:#679b7c}
-.grove-info summary{list-style:none;display:grid;place-items:center;border:1px solid rgba(137,187,155,.42);width:23px;height:23px;border-radius:50%;font-size:12px;font-family:Georgia,serif;font-style:italic;cursor:pointer;background:rgba(255,255,255,.72)}
-.grove-info summary::-webkit-details-marker{display:none}
-.grove-info p{position:absolute;right:0;bottom:32px;width:min(300px,77vw);padding:13px 15px;margin:0;background:rgba(255,255,255,.97);border:1px solid #d9e9df;border-radius:8px;color:#54866b;font-size:11px;line-height:1.8;box-shadow:0 9px 24px rgba(49,98,64,.05)}
-.grove-history-panel{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 3%;margin-bottom:18px;font-size:11px;color:#6b9a7b}
-.grove-history-panel[hidden]{display:none}
-.grove-history-panel input{accent-color:#268e62;flex:1;min-width:120px}
-.grove-history-panel label{white-space:nowrap}
-#grove-history-date{color:#087b55;font-variant-numeric:tabular-nums}
-#grove-history-meta{font-size:10px;color:#82a892}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:650px){
- .grove-home,.grove-figure{min-height:calc(100svh - 116px)}
- .grove-canvas-area{height:clamp(370px,58svh,630px)}
- .grove-footer{margin:clamp(45px,7svh,78px) 0 20px;grid-template-columns:1fr auto;row-gap:13px}
+ .grove-footer{left:14px;right:14px;bottom:max(19px,env(safe-area-inset-bottom));grid-template-columns:1fr auto;row-gap:13px}
  .grove-controls{grid-column:1/-1;grid-row:1;justify-self:center}
- .grove-mode{font-size:10px;padding:7px 12px}
  .grove-history-toggle{grid-column:1;grid-row:2}
  .grove-tools{grid-column:2;grid-row:2}
- .grove-history-panel{margin-top:4px;padding:12px 0}
+ .grove-mode{font-size:10px;padding:7px 12px}
+ .grove-history-panel{left:14px;right:14px;bottom:115px;padding:10px 12px}
 }
 @media(prefers-reduced-motion:reduce){.grove-mode,.grove-tiny{transition:none}}
 </style>
 <script>
-  type Mark={key:string;section:string;title:string;url:string;strength:number;recency:number;related:number;x:number;y:number;seed:number};
-  const dataEl=document.getElementById('grove-data');
-  const canvas=document.getElementById('grove-canvas') as HTMLCanvasElement | null;
-  const area=document.getElementById('grove-canvas-area') as HTMLElement | null;
-  if(dataEl && canvas && area){
-    const data=JSON.parse(dataEl.textContent||'{}') as {marks:Mark[];relationDensity:number;fingerprint:number;history:{capturedOn:string;marks:Mark[];relationDensity:number;counts:Record<string,number>}[]};
-    const ctx=canvas.getContext('2d',{alpha:true});
-    if(ctx){
-      const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
-      const fine=window.matchMedia('(pointer: fine)');
-      const buttons=Array.from(document.querySelectorAll<HTMLButtonElement>('.grove-mode'));
-      const announcement=document.getElementById('grove-announcement');
-      const names:Record<string,string>={whole:'Whole archive: accumulated records',growth:'Recent growth: newer encounters highlighted',movement:'Movement: collective motion emphasized'};
-      let mode:'whole'|'growth'|'movement'='whole';
-      let zoom=1,panX=0,panY=0,selectedHistory=-1;
-      const tooltip=document.getElementById('grove-record-tooltip') as HTMLElement|null;
-      const link=document.getElementById('grove-record-link') as HTMLAnchorElement|null;
-      const typeLabel=document.getElementById('grove-record-type');
-      const historyPanel=document.getElementById('grove-history-panel') as HTMLElement|null;
-      const historyToggle=document.getElementById('grove-history-toggle') as HTMLButtonElement|null;
-      const historyRange=document.getElementById('grove-history-range') as HTMLInputElement|null;
-      const historyDate=document.getElementById('grove-history-date');
-      const historyMeta=document.getElementById('grove-history-meta');
-      const zoomLabel=document.getElementById('grove-zoom-label');
-      const history=data.history||[];
-      let density=data.relationDensity||0,fingerprint=data.fingerprint||0;
-      const markFrom=(m:Mark,i:number)=>({...m,index:i,phase:seed(m.key+'phase')*TAU,positionX:0,positionY:0});
-      let frame=0,last=0,visible=true,width=0,height=0,dpr=1;
-      let pointer={x:-500,y:-500,active:false};
-      const TAU=Math.PI*2;
-      const seed=(s:string)=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)/4294967295};
-      let marks=(data.marks||[]).map(markFrom);
-      // A stable multi-branch structure. Archive density thickens roots;
-      // distinct collection relationships influence the overall spread.
-      // Root count expands slowly with archive diversity. At any scale we draw
-      // aggregated organization, while all individual records remain available on zoom.
-      const buildRoots=()=>{
-        const count=Math.min(76,Math.max(19,Math.round(11+Math.sqrt(marks.length)*.68+Math.log1p(marks.length)*1.8)));
-        return Array.from({length:count},(_,i)=>({
-          i,angle:(i/count)*TAU+.18*Math.sin(i*2.1),
-          bend:.12+.27*seed('bend'+i), reach:.54+.37*seed('reach'+i), phase:seed('branch'+i)*TAU,
-          influence:marks.reduce((sum,m)=>{
-            const mAngle=Math.atan2(m.y-.5,m.x-.5);
-            const delta=Math.atan2(Math.sin(mAngle-(i/count)*TAU),Math.cos(mAngle-(i/count)*TAU));
-            return sum+(Math.abs(delta)<.18+.15/Math.sqrt(count/19)?Math.log1p(m.related)*.6+m.strength*.7:0);
-          },0)
-        }));
-      };
-      let roots=buildRoots();
-      const buildFlock=()=>Array.from({length:Math.min(650,Math.max(155,Math.round(95+Math.sqrt(marks.length)*20)))},(_,i)=>({
-        i,angle:seed('flockangle'+i)*TAU,r:.08+.88*Math.sqrt(seed('flockradius'+i)),
-        phase:seed('flockphase'+i)*TAU,speed:.58+seed('flockspeed'+i)*.9,
-        size:.5+seed('flocksize'+i)*1.4,fade:.22+.6*seed('flockfade'+i)
-      }));
-      let flock=buildFlock();
-      const resize=()=>{
-        const rect=area.getBoundingClientRect();
-        width=Math.max(1,rect.width);height=Math.max(1,rect.height);
-        dpr=Math.min(window.devicePixelRatio||1,2);
-        canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
-        ctx.setTransform(dpr,0,0,dpr,0,0);
-        draw(last||0);
-      };
-      const nodePosition=(m:typeof marks[number],t:number,scaleX:number,scaleY:number)=>{
-        const sway=reduce.matches?0:Math.sin(t*.00023+m.phase)*.008;
-        const spread=Math.min(1.19,.87+Math.sqrt(Math.max(1,marks.length))/75);
-        const xx=(m.x-.5)*spread+Math.sin(m.phase+t*.00015)*.018+sway;
-        const yy=(m.y-.5)*spread+Math.cos(m.phase*1.7+t*.00014)*.019;
-        return [width*.5+xx*scaleX,height*.49+yy*scaleY] as const;
-      };
-      const draw=(t:number)=>{
-        if(!width||!height)return;
-        ctx.setTransform(dpr,0,0,dpr,0,0);
-        ctx.clearRect(0,0,width,height);
-        ctx.save();
-        ctx.translate(width*.5+panX,height*.49+panY);
-        ctx.scale(zoom,zoom);
-        ctx.translate(-width*.5,-height*.49);
-        const mobile=width<560;
-        const sx=width*(mobile ? .93 : .85), sy=height*(mobile ? .85 : .87);
-        const cX=width*.5,cY=height*.49;
-        const growth=mode==='growth',movement=mode==='movement';
-        // Slow translucent tissue layers form a single continuous body.
-        const layers=Math.min(9,5+Math.floor(Math.log2(Math.max(1,marks.length)/140+1)*1.6));
-        for(let layer=layers-1;layer>=0;layer--){
-          const radius=(.29+layer*.045)*Math.min(sx,sy)*1.23*(1+Math.min(.13,Math.log1p(marks.length)/90));
-          ctx.beginPath();
-          for(let j=0;j<=150;j++){
-            const a=j/150*TAU;
-            const relationBoost=Math.min(.12,density*.018);
-            const ripple=1+.11*Math.sin(a*4+fingerprint*.009+layer*.63)+relationBoost*Math.sin(a*5.8+layer*.4)
-              +.075*Math.sin(a*7.7+layer*1.7)
-              +(reduce.matches?0:.032*Math.cos(a*5-t*.00019+layer));
-            const x=cX+Math.cos(a)*radius*ripple*(mobile?1.05:1.7);
-            const y=cY+Math.sin(a)*radius*ripple*.88;
-            if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-          }
-          ctx.closePath();
-          ctx.fillStyle=`rgba(140,211,165,${.016+(layers-layer)*.004})`;
-          ctx.fill();
-          ctx.lineWidth=.65;
-          ctx.strokeStyle=`rgba(94,174,125,${.06+(layers-layer)*.014})`;
-          ctx.stroke();
-        }
-        // Mangrove principle: anchored ramifications, not a concepts-style line graph.
-        roots.forEach(branch=>{
-          const variation=Math.log1p(branch.influence)*.115;
-          const growthLength=branch.reach*(.85+Math.min(.35,variation));
-          const angle=branch.angle;
-          const cx=cX+Math.cos(angle)*sx*.12;
-          const cy=cY+Math.sin(angle)*sy*.09;
-          const ex=cX+Math.cos(angle+Math.sin(angle*3+branch.phase)*.22)*sx*(.27+growthLength*.2);
-          const ey=cY+Math.sin(angle)*sy*(.22+growthLength*.16);
-          const bend=branch.bend;
-          ctx.beginPath();ctx.moveTo(cx,cy);
-          ctx.bezierCurveTo(cx+Math.cos(angle+bend)*sx*.13,cy+Math.sin(angle-bend)*sy*.14,
-            ex-Math.cos(angle-.38)*sx*.1,ey-Math.sin(angle+.23)*sy*.11,ex,ey);
-          ctx.strokeStyle=`rgba(50,138,93,${(growth ? .19 : .14)+Math.min(.18,variation)})`;
-          ctx.lineWidth=.65+Math.min(1.5,Math.log1p(branch.influence)*.3);
-          ctx.stroke();
-          for(let k=0;k<3;k++){
-            const r=.45+k*.15;
-            const bx=cx+(ex-cx)*r,by=cy+(ey-cy)*r;
-            const branchAngle=angle+(k%2===0?1:-1)*(.4+branch.bend);
-            const len=(.04+.025*seed('twig'+branch.i+':'+k))*Math.min(sx,sy);
-            ctx.beginPath();ctx.moveTo(bx,by);
-            ctx.quadraticCurveTo(bx+len*.3*Math.cos(branchAngle),by+len*.36*Math.sin(branchAngle),bx+len*Math.cos(branchAngle),by+len*Math.sin(branchAngle));
-            ctx.strokeStyle='rgba(65,148,104,.12)';ctx.lineWidth=.65;ctx.stroke();
-          }
-        });
-        // Record-derived growth sites quietly retain a memory of past additions.
-        const markerStride=zoom<1.3?Math.max(1,Math.ceil(marks.length/950)):1;
-        for(const m of marks){
-          // At overview scale, preserve visual restraint for large future archives.
-          if(zoom<1.3 && marks.length>950 && m.index%markerStride!==0)continue;
-          const [x,y]=nodePosition(m,t,sx,sy);
-          if(zoom>1.25){const visibleX=(x-width*.5)*zoom+width*.5+panX,visibleY=(y-height*.49)*zoom+height*.49+panY;
-            if(visibleX< -35||visibleX>width+35||visibleY< -35||visibleY>height+35)continue;}
-
-          m.positionX=x;m.positionY=y;
-          const intensity=growth?m.recency*.72+.06:.21+m.strength*.14;
-          const radius=1.1+Math.sqrt(m.strength)*2.5+(growth?m.recency*2.4:0)+(zoom>1.25?1.15:0);
-          const halo=ctx.createRadialGradient(x,y,0,x,y,radius*8);
-          halo.addColorStop(0,`rgba(51,171,94,${Math.min(.2,intensity*.5)})`);
-          halo.addColorStop(1,'rgba(51,171,94,0)');
-          ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,radius*8,0,TAU);ctx.fill();
-          ctx.fillStyle=`rgba(23,125,79,${Math.min(.67,intensity+.09)})`;
-          ctx.beginPath();ctx.arc(x,y,Math.max(.6,radius*.48),0,TAU);ctx.fill();
-        }
-        // Murmuration principle: hundreds of smaller units flow collectively
-        // through the tissue. Motion is coherent, not per-label jitter.
-        const speed=movement?1.8:.8;
-        // At detail scale all visible dots are real linked records, not ornamental flock particles.
-        if(zoom<1.25)for(const f of flock){
-          const u=f.angle+(reduce.matches?0:t*.000033*speed*f.speed);
-          const swirl=.13*Math.sin(u*3+f.phase + (reduce.matches?0:t*.00018*speed));
-          const r=f.r*(1+.12*Math.sin(u*2.1+fingerprint*.013));
-          const px=cX+Math.cos(u+swirl)*sx*(.39*r);
-          const py=cY+Math.sin(u*.91+swirl)*sy*(.38*r);
-          let x=px,y=py;
-          if(pointer.active&&!reduce.matches){
-            const dx=px-pointer.x,dy=py-pointer.y;
-            const d=Math.hypot(dx,dy);
-            const range=Math.min(145,width*.24);
-            if(d<range&&d>0){const push=(1-d/range)**2*24;x+=dx/d*push;y+=dy/d*push;}
-          }
-          ctx.beginPath();ctx.arc(x,y,Math.min(1.9,f.size*(mobile ? .8 : 1)),0,TAU);
-          ctx.fillStyle=`rgba(38,136,85,${Math.min(.65,f.fade*(growth ? .28 : movement ? .82 : .64))})`;
-          ctx.fill();
-        }
-        // A few subtle luminous folds communicate collective movement.
-        if(!reduce.matches){
-          ctx.beginPath();
-          for(let j=0;j<=85;j++){
-            const u=j/85;
-            const x=cX+sx*(u-.5)*.86;
-            const y=cY+Math.sin(u*TAU*2.4+t*.00027)*sy*.087;
-            if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-          }
-          ctx.lineWidth=.5;ctx.strokeStyle='rgba(76,171,111,.095)';ctx.stroke();
-        }
-        ctx.restore();
-      };
-      const tick=(time:number)=>{
-        frame=0;last=time;
-        if(!visible||document.hidden)return;
-        draw(time);
-        if(!reduce.matches)frame=requestAnimationFrame(tick);
-      };
-      const sync=()=>{
-        if(frame){cancelAnimationFrame(frame);frame=0;}
-        if(visible&&!document.hidden){
-          draw(last||0);
-          if(!reduce.matches)frame=requestAnimationFrame(tick);
-        }
-      };
-      buttons.forEach(button=>button.addEventListener('click',()=>{
-        const next=button.dataset.mode;
-        if(next!=='whole'&&next!=='growth'&&next!=='movement')return;
-        mode=next;
-        buttons.forEach(b=>{const active=b===button;b.classList.toggle('is-selected',active);b.setAttribute('aria-pressed',String(active));});
-        if(announcement)announcement.textContent=names[mode];
-        draw(last||0);
-      }));
-      const closeTip=()=>{if(tooltip)tooltip.hidden=true;};
-      const screenPosition=(m:typeof marks[number])=>{
-        const mobile=width<560,sx=width*(mobile?.93:.85),sy=height*(mobile?.85:.87);
-        const [x,y]=nodePosition(m,last||0,sx,sy);
-        return {x:width*.5+(x-width*.5)*zoom+panX,y:height*.49+(y-height*.49)*zoom+panY};
-      };
-      const nearest=(x:number,y:number)=>{
-        if(zoom<1.25)return null;
-        let match:typeof marks[number]|null=null,closest=Infinity;
-        for(const m of marks){
-          const p=screenPosition(m);if(Math.abs(p.x-x)>18||Math.abs(p.y-y)>18)continue;
-          const d=(p.x-x)**2+(p.y-y)**2;
-          if(d<closest){match=m;closest=d;}
-        }
-        return closest<=Math.max(105,zoom*zoom*15)?match:null;
-      };
-      const showTip=(m:typeof marks[number],x:number,y:number)=>{
-        if(!tooltip||!link)return;
-        tooltip.hidden=false;
-        link.href=m.url;link.textContent=m.title;
-        if(typeLabel)typeLabel.textContent=m.section;
-        tooltip.style.left=`${Math.max(8,Math.min(width-235,x))}px`;
-        tooltip.style.top=`${Math.max(8,Math.min(height-84,y))}px`;
-      };
-      const constrainPan=()=>{
-        const limX=width*(zoom-1)*.52+20,limY=height*(zoom-1)*.52+20;
-        panX=Math.max(-limX,Math.min(limX,panX));panY=Math.max(-limY,Math.min(limY,panY));
-      };
-      const setZoom=(next:number,atX=width*.5,atY=height*.49)=>{
-        const before=zoom;zoom=Math.max(1,Math.min(7,next));
-        panX=(panX+width*.5-atX)*(zoom/before)+atX-width*.5;
-        panY=(panY+height*.49-atY)*(zoom/before)+atY-height*.49;
-        if(zoom===1){panX=0;panY=0;}
-        constrainPan();
-        if(zoomLabel)zoomLabel.textContent=`${Math.round(zoom*100)}%`;
-        area.style.touchAction=zoom>1.1?'none':'pan-y';
-        canvas.style.cursor=zoom>1.1?'grab':'zoom-in';
-        closeTip();draw(last||0);
-      };
-      document.querySelectorAll<HTMLButtonElement>('.grove-zoom').forEach(btn=>btn.addEventListener('click',()=>setZoom(zoom*(btn.dataset.zoom==='in'?1.55:1/1.55))));
-      document.getElementById('grove-reset')?.addEventListener('click',()=>setZoom(1));
-      area.addEventListener('wheel',e=>{
-        // Wheel/trackpad zoom remains local to the organism, not the entire page.
-        if(!e.ctrlKey&&!e.altKey)return; // normal page scrolling still works
-        e.preventDefault();const r=area.getBoundingClientRect();
-        setZoom(zoom*(e.deltaY<0?1.18:1/1.18),e.clientX-r.left,e.clientY-r.top);
-      },{passive:false});
-      const held=new Map<number,{x:number;y:number}>();
-      let pointerStart:{x:number;y:number;panX:number;panY:number}|null=null;
-      let pinchStart:{distance:number;zoom:number;centerX:number;centerY:number}|null=null;
-      let dragged=false;
-      area.addEventListener('pointerdown',e=>{
-        if((e.target as HTMLElement).closest('a'))return;
-        const rect=area.getBoundingClientRect();const x=e.clientX-rect.left,y=e.clientY-rect.top;
-        held.set(e.pointerId,{x,y});dragged=false;
-        pointerStart={x,y,panX,panY};
-        if(held.size===2){const [a,b]=[...held.values()];pinchStart={distance:Math.hypot(a.x-b.x,a.y-b.y),zoom,centerX:(a.x+b.x)/2,centerY:(a.y+b.y)/2};}
-        if(zoom>1.1)area.setPointerCapture(e.pointerId);
-        pointer={x:width*.5+(x-width*.5-panX)/zoom,y:height*.49+(y-height*.49-panY)/zoom,active:true};
-      },{passive:true});
-      area.addEventListener('pointermove',e=>{
-        const rect=area.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;
-        if(held.has(e.pointerId))held.set(e.pointerId,{x,y});
-        if(held.size===2&&pinchStart){
-          const [a,b]=[...held.values()];const dis=Math.hypot(a.x-b.x,a.y-b.y);
-          setZoom(pinchStart.zoom*dis/Math.max(1,pinchStart.distance),pinchStart.centerX,pinchStart.centerY);
-          dragged=true;closeTip();return;
-        }
-        if(zoom>1.1&&held.size===1&&pointerStart){
-          if(Math.hypot(x-pointerStart.x,y-pointerStart.y)>5)dragged=true;
-          if(dragged){panX=pointerStart.panX+x-pointerStart.x;panY=pointerStart.panY+y-pointerStart.y;constrainPan();closeTip();draw(last||0);return;}
-        }
-        pointer={x:width*.5+(x-width*.5-panX)/zoom,y:height*.49+(y-height*.49-panY)/zoom,active:true};
-        if(fine.matches){const m=nearest(x,y);canvas.style.cursor=m?'pointer':zoom>1.1?'grab':'zoom-in';if(m)showTip(m,x,y);else closeTip();}
-      },{passive:true});
-      area.addEventListener('pointerup',e=>{
-        const r=area.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
-        const m=!dragged?nearest(x,y):null;
-        held.delete(e.pointerId);
-        if(held.size<2)pinchStart=null;
-        if(held.size===0){pointerStart=null;pointer.active=false;}
-        if(m){
-          if(fine.matches){window.location.assign(m.url);}
-          else showTip(m,x,y); // touch: expose readable link, avoid accidental navigation
-        } else if(!dragged&&zoom<1.25){setZoom(1.8,x,y);}
-        else if(!dragged)closeTip();
-      },{passive:true});
-      area.addEventListener('pointercancel',e=>{held.delete(e.pointerId);pinchStart=null;pointerStart=null;pointer.active=false;},{passive:true});
-      area.addEventListener('pointerleave',()=>{if(held.size===0){pointer.active=false;if(fine.matches)closeTip();}},{passive:true});
-      // Saved, immutable snapshots represent actual captured source states, not reconstructed visits.
-      const setHistory=(index:number)=>{
-        selectedHistory=index;
-        const item=index<0?null:history[index];
-        marks=(item?.marks||data.marks||[]).map(markFrom);
-        density=item?.relationDensity||data.relationDensity||0;
-        fingerprint=marks.reduce((v,m)=>v+Math.round(m.strength*7+m.related*2+m.seed*23),0);
-        roots=buildRoots();flock=buildFlock();
-        if(historyRange)historyRange.value=String(index<0?history.length:index);
-        if(historyDate)historyDate.textContent=item?.capturedAt?new Date(item.capturedAt).toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):item?.capturedOn||'Now';
-        if(historyMeta)historyMeta.textContent=item?`${marks.length} records · saved source state`:`${marks.length} records · current archive`;
-        closeTip();draw(last||0);
-      };
-      historyToggle?.addEventListener('click',()=>{
-        if(!historyPanel)return;
-        historyPanel.hidden=!historyPanel.hidden;
-        historyToggle.setAttribute('aria-expanded',String(!historyPanel.hidden));
-      });
-      historyRange?.addEventListener('input',()=>{
-        const index=Number(historyRange.value);
-        setHistory(index>=history.length?-1:index);
-      });
-      document.getElementById('grove-history-live')?.addEventListener('click',()=>setHistory(-1));
-      setHistory(-1);
-      let observer:IntersectionObserver|null=null;
-      if('IntersectionObserver' in window){observer=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??true;sync();},{threshold:.01});observer.observe(area);}
-      window.addEventListener('resize',resize,{passive:true});
-      document.addEventListener('visibilitychange',sync);
-      reduce.addEventListener('change',sync);
-      resize();sync();
+ type Mark={key:string;section:string;title:string;url:string;strength:number;recency:number;related:number;x:number;y:number;seed:number};
+ type Vec=[number,number,number];
+ const dataEl=document.getElementById('grove-data');
+ const canvas=document.getElementById('grove-canvas') as HTMLCanvasElement|null;
+ const area=document.getElementById('grove-canvas-area') as HTMLElement|null;
+ if(dataEl&&canvas&&area){
+  const ctx=canvas.getContext('2d',{alpha:true});
+  if(ctx){
+   const data=JSON.parse(dataEl.textContent||'{}') as {marks:Mark[];relationDensity:number;fingerprint:number;history:{capturedAt?:string;capturedOn?:string;marks:Mark[];relationDensity:number}[]};
+   const TAU=Math.PI*2;
+   const hash=(s:string)=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)/4294967295};
+   const reduce=matchMedia('(prefers-reduced-motion:reduce)');
+   const fine=matchMedia('(pointer:fine)');
+   const modeButtons=[...document.querySelectorAll<HTMLButtonElement>('.grove-mode')];
+   const tooltip=document.getElementById('grove-record-tooltip') as HTMLElement;
+   const recordLink=document.getElementById('grove-record-link') as HTMLAnchorElement;
+   const recordType=document.getElementById('grove-record-type') as HTMLElement;
+   const zoomLabel=document.getElementById('grove-zoom-label');
+   const historyToggle=document.getElementById('grove-history-toggle') as HTMLButtonElement;
+   const historyPanel=document.getElementById('grove-history-panel') as HTMLElement;
+   const historyRange=document.getElementById('grove-history-range') as HTMLInputElement;
+   const historyDate=document.getElementById('grove-history-date');
+   const historyMeta=document.getElementById('grove-history-meta');
+   const history=data.history||[];
+   let current=data.marks||[];
+   let density=data.relationDensity||0;
+   let fingerprint=data.fingerprint||0;
+   let mode:'whole'|'growth'|'movement'='whole';
+   let yaw=-.26,pitch=-.18,zoom=1,width=1,height=1,dpr=1,last=0,raf=0,visible=true;
+   let pointCache:{m:Mark;x:number;y:number;r:number;depth:number}[]=[];
+   let focus:Mark|null=null;
+   const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
+   const pos=(m:Mark):Vec=>{
+    // Every real record is embedded in 3D, with stable positions based on its ID.
+    const depth=hash('depth:'+m.section+':'+m.key)*2-1;
+    const radial=.65+.35*hash('radial:'+m.key);
+    return [(m.x-.5)*3.0*radial,(m.y-.5)*1.85*radial,depth*.90];
+   };
+   const rotate=([x,y,z]:Vec):Vec=>{
+    const cy=Math.cos(yaw),sy=Math.sin(yaw),cx=Math.cos(pitch),sx=Math.sin(pitch);
+    const x1=x*cy+z*sy,z1=-x*sy+z*cy;
+    return [x1,y*cx-z1*sx,y*sx+z1*cx];
+   };
+   const project=(p:Vec)=>{
+    const [x,y,z]=rotate(p);
+    const perspective=3.9/(3.9-z*.29);
+    const scale=(width<650?Math.max(width*.51,height*.30):Math.min(width*.34,height*.53))*zoom;
+    return {x:width*.5+x*scale*perspective,y:height*.525+y*scale*perspective,z,scale:perspective};
+   };
+   const paths=()=>{
+    // 3D rhizomatic pathways respond to collection size and density.
+    const count=Math.min(110,Math.max(19,Math.round(12+Math.sqrt(current.length)*1.7)));
+    return Array.from({length:count},(_,i)=>({a:i/count*TAU,seed:hash('root'+i),i}));
+   };
+   let rootPaths=paths();
+   const resize=()=>{width=innerWidth;height=innerHeight;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw(last)};
+   const draw=(time:number)=>{
+    last=time;
+    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+    const growth=mode==='growth',movement=mode==='movement';
+    const sway=reduce.matches?0:Math.sin(time*.00018)*.028;
+    // Floating, translucent 3D tissue contours, not a framed 2D ellipse.
+    const rings=Math.min(12,5+Math.floor(Math.log1p(current.length)/1.7));
+    for(let k=0;k<rings;k++){
+     const level=(k+1)/rings,lat=(level-.5)*Math.PI*.83;
+     const rad=Math.cos(lat);
+     const vertices=[] as {x:number;y:number;z:number}[];
+     for(let j=0;j<=112;j++){
+      const a=j/112*TAU;
+      const ripple=1+.13*Math.sin(a*5+level*12+fingerprint*.002)+.07*Math.sin(a*8-level*7)+sway*Math.sin(a*3+level*4);
+      vertices.push(project([1.51*rad*Math.cos(a)*ripple,.80*Math.sin(lat)+.07*Math.sin(a*3+level*4),.92*rad*Math.sin(a)*ripple]));
+     }
+     const avg=vertices.reduce((s,p)=>s+p.z,0)/vertices.length;
+     ctx.beginPath();vertices.forEach((v,i)=>i?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y));ctx.closePath();
+     ctx.fillStyle=`rgba(137,213,167,${.005+level*.007})`;ctx.fill();
+     ctx.strokeStyle=`rgba(65,157,104,${.035+level*.045+(avg>0?.025:0)})`;
+     ctx.lineWidth=.65;ctx.stroke();
     }
+    // Branches have genuine three-dimensional endpoints and move with rotation.
+    for(const b of rootPaths){
+     const a=b.a,depth=(b.seed-.5)*1.65;
+     const tlen=.71+Math.min(.2,Math.log1p(density)/11);
+     const points:Vec[]=[];
+     for(let j=0;j<=22;j++){
+      const t=j/22;
+      const bend=.22*Math.sin(t*TAU*.8+a*2+b.seed*4);
+      const base=.48+t*.65;
+      const theta=a+.16*Math.sin(t*3+b.seed*8);
+      points.push([Math.cos(theta)*base*tlen*1.56+bend*.3,Math.sin(theta)*base*tlen*.87+.07*Math.sin(t*4+b.seed*5),depth*(.6+.25*t)+.17*Math.sin(t*2+a)]);
+     }
+     ctx.beginPath();points.forEach((p,i)=>{const v=project(p);i?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y)});
+     ctx.strokeStyle=`rgba(34,139,91,${growth?.18:.105})`;ctx.lineWidth=.55+Math.log1p(current.length)*.045;ctx.stroke();
+    }
+    // All visible points ARE archive records, each with a real link.
+    pointCache=[];
+    const ordered=current.map(m=>({m,p:pos(m)})).sort((a,b)=>rotate(a.p)[2]-rotate(b.p)[2]);
+    for(const {m,p} of ordered){
+     const t=reduce.matches?0:time*.00024*(movement?1.9:1);
+     const offset=.028*Math.sin(t+hash('phase'+m.key)*TAU);
+     const v=project([p[0]+offset,p[1]+offset*.4,p[2]]);
+     if(v.x< -45||v.x>width+45||v.y< -45||v.y>height+45)continue;
+     const recent=growth?(.13+m.recency*.8):(.25+Math.min(.35,m.strength*.3));
+     const depthAlpha=clamp(.65+v.z*.25,.20,1);
+     const radius=clamp((zoom>1.2?2.25:1.45)*v.scale*zoom**.23+.6*m.strength,.9,5);
+     const glowRadius=radius*(zoom>1.25?4:8);
+     if(glowRadius>5){const glow=ctx.createRadialGradient(v.x,v.y,0,v.x,v.y,glowRadius);glow.addColorStop(0,`rgba(38,164,93,${recent*.15*depthAlpha})`);glow.addColorStop(1,'rgba(38,164,93,0)');ctx.fillStyle=glow;ctx.beginPath();ctx.arc(v.x,v.y,glowRadius,0,TAU);ctx.fill()}
+     ctx.fillStyle=`rgba(17,135,76,${clamp(recent*depthAlpha,.12,.78)})`;ctx.beginPath();ctx.arc(v.x,v.y,radius,0,TAU);ctx.fill();
+     pointCache.push({m,x:v.x,y:v.y,r:radius,depth:v.z});
+    }
+    if(focus){const dot=pointCache.find(p=>p.m.key===focus?.key&&p.m.section===focus?.section);if(dot){ctx.strokeStyle='rgba(26,142,85,.77)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(dot.x,dot.y,Math.max(7,dot.r+5),0,TAU);ctx.stroke()}}
+   };
+   const closeTip=()=>{tooltip.hidden=true;focus=null};
+   const nearest=(x:number,y:number)=>{
+    let hit:typeof pointCache[number]|null=null,d=Infinity;
+    for(const p of pointCache){const sq=(p.x-x)**2+(p.y-y)**2;const r=Math.max(9,Math.min(16,p.r+5));if(sq<r*r&&sq<d){hit=p;d=sq}}
+    return hit;
+   };
+   const tip=(p:typeof pointCache[number])=>{
+    focus=p.m;tooltip.hidden=false;recordType.textContent=p.m.section;recordLink.textContent=p.m.title;recordLink.href=p.m.url;
+    tooltip.style.left=`${clamp(p.x,8,width-Math.min(290,width*.78)-25)}px`;
+    tooltip.style.top=`${clamp(p.y,135,height-150)}px`;
+   };
+   const setZoom=(n:number)=>{zoom=clamp(n,.65,6);if(zoomLabel)zoomLabel.textContent=`${Math.round(zoom*100)}%`;closeTip();draw(last)};
+   document.querySelectorAll<HTMLButtonElement>('.grove-zoom').forEach(b=>b.addEventListener('click',()=>setZoom(zoom*(b.dataset.zoom==='in'?1.4:1/1.4))));
+   document.getElementById('grove-reset')?.addEventListener('click',()=>{yaw=-.26;pitch=-.18;setZoom(1)});
+   modeButtons.forEach(b=>b.addEventListener('click',()=>{const m=b.dataset.mode;if(m!=='whole'&&m!=='growth'&&m!=='movement')return;mode=m;modeButtons.forEach(btn=>{btn.classList.toggle('is-selected',btn===b);btn.setAttribute('aria-pressed',String(btn===b))});draw(last)}));
+   // Drag = rotate 3D organism. Tap = open archive record. Pinch = zoom.
+   const held=new Map<number,{x:number;y:number}>();
+   let lastPointer:{x:number;y:number}|null=null;
+   let pinch:{distance:number;zoom:number}|null=null;
+   let dragged=false,downPoint:{x:number;y:number}|null=null;
+   area.addEventListener('pointerdown',e=>{
+    if((e.target as HTMLElement).closest('a,button,summary'))return;
+    held.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(held.size===1){lastPointer={x:e.clientX,y:e.clientY};downPoint={x:e.clientX,y:e.clientY};dragged=false}
+    if(held.size===2){const [a,b]=[...held.values()];pinch={distance:Math.hypot(a.x-b.x,a.y-b.y),zoom};dragged=true}
+    area.setPointerCapture(e.pointerId);
+   });
+   area.addEventListener('pointermove',e=>{
+    if(held.has(e.pointerId)){
+     held.set(e.pointerId,{x:e.clientX,y:e.clientY});
+     if(held.size===2&&pinch){const [a,b]=[...held.values()];setZoom(pinch.zoom*Math.hypot(a.x-b.x,a.y-b.y)/Math.max(1,pinch.distance));dragged=true;return}
+     if(lastPointer){const dx=e.clientX-lastPointer.x,dy=e.clientY-lastPointer.y;
+      if(Math.hypot(e.clientX-(downPoint?.x||0),e.clientY-(downPoint?.y||0))>5)dragged=true;
+      if(dragged){yaw+=dx*.0065;pitch=clamp(pitch+dy*.0055,-1.48,1.48);closeTip();draw(last)}
+      lastPointer={x:e.clientX,y:e.clientY};return}
+    }
+    if(fine.matches){const p=nearest(e.clientX,e.clientY);canvas.style.cursor=p?'pointer':'grab';if(p)tip(p);else closeTip()}
+   },{passive:true});
+   const end=(e:PointerEvent)=>{const hit=!dragged&&held.size===1?nearest(e.clientX,e.clientY):null;
+    held.delete(e.pointerId);if(held.size<2)pinch=null;if(!held.size){lastPointer=null;downPoint=null}
+    if(hit){if(fine.matches)window.location.assign(hit.m.url);else tip(hit)}else if(!dragged)closeTip();
+   };
+   area.addEventListener('pointerup',end,{passive:true});
+   area.addEventListener('pointercancel',e=>{held.delete(e.pointerId);pinch=null;lastPointer=null;dragged=false},{passive:true});
+   area.addEventListener('wheel',e=>{if(!e.ctrlKey&&!e.altKey)return;e.preventDefault();setZoom(zoom*(e.deltaY<0?1.1:.9))},{passive:false});
+   const setHistory=(index:number)=>{
+    const item=index<0?null:history[index];current=item?.marks||data.marks||[];density=item?.relationDensity||data.relationDensity||0;
+    fingerprint=current.reduce((s,m)=>s+Math.round(m.strength*7+m.related*2+m.seed*23),0);rootPaths=paths();
+    historyRange.value=String(index<0?history.length:index);
+    if(historyDate)historyDate.textContent=item?.capturedAt?new Date(item.capturedAt).toLocaleDateString():item?.capturedOn||'Now';
+    if(historyMeta)historyMeta.textContent=`${current.length} records · ${item?'saved archive':'current archive'}`;
+    closeTip();draw(last);
+   };
+   historyToggle?.addEventListener('click',()=>{historyPanel.hidden=!historyPanel.hidden;historyToggle.setAttribute('aria-expanded',String(!historyPanel.hidden))});
+   historyRange?.addEventListener('input',()=>{const i=Number(historyRange.value);setHistory(i>=history.length?-1:i)});
+   document.getElementById('grove-history-live')?.addEventListener('click',()=>setHistory(-1));
+   const animate=(t:number)=>{raf=0;if(!visible||document.hidden)return;draw(t);if(!reduce.matches)raf=requestAnimationFrame(animate)};
+   const sync=()=>{if(raf)cancelAnimationFrame(raf);raf=0;if(visible&&!document.hidden&&!reduce.matches)raf=requestAnimationFrame(animate);else draw(last)};
+   if('IntersectionObserver' in window){new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??true;sync()}).observe(area)}
+   addEventListener('resize',resize,{passive:true});document.addEventListener('visibilitychange',sync);reduce.addEventListener('change',sync);
+   resize();setHistory(-1);sync();
   }
+ }
 </script>
