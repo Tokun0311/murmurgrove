@@ -86,7 +86,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
            It shares the existing country filter state, without touching desktop. -->
       <div class="mobile-land-atlas" id="mobile-land-atlas" aria-label="Interactive geographic overview">
         <div class="mobile-land-atlas-graphic" id="mobile-land-atlas-graphic">
-          <div class="mobile-land-atlas-silhouette" aria-hidden="true"></div>
+          <img class="mobile-land-atlas-silhouette" src="/mobile-institutions-land.png" alt="" aria-hidden="true" width="1600" height="800" loading="eager" decoding="async" />
           <button type="button" class="mobile-land-atlas-tap" id="mobile-land-atlas-tap" aria-label="Select the nearest archived country on the map"></button>
           <div class="mobile-land-atlas-selection" id="mobile-land-atlas-selection" hidden>
             <span class="mobile-land-atlas-marker" aria-hidden="true"></span>
@@ -253,11 +253,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     /* A compact flat geographic field. Transparent sea; reliably visible land. */
     .institutions-page .mobile-land-atlas{display:block;position:relative;width:100%;margin:3px 0 22px;}
     .institutions-page .mobile-land-atlas-graphic{position:relative;width:100%;aspect-ratio:2/1;min-height:155px;max-height:235px;overflow:hidden;background:transparent;}
-    .institutions-page .mobile-land-atlas-silhouette{position:absolute;inset:0;background-color:#b9d9cb;
-      -webkit-mask-image:url('/land-mask.png');mask-image:url('/land-mask.png');
-      -webkit-mask-size:100% 100%;mask-size:100% 100%;
-      -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-      opacity:.82;pointer-events:none;}
+    .institutions-page .mobile-land-atlas-silhouette{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;opacity:1;pointer-events:none;user-select:none;-webkit-user-drag:none;}
     .institutions-page .mobile-land-atlas-tap{position:absolute;inset:0;border:0;background:transparent;padding:0;cursor:crosshair;width:100%;height:100%;}
     .institutions-page .mobile-land-atlas-tap:focus-visible{outline:2px solid #0d8e61;outline-offset:-3px;}
     .institutions-page .mobile-land-atlas-selection{position:absolute;left:var(--atlas-x,50%);top:var(--atlas-y,50%);transform:translate(-50%,-100%);display:flex;align-items:center;flex-direction:column;pointer-events:none;z-index:2;gap:4px;}
@@ -335,7 +331,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   const atlasSelection=document.getElementById('mobile-land-atlas-selection');
   const atlasCountryName=atlasSelection?.querySelector<HTMLElement>('.mobile-land-atlas-country');
   const atlasLocations: {country:string,lon:number,lat:number}[]=JSON.parse(document.getElementById('globe-city-data')?.textContent||'[]');
-  const atlasPosition=(lon:number,lat:number)=>({x:(lon+180)/360*100,y:(90-lat)/180*100});
+  // The mobile map is an actual transparent PNG cropped to Europe, Asia and
+  // Southeast Asia. These bounds match the source image exactly.
+  const atlasPosition=(lon:number,lat:number)=>({x:(lon+20)/180*100,y:(72-lat)/90*100});
   function updateMobileAtlas(country:string){
     if(!mobileAtlas||!atlasSelection)return;
     const marker=atlasLocations.find(item=>item.country===country);
@@ -358,7 +356,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       const dy=(y-pt.y/100);
       return {country:item.country,dist:Math.hypot(dx,dy)};
     }).sort((a,b)=>a.dist-b.dist)[0];
-    if(nearest && nearest.dist<.13) filterCountry(nearest.country);
+    if(nearest && nearest.dist<.115) filterCountry(nearest.country);
   });
   function filterCountry(country:string,scroll=false){
     updateMobileAtlas(country);
