@@ -210,10 +210,15 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   if(desktopMap){
     const nodeEls=Array.from(desktopMap.querySelectorAll<SVGAElement>('.concept-node'));
     const edgeEls=Array.from(desktopMap.querySelectorAll<SVGLineElement>('.concept-link'));
+    // Broad, continuous orbital paths rather than 4–5px micro-vibrations.
+    // Each node has its own travel distance, phase, and period; the center
+    // of its path remains tethered to the original editorial composition.
     const nodes=nodeEls.map((el,i)=>({
       el,id:el.dataset.concept||'',x:Number(el.dataset.x),y:Number(el.dataset.y),
-      speed:0.00020+(i%5)*0.000025,phase:i*2.39996,
-      dx:0,dy:0,held:false
+      phase:i*2.39996323,
+      orbitX:26+(i*11%24),orbitY:18+(i*13%22),
+      periodX:24500+(i*3731%15500),periodY:28500+(i*4229%18000),
+      dx:0,dy:0,held:false,releaseAt:0,releaseX:0,releaseY:0
     }));
     const byId=new Map(nodes.map(n=>[n.id,n]));
     const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -228,21 +233,29 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
     };
     for(const n of nodes){
       n.el.addEventListener('pointerenter',()=>{n.held=true;updateFocus(n.id)});
-      n.el.addEventListener('pointerleave',()=>{n.held=false;updateFocus(null)});
+      n.el.addEventListener('pointerleave',()=>{n.held=false;n.releaseAt=performance.now();n.releaseX=n.dx;n.releaseY=n.dy;updateFocus(null)});
       n.el.addEventListener('focus',()=>{n.held=true;updateFocus(n.id)});
-      n.el.addEventListener('blur',()=>{n.held=false;updateFocus(null)});
+      n.el.addEventListener('blur',()=>{n.held=false;n.releaseAt=performance.now();n.releaseX=n.dx;n.releaseY=n.dy;updateFocus(null)});
     }
     const tick=(time:number)=>{
       raf=0;
       if(!visible||document.hidden||reduced.matches)return;
       if(!start)start=time;
       const t=time-start;
+      // Long elliptical and gently asymmetric paths make trajectories legible.
+      // All positions are sampled from absolute time, so the motion stays
+      // smooth across slower frames and never accumulates random jitter.
       for(const node of nodes){
         if(!node.held){
-          const targetX=5.5*Math.sin(t*node.speed+node.phase);
-          const targetY=4.5*Math.cos(t*node.speed*.83+node.phase*1.27);
-          node.dx+=(targetX-node.dx)*.085;
-          node.dy+=(targetY-node.dy)*.085;
+          const ax=t*2*Math.PI/node.periodX+node.phase;
+          const ay=t*2*Math.PI/node.periodY+node.phase*1.23;
+          const orbitX=node.orbitX*(.78*Math.sin(ax)+.22*Math.sin(ax*.51+node.phase));
+          const orbitY=node.orbitY*(.82*Math.cos(ay)+.18*Math.sin(ay*.63+node.phase));
+          const blend=node.releaseAt?Math.min(1,(time-node.releaseAt)/1300):1;
+          const ease=blend*blend*(3-2*blend);
+          node.dx=node.releaseX*(1-ease)+orbitX*ease;
+          node.dy=node.releaseY*(1-ease)+orbitY*ease;
+          if(blend>=1)node.releaseAt=0;
         }
         node.el.setAttribute('transform',`translate(${node.dx.toFixed(2)} ${node.dy.toFixed(2)})`);
       }
