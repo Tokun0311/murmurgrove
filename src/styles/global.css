@@ -197,3 +197,10 @@ button.exhibition-calendar-day.has-records.selected{background:var(--ink);color:
 .exhibition-index-heading p{font-size:12px;color:var(--quiet);margin:0}
 @media(max-width:900px){.exhibition-date-explorer{grid-template-columns:1fr;gap:23px}.exhibition-day-preview{min-height:0}.exhibition-date-explorer .exhibition-calendar{max-width:610px}}
 @media(max-width:650px){.exhibition-date-explorer .exhibition-calendar-day{aspect-ratio:1/1;height:auto;padding:6px}.exhibition-date-explorer{margin-bottom:32px}.exhibition-index-heading{gap:7px}.exhibition-index-heading h2{font-size:21px}}
+
+/* One location indicator in the masthead; section pages do not repeat a visible title. */
+.mast nav a { display:inline-block; padding:7px 9px; margin:-7px -9px; line-height:1.3; transition:background-color .15s ease,color .15s ease; }
+.mast nav a[aria-current="page"] { background:#075e43; color:#fff; text-decoration:none; }
+.mast nav a[aria-current="page"]:hover { background:#044c36; color:#fff; text-decoration:none; }
+.mast nav a:focus-visible { outline:2px solid var(--ink); outline-offset:3px; }
+@media(max-width:650px){ .mast nav a{padding:7px 8px;margin:-4px -6px} .mast nav{row-gap:11px} }

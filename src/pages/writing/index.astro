@@ -6,8 +6,7 @@ const posts = (await getCollection('entries', ({data}) => !data.draft))
 ---
 <Base title="Writing | TOW ARCHIVE" description="Essays, reviews and research notes by Tow Deng.">
   <section class="archive writing-archive">
-    <h1 class="section-title">Writing</h1>
-    <p class="section-lead">Essays, exhibition reviews, and research notes. 中文 / 日本語 / English.</p>
+    <h1 class="sr-only">Writing</h1>
     {posts.length > 0 ? (
       <ol class="archive-list" aria-label="Published writing">
         {posts.map(post => <li class="archive-entry writing-entry">
