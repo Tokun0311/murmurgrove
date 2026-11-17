@@ -78,6 +78,29 @@ const mobileOrder = [
 const nodeById = new Map(nodes.map(node => [node.id,node]));
 const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   ...nodes.filter(node=>!mobileOrder.includes(node.id))];
+const mobileFieldLayout:Record<string,[number,number]>= {
+  'institutional-studies':[51,18],
+  'curatorial-practices':[28,30],
+  'site-specificity':[31,62],
+  'transcultural-studies':[74,24],
+  'politics-of-representation':[74,50],
+  'identity-and-representation':[82,71],
+  'collective-practices':[21,17],
+  'memory-and-place':[19,77],
+  'ecology':[53,80],
+  'care-and-design':[51,49],
+  'moving-image':[16,48],
+  'sound-and-technology':[60,10],
+};
+const mobileFieldNodes = Object.entries(mobileFieldLayout)
+  .flatMap(([id,[mx,my]]) => {
+    const node = nodeById.get(id);
+    return node ? [{...node,mx,my}] : [];
+  });
+const mobileFieldDefault = mobileFieldNodes[0];
+const conceptCountLabel = (count:number) => count === 1
+  ? 'Appears in 1 exhibition record.'
+  : `Appears in ${count} exhibition records.`;
 
 ---
 <Base title="Themes & Concepts | TOW ARCHIVE">
@@ -96,7 +119,45 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
         </g>
       </svg>
 
-      <div class="concept-mobile-network" aria-label="Vertical concept network">
+      <div class="concept-mobile-explorer" aria-label="Mobile concept field">
+        <div class="concept-mobile-stage-shell">
+          <div class="concept-mobile-stage-head">
+            <p>CONCEPT FIELD</p>
+            <span>Tap a term to focus, then open its page below.</span>
+          </div>
+          <div class="concept-mobile-stage" id="concept-mobile-stage">
+            {mobileFieldNodes.map((node, i) => (
+              <button
+                type="button"
+                class="concept-mobile-orbit concept-cycle"
+                data-concept={node.id}
+                data-zh={node.title}
+                data-en={node.en}
+                data-ja={node.ja}
+                data-title={node.title}
+                data-english={node.en}
+                data-japanese={node.ja}
+                data-count={node.count}
+                data-href={`/concepts/${node.id}/`}
+                aria-pressed={i===0 ? 'true' : 'false'}
+                style={`--x:${node.mx}%;--y:${node.my}%;--float:${i % 6};--weight:${node.count >= 5 ? 1 : 0};`}
+              >{node.title}</button>
+            ))}
+          </div>
+          {mobileFieldDefault && (
+            <div class="concept-mobile-focus-panel" id="concept-mobile-focus-panel">
+              <div class="concept-mobile-focus-kicker">Selected concept</div>
+              <a class="concept-mobile-focus-link" id="concept-mobile-focus-link" href={`/concepts/${mobileFieldDefault.id}/`}>
+                <span class="concept-mobile-focus-main" id="concept-mobile-focus-main">{mobileFieldDefault.title}</span>
+                <span class="concept-mobile-focus-arrow" aria-hidden="true">↗</span>
+              </a>
+              <p class="concept-mobile-focus-meta" id="concept-mobile-focus-meta">{conceptCountLabel(mobileFieldDefault.count)}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div class="concept-mobile-network" aria-label="Vertical concept index">
         {mobileSorted.map((node, i) => (
           <a class="mobile-concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} style={`--index:${i};--weight:${node.count>=5?1:0};`}>
             <span class="mobile-concept-dot" aria-hidden="true"></span>
@@ -135,17 +196,57 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   .mobile-concept-term{min-width:0;font-size:clamp(15px,4vw,18px);font-weight:400;line-height:1.35}
   .mobile-concept-translation{display:none;}
   .mobile-concept-node[style*="--weight:1"] .mobile-concept-term{font-weight:500}
+  .concept-mobile-explorer{display:none;}
+  .concept-mobile-stage-shell{border-bottom:1px solid var(--rule);padding:4px 0 18px;margin-bottom:8px;}
+  .concept-mobile-stage-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:0 0 12px;}
+  .concept-mobile-stage-head p{margin:0;font-size:10px;letter-spacing:.12em;color:#7b9788;}
+  .concept-mobile-stage-head span{display:block;max-width:22ch;color:var(--quiet);font-size:11px;line-height:1.5;text-align:right;}
+  .concept-mobile-stage{position:relative;height:250px;border:1px solid #d8e8de;border-radius:18px;background:radial-gradient(circle at 28% 28%,rgba(228,244,233,.95),rgba(255,255,255,.96) 48%,rgba(248,251,249,.98));overflow:hidden;}
+  .concept-mobile-stage::before{content:"";position:absolute;inset:18px;border-radius:16px;background:radial-gradient(circle at 50% 50%,rgba(123,193,151,.07),transparent 70%);pointer-events:none;}
+  .concept-mobile-orbit{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);border:0;background:none;color:var(--ink);font:400 13px/1.34 inherit;letter-spacing:-.02em;padding:5px 8px;border-radius:999px;cursor:pointer;max-width:44vw;text-wrap:balance;opacity:.92;}
+  .concept-mobile-orbit[style*="--weight:1"]{font-weight:500;}
+  .concept-mobile-orbit.is-active{background:rgba(255,255,255,.84);box-shadow:0 0 0 1px rgba(111,164,132,.26),0 10px 22px rgba(23,85,56,.07);opacity:1;}
+  .concept-mobile-orbit:focus-visible{outline:2px solid #0d8e61;outline-offset:2px;}
+  .concept-mobile-focus-panel{display:grid;gap:5px;padding-top:12px;}
+  .concept-mobile-focus-kicker{font-size:10px;letter-spacing:.12em;color:#7b9788;}
+  .concept-mobile-focus-link{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;color:var(--ink);text-decoration:none;font-size:18px;line-height:1.28;letter-spacing:-.03em;}
+  .concept-mobile-focus-link:hover,.concept-mobile-focus-link:focus-visible{text-decoration:underline;text-underline-offset:4px;}
+  .concept-mobile-focus-arrow{font-size:18px;line-height:1;flex:0 0 auto;margin-top:2px;}
+  .concept-mobile-focus-meta{margin:0;color:var(--quiet);font-size:11px;line-height:1.6;}
   @media(min-width:901px){
     .concept-map-desktop{display:block}
-    .concept-mobile-network{display:none}
+    .concept-mobile-explorer,.concept-mobile-network{display:none}
   }
-  @media(max-width:900px){.concept-archive{min-height:0}.concept-map-scroll{overflow:visible}}
-  @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } }
+  @media(max-width:900px){
+    .concept-archive{min-height:0}
+    .concept-map-scroll{overflow:visible}
+    .concept-mobile-explorer{display:block}
+    .concept-mobile-network{display:grid}
+  }
+  @media(max-width:650px){
+    .concept-mobile-stage{height:244px;}
+    .concept-mobile-orbit{font-size:12px;max-width:46vw;}
+    .concept-mobile-network{padding-top:2px;}
+    .mobile-concept-node,.mobile-concept-node:nth-child(even){padding:13px 2px;}
+  }
+  @media(max-width:380px){
+    .concept-mobile-stage{height:228px;}
+    .concept-mobile-orbit{font-size:11px;max-width:48vw;padding:4px 7px;}
+    .concept-mobile-focus-link{font-size:16px;}
+  }
+  @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } .concept-mobile-orbit{animation:none!important;} }
   .concept-node{will-change:transform;transition:opacity .2s ease}
   .concept-map-desktop{user-select:none}
   /* Each node displays exactly one language. Transitions happen independently. */
   .concept-cycle{opacity:1;transition:opacity .32s ease;}
   .concept-cycle.is-changing{opacity:.08;}
+  .concept-mobile-orbit{animation:mobile-orbit-float 17s ease-in-out infinite;animation-delay:calc(var(--float,0) * -1.4s);}
+  @keyframes mobile-orbit-float{
+    0%,100%{transform:translate(-50%,-50%) translate3d(0,0,0)}
+    25%{transform:translate(-50%,-50%) translate3d(4px,-7px,0)}
+    50%{transform:translate(-50%,-50%) translate3d(-5px,5px,0)}
+    75%{transform:translate(-50%,-50%) translate3d(6px,3px,0)}
+  }
   @media(prefers-reduced-motion:reduce){.concept-cycle{transition:none!important;}}
 
 </style>
@@ -205,6 +306,32 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   document.addEventListener('visibilitychange',syncLanguageMotion);
   reducedLanguages.addEventListener('change',syncLanguageMotion);
   syncLanguageMotion();
+
+  const mobileOrbitButtons=Array.from(document.querySelectorAll<HTMLButtonElement>('.concept-mobile-orbit'));
+  const mobileFocusLink=document.getElementById('concept-mobile-focus-link') as HTMLAnchorElement | null;
+  const mobileFocusMain=document.getElementById('concept-mobile-focus-main');
+  const mobileFocusMeta=document.getElementById('concept-mobile-focus-meta');
+  const updateMobileFocus=(button:HTMLButtonElement)=>{
+    mobileOrbitButtons.forEach(item=>{
+      const active=item===button;
+      item.classList.toggle('is-active',active);
+      item.setAttribute('aria-pressed',String(active));
+    });
+    if(mobileFocusLink){
+      mobileFocusLink.href=button.dataset.href||'#';
+    }
+    if(mobileFocusMain){
+      mobileFocusMain.textContent=button.dataset.title||button.textContent||'';
+    }
+    if(mobileFocusMeta){
+      const count=Number(button.dataset.count||'0');
+      mobileFocusMeta.textContent=count===1
+        ? 'Appears in 1 exhibition record.'
+        : `Appears in ${count} exhibition records.`;
+    }
+  };
+  mobileOrbitButtons.forEach(button=>button.addEventListener('click',()=>updateMobileFocus(button)));
+  if(mobileOrbitButtons.length) updateMobileFocus(mobileOrbitButtons[0]);
 
   const desktopMap=document.querySelector<SVGSVGElement>('.concept-map-desktop');
   if(desktopMap){

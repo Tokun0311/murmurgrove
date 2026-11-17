@@ -114,7 +114,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         </div>
       </div>
       <aside class="geo-index" aria-label="Browse institutions by location">
-        <p class="geo-index-kicker">EXPLORE BY REGION</p>
+        <p class="geo-index-kicker">EXPLORE BY LOCATION</p>
+        <p class="mobile-geo-hint">Use the globe for spatial exploration, or choose a country for a quicker reading view.</p>
         <button type="button" class="geo-all-button is-active" data-jump-country="all" aria-pressed="true">All institutions <span>{items.length}</span></button>
         <div class="geo-index-group"><h2>Asia</h2>
           {countryEntries.filter(g=>['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand'].includes(g.country)).map(({country,cities,entries})=>(
@@ -231,6 +232,62 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   @media(max-width:760px){.globe-index-layout{display:flex;flex-direction:column;align-items:stretch;gap:5px;min-height:0;}.map-shell{position:relative;left:calc(50% - 50vw);top:auto;width:100vw;height:clamp(300px,80vw,450px);}.world-map{position:relative;height:100%;}.geo-index{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:14px 0 10px;}.map-tooltip{position:absolute;top:14px;left:14px;width:min(320px,calc(100% - 28px));max-height:280px;}.globe-zoom-controls{top:10px;left:12px;}.institution-country-group{grid-template-columns:1fr;gap:12px;}.institution-country-header h2{white-space:normal;}.institution-city-group{grid-template-columns:100px minmax(0,1fr);}.institution-city-list{grid-template-columns:repeat(2,minmax(0,1fr));}}
   @media(max-width:480px){.institution-geography-index{padding-top:18px}.institution-city-group{grid-template-columns:1fr;gap:7px}.institution-city-list{grid-template-columns:1fr 1fr;gap:12px}.institution-city-list a{font-size:13px}}
   @media(prefers-reduced-motion:reduce){.world-map{scroll-behavior:auto}}
+
+  /* Mobile redesign: preserve the geographic explorer, but turn it into a compact card
+     with quick country chips and a lighter institution list. Desktop remains unchanged. */
+  .mobile-geo-hint{display:none;}
+  @media(max-width:650px){
+    .institutions-page .map-heading{display:none;}
+    .institutions-page .globe-index-layout{display:block;min-height:0;}
+    .institutions-page .map-shell{display:block !important;position:relative;left:auto;top:auto;width:100%;height:clamp(224px,56vw,310px);margin:0 0 16px;border:1px solid #d8e8de;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,rgba(243,248,244,.9),rgba(255,255,255,.96));pointer-events:auto;}
+    .institutions-page .world-map{position:relative;inset:0;height:100%;cursor:grab;touch-action:none;}
+    .institutions-page .world-map:active{cursor:grabbing;}
+    .institutions-page .globe-canvas,.institutions-page .globe-dots{position:absolute;inset:0;width:100%;height:100%;}
+    .institutions-page .globe-loading{font-size:11px;}
+    .institutions-page .globe-zoom-controls{display:none !important;}
+    .institutions-page .map-tooltip{top:12px;left:12px;width:min(300px,calc(100% - 24px));max-height:min(170px,calc(100% - 24px));padding:12px 13px;background:rgba(255,255,255,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(93,156,126,.22);box-shadow:0 10px 26px rgba(25,79,51,.08);}
+    .institutions-page .map-popup-country{font-size:13px;margin-bottom:.45rem;}
+    .institutions-page .map-location-precision{display:none;}
+    .institutions-page .map-popup-group{margin-bottom:.55rem;}
+    .institutions-page .map-popup-group h3{font-size:10px;letter-spacing:.08em;}
+    .institutions-page .map-popup-group li a,.institutions-page .cluster-city-link{font-size:12px;padding:.32rem 0;}
+
+    .institutions-page .geo-index{display:flex;flex-wrap:wrap;gap:8px;padding:0 0 16px;background:transparent;align-items:flex-start;}
+    .institutions-page .geo-index-kicker{flex:0 0 100%;margin:0 0 1px;font-size:10px;letter-spacing:.12em;color:#7d9789;}
+    .institutions-page .mobile-geo-hint{display:block;flex:0 0 100%;margin:0 0 10px;color:#769181;font-size:11px;line-height:1.55;}
+    .institutions-page .geo-index-group{display:contents;}
+    .institutions-page .geo-index-group h2{display:none;}
+    .institutions-page .geo-country{display:block;flex:0 0 auto;min-width:0;margin:0;}
+    .institutions-page .geo-all-button,
+    .institutions-page .geo-country-button{display:inline-flex;align-items:center;justify-content:center;width:auto;min-height:42px;padding:9px 13px;margin:0;border:1px solid #d7e6dc;border-radius:4px;background:#fff;color:var(--ink);font-size:12px;line-height:1.4;text-align:center;gap:0;box-sizing:border-box;}
+    .institutions-page .geo-country-button span{flex:initial;font-size:12px;line-height:1.4;overflow-wrap:normal;white-space:normal;}
+    .institutions-page .geo-country-button small,
+    .institutions-page .geo-all-button span,
+    .institutions-page .geo-country p{display:none;}
+    .institutions-page .geo-all-button.is-active,
+    .institutions-page .geo-country-button.is-active,
+    .institutions-page .geo-country-button[aria-pressed="true"]{background:#0d8e61;border-color:#0d8e61;color:#fff;font-weight:400;}
+    .institutions-page .geo-all-button:focus-visible,
+    .institutions-page .geo-country-button:focus-visible{outline:2px solid #0d8e61;outline-offset:2px;}
+
+    .institutions-page .institution-geography-index{padding-top:10px;}
+    .institutions-page .institution-geography-index::before{display:none;}
+    .institutions-page .institution-country-group{grid-template-columns:1fr;gap:10px;padding:18px 0 14px;border:0;}
+    .institutions-page .institution-country-header h2{font-size:18px;white-space:normal;}
+    .institutions-page .institution-country-cities{display:grid;gap:10px;}
+    .institutions-page .institution-city-group{grid-template-columns:1fr;gap:5px;padding:0;}
+    .institutions-page .institution-city-group+.institution-city-group{padding-top:8px;border-top:0;}
+    .institutions-page .institution-city-group h3{margin:0 0 3px;font-size:11px;}
+    .institutions-page .institution-city-list{grid-template-columns:1fr;gap:4px 0;}
+    .institutions-page .institution-city-list li{border:0;}
+    .institutions-page .institution-city-list a{min-height:38px;padding:7px 0;font-size:14px;}
+  }
+  @media(max-width:360px){
+    .institutions-page .geo-all-button,
+    .institutions-page .geo-country-button{padding:8px 11px;font-size:11px;}
+    .institutions-page .geo-country-button span{font-size:11px;}
+  }
+
 </style>
 <script>
   const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
@@ -273,6 +330,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     const dotCtx=dotsCanvas.getContext('2d');
     const clamp = (n:number,a:number,b:number) => Math.min(b,Math.max(a,n));
     const PI = Math.PI;
+    const compactMobile = window.matchMedia('(max-width: 650px)');
     let longitude = 75 * PI / 180, latitude = 19 * PI / 180, zoom = 1;
     let selectedGlobeCountry:string|null=null;
     const defaultGlobe={lon:longitude,lat:latitude,zoom:1};
@@ -505,7 +563,15 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       }
       function updateProjection(){
         // Stable map coordinate system across global and country views.
-        // The hemisphere rotates and scales around the same left-hand compositional anchor.
+        // On mobile, recentre the globe so it acts like a compact exploratory card
+        // rather than a cropped background element.
+        if(compactMobile.matches){
+          const baseRadius=Math.min(width*.31,height*.41);
+          radius=baseRadius*zoom;
+          cx=width*.5;
+          cy=height*.57;
+          return;
+        }
         const baseRadius=Math.min(width*.205,height*.37);
         radius=baseRadius*zoom;
         cx=width*.285;
