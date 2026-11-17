@@ -1,22 +1,378 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
-const exhibitions=(await getCollection('exhibitions')).sort((a,b)=>b.data.visitedOn.valueOf()-a.data.visitedOn.valueOf());
-const latest=exhibitions.slice(0,6);
+import { createMurmurgrove } from '../lib/murmurgrove';
+const [exhibitions,people,institutions,concepts]=await Promise.all([
+  getCollection('exhibitions'),getCollection('people'),getCollection('institutions'),getCollection('concepts')
+]);
+const organism=createMurmurgrove({
+  exhibitions:exhibitions.map(x=>({id:x.id,data:x.data as Record<string,any>})),
+  people:people.map(x=>({id:x.id,data:x.data as Record<string,any>})),
+  institutions:institutions.map(x=>({id:x.id,data:x.data as Record<string,any>})),
+  concepts:concepts.map(x=>({id:x.id,data:x.data as Record<string,any>})),
+});
+const sectionItems=[
+  {id:'exhibitions',name:'Exhibitions',desc:'Encounters in time',index:1},
+  {id:'institutions',name:'Institutions',desc:'Art in place',index:2},
+  {id:'people',name:'People',desc:'Lives & practices',index:3},
+  {id:'concepts',name:'Concepts',desc:'Ideas in circulation',index:4},
+] as const;
+const pageData={marks:organism.marks,counts:organism.counts,relationDensity:organism.relationDensity,fingerprint:organism.fingerprint};
 ---
-<Base title="TOW ARCHIVE" description="A personal archive of exhibitions, art institutions, people and research concepts.">
-  <section class="home-index" aria-label="Tow Archive index">
-    <h2 class="section-title">An archive of looking and thinking.</h2>
-    <p class="section-lead">Exhibitions, encounters and research notes, connected through people, places and concepts.</p>
-    <div class="home-sections">
-      <a href="/exhibitions/">Exhibitions <span>Browse by date and region ↗</span></a>
-      <a href="/institutions/">Institutions <span>Explore places ↗</span></a>
-      <a href="/concepts/">Concepts <span>Explore connections ↗</span></a>
-      <a href="/people/">People <span>Browse people ↗</span></a>
+<Base title="TOW ARCHIVE | Murmurgrove" description="An evolving archive of encounters, institutions, people and concepts. A living form shaped by the archive as a whole.">
+  <section class="grove-home" aria-labelledby="grove-intro-title">
+    <div class="grove-intro">
+      <div class="grove-intro-copy">
+        <p class="grove-eyebrow">AN EVOLVING RESEARCH ARCHIVE <span aria-hidden="true">/</span> MURMURGROVE</p>
+        <h2 id="grove-intro-title">An archive<br/>in the making<span class="grove-period">.</span></h2>
+        <p class="grove-intro-text">Encounters accumulate. Relations take root. The archive moves as it grows.</p>
+      </div>
+      <div class="grove-intro-aside"><span class="grove-small-cross" aria-hidden="true">✳</span><span>One form, continually shaped<br/>by four ways of looking.</span></div>
     </div>
-    <div class="home-recent-heading"><h2>Recent exhibitions</h2><a href="/exhibitions/">View all</a></div>
-    <ol class="archive-list">
-      {latest.map(item=><li class="archive-entry"><time datetime={item.data.visitedOn.toISOString().slice(0,10)}>{item.data.dateLabel.replaceAll('-','.')}</time><a href={`/exhibitions/${item.id}/`}>{item.data.title}</a><span class="entry-type">{item.data.region}</span></li>)}
-    </ol>
+
+    <div class="grove-figure" id="murmurgrove" data-fingerprint={organism.fingerprint}>
+      <div class="grove-figure-top">
+        <span>FIG. 01 <span class="grove-separator">/</span> ARCHIVE MORPHOLOGY</span>
+        <span class="grove-status"><span class="grove-status-dot" aria-hidden="true"></span> CONTINUALLY FORMING</span>
+      </div>
+      <div class="grove-canvas-area" id="grove-canvas-area">
+        <div class="grove-haze" aria-hidden="true"></div>
+        <canvas id="grove-canvas" aria-label="Animated organic illustration representing the connected archive. Its changing form is derived from exhibitions, institutions, people and concepts." role="img"></canvas>
+        <div class="grove-watermark grove-watermark-top" aria-hidden="true">ROOTED IN ENCOUNTERS</div>
+        <div class="grove-watermark grove-watermark-bottom" aria-hidden="true">SHAPED BY RELATIONS</div>
+        <div class="grove-figure-legend" aria-hidden="true"><span class="grove-legend-dash"></span> A living form generated from the archive</div>
+      </div>
+      <div class="grove-figure-foot">
+        <div class="grove-modes" role="group" aria-label="Explore the organism through different views">
+          <button type="button" class="grove-mode is-selected" data-mode="whole" aria-pressed="true">Whole archive</button>
+          <button type="button" class="grove-mode" data-mode="growth" aria-pressed="false">Recent growth</button>
+          <button type="button" class="grove-mode" data-mode="movement" aria-pressed="false">Movement</button>
+        </div>
+        <div class="grove-mode-description" id="grove-mode-description" aria-live="polite">The form of the archive, held together by accumulated encounters.</div>
+      </div>
+    </div>
+
+    <div class="grove-ways" aria-label="Enter the archive">
+      <div class="grove-ways-heading"><span>FOUR WAYS INTO THE ARCHIVE</span><span>01 — 04</span></div>
+      <div class="grove-ways-grid">
+        {sectionItems.map(section=>(
+          <div class="grove-way">
+            <a class="grove-way-main" href={`/${section.id}/`} aria-label={`Explore ${section.name}`}>
+              <span class="grove-way-index">0{section.index}</span>
+              <span class="grove-way-title">{section.name}</span>
+              <span class="grove-way-arrow" aria-hidden="true">↗</span>
+            </a>
+            <div class="grove-way-meta"><span>{section.desc}</span><span>{organism.counts[section.id]} records</span></div>
+            <div class="grove-entrances">
+              {(organism.entrances[section.id]||[]).slice(0,2).map(entry=>(<a href={entry.url}>{entry.title} <span aria-hidden="true">↗</span></a>))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="grove-recent">
+      <div class="grove-recent-intro"><p class="grove-eyebrow">RECENT ENCOUNTERS</p><h2>The archive continues.</h2><p>New records change the form above, without replacing what came before.</p><a href="/exhibitions/">All exhibition records <span aria-hidden="true">↗</span></a></div>
+      <ol class="grove-recent-list">
+        {organism.latest.map(item=>(
+          <li><time datetime={new Date(item.visitedOn).toISOString().slice(0,10)}>{new Date(item.visitedOn).toISOString().slice(0,10).replaceAll('-','.')}</time><a href={`/exhibitions/${item.id}/`}>{item.title}</a><span class="grove-recent-region">{item.region}</span></li>
+        ))}
+      </ol>
+    </div>
+    <div class="grove-outro"><span>MURMURGROVE</span><p>Neither a finished map nor a complete account. An ongoing form of looking, connecting, and returning.</p><a href="/about/">About the archive ↗</a></div>
   </section>
+  <script type="application/json" id="grove-data" set:html={JSON.stringify(pageData).replace(/</g,'\\u003c')}></script>
 </Base>
+<style>
+.grove-home{padding:var(--section-start-gap,32px) 0 56px;color:var(--ink)}
+.grove-intro{display:flex;justify-content:space-between;gap:32px;align-items:flex-end;padding:18px 0 25px}
+.grove-intro-copy{max-width:780px}
+.grove-eyebrow{font-size:10px;font-weight:500;letter-spacing:.125em;margin:0 0 20px;color:#538b73}
+.grove-eyebrow span{padding:0 8px;color:#9ec8af}
+.grove-intro h2{font-size:clamp(42px,7.5vw,99px);font-weight:400;line-height:1.025;letter-spacing:-.072em;margin:0 0 22px;color:#087a55}
+.grove-period{color:#80ba90}
+.grove-intro-text{font-size:clamp(13px,1.35vw,16px);line-height:1.65;letter-spacing:-.015em;margin:0;max-width:37ch;color:#608b75}
+.grove-intro-aside{align-self:flex-end;display:flex;align-items:flex-start;gap:10px;color:#80a895;font-size:11px;line-height:1.6;text-align:left;white-space:nowrap;padding-bottom:4px}
+.grove-small-cross{font-size:23px;line-height:1;color:#83bf9e}
+.grove-figure{margin-top:14px;border-top:1px solid #6ba989;border-bottom:1px solid #9fc6b2;isolation:isolate}
+.grove-figure-top{display:flex;justify-content:space-between;gap:12px;font-size:10px;letter-spacing:.11em;color:#7ca58f;padding:14px 0 7px}
+.grove-separator{padding:0 5px;color:#b5d0bd}
+.grove-status{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.grove-status-dot{width:5px;height:5px;border-radius:50%;background:#4fb78a;box-shadow:0 0 10px #84c5a6;animation:grove-pulse 3.6s infinite}
+@keyframes grove-pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.grove-canvas-area{position:relative;height:clamp(410px,56vw,690px);overflow:hidden;touch-action:pan-y;background:radial-gradient(ellipse 52% 40% at 50% 52%,rgba(183,233,201,.075),rgba(255,255,255,0) 80%)}
+.grove-haze{pointer-events:none;position:absolute;inset:5% 6%;z-index:0;background:radial-gradient(ellipse at 48% 48%,rgba(185,239,198,.075),transparent 57%)}
+#grove-canvas{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.grove-watermark{position:absolute;z-index:2;pointer-events:none;color:#a5c6b6;font-size:9px;letter-spacing:.14em;writing-mode:vertical-rl}
+.grove-watermark-top{top:16%;left:1px}.grove-watermark-bottom{right:1px;bottom:15%;transform:rotate(180deg)}
+.grove-figure-legend{position:absolute;bottom:16px;left:0;display:flex;gap:8px;align-items:center;color:#7baa90;font-size:10px;z-index:2}
+.grove-legend-dash{display:block;height:1px;width:21px;background:#a2ccb3}
+.grove-figure-foot{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:16px 0 19px;min-height:72px;border-top:1px solid #e1eee5}
+.grove-modes{display:flex;flex-wrap:wrap;gap:6px}
+.grove-mode{color:#598b72;border:1px solid #d2e6d9;background:transparent;border-radius:100px;font-size:11px;padding:8px 13px;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.grove-mode:hover{border-color:#80b79c;background:#f3faf5}
+.grove-mode.is-selected{background:#e9f6ee;border-color:#aad3ba;color:#087a55}
+.grove-mode:focus-visible,.grove-way a:focus-visible,.grove-entrances a:focus-visible{outline:2px solid #159569;outline-offset:3px}
+.grove-mode-description{max-width:320px;font-size:11px;color:#86a898;text-align:right;line-height:1.5}
+.grove-ways{margin:82px 0 85px}
+.grove-ways-heading{display:flex;justify-content:space-between;border-bottom:1px solid #91bea4;padding-bottom:16px;color:#62987c;font-size:11px;letter-spacing:.1em}
+.grove-ways-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
+.grove-way{min-width:0;border-bottom:1px solid #d8e8df;padding:26px 0 23px}
+.grove-way-main{display:flex;align-items:baseline;gap:12px;text-decoration:none}
+.grove-way-index{align-self:flex-start;transform:translateY(7px);color:#94beaa;font-size:11px;font-variant-numeric:tabular-nums}
+.grove-way-title{color:#087a55;line-height:1.1;letter-spacing:-.045em;font-size:clamp(25px,3.2vw,44px);font-weight:400}
+.grove-way-arrow{margin-left:auto;font-size:24px;font-weight:300;line-height:1;color:#9bc7ab;transition:transform .2s ease}
+.grove-way-main:hover .grove-way-arrow{transform:translate(3px,-3px)}
+.grove-way-meta{display:flex;justify-content:space-between;gap:10px;margin:11px 0 15px;padding-left:29px;font-size:11px;color:#8da995}
+.grove-entrances{padding-left:29px;display:flex;gap:5px 22px;flex-wrap:wrap;align-items:center}
+.grove-entrances a{display:inline-block;font-size:12px;line-height:1.5;color:#508c70;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grove-entrances a span{color:#99c5aa}
+.grove-recent{display:grid;grid-template-columns:minmax(210px,.85fr) minmax(0,1.7fr);gap:55px;padding:34px 0 67px;border-top:1px solid #91bea4}
+.grove-recent-intro .grove-eyebrow{margin-bottom:15px}
+.grove-recent-intro h2{font-size:clamp(25px,3.3vw,42px);letter-spacing:-.05em;font-weight:400;line-height:1.13;margin:0 0 17px}
+.grove-recent-intro p:not(.grove-eyebrow){font-size:12px;color:#81a48c;line-height:1.65;max-width:25ch}
+.grove-recent-intro>a{display:inline-block;font-size:12px;margin-top:18px;text-decoration:underline;text-decoration-color:#b4d9c1;text-underline-offset:5px}
+.grove-recent-list{list-style:none;padding:0;margin:0}
+.grove-recent-list li{display:grid;grid-template-columns:95px minmax(0,1fr) 115px;gap:16px;align-items:baseline;border-bottom:1px solid #e2eee6;padding:17px 0}
+.grove-recent-list li:first-child{padding-top:0}
+.grove-recent-list time{font-size:11px;color:#89a994;font-variant-numeric:tabular-nums}
+.grove-recent-list a{font-size:16px;line-height:1.45;letter-spacing:-.02em;overflow-wrap:anywhere}
+.grove-recent-region{font-size:11px;text-align:right;color:#9bb7a4}
+.grove-outro{display:flex;align-items:baseline;gap:25px;border-top:1px solid #d2e6d9;padding-top:23px}
+.grove-outro>span{font-size:10px;color:#8bae98;letter-spacing:.12em;white-space:nowrap}
+.grove-outro p{font-size:12px;color:#8eab99;max-width:440px;line-height:1.6;margin:0}
+.grove-outro a{margin-left:auto;white-space:nowrap;font-size:12px;color:#548e71}
+@media(max-width:800px){
+.grove-intro-aside{display:none}
+.grove-figure-foot{align-items:flex-start;flex-direction:column;gap:9px}
+.grove-mode-description{text-align:left;max-width:none}
+.grove-ways-grid{column-gap:24px}
+.grove-recent{gap:25px}
+.grove-recent-list li{grid-template-columns:88px minmax(0,1fr)}
+.grove-recent-region{display:none}
+}
+@media(max-width:650px){
+.grove-home{padding-top:24px}
+.grove-intro{padding:9px 0 17px}
+.grove-eyebrow{font-size:9px;letter-spacing:.09em;margin-bottom:15px}
+.grove-eyebrow span{padding:0 3px}
+.grove-intro h2{font-size:clamp(40px,11vw,58px);line-height:1.03;margin:0 0 17px}
+.grove-intro-text{font-size:12px;max-width:34ch}
+.grove-figure{margin-top:8px}
+.grove-figure-top{font-size:9px;letter-spacing:.055em}
+.grove-canvas-area{height:min(116vw,500px);min-height:340px}
+.grove-watermark{font-size:8px}
+.grove-figure-legend{font-size:9px;bottom:8px}
+.grove-figure-foot{padding:12px 0 14px}
+.grove-modes{gap:5px}
+.grove-mode{padding:8px 10px;font-size:10px}
+.grove-ways{margin:55px 0 58px}
+.grove-ways-heading{font-size:9px;padding-bottom:12px}
+.grove-ways-grid{grid-template-columns:1fr}
+.grove-way{padding:19px 0 17px}
+.grove-way-title{font-size:29px}
+.grove-way-meta{margin:9px 0 9px}
+.grove-entrances a{max-width:47%;font-size:11px}
+.grove-recent{grid-template-columns:1fr;gap:28px;padding:25px 0 48px}
+.grove-recent-intro h2{font-size:29px}
+.grove-recent-intro p:not(.grove-eyebrow){max-width:40ch}
+.grove-recent-intro>a{margin-top:8px}
+.grove-recent-list li{grid-template-columns:82px minmax(0,1fr);gap:9px;padding:13px 0}
+.grove-recent-list a{font-size:14px}
+.grove-outro{flex-wrap:wrap;gap:10px}
+.grove-outro>span{width:100%}
+.grove-outro a{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){.grove-status-dot{animation:none}}
+</style>
+<script>
+  type Mark={key:string;section:string;strength:number;recency:number;related:number;x:number;y:number;seed:number};
+  const dataEl=document.getElementById('grove-data');
+  const canvas=document.getElementById('grove-canvas') as HTMLCanvasElement | null;
+  const area=document.getElementById('grove-canvas-area') as HTMLElement | null;
+  if(dataEl && canvas && area){
+    const data=JSON.parse(dataEl.textContent||'{}') as {marks:Mark[];relationDensity:number;fingerprint:number};
+    const ctx=canvas.getContext('2d',{alpha:true});
+    if(ctx){
+      const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+      const fine=window.matchMedia('(pointer: fine)');
+      const buttons=Array.from(document.querySelectorAll<HTMLButtonElement>('.grove-mode'));
+      const description=document.getElementById('grove-mode-description');
+      const descriptions:Record<string,string>={whole:'The form of the archive, held together by accumulated encounters.',growth:'Recent encounters gently illuminate the places where the archive is growing.',movement:'Collective motion reveals a living system: responsive, but never random.'};
+      let mode='whole';
+      let frame=0,last=0,visible=true,width=0,height=0,dpr=1;
+      let pointer={x:-500,y:-500,active:false};
+      const TAU=Math.PI*2;
+      const seed=(s:string)=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)/4294967295};
+      const marks=(data.marks||[]).map((m,i)=>({...m,index:i,phase:seed(m.key+'phase')*TAU,positionX:0,positionY:0}));
+      // A stable multi-branch structure. Archive density thickens roots;
+      // distinct collection relationships influence the overall spread.
+      const roots=Array.from({length:19},(_,i)=>({
+        i,angle:(i/19)*TAU + .18*Math.sin(i*2.1),
+        bend:.12+.27*seed('bend'+i),
+        reach:.54+.37*seed('reach'+i),
+        phase:seed('branch'+i)*TAU,
+        influence:marks.filter(m=>Math.abs(Math.atan2(Math.sin(Math.atan2(m.y-.5,m.x-.5)-(i/19)*TAU),Math.cos(Math.atan2(m.y-.5,m.x-.5)-(i/19)*TAU)))<.35).reduce((sum,m)=>sum+Math.min(6,m.related)*.42+m.strength*.7,0)
+      }));
+      const flock=Array.from({length:Math.min(580,Math.max(155,Math.round(95+marks.length*2.2)))},(_,i)=>({
+        i,angle:seed('flockangle'+i)*TAU,r:.08+.88*Math.sqrt(seed('flockradius'+i)),
+        phase:seed('flockphase'+i)*TAU,speed:.58+seed('flockspeed'+i)*.9,
+        size:.5+seed('flocksize'+i)*1.4,fade:.22+.6*seed('flockfade'+i)
+      }));
+      const resize=()=>{
+        const rect=area.getBoundingClientRect();
+        width=Math.max(1,rect.width);height=Math.max(1,rect.height);
+        dpr=Math.min(window.devicePixelRatio||1,2);
+        canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        draw(last||0);
+      };
+      const nodePosition=(m:typeof marks[number],t:number,scaleX:number,scaleY:number)=>{
+        const sway=reduce.matches?0:Math.sin(t*.00023+m.phase)*.008;
+        const spread=Math.min(1.19,.87+Math.sqrt(Math.max(1,marks.length))/75);
+        const xx=(m.x-.5)*spread+Math.sin(m.phase+t*.00015)*.018+sway;
+        const yy=(m.y-.5)*spread+Math.cos(m.phase*1.7+t*.00014)*.019;
+        return [width*.5+xx*scaleX,height*.49+yy*scaleY] as const;
+      };
+      const draw=(t:number)=>{
+        if(!width||!height)return;
+        ctx.clearRect(0,0,width,height);
+        const mobile=width<560;
+        const sx=width*(mobile ? .93 : .85), sy=height*(mobile ? .85 : .87);
+        const cX=width*.5,cY=height*.49;
+        const growth=mode==='growth',movement=mode==='movement';
+        // Slow translucent tissue layers form a single continuous body.
+        const layers=5;
+        for(let layer=layers-1;layer>=0;layer--){
+          const radius=(.29+layer*.045)*Math.min(sx,sy)*1.23;
+          ctx.beginPath();
+          for(let j=0;j<=150;j++){
+            const a=j/150*TAU;
+            const relationBoost=Math.min(.12,(data.relationDensity||0)*.018);
+            const ripple=1+.11*Math.sin(a*4+data.fingerprint*.009+layer*.63)+relationBoost*Math.sin(a*5.8+layer*.4)
+              +.075*Math.sin(a*7.7+layer*1.7)
+              +(reduce.matches?0:.032*Math.cos(a*5-t*.00019+layer));
+            const x=cX+Math.cos(a)*radius*ripple*(mobile?1.05:1.7);
+            const y=cY+Math.sin(a)*radius*ripple*.88;
+            if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+          }
+          ctx.closePath();
+          ctx.fillStyle=`rgba(140,211,165,${.016+(layers-layer)*.004})`;
+          ctx.fill();
+          ctx.lineWidth=.65;
+          ctx.strokeStyle=`rgba(94,174,125,${.06+(layers-layer)*.014})`;
+          ctx.stroke();
+        }
+        // Mangrove principle: anchored ramifications, not a concepts-style line graph.
+        roots.forEach(branch=>{
+          const variation=(branch.influence/Math.max(1,marks.length))*.8;
+          const growthLength=branch.reach*(.85+Math.min(.35,variation));
+          const angle=branch.angle;
+          const cx=cX+Math.cos(angle)*sx*.12;
+          const cy=cY+Math.sin(angle)*sy*.09;
+          const ex=cX+Math.cos(angle+Math.sin(angle*3+branch.phase)*.22)*sx*(.27+growthLength*.2);
+          const ey=cY+Math.sin(angle)*sy*(.22+growthLength*.16);
+          const bend=branch.bend;
+          ctx.beginPath();ctx.moveTo(cx,cy);
+          ctx.bezierCurveTo(cx+Math.cos(angle+bend)*sx*.13,cy+Math.sin(angle-bend)*sy*.14,
+            ex-Math.cos(angle-.38)*sx*.1,ey-Math.sin(angle+.23)*sy*.11,ex,ey);
+          ctx.strokeStyle=`rgba(50,138,93,${(growth ? .19 : .14)+Math.min(.18,variation)})`;
+          ctx.lineWidth=.8+branch.influence/Math.max(1,marks.length)*3;
+          ctx.stroke();
+          for(let k=0;k<3;k++){
+            const r=.45+k*.15;
+            const bx=cx+(ex-cx)*r,by=cy+(ey-cy)*r;
+            const branchAngle=angle+(k%2===0?1:-1)*(.4+branch.bend);
+            const len=(.04+.025*seed('twig'+branch.i+':'+k))*Math.min(sx,sy);
+            ctx.beginPath();ctx.moveTo(bx,by);
+            ctx.quadraticCurveTo(bx+len*.3*Math.cos(branchAngle),by+len*.36*Math.sin(branchAngle),bx+len*Math.cos(branchAngle),by+len*Math.sin(branchAngle));
+            ctx.strokeStyle='rgba(65,148,104,.12)';ctx.lineWidth=.65;ctx.stroke();
+          }
+        });
+        // Record-derived growth sites quietly retain a memory of past additions.
+        for(const m of marks){
+          const [x,y]=nodePosition(m,t,sx,sy);
+          m.positionX=x;m.positionY=y;
+          const intensity=growth?m.recency*.72+.06:.21+m.strength*.14;
+          const radius=1.1+Math.sqrt(m.strength)*2.5+(growth?m.recency*2.4:0);
+          const halo=ctx.createRadialGradient(x,y,0,x,y,radius*8);
+          halo.addColorStop(0,`rgba(51,171,94,${Math.min(.2,intensity*.5)})`);
+          halo.addColorStop(1,'rgba(51,171,94,0)');
+          ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,radius*8,0,TAU);ctx.fill();
+          ctx.fillStyle=`rgba(23,125,79,${Math.min(.67,intensity+.09)})`;
+          ctx.beginPath();ctx.arc(x,y,Math.max(.6,radius*.48),0,TAU);ctx.fill();
+        }
+        // Murmuration principle: hundreds of smaller units flow collectively
+        // through the tissue. Motion is coherent, not per-label jitter.
+        const speed=movement?1.8:.8;
+        for(const f of flock){
+          const u=f.angle+(reduce.matches?0:t*.000033*speed*f.speed);
+          const swirl=.13*Math.sin(u*3+f.phase + (reduce.matches?0:t*.00018*speed));
+          const r=f.r*(1+.12*Math.sin(u*2.1+data.fingerprint*.013));
+          const px=cX+Math.cos(u+swirl)*sx*(.39*r);
+          const py=cY+Math.sin(u*.91+swirl)*sy*(.38*r);
+          let x=px,y=py;
+          if(pointer.active&&!reduce.matches){
+            const dx=px-pointer.x,dy=py-pointer.y;
+            const d=Math.hypot(dx,dy);
+            const range=Math.min(145,width*.24);
+            if(d<range&&d>0){const push=(1-d/range)**2*24;x+=dx/d*push;y+=dy/d*push;}
+          }
+          ctx.beginPath();ctx.arc(x,y,Math.min(1.9,f.size*(mobile ? .8 : 1)),0,TAU);
+          ctx.fillStyle=`rgba(38,136,85,${Math.min(.65,f.fade*(growth ? .28 : movement ? .82 : .64))})`;
+          ctx.fill();
+        }
+        // A few subtle luminous folds communicate collective movement.
+        if(!reduce.matches){
+          ctx.beginPath();
+          for(let j=0;j<=85;j++){
+            const u=j/85;
+            const x=cX+sx*(u-.5)*.86;
+            const y=cY+Math.sin(u*TAU*2.4+t*.00027)*sy*.087;
+            if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+          }
+          ctx.lineWidth=.5;ctx.strokeStyle='rgba(76,171,111,.095)';ctx.stroke();
+        }
+      };
+      const tick=(time:number)=>{
+        frame=0;last=time;
+        if(!visible||document.hidden)return;
+        draw(time);
+        if(!reduce.matches)frame=requestAnimationFrame(tick);
+      };
+      const sync=()=>{
+        if(frame){cancelAnimationFrame(frame);frame=0;}
+        if(visible&&!document.hidden){
+          draw(last||0);
+          if(!reduce.matches)frame=requestAnimationFrame(tick);
+        }
+      };
+      buttons.forEach(button=>button.addEventListener('click',()=>{
+        mode=button.dataset.mode||'whole';
+        buttons.forEach(b=>{const selected=b===button;b.classList.toggle('is-selected',selected);b.setAttribute('aria-pressed',String(selected));});
+        if(description)description.textContent=descriptions[mode]||descriptions.whole;
+        sync();
+      }));
+      let contactTimer=0;
+      area.addEventListener('pointerdown',e=>{
+        const rect=area.getBoundingClientRect();
+        pointer={x:e.clientX-rect.left,y:e.clientY-rect.top,active:true};
+        window.clearTimeout(contactTimer);
+        if(!fine.matches)contactTimer=window.setTimeout(()=>{pointer.active=false},1050);
+      },{passive:true});
+      area.addEventListener('pointermove',e=>{
+        if(!fine.matches && e.buttons===0)return;
+        const rect=area.getBoundingClientRect();
+        pointer={x:e.clientX-rect.left,y:e.clientY-rect.top,active:true};
+      },{passive:true});
+      area.addEventListener('pointerleave',()=>{pointer.active=false;},{passive:true});
+      area.addEventListener('pointercancel',()=>{pointer.active=false;},{passive:true});
+      let observer:IntersectionObserver|null=null;
+      if('IntersectionObserver' in window){observer=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??true;sync();},{threshold:.01});observer.observe(area);}
+      window.addEventListener('resize',resize,{passive:true});
+      document.addEventListener('visibilitychange',sync);
+      reduce.addEventListener('change',sync);
+      resize();sync();
+    }
+  }
+</script>
