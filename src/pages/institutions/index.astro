@@ -61,6 +61,9 @@ const countryMarkers = countryEntries.map(({country,cities,entries}) => {
     lat:Math.atan2(avg.y,Math.hypot(avg.x,avg.z))*180/Math.PI,
     count:entries.length};
 }).filter(p=>Number.isFinite(p.lon)&&Number.isFinite(p.lat));
+const focusCityMarkers = countryEntries.flatMap(({country,cities}) => cities.map(({city,entries}) => ({
+  country,city,lon:cityMeta[city]?.lon,lat:cityMeta[city]?.lat,count:entries.length
+})).filter(p=>Number.isFinite(p.lon)&&Number.isFinite(p.lat)));
 const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.city]?.country);
 ---
 <Base title="Institutions & Spaces | TOW ARCHIVE">
@@ -71,12 +74,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       <div class="map-heading"><span>GEOGRAPHIC INDEX</span><span>{countryEntries.length} countries · {items.length} entries</span></div>
       <div class="globe-index-layout">
       <div class="map-shell" id="institution-map-shell">
-        <div class="map-controls" aria-label="Map navigation">
-          <button type="button" class="map-control" data-map-action="in" aria-label="Zoom in" title="Zoom in">+</button>
-          <button type="button" class="map-control" data-map-action="out" aria-label="Zoom out" title="Zoom out">−</button>
-          <button type="button" class="map-control map-reset" data-map-action="reset" title="Reset map view">Reset</button>
-        </div>
-        <div class="world-map" id="institution-world-map" role="group" aria-label="Interactive globe with coastlines and one density glow per country. Drag to rotate, scroll to zoom, and select a marker to explore institutions." tabindex="0">
+        <button type="button" class="map-reset-minimal" data-map-action="reset" title="Return to global view" hidden>← Global view</button>
+        <div class="world-map" id="institution-world-map" role="group" aria-label="Rotatable geographic globe. Choose a country from the geographic index to enlarge its region and reveal recorded cities." tabindex="0">
           <canvas class="globe-canvas" id="institution-globe" aria-hidden="true"></canvas>
           <canvas class="globe-dots" id="institution-dots" aria-hidden="true"></canvas>
           <script id="globe-city-data" type="application/json" set:html={JSON.stringify(countryMarkers).replaceAll("<", "\\u003c")} />
@@ -112,10 +111,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
             <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
           ))}
         </div>
-        <p class="geo-index-help">Choose a country to rotate the globe and filter the archive.</p>
+        <p class="geo-index-help">Choose a country to bring its recorded cities into focus.</p>
       </aside>
       </div>
-      <p class="map-note">Drag to rotate · Scroll to zoom · Select a country glow to explore.</p>
+      <p class="map-note">Drag the globe to explore · Select a country to reveal its cities.</p>
     </section>
 
     <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries · grouped by country and city</span></div>
@@ -150,6 +149,19 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
 </Base>
 
 <style>
+  /* Expanded globe acts as a quiet, interactive spatial backdrop. */
+  .world-map-section{margin:0 0 2.8rem;position:relative}
+  .globe-index-layout{position:relative!important;display:block!important;isolation:isolate;min-height:clamp(485px,48vw,630px)}
+  .map-shell{position:absolute!important;z-index:0;inset:0 auto 0 -3%;width:82%;height:100%;background:transparent!important;isolation:auto!important}
+  .world-map{height:100%!important;width:100%;background:transparent!important;overflow:hidden}
+  .geo-index{position:relative;z-index:5;margin:0 0 0 auto;width:min(45%,580px);min-height:100%;padding:26px 12px 30px 55px!important;
+    background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.88) 12%,rgba(255,255,255,.97) 36%,#fff 100%)}
+  .map-reset-minimal{position:absolute;top:13px;left:20px;z-index:9;border:0;background:rgba(255,255,255,.85);color:#48785e;font:inherit;font-size:12px;padding:7px 10px;cursor:pointer}
+  .map-reset-minimal[hidden]{display:none}
+  .map-reset-minimal:hover{text-decoration:underline}
+  .map-tooltip{right:42%;top:16px;max-width:260px}
+  @media(max-width:960px){.globe-index-layout{min-height:530px}.geo-index{width:51%;padding-left:28px!important}.map-shell{width:88%}}
+  @media(max-width:700px){.globe-index-layout{min-height:0;display:flex!important;flex-direction:column}.map-shell{position:relative!important;width:100%;height:340px;left:0}.geo-index{width:100%;padding:10px 0 0!important;background:#fff;min-height:0}.map-tooltip{top:0;right:0}.world-map{height:340px!important}}
   .world-map-section{margin:0 0 2.8rem}
   .globe-index-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.95fr);gap:clamp(20px,4vw,62px);align-items:center}
   .geo-index{align-self:center;max-height:none;overflow:visible;padding:.25rem 0 .25rem .5rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 1.1rem}
@@ -245,10 +257,16 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     type CityMarker={country:string,lon:number,lat:number,count:number};
     const cityDataElement=document.querySelector('#globe-city-data');
     const cities:CityMarker[]=cityDataElement?.textContent ? JSON.parse(cityDataElement.textContent) : [];
+    type FocusCity={city:string,country:string,lon:number,lat:number,count:number};
+    const focusCityElement=document.querySelector('#globe-focus-city-data');
+    const focusCities:FocusCity[]=focusCityElement?.textContent?JSON.parse(focusCityElement.textContent):[];
     const dotCtx=dotsCanvas.getContext('2d');
     const clamp = (n:number,a:number,b:number) => Math.min(b,Math.max(a,n));
     const PI = Math.PI;
     let longitude = 75 * PI / 180, latitude = 19 * PI / 180, zoom = 1;
+    let selectedGlobeCountry:string|null=null;
+    const defaultGlobe={lon:longitude,lat:latitude,zoom:1};
+    const resetButton=shell.querySelector<HTMLButtonElement>('[data-map-action="reset"]');
     let width=1,height=1,cx=0,cy=0,radius=1;
     let dragging: {id:number,x:number,y:number,lon:number,lat:number}|null=null;
     let moved=false, activeCountry:string|null=null, pinned=false, closeTimer:any;
@@ -290,10 +308,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           // Sample a merged land mask. Countries share the same fill and have NO internal borders.
           vec2 uv=vec2(fract(lng/6.28318530718+.5),clamp(lat/3.14159265359+.5,0.001,.999));
           float land=texture2D(landMask,uv).a;
-          vec3 color=mix(vec3(1.0),vec3(.945,.974,.950),land*.95);
-          color=mix(color,vec3(.73,.84,.76),grid*.56);
+          vec3 color=mix(vec3(1.0),vec3(.927,.955,.969),land*.62);
+          color=mix(color,vec3(.70,.80,.83),grid*.32);
           float edge=1.0-smoothstep(.65/max(sphereRadius,1.0),2.2/max(sphereRadius,1.0),1.0-sqrt(rr));
-          color=mix(color,vec3(.60,.77,.65),edge*.35);
+          color=mix(color,vec3(.70,.83,.84),edge*.23);
           gl_FragColor=vec4(color,1.0-smoothstep(.998,1.0,rr));
         }`;
       const compile=(source:string,type:number)=>{
@@ -340,20 +358,26 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       // Smoothly align the chosen country with the viewer, without moving the page.
       focusGlobeCountry=(country:string)=>{
         if(turnAnimation)cancelAnimationFrame(turnAnimation);
-        if(country==='all'){hideTip();return;}
-        const chosen=cities.filter(c=>c.country===country);
-        if(!chosen.length)return;
-        const avg=chosen.reduce((sum,c)=>({x:sum.x+Math.cos(c.lat*PI/180)*Math.sin(c.lon*PI/180),y:sum.y+Math.sin(c.lat*PI/180),z:sum.z+Math.cos(c.lat*PI/180)*Math.cos(c.lon*PI/180)}),{x:0,y:0,z:0});
-        const targetLon=Math.atan2(avg.x,avg.z);
-        const targetLat=clamp(Math.atan2(avg.y,Math.hypot(avg.x,avg.z)),-PI*.46,PI*.46);
+        hideTip();
+        selectedGlobeCountry=country==='all'?null:country;
+        resetButton?.toggleAttribute('hidden',!selectedGlobeCountry);
+        const chosen=cities.find(c=>c.country===country);
+        const targetLon=chosen?chosen.lon*PI/180:defaultGlobe.lon;
+        const targetLat=chosen?clamp(chosen.lat*PI/180,-PI*.46,PI*.46):defaultGlobe.lat;
+        // Keep the Earth spherical: enlarge the sphere itself, never flatten/stretch it.
+        // Small countries still get a geographic close-up; city dots appear when selected.
+        const targetZoom=chosen?(country==='Japan'?2.25:country==='South Korea'?2.55:2.35):1;
         const shift=Math.atan2(Math.sin(targetLon-longitude),Math.cos(targetLon-longitude));
-        const startLon=longitude,startLat=latitude;
-        if(reducedMotion.matches){longitude=startLon+shift;latitude=targetLat;requestDraw();return;}
-        const start=performance.now(),duration=650;
+        const startLon=longitude,startLat=latitude,startZoom=zoom;
+        if(reducedMotion.matches){longitude+=shift;latitude=targetLat;zoom=targetZoom;resize();return;}
+        const start=performance.now(),duration=850;
         const tick=(time:number)=>{
-          const t=Math.min(1,(time-start)/duration);const ease=t*t*(3-2*t);
-          longitude=startLon+shift*ease;latitude=startLat+(targetLat-startLat)*ease;
-          requestDraw();if(t<1)turnAnimation=requestAnimationFrame(tick);else turnAnimation=0;
+          const t=Math.min(1,(time-start)/duration),ease=t*t*(3-2*t);
+          longitude=startLon+shift*ease;
+          latitude=startLat+(targetLat-startLat)*ease;
+          zoom=startZoom+(targetZoom-startZoom)*ease;
+          resize();
+          if(t<1)turnAnimation=requestAnimationFrame(tick);else turnAnimation=0;
         };
         turnAnimation=requestAnimationFrame(tick);
       };
@@ -378,29 +402,35 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         const depth=wy*st+t*ct;
         return depth>0?[cx+x*radius,cy-y*radius]:null;
       }
-      type ProjectedCountry={x:number,y:number,point:CityMarker};
+      type ProjectedCountry={x:number,y:number,point:CityMarker|FocusCity};
       let visibleCountries:ProjectedCountry[]=[];
       function drawDots(){
         if(!dotCtx)return;
         dotCtx.clearRect(0,0,width,height);
         visibleCountries=[];
         const dpr=Math.min(window.devicePixelRatio||1,2);
-        for(const point of cities){
+        const visiblePoints=selectedGlobeCountry
+          ? focusCities.filter(p=>p.country===selectedGlobeCountry)
+          : cities;
+        for(const point of visiblePoints){
           const pos=dotPosition(point.lon,point.lat);if(!pos)continue;
           const [x,y]=pos;
           visibleCountries.push({x,y,point});
-          // Density is represented by a soft, borderless fade, not by numbers.
-          // Logarithmic scaling avoids letting Japan overpower all other regions.
           const density=Math.log1p(point.count)/Math.log(41);
-          const spread=(16+18*density)*dpr;
+          const spread=(18+23*density)*dpr;
           const glow=dotCtx.createRadialGradient(x,y,0,x,y,spread);
-          glow.addColorStop(0,`rgba(16,133,78,${(.13+.46*density).toFixed(3)})`);
-          glow.addColorStop(.35,`rgba(38,177,99,${(.07+.21*density).toFixed(3)})`);
-          glow.addColorStop(1,'rgba(50,184,103,0)');
+          glow.addColorStop(0,`rgba(24,122,91,${(.10+.28*density).toFixed(3)})`);
+          glow.addColorStop(.45,`rgba(59,158,117,${(.04+.12*density).toFixed(3)})`);
+          glow.addColorStop(1,'rgba(70,165,126,0)');
           dotCtx.beginPath();dotCtx.arc(x,y,spread,0,PI*2);
           dotCtx.fillStyle=glow;dotCtx.fill();
-          dotCtx.beginPath();dotCtx.arc(x,y,2.3*dpr,0,PI*2);
-          dotCtx.fillStyle='rgba(31,122,76,.78)';dotCtx.fill();
+          dotCtx.beginPath();dotCtx.arc(x,y,(selectedGlobeCountry?2.1:1.7)*dpr,0,PI*2);
+          dotCtx.fillStyle='rgba(45,125,93,.65)';dotCtx.fill();
+          if(selectedGlobeCountry && 'city' in point){
+            dotCtx.font=`${11*dpr}px system-ui, sans-serif`;
+            dotCtx.fillStyle='rgba(35,102,75,.85)';
+            dotCtx.fillText(String(point.city),x+7*dpr,y-7*dpr);
+          }
         }
       }
       function countryAt(clientX:number,clientY:number){
@@ -428,14 +458,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         if(activeCountry!==country||tooltip.hidden)tooltip.replaceChildren(...Array.from(el.children).map(c=>c.cloneNode(true)));
         activeCountry=country;pinned=keep;tooltip.hidden=false;
       }
-      // Keep the complete circular silhouette visible even at maximum zoom.
-      function changeZoom(next:number){zoom=clamp(next,.68,1.15);resize()}
-      shell.querySelectorAll<HTMLButtonElement>('[data-map-action]').forEach(btn=>btn.addEventListener('click',()=>{
-        if(btn.dataset.mapAction==='in')changeZoom(zoom*1.18);
-        if(btn.dataset.mapAction==='out')changeZoom(zoom/1.18);
-        if(btn.dataset.mapAction==='reset'){if(turnAnimation)cancelAnimationFrame(turnAnimation);filterCountry('all');longitude=75*PI/180;latitude=19*PI/180;hideTip();changeZoom(1)}
-      }));
-      map.addEventListener('wheel',e=>{e.preventDefault();changeZoom(zoom*(e.deltaY<0?1.09:1/1.09))},{passive:false});
+      resetButton?.addEventListener('click',()=>{filterCountry('all');focusGlobeCountry('all')});
       map.addEventListener('pointerdown',e=>{
         if(e.button!==0)return;
         if(turnAnimation)cancelAnimationFrame(turnAnimation);
@@ -464,9 +487,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       map.addEventListener('pointercancel',()=>{dragging=null;map.classList.remove('is-dragging')});
       map.addEventListener('pointerleave',()=>{if(!pinned)hideTip()});
       map.addEventListener('keydown',e=>{
-        if(e.key==='+'||e.key==='='){e.preventDefault();changeZoom(zoom*1.18)}
-        else if(e.key==='-'){e.preventDefault();changeZoom(zoom/1.18)}
-        else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();longitude+=(e.key==='ArrowLeft'?1:-1)*.17;requestDraw()}
+        if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();longitude+=(e.key==='ArrowLeft'?1:-1)*.17;requestDraw()}
         else if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();latitude=clamp(latitude+(e.key==='ArrowUp'?-1:1)*.15,-1.44,1.44);requestDraw()}
         else if(e.key==='Escape')hideTip();
       });

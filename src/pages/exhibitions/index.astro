@@ -18,8 +18,16 @@ const lastDate = calendarDates[0] || '2026-01-01';
         <div>
           <p class="eyebrow">BY DATE</p>
           <div class="exhibition-month-pickers" aria-label="Choose calendar month and year">
-            <label><span class="sr-only">Month</span><select id="exhibition-month-select" aria-label="Calendar month"></select></label>
-            <label><span class="sr-only">Year</span><select id="exhibition-year-select" aria-label="Calendar year"></select></label>
+            <div class="calendar-picker" data-picker="month">
+              <button type="button" class="calendar-picker-trigger" id="calendar-month-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="calendar-month-menu">November <span aria-hidden="true">⌄</span></button>
+              <div class="calendar-picker-menu" id="calendar-month-menu" role="listbox" aria-label="Choose month" hidden></div>
+            </div>
+            <div class="calendar-picker" data-picker="year">
+              <button type="button" class="calendar-picker-trigger" id="calendar-year-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="calendar-year-menu">2026 <span aria-hidden="true">⌄</span></button>
+              <div class="calendar-picker-menu" id="calendar-year-menu" role="listbox" aria-label="Choose year" hidden></div>
+            </div>
+            <select class="sr-only" id="exhibition-month-select" tabindex="-1" aria-hidden="true"></select>
+            <select class="sr-only" id="exhibition-year-select" tabindex="-1" aria-hidden="true"></select>
           </div>
           <h2 id="exhibition-month-label" class="sr-only" aria-live="polite"></h2>
         </div>
@@ -91,6 +99,34 @@ const lastDate = calendarDates[0] || '2026-01-01';
   const heading=document.querySelector<HTMLElement>('#exhibition-month-label');
   const monthSelect=document.querySelector<HTMLSelectElement>('#exhibition-month-select');
   const yearSelect=document.querySelector<HTMLSelectElement>('#exhibition-year-select');
+  const pickerMenus={
+    month:document.querySelector<HTMLElement>('#calendar-month-menu'),
+    year:document.querySelector<HTMLElement>('#calendar-year-menu'),
+  };
+  const pickerTriggers={
+    month:document.querySelector<HTMLButtonElement>('#calendar-month-trigger'),
+    year:document.querySelector<HTMLButtonElement>('#calendar-year-trigger'),
+  };
+  const closePickerMenus=()=>{
+    for(const key of ['month','year'] as const){
+      if(pickerMenus[key])pickerMenus[key]!.hidden=true;
+      pickerTriggers[key]?.setAttribute('aria-expanded','false');
+    }
+  };
+  for(const key of ['month','year'] as const){
+    const trigger=pickerTriggers[key],menu=pickerMenus[key];
+    trigger?.addEventListener('click',()=>{
+      const open=Boolean(menu?.hidden);
+      closePickerMenus();
+      if(menu){menu.hidden=!open;trigger.setAttribute('aria-expanded',String(open));}
+    });
+  }
+  document.addEventListener('pointerdown',event=>{
+    if(!(event.target instanceof Element) || !event.target.closest('.calendar-picker'))closePickerMenus();
+  });
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape')closePickerMenus();
+  });
   const grid=document.querySelector<HTMLElement>('#exhibition-calendar-grid');
   const status=document.querySelector<HTMLElement>('#exhibition-date-status');
   const clear=document.querySelector<HTMLButtonElement>('#exhibition-date-clear');
@@ -113,6 +149,24 @@ const lastDate = calendarDates[0] || '2026-01-01';
       const option=document.createElement('option');option.value=String(index+1).padStart(2,'0');option.textContent=name;monthSelect.add(option);
     });
   }
+  function rebuildPickerMenu(kind:'month'|'year'){
+    const menu=pickerMenus[kind];const select=kind==='month'?monthSelect:yearSelect;
+    if(!menu||!select)return;
+    menu.replaceChildren();
+    for(const option of Array.from(select.options)){
+      const button=document.createElement('button');
+      button.type='button';button.setAttribute('role','option');
+      button.className='calendar-picker-option';button.textContent=option.textContent;
+      button.setAttribute('aria-selected',String(option.value===select.value));
+      button.disabled=option.disabled;
+      button.addEventListener('click',()=>{
+        select.value=option.value;
+        changeCalendarMonth();
+        closePickerMenus();
+      });
+      menu.append(button);
+    }
+  }
   function synchronizeMonthSelectors(){
     if(yearSelect) yearSelect.value=currentMonth.slice(0,4);
     if(monthSelect){
@@ -123,6 +177,13 @@ const lastDate = calendarDates[0] || '2026-01-01';
         option.disabled=candidate<firstMonth||candidate>lastMonth;
       }
     }
+    if(pickerTriggers.month){
+      pickerTriggers.month.firstChild!.textContent=monthNames[Number(currentMonth.slice(5,7))-1]+' ';
+    }
+    if(pickerTriggers.year){
+      pickerTriggers.year.firstChild!.textContent=currentMonth.slice(0,4)+' ';
+    }
+    rebuildPickerMenu('month');rebuildPickerMenu('year');
   }
   function changeCalendarMonth(){
     if(!yearSelect||!monthSelect)return;
