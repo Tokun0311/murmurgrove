@@ -23,3 +23,34 @@ Root counts increase gradually but remain bounded for visual legibility; all dat
 ## Verification scope
 
 Validated the standalone browser script using Chromium at 1280px and 390px, with zoom, modes, history and hover-to-link. The complete Astro production build was not possible in the current environment without installing its dependencies. Real mobile Safari should be tested after deployment.
+
+## Relational ecology v2 (November 2026)
+
+Murmurgrove now lays out records in a deterministic, bounded three-dimensional
+relaxation driven by the **real** roots extracted from exhibition associations.
+This replaces independent ID-only display positions. Permanent IDs remain the
+stable initial seeds, so equal datasets produce equal positions.
+
+- **Institutions** have the strongest positional anchoring and provide stable
+  contextual centres.
+- **Exhibitions** are permitted to move toward their associated institutions,
+  people and concepts, creating local growth.
+- **People** have greater mobility and influence connected clusters as bridges.
+- **Concepts** exert a lower-amplitude distributed movement field on records
+  connected to them, rather than appearing as a separate label constellation.
+- **Root pathways** use the current animated coordinates of both endpoints;
+  they remain attached as the organism moves. A link is drawn only when the
+  archive contains a verified direct reference or a repeated cross-section
+  co-occurrence.
+
+The force calculation runs **once per data state**, not during each animation
+frame. A spatial grid limits collision searches to nearby nodes, preventing an
+all-pairs force simulation as the archive grows. Each frame animates only
+precomputed relation influences. Interaction-specific simplified rendering,
+limited mobile pixel ratio and frame-rate throttling are preserved.
+
+Morphology algorithm identifier: `relational-ecology-v2`. This identifier is
+saved on new snapshots. Older recorded content snapshots remain unchanged;
+when opened, their saved records and roots are interpreted under the current
+visual algorithm. For exact historical visual fidelity across future algorithm
+changes, archive the matching renderer version with the snapshot.

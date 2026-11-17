@@ -1,6 +1,7 @@
 /** Stable, content-derived homepage morphology. No homepage editorial data to maintain. */
 export type CollectionItem = {id:string; data:Record<string, any>};
 export type GroveInput = {exhibitions:CollectionItem[]; people:CollectionItem[]; institutions:CollectionItem[]; concepts:CollectionItem[]};
+export type GroveRoot = {from:string;to:string;weight:number;kind:'direct'|'shared'};
 export type GroveMark = {key:string;section:'exhibitions'|'institutions'|'people'|'concepts';title:string;url:string;strength:number;recency:number;related:number;x:number;y:number;seed:number};
 
 export const hashUnit = (value:string):number=>{
@@ -23,6 +24,7 @@ export function createMurmurgrove(input:GroveInput){
   };
   const mentions={people:new Map<string,number>(),institutions:new Map<string,number>(),concepts:new Map<string,number>()};
   const links=new Map<string,number>();
+  const directRoots=new Map<string,GroveRoot>();
   const recent=new Map<string,number>();
   let totalRelations=0;
   for(const e of records){
@@ -39,6 +41,7 @@ export function createMurmurgrove(input:GroveInput){
         if(recentWeight)recent.set(`${kind}:${id}`,(recent.get(`${kind}:${id}`)||0)+1);
         const k=`exhibitions:${e.id}|${kind}:${id}`;
         links.set(k,1);
+        directRoots.set(k,{from:`exhibitions:${e.id}`,to:`${kind}:${id}`,weight:1,kind:'direct'});
         totalRelations++;
       }
     }
@@ -91,8 +94,17 @@ export function createMurmurgrove(input:GroveInput){
     concepts:active('concepts',concepts),
   };
   const relationDensity=totalRelations/Math.max(1,records.length);
+  // Root geometry is derived from verified content references, not random radial strokes.
+  // Repeated cross-section co-occurrences make stronger shared pathways.
+  const roots:GroveRoot[]=[...directRoots.values()];
+  for(const [pair,weight] of links){
+    if(weight<2 || directRoots.has(pair))continue;
+    const [from,to]=pair.split('|');
+    if(from&&to) roots.push({from,to,weight,kind:'shared'});
+  }
+  roots.sort((a,b)=>b.weight-a.weight || (a.from+a.to).localeCompare(b.from+b.to));
   const fingerprint=[...marks].sort((a,b)=>a.key.localeCompare(b.key)).reduce((s,m)=>s+Math.round(m.strength*7+m.related*2+m.seed*23),0);
-  return {counts,relationCount:totalRelations,relationDensity,marks:displayed,entrances,fingerprint,
+  return {counts,relationCount:totalRelations,relationDensity,marks:displayed,roots,entrances,fingerprint,
     latest:sorted.slice(0,4).map(item=>({id:item.id,title:item.data.title,visitedOn:toDate(item.data.visitedOn),dateLabel:item.data.dateLabel,region:item.data.region})),
     summary:{records:records.length,linked:marks.filter(m=>m.related>0).length,relations:links.size}};
 }

@@ -47,13 +47,25 @@ def timestamp(value):
     except:return 0
 latest=max((timestamp(d.get('visitedOn')) for _,d in exhibitions),default=0)
 relations=0
+roots=[]
+shared={}
 for id,d in exhibitions:
     linked={'institutions':[d.get('institution'),*(d.get('relatedInstitutions') or [])], 'people':d.get('artists') or [],'concepts':d.get('concepts') or []}
-    for k,values in linked.items():
-        for v in set(x for x in values if x in indexes[k]):
+    matched={k:sorted(set(x for x in values if x in indexes[k])) for k,values in linked.items()}
+    for k,values in matched.items():
+        for v in values:
+            roots.append({'from':f'exhibitions:{id}','to':f'{k}:{v}','weight':1,'kind':'direct'})
             mentions[k][v]=mentions[k].get(v,0)+1
             relations+=1
             if latest-timestamp(d.get('visitedOn'))<=75:recent[k][v]=recent[k].get(v,0)+1
+    all_nodes=[(kind,f'{kind}:{v}') for kind,values in matched.items() for v in values]
+    for i,(kind_a,a) in enumerate(all_nodes):
+        for kind_b,b in all_nodes[i+1:]:
+            if kind_a==kind_b:continue
+            pair=tuple(sorted((a,b)))
+            shared[pair]=shared.get(pair,0)+1
+roots.extend({'from':a,'to':b,'weight':w,'kind':'shared'} for (a,b),w in shared.items() if w>=2)
+roots.sort(key=lambda r:(-r['weight'],r['from'],r['to']))
 marks=[]
 for key,d in exhibitions:
     days=latest-timestamp(d.get('visitedOn'))
@@ -67,8 +79,8 @@ marks.sort(key=lambda v:v['key'])
 now=datetime.datetime.now(datetime.timezone.utc)
 today=os.getenv('GROVE_SNAPSHOT_DATE') or now.date().isoformat()
 captured_at=now.strftime('%Y-%m-%dT%H:%M:%SZ')
-output={'capturedOn':today,'capturedAt':captured_at,'kind':'observed-build-snapshot','counts':{'exhibitions':len(exhibitions),'institutions':len(institutions),'people':len(people),'concepts':len(concepts)},'relationCount':relations,'relationDensity':round(relations/max(1,len(exhibitions)),5),'marks':marks}
-content_signature=hashlib.sha256(json.dumps({'counts':output['counts'],'relationCount':relations,'marks':marks},ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:12]
+output={'capturedOn':today,'capturedAt':captured_at,'kind':'observed-build-snapshot','morphologyVersion':'relational-ecology-v2','counts':{'exhibitions':len(exhibitions),'institutions':len(institutions),'people':len(people),'concepts':len(concepts)},'relationCount':relations,'relationDensity':round(relations/max(1,len(exhibitions)),5),'marks':marks,'roots':roots}
+content_signature=hashlib.sha256(json.dumps({'counts':output['counts'],'relationCount':relations,'marks':marks,'roots':roots},ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:12]
 output['signature']=content_signature
 for existing in OUT.glob('*.json'):
     try:
