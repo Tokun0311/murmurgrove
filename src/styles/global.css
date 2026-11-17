@@ -270,3 +270,8 @@ button.exhibition-calendar-day.has-records.selected{background:var(--ink);color:
 /* The archive title is the active navigation item on the home page. */
 body:has(.mast h1.brand) .mast .brand{position:relative;isolation:isolate}
 body:has(.mast h1.brand) .mast .brand::before{content:"";position:absolute;inset:-15px -27px;z-index:-1;pointer-events:none;border-radius:50%;background:radial-gradient(ellipse at center,rgba(102,235,113,.42),rgba(118,237,128,.20) 47%,transparent 78%);filter:blur(10px)}
+
+/* Institutions only: let the globe sit beneath the brand/navigation without moving them. */
+body:has(.institutions-page) .frame{position:relative;isolation:isolate;}
+body:has(.institutions-page) .mast{position:relative;z-index:5;background:transparent;}
+body:has(.institutions-page) main{position:relative;z-index:1;}
