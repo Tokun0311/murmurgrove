@@ -88,9 +88,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         <div class="mobile-land-atlas-graphic" id="mobile-land-atlas-graphic">
           <img class="mobile-land-atlas-silhouette" src="/mobile-institutions-land.png" alt="" aria-hidden="true" width="1600" height="800" loading="eager" decoding="async" />
           <button type="button" class="mobile-land-atlas-tap" id="mobile-land-atlas-tap" aria-label="Select the nearest archived country on the map"></button>
-          <div class="mobile-land-atlas-selection" id="mobile-land-atlas-selection" hidden>
-            <span class="mobile-land-atlas-marker" aria-hidden="true"></span>
-            <span class="mobile-land-atlas-country"></span>
+          <div class="mobile-land-atlas-selection" id="mobile-land-atlas-selection" hidden aria-hidden="true">
+            <span class="mobile-land-atlas-halo"></span>
           </div>
         </div>
       </div>
@@ -256,10 +255,12 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     .institutions-page .mobile-land-atlas-silhouette{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;opacity:1;pointer-events:none;user-select:none;-webkit-user-drag:none;}
     .institutions-page .mobile-land-atlas-tap{position:absolute;inset:0;border:0;background:transparent;padding:0;cursor:crosshair;width:100%;height:100%;}
     .institutions-page .mobile-land-atlas-tap:focus-visible{outline:2px solid #0d8e61;outline-offset:-3px;}
-    .institutions-page .mobile-land-atlas-selection{position:absolute;left:var(--atlas-x,50%);top:var(--atlas-y,50%);transform:translate(-50%,-100%);display:flex;align-items:center;flex-direction:column;pointer-events:none;z-index:2;gap:4px;}
+    /* An atmospheric location emphasis, not a pin or a repeated country name.
+       Its centre is anchored inside the image, so it cannot be clipped at the top. */
+    .institutions-page .mobile-land-atlas-selection{position:absolute;left:var(--atlas-x,50%);top:var(--atlas-y,50%);width:64px;height:64px;transform:translate(-50%,-50%);display:grid;place-items:center;pointer-events:none;z-index:2;}
     .institutions-page .mobile-land-atlas-selection[hidden]{display:none;}
-    .institutions-page .mobile-land-atlas-marker{display:block;width:10px;height:10px;border-radius:50%;background:#0b8459;border:2px solid #fff;box-shadow:0 0 0 4px rgba(32,142,98,.18);}
-    .institutions-page .mobile-land-atlas-country{display:block;padding:3px 7px;color:#155b43;background:rgba(255,255,255,.96);font-size:11px;white-space:nowrap;border-radius:3px;}
+    .institutions-page .mobile-land-atlas-halo{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle,rgba(19,123,83,.30) 0%,rgba(40,155,105,.20) 22%,rgba(64,166,116,.09) 51%,rgba(64,166,116,0) 75%);border:0;box-shadow:none;}
+    @media(max-width:360px){.institutions-page .mobile-land-atlas-selection{width:56px;height:56px;}}
     /* The WebGL globe is still kept intact for the desktop experience. */
     .institutions-page .map-shell{display:none !important;}
     .institutions-page .mobile-geo-hint{display:none;}
@@ -329,11 +330,14 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   const mobileAtlas=document.getElementById('mobile-land-atlas');
   const mobileAtlasTap=document.getElementById('mobile-land-atlas-tap');
   const atlasSelection=document.getElementById('mobile-land-atlas-selection');
-  const atlasCountryName=atlasSelection?.querySelector<HTMLElement>('.mobile-land-atlas-country');
   const atlasLocations: {country:string,lon:number,lat:number}[]=JSON.parse(document.getElementById('globe-city-data')?.textContent||'[]');
-  // The mobile map is an actual transparent PNG cropped to Europe, Asia and
-  // Southeast Asia. These bounds match the source image exactly.
-  const atlasPosition=(lon:number,lat:number)=>({x:(lon+20)/180*100,y:(72-lat)/90*100});
+  // The PNG is a full-world equirectangular projection (1600 x 800):
+  // longitude -180..180, latitude 90..-90. Use those exact image bounds.
+  // The previous cropped-region formula misplaced the marker near the top edge.
+  const atlasPosition=(lon:number,lat:number)=>({
+    x:Math.max(5,Math.min(95,(lon+180)/360*100)),
+    y:Math.max(8,Math.min(92,(90-lat)/180*100))
+  });
   function updateMobileAtlas(country:string){
     if(!mobileAtlas||!atlasSelection)return;
     const marker=atlasLocations.find(item=>item.country===country);
@@ -342,7 +346,6 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       const pos=atlasPosition(marker.lon,marker.lat);
       mobileAtlas.style.setProperty('--atlas-x',`${pos.x}%`);
       mobileAtlas.style.setProperty('--atlas-y',`${pos.y}%`);
-      if(atlasCountryName)atlasCountryName.textContent=country;
     }
   }
   mobileAtlasTap?.addEventListener('click',event=>{

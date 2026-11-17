@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 const items = (await getCollection('concepts')).sort((a,b)=>a.data.title.localeCompare(b.data.title));
 const exhibitions = await getCollection('exhibitions');
 const frequency = new Map(items.map(item => [item.id, 0]));
-const connections = new Map();
+const connections = new Map<string, number>();
 for (const e of exhibitions) {
   const concepts = [...new Set(e.data.concepts)].filter(id => frequency.has(id));
   concepts.forEach(id => frequency.set(id, (frequency.get(id) ?? 0) + 1));
@@ -14,9 +14,7 @@ for (const e of exhibitions) {
     connections.set(key, (connections.get(key) ?? 0) + 1);
   }
 }
-// Fixed, intentionally irregular positions avoid animation, hydration and layout jumps.
-// Stable slugs keep positions predictable when existing entries are edited.
-const locations = {
+const locations:Record<string,[number,number]> = {
  'institutional-studies':[550,305], 'curatorial-practices':[290,170],
  'site-specificity':[285,410], 'transcultural-studies':[795,175],
  'politics-of-representation':[795,345], 'artist-residency':[535,75],
@@ -28,8 +26,6 @@ const locations = {
  'postwar-art':[760,540], 'printmaking':[970,565],
  'moving-image':[110,405],
 };
-// Any new concept also receives an automatic place without changing the saved layout.
-const known = new Set(Object.keys(locations));
 let extra = 0;
 const translations:Record<string,{en:string,ja:string}> = {
   'institutional-studies': {en:'Institutional Studies',ja:'制度・機関研究'},
@@ -62,7 +58,6 @@ const edges = [...connections].map(([key,count])=>{
  return {a,b,count,from:positionById.get(a),to:positionById.get(b)};
 }).filter(edge => edge.from && edge.to);
 const maxY = Math.max(620, ...nodes.map(node=>node.y+55));
-// A separate vertical map for narrow screens: no horizontal scrolling, no clipped labels.
 const mobileOrder = [
  'institutional-studies', 'curatorial-practices',
  'site-specificity', 'transcultural-studies',
@@ -76,21 +71,35 @@ const mobileOrder = [
  'printmaking',
 ];
 const nodeById = new Map(nodes.map(node => [node.id,node]));
-const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
-  ...nodes.filter(node=>!mobileOrder.includes(node.id))];
-// Every concept in the archive is represented in the mobile field.
-// Two generously spaced streams give each translation a reliable text area.
-const mobileFieldNodes = mobileSorted.map((node, index) => ({
-  ...node,
-  mx: index % 2 === 0 ? 27 : 73,
-  my: 6.0 + Math.floor(index / 2) * 9.5,
-  drift: (index * 7) % 7,
-}));
-const mobileFieldDefault = mobileFieldNodes[0];
-const conceptCountLabel = (count:number) => count === 1
-  ? 'Appears in 1 exhibition record.'
-  : `Appears in ${count} exhibition records.`;
-
+const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean), ...nodes.filter(node=>!mobileOrder.includes(node.id))];
+const mobileFieldLayout:Record<string,[number,number,number,number]> = {
+  'collective-practices':[18,11,12,10],
+  'institutional-studies':[52,10,18,13],
+  'curatorial-practices':[82,14,12,10],
+  'sound-and-technology':[18,24,14,13],
+  'artist-residency':[51,24,16,11],
+  'transcultural-studies':[83,27,13,14],
+  'performance':[17,39,15,13],
+  'care-and-design':[54,38,16,11],
+  'identity-and-representation':[84,40,14,13],
+  'moving-image':[19,54,15,12],
+  'politics-of-representation':[51,53,17,12],
+  'photography':[81,56,14,12],
+  'site-specificity':[20,69,16,13],
+  'ecology':[52,68,18,12],
+  'technology-and-body':[82,71,14,13],
+  'memory-and-place':[18,84,15,11],
+  'material-and-memory':[50,84,15,11],
+  'postwar-art':[81,87,13,10],
+  'printmaking':[48,95,13,10],
+};
+const mobileFieldNodes = mobileSorted.map((node, index) => {
+  const fallbackX = index % 3 === 0 ? 18 : index % 3 === 1 ? 50 : 82;
+  const fallbackY = 12 + Math.floor(index / 3) * 12.5;
+  const [mx,my,ampX,ampY] = mobileFieldLayout[node.id] ?? [fallbackX, fallbackY, 13, 10];
+  return {...node, mx, my, ampX, ampY, drift:index % 7};
+});
+const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
 ---
 <Base title="Themes & Concepts | TOW ARCHIVE">
   <section class="archive concept-archive">
@@ -112,44 +121,30 @@ const conceptCountLabel = (count:number) => count === 1
         <div class="concept-mobile-stage-shell">
           <div class="concept-mobile-stage-head">
             <p>CONCEPT FIELD</p>
-            <span>Touch a term to explore</span>
+            <span>Tap any moving term to open its page</span>
           </div>
+          <script type="application/json" id="concept-mobile-edge-data">{JSON.stringify(mobileEdges)}</script>
           <div class="concept-mobile-stage" id="concept-mobile-stage">
-            {mobileFieldNodes.map((node, i) => (
-              <button
-                type="button"
+            <svg class="concept-mobile-links" id="concept-mobile-links" aria-hidden="true"></svg>
+            {mobileFieldNodes.map((node) => (
+              <a
+                href={`/concepts/${node.id}/`}
                 class="concept-mobile-orbit concept-cycle"
                 data-concept={node.id}
                 data-zh={node.title}
                 data-en={node.en}
                 data-ja={node.ja}
-                data-title={node.title}
-                data-english={node.en}
-                data-japanese={node.ja}
-                data-count={node.count}
-                data-href={`/concepts/${node.id}/`}
-                aria-pressed={i===0 ? 'true' : 'false'}
-                style={`--x:${node.mx}%;--y:${node.my}%;--float:${node.drift};--weight:${node.count >= 5 ? 1 : 0};`}
-              >{node.title}</button>
+                data-base-x={node.mx}
+                data-base-y={node.my}
+                data-amp-x={node.ampX}
+                data-amp-y={node.ampY}
+                data-drift={node.drift}
+                style={`--x:${node.mx}%;--y:${node.my}%;--weight:${node.count >= 5 ? 1 : 0};`}
+              >{node.title}</a>
             ))}
           </div>
-          {mobileFieldDefault && (
-            <div class="concept-mobile-focus-panel" id="concept-mobile-focus-panel">
-              <div class="concept-mobile-focus-kicker">SELECTED CONCEPT · {mobileFieldNodes.length} IN THE FIELD</div>
-              <div class="concept-mobile-focus-main" id="concept-mobile-focus-main">{mobileFieldDefault.title}</div>
-              <div class="concept-mobile-focus-translations" id="concept-mobile-focus-translations">
-                <span id="concept-mobile-focus-en" lang="en">{mobileFieldDefault.en}</span>
-                <span id="concept-mobile-focus-ja" lang="ja">{mobileFieldDefault.ja}</span>
-              </div>
-              <p class="concept-mobile-focus-meta" id="concept-mobile-focus-meta">{conceptCountLabel(mobileFieldDefault.count)}</p>
-              <a class="concept-mobile-focus-link" id="concept-mobile-focus-link" href={`/concepts/${mobileFieldDefault.id}/`}>
-                <span>Open concept page</span><span class="concept-mobile-focus-arrow" aria-hidden="true">↗</span>
-              </a>
-            </div>
-          )}
         </div>
       </div>
-
     </div>
     <p class="concept-note">Lines connect concepts tagged in the same exhibition. Larger words appear more frequently in the archive. Select a term to open its page.</p>
   </section>
@@ -159,13 +154,10 @@ const conceptCountLabel = (count:number) => count === 1
   .concept-map-scroll { width:100%; overflow:hidden; border-bottom:1px solid var(--rule); }
   .concept-map { display:block; width:100%; height:auto; overflow:visible; }
   .concept-map-desktop { display:none; min-width:0; }
-  .concept-mobile-network { display:grid; grid-template-columns:minmax(0,1fr); padding:12px 0 16px; gap:0; }
   .concept-link { stroke:var(--ink); opacity:.18; vector-effect:non-scaling-stroke; transition:opacity .16s ease; }
   .concept-node { color:var(--ink); text-decoration:none; outline:none; }
   .concept-node circle { fill:var(--ink); opacity:.55; }
   .concept-term { fill:var(--ink); font-family:inherit; font-weight:400; font-size:15px; letter-spacing:-.025em; }
-  .concept-translation{fill:#75998a;font-family:inherit;font-size:9.5px;letter-spacing:0;font-weight:400;pointer-events:none;}
-  .concept-translation-ja{font-size:9.5px;fill:#91a69b;}
   .concept-term-major { font-size:17px; }
   .concept-node:hover .concept-term, .concept-node:focus-visible .concept-term { fill:#005b3b; text-decoration:underline; stroke:none; paint-order:normal; }
   .concept-node:focus-visible .concept-term { text-decoration:underline; }
@@ -173,144 +165,49 @@ const conceptCountLabel = (count:number) => count === 1
   .concept-link.is-related { opacity:.63; }
   .concept-link.is-muted { opacity:.06; }
   .concept-note { color:var(--quiet); font-size:12px; line-height:1.7; margin:16px 0 0; }
-  .mobile-concept-node{display:flex;align-items:center;gap:13px;width:100%;min-width:0;padding:15px 12px;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule);overflow-wrap:anywhere}
-  .mobile-concept-node:nth-child(even){padding-left:30px}
-  .mobile-concept-node:hover,.mobile-concept-node:focus-visible{text-decoration:underline;text-underline-offset:4px;background:transparent}
-  .mobile-concept-dot{flex:0 0 6px;width:6px;height:6px;background:var(--ink);border-radius:50%}
-  .mobile-concept-labels{display:flex;flex-direction:column;min-width:0;gap:3px;}
-  .mobile-concept-term{min-width:0;font-size:clamp(15px,4vw,18px);font-weight:400;line-height:1.35}
-  .mobile-concept-translation{display:none;}
-  .mobile-concept-node[style*="--weight:1"] .mobile-concept-term{font-weight:500}
+
   .concept-mobile-explorer{display:none;}
   .concept-mobile-stage-shell{border-bottom:1px solid var(--rule);padding:4px 0 18px;margin-bottom:8px;}
   .concept-mobile-stage-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:0 0 12px;}
   .concept-mobile-stage-head p{margin:0;font-size:10px;letter-spacing:.12em;color:#7b9788;}
   .concept-mobile-stage-head span{display:block;max-width:22ch;color:var(--quiet);font-size:11px;line-height:1.5;text-align:right;}
-  .concept-mobile-stage{position:relative;height:1140px;border:0;border-radius:0;background:radial-gradient(ellipse 54% 34% at 31% 30%,rgba(173,215,188,.12),transparent 100%),radial-gradient(ellipse 50% 40% at 76% 69%,rgba(150,211,174,.11),transparent 100%);overflow:hidden;}
-  .concept-mobile-stage::before{content:"";position:absolute;inset:8px;background:radial-gradient(ellipse at 50% 50%,rgba(154,207,169,.035),transparent 70%);pointer-events:none;}
-  .concept-mobile-orbit{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);border:0;background:none;color:var(--ink);font-family:inherit;font-weight:400;font-size:clamp(18px,5.2vw,22px);line-height:1.33;letter-spacing:-.02em;padding:12px 4px;border-radius:14px;cursor:pointer;width:43%;max-width:43%;text-align:center;overflow-wrap:anywhere;opacity:.92;z-index:1;touch-action:manipulation;will-change:transform;}
+  .concept-mobile-stage{position:relative;height:1180px;border:0;border-radius:0;background:radial-gradient(ellipse 55% 35% at 26% 24%,rgba(173,215,188,.11),transparent 100%),radial-gradient(ellipse 47% 39% at 76% 62%,rgba(150,211,174,.1),transparent 100%);overflow:hidden;}
+  .concept-mobile-stage::before{content:"";position:absolute;inset:8px;background:radial-gradient(ellipse at 50% 50%,rgba(154,207,169,.03),transparent 72%);pointer-events:none;}
+  .concept-mobile-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;}
+  .concept-mobile-links line{stroke:rgba(41,117,79,.14);stroke-width:1.1;vector-effect:non-scaling-stroke;}
+  .concept-mobile-orbit{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);display:block;border:0;background:none;color:var(--ink);font-family:inherit;font-weight:400;font-size:clamp(19px,5.6vw,24px);line-height:1.28;letter-spacing:-.022em;padding:8px 5px;border-radius:10px;cursor:pointer;width:40%;max-width:40%;text-align:center;text-decoration:none;overflow-wrap:anywhere;opacity:.96;z-index:1;touch-action:manipulation;will-change:transform,left,top;}
   .concept-mobile-orbit[style*="--weight:1"]{font-weight:500;}
-  .concept-mobile-orbit.is-active{background:radial-gradient(ellipse at center,rgba(174,227,188,.28),rgba(225,245,230,.12) 63%,transparent 85%);box-shadow:none;opacity:1;}
+  .concept-mobile-orbit:hover,.concept-mobile-orbit:focus-visible{text-decoration:underline;text-underline-offset:4px;}
   .concept-mobile-orbit:focus-visible{outline:2px solid #0d8e61;outline-offset:2px;}
-  .concept-mobile-focus-panel{display:grid;gap:8px;padding:18px 15px 17px;margin-top:10px;background:linear-gradient(135deg,rgba(233,245,236,.74),rgba(255,255,255,.95));border-left:3px solid #18865e;box-shadow:0 0 0 1px rgba(116,171,140,.12);border-radius:2px;}
-  .concept-mobile-focus-kicker{font-size:10px;letter-spacing:.12em;color:#7b9788;}
-  .concept-mobile-focus-main{font-size:clamp(20px,5.6vw,25px);line-height:1.3;letter-spacing:-.03em;color:#087b55;font-weight:500;}
-  .concept-mobile-focus-translations{display:flex;gap:8px 14px;flex-wrap:wrap;color:#587d69;font-size:12px;line-height:1.45;}
-  .concept-mobile-focus-link{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:6px;padding:11px 12px;color:#fff;background:#087b55;border-radius:4px;text-decoration:none;font-size:13px;line-height:1.4;letter-spacing:0;font-weight:500;min-height:44px;box-sizing:border-box;}
-  .concept-mobile-focus-link:hover,.concept-mobile-focus-link:focus-visible{background:#066b4a;text-decoration:underline;text-underline-offset:4px;}
-  .concept-mobile-focus-arrow{font-size:18px;line-height:1;flex:0 0 auto;margin-top:2px;}
-  .concept-mobile-focus-meta{margin:0;color:var(--quiet);font-size:11px;line-height:1.6;}
+
   @media(min-width:901px){
     .concept-map-desktop{display:block}
-    .concept-mobile-explorer,.concept-mobile-network{display:none}
+    .concept-mobile-explorer{display:none}
   }
   @media(max-width:900px){
     .concept-archive{min-height:0}
     .concept-map-scroll{overflow:visible}
     .concept-mobile-explorer{display:block}
-    .concept-mobile-network{display:none}
-  }
-  @media(max-width:650px){
-    .concept-mobile-stage{height:1140px;}
-    .concept-mobile-orbit{width:43%;max-width:43%;}
-    .concept-mobile-network{padding-top:2px;}
     .concept-archive .concept-note{display:none;}
-
-    .mobile-concept-node,.mobile-concept-node:nth-child(even){padding:13px 2px;}
-    .concept-mobile-network .mobile-concept-node{border-bottom:0;min-height:47px;padding:10px 2px;}
-    .concept-mobile-network .mobile-concept-node:nth-child(even){padding-left:2px;}
-    .concept-mobile-network .mobile-concept-dot{width:4px;height:4px;flex-basis:4px;opacity:.65;}
-
   }
-  @media(max-width:380px){
-    .concept-mobile-stage{height:1220px;}
-    .concept-mobile-orbit{font-size:clamp(17px,5vw,19px);width:43%;max-width:43%;padding:10px 2px;}
-    .concept-mobile-focus-link{font-size:16px;}
-  }
-
-  /* Mobile-only viewport dock: selection stays accessible while the field scrolls. */
   @media(max-width:650px){
-    .concept-mobile-stage-shell{border-bottom:0;padding-bottom:calc(225px + env(safe-area-inset-bottom,0px));margin-bottom:0;}
-    .concept-mobile-focus-panel{
-      position:fixed;
-      z-index:80;
-      left:max(12px,env(safe-area-inset-left,0px));
-      right:max(12px,env(safe-area-inset-right,0px));
-      bottom:calc(10px + env(safe-area-inset-bottom,0px));
-      width:auto;
-      max-width:560px;
-      margin:0 auto;
-      box-sizing:border-box;
-      display:grid;
-      gap:5px;
-      padding:12px 15px 13px;
-      border:1px solid rgba(101,162,126,.27);
-      border-left:3px solid #16835b;
-      border-radius:9px;
-      background:rgba(248,252,249,.95);
-      -webkit-backdrop-filter:blur(16px);
-      backdrop-filter:blur(16px);
-      box-shadow:0 8px 32px rgba(26,85,56,.13);
-    }
-    .concept-mobile-focus-kicker{font-size:10px;letter-spacing:.10em;}
-    .concept-mobile-focus-main{font-size:clamp(21px,6vw,27px);line-height:1.22;}
-    .concept-mobile-focus-translations{font-size:12px;line-height:1.35;gap:4px 12px;}
-    .concept-mobile-focus-meta{font-size:11px;line-height:1.35;}
-    .concept-mobile-focus-link{
-      margin-top:3px;
-      min-height:42px;
-      padding:8px 12px;
-      font-size:14px;
-      border-radius:5px;
-    }
+    .concept-mobile-stage{height:1180px;}
   }
   @media(max-width:380px){
-    .concept-mobile-focus-panel{left:9px;right:9px;padding:10px 12px 11px;gap:4px;}
-    .concept-mobile-focus-main{font-size:21px;}
-    .concept-mobile-focus-link{min-height:39px;padding:7px 10px;font-size:13px;}
-    .concept-mobile-stage-shell{padding-bottom:calc(216px + env(safe-area-inset-bottom,0px));}
+    .concept-mobile-stage{height:1260px;}
+    .concept-mobile-orbit{font-size:clamp(18px,5.2vw,21px);width:40%;max-width:40%;padding:7px 4px;}
   }
 
-  @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } .concept-mobile-orbit{animation:none!important;} }
   .concept-node{will-change:transform;transition:opacity .2s ease}
   .concept-map-desktop{user-select:none}
-  /* Each node displays exactly one language. Transitions happen independently. */
   .concept-cycle{opacity:1;transition:opacity .32s ease;}
   .concept-cycle.is-changing{opacity:.08;}
-  /* Larger, clearly visible displacement. Each lane uses a different path and tempo. */
-  @media(max-width:900px){
-    .concept-mobile-orbit{animation:mobile-drift-a 11s ease-in-out infinite;animation-delay:calc(var(--float,0) * -1.85s);}
-    .concept-mobile-orbit:nth-child(3n){animation-name:mobile-drift-b;animation-duration:14s;animation-delay:-5s;}
-    .concept-mobile-orbit:nth-child(4n){animation-name:mobile-drift-c;animation-duration:16s;animation-delay:-8s;}
-    .concept-mobile-orbit:nth-child(5n){animation-duration:12s;animation-direction:reverse;}
-  }
-  @keyframes mobile-drift-a{
-    0%,100%{transform:translate(calc(-50% - 19px),calc(-50% + 13px))}
-    27%{transform:translate(calc(-50% + 28px),calc(-50% - 21px))}
-    55%{transform:translate(calc(-50% + 8px),calc(-50% + 25px))}
-    80%{transform:translate(calc(-50% - 30px),calc(-50% - 12px))}
-  }
-  @keyframes mobile-drift-b{
-    0%,100%{transform:translate(calc(-50% + 22px),calc(-50% - 21px))}
-    25%{transform:translate(calc(-50% - 21px),calc(-50% + 20px))}
-    54%{transform:translate(calc(-50% + 24px),calc(-50% + 9px))}
-    80%{transform:translate(calc(-50% - 15px),calc(-50% - 29px))}
-  }
-  @keyframes mobile-drift-c{
-    0%,100%{transform:translate(calc(-50% - 27px),calc(-50% - 10px))}
-    30%{transform:translate(calc(-50% + 17px),calc(-50% + 29px))}
-    60%{transform:translate(calc(-50% + 29px),calc(-50% - 24px))}
-    83%{transform:translate(calc(-50% - 13px),calc(-50% + 15px))}
-  }
-  @media(prefers-reduced-motion:reduce){.concept-cycle{transition:none!important;}}
-
+  @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } .concept-cycle{transition:none!important;} }
 </style>
 <script>
-  // Mixed-language network: each concept shows ONE translation at a time.
-  // Independent schedules prevent the full diagram from changing language together.
   const reducedLanguages=window.matchMedia('(prefers-reduced-motion: reduce)');
   const languageNodes=Array.from(document.querySelectorAll<SVGTextElement|HTMLElement>('.concept-cycle'));
-  type CyclingLabel={el:SVGTextElement|HTMLElement; words:string[];current:number;next:number;changing:boolean;switchAt:number};
+  type CyclingLabel={el:SVGTextElement|HTMLElement; words:string[];current:number;changing:boolean;switchAt:number;next:number};
   const seededRandom=(seed:number)=>{
     let n=seed>>>0;
     return ()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};
@@ -329,7 +226,6 @@ const conceptCountLabel = (count:number) => count === 1
     if(document.hidden||reducedLanguages.matches)return;
     const now=performance.now();
     for(const label of labels){
-      // Start a per-node crossfade only at its own scheduled moment.
       if(!label.changing&&now>=label.next){
         label.changing=true;
         label.switchAt=now+320;
@@ -349,7 +245,6 @@ const conceptCountLabel = (count:number) => count === 1
     window.clearInterval(labelTimer);
     labelTimer=0;
     if(!document.hidden&&!reducedLanguages.matches){
-      // Avoid synchronized changes when returning to a background tab.
       const now=performance.now();
       for(const label of labels){
         if(label.changing){label.changing=false;label.el.classList.remove('is-changing');}
@@ -362,43 +257,101 @@ const conceptCountLabel = (count:number) => count === 1
   reducedLanguages.addEventListener('change',syncLanguageMotion);
   syncLanguageMotion();
 
-  const mobileOrbitButtons=Array.from(document.querySelectorAll<HTMLButtonElement>('.concept-mobile-orbit'));
-  const mobileFocusLink=document.getElementById('concept-mobile-focus-link') as HTMLAnchorElement | null;
-  const mobileFocusMain=document.getElementById('concept-mobile-focus-main');
-  const mobileFocusMeta=document.getElementById('concept-mobile-focus-meta');
-  const mobileFocusEn=document.getElementById('concept-mobile-focus-en');
-  const mobileFocusJa=document.getElementById('concept-mobile-focus-ja');
-  const updateMobileFocus=(button:HTMLButtonElement)=>{
-    mobileOrbitButtons.forEach(item=>{
-      const active=item===button;
-      item.classList.toggle('is-active',active);
-      item.setAttribute('aria-pressed',String(active));
-    });
-    if(mobileFocusLink){
-      mobileFocusLink.href=button.dataset.href||'#';
-    }
-    if(mobileFocusMain){
-      mobileFocusMain.textContent=button.dataset.title||button.textContent||'';
-    }
-    if(mobileFocusEn)mobileFocusEn.textContent=button.dataset.english||'';
-    if(mobileFocusJa)mobileFocusJa.textContent=button.dataset.japanese||'';
-    if(mobileFocusMeta){
-      const count=Number(button.dataset.count||'0');
-      mobileFocusMeta.textContent=count===1
-        ? 'Appears in 1 exhibition record.'
-        : `Appears in ${count} exhibition records.`;
-    }
-  };
-  mobileOrbitButtons.forEach(button=>button.addEventListener('click',()=>updateMobileFocus(button)));
-  if(mobileOrbitButtons.length) updateMobileFocus(mobileOrbitButtons[0]);
+  const mobileStage=document.getElementById('concept-mobile-stage') as HTMLElement | null;
+  const mobileLinksSvg=document.getElementById('concept-mobile-links') as SVGSVGElement | null;
+  const mobileLinks=Array.from(document.querySelectorAll<HTMLAnchorElement>('.concept-mobile-orbit'));
+  const mobileEdgeDataElement=document.getElementById('concept-mobile-edge-data');
+  if(mobileStage && mobileLinksSvg && mobileLinks.length && mobileEdgeDataElement){
+    const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+    const edges: {a:string,b:string,count:number}[] = JSON.parse(mobileEdgeDataElement.textContent || '[]');
+    const nodeMap=new Map(mobileLinks.map((link,index)=>{
+      const baseX=Number(link.dataset.baseX||'50');
+      const baseY=Number(link.dataset.baseY||'50');
+      const ampX=Number(link.dataset.ampX||'12');
+      const ampY=Number(link.dataset.ampY||'10');
+      const drift=Number(link.dataset.drift||String(index));
+      const phase=index*0.91 + drift*0.47;
+      const phase2=index*1.31 + drift*0.62;
+      const periodX=12200 + (index%5)*1700;
+      const periodY=15300 + (index%6)*1500;
+      const periodX2=9600 + (index%4)*1200;
+      const periodY2=11800 + (index%3)*900;
+      return [link.dataset.concept||'', {link, baseX, baseY, ampX, ampY, phase, phase2, periodX, periodY, periodX2, periodY2, x:0, y:0}];
+    }));
+    const ns='http://www.w3.org/2000/svg';
+    const lineEntries=edges.map(edge=>{
+      const a=nodeMap.get(edge.a), b=nodeMap.get(edge.b);
+      if(!a || !b) return null;
+      const line=document.createElementNS(ns,'line');
+      line.setAttribute('stroke-width', String(Math.min(1.8, 0.55 + edge.count*0.18)));
+      line.setAttribute('opacity', String(Math.min(0.26, 0.08 + edge.count*0.02)));
+      mobileLinksSvg.appendChild(line);
+      return {a,b,line};
+    }).filter(Boolean) as {a:any,b:any,line:SVGLineElement}[];
+
+    const layout=()=>{
+      const rect=mobileStage.getBoundingClientRect();
+      mobileLinksSvg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
+      mobileLinksSvg.setAttribute('width', String(rect.width));
+      mobileLinksSvg.setAttribute('height', String(rect.height));
+    };
+    layout();
+    let raf=0;
+    let start=0;
+    const tick=(time:number)=>{
+      raf=0;
+      if(document.hidden) return;
+      if(!start) start=time;
+      const t=time-start;
+      const rect=mobileStage.getBoundingClientRect();
+      const w=rect.width, h=rect.height;
+      for(const node of nodeMap.values()){
+        const x = (node.baseX/100)*w + Math.sin(t/node.periodX*2*Math.PI + node.phase) * (node.ampX/100*w)
+          + Math.sin(t/node.periodX2*2*Math.PI + node.phase2) * (node.ampX/100*w*0.55);
+        const y = (node.baseY/100)*h + Math.cos(t/node.periodY*2*Math.PI + node.phase*1.12) * (node.ampY/100*h)
+          + Math.sin(t/node.periodY2*2*Math.PI + node.phase2*1.07) * (node.ampY/100*h*0.45);
+        node.x=x; node.y=y;
+        node.link.style.left=`${x}px`;
+        node.link.style.top=`${y}px`;
+      }
+      for(const entry of lineEntries){
+        entry.line.setAttribute('x1', String(entry.a.x));
+        entry.line.setAttribute('y1', String(entry.a.y));
+        entry.line.setAttribute('x2', String(entry.b.x));
+        entry.line.setAttribute('y2', String(entry.b.y));
+      }
+      if(!reducedMotion.matches) raf=requestAnimationFrame(tick);
+    };
+    const sync=()=>{
+      layout();
+      if(reducedMotion.matches){
+        for(const node of nodeMap.values()){
+          const rect=mobileStage.getBoundingClientRect();
+          node.x = (node.baseX/100)*rect.width;
+          node.y = (node.baseY/100)*rect.height;
+          node.link.style.left=`${node.x}px`;
+          node.link.style.top=`${node.y}px`;
+        }
+        for(const entry of lineEntries){
+          entry.line.setAttribute('x1', String(entry.a.x));
+          entry.line.setAttribute('y1', String(entry.a.y));
+          entry.line.setAttribute('x2', String(entry.b.x));
+          entry.line.setAttribute('y2', String(entry.b.y));
+        }
+        if(raf){cancelAnimationFrame(raf);raf=0;}
+      }else if(!raf){
+        raf=requestAnimationFrame(tick);
+      }
+    };
+    window.addEventListener('resize', sync, {passive:true});
+    reducedMotion.addEventListener('change', sync);
+    sync();
+  }
 
   const desktopMap=document.querySelector<SVGSVGElement>('.concept-map-desktop');
   if(desktopMap){
     const nodeEls=Array.from(desktopMap.querySelectorAll<SVGAElement>('.concept-node'));
     const edgeEls=Array.from(desktopMap.querySelectorAll<SVGLineElement>('.concept-link'));
-    // Broad, continuous orbital paths rather than 4–5px micro-vibrations.
-    // Each node has its own travel distance, phase, and period; the center
-    // of its path remains tethered to the original editorial composition.
     const nodes=nodeEls.map((el,i)=>({
       el,id:el.dataset.concept||'',x:Number(el.dataset.x),y:Number(el.dataset.y),
       phase:i*2.39996323,
@@ -408,9 +361,8 @@ const conceptCountLabel = (count:number) => count === 1
     }));
     const byId=new Map(nodes.map(n=>[n.id,n]));
     const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
-    let activeId:string|null=null, visible=false, raf=0, start=0;
+    let visible=false, raf=0, start=0;
     const updateFocus=(id:string|null)=>{
-      activeId=id;
       for(const edge of edgeEls){
         const related=Boolean(id&&(edge.dataset.a===id||edge.dataset.b===id));
         edge.classList.toggle('is-related',related);
@@ -428,9 +380,6 @@ const conceptCountLabel = (count:number) => count === 1
       if(!visible||document.hidden||reduced.matches)return;
       if(!start)start=time;
       const t=time-start;
-      // Long elliptical and gently asymmetric paths make trajectories legible.
-      // All positions are sampled from absolute time, so the motion stays
-      // smooth across slower frames and never accumulates random jitter.
       for(const node of nodes){
         if(!node.held){
           const ax=t*2*Math.PI/node.periodX+node.phase;
