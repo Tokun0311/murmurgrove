@@ -48,7 +48,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     <h1 class="sr-only">Institutions &amp; Spaces</h1>
 
     <section class="world-map-section" aria-label="Institution locations by country and region">
-      <div class="map-heading"><span>WORLD GLOBE</span><span>{countryEntries.length} places · {items.length} entries</span></div>
+      <div class="map-heading"><span>WIREFRAME GLOBE</span><span>{countryEntries.length} places · {items.length} entries</span></div>
       <div class="map-shell" id="institution-map-shell">
         <div class="map-controls" aria-label="Map navigation">
           <button type="button" class="map-control" data-map-action="in" aria-label="Zoom in" title="Zoom in">+</button>
@@ -121,7 +121,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .world-map-section{margin:2.1rem 0 2.8rem}
   .map-heading{display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.72rem;letter-spacing:.12em;color:#668075;text-transform:uppercase;margin:0 0 .9rem}
   .map-shell{position:relative;border:0;border-radius:0;background:#fff;isolation:isolate;overflow:visible}
-  .world-map{position:relative;width:100%;height:clamp(480px,56vw,790px);overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none;background:#fff}
+  .world-map{position:relative;width:100%;height:clamp(390px,48vw,650px);overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none;background:#fff}
   .world-map.is-dragging{cursor:grabbing}
   .globe-canvas{width:100%;height:100%;display:block;pointer-events:none}
   .globe-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#789084;letter-spacing:.08em;pointer-events:none}
@@ -159,7 +159,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .institution-city-list a{font-size:clamp(16px,1.65vw,21px);line-height:1.5;letter-spacing:-.02em;overflow-wrap:anywhere}
   .institution-city-list a:hover,.institution-city-list a:focus-visible{color:#056848;text-decoration:underline;text-underline-offset:4px}
   .institution-ungrouped-list{margin-left:calc(19% + 1.2rem)}
-  @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{height:clamp(320px,95vw,540px)}.world-map-section{margin:1.5rem 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
+  @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{height:clamp(310px,88vw,480px)}.world-map-section{margin:1.5rem 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
   @media(prefers-reduced-motion:reduce){.world-map{scroll-behavior:auto}}
 </style>
 <script id="globe-geometry" type="application/json" set:html={JSON.stringify(geoPaths).replaceAll("<", "\\u003c")} />
@@ -217,33 +217,43 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         void main(){gl_Position=vec4(pos,0.0,1.0);}`;
       const fragment=`precision highp float;
         uniform sampler2D atlas;
-        uniform vec2 viewSize;
         uniform vec2 center;
         uniform float sphereRadius;
         uniform float lonRotation;
         uniform float latRotation;
-        uniform float selected;
         void main(){
           vec2 p=(gl_FragCoord.xy-center)/sphereRadius;
           float rr=dot(p,p);
-          if(rr>=1.0){discard;}
+          if(rr>=1.0)discard;
           float z=sqrt(max(0.0,1.0-rr));
           float cl=cos(lonRotation),sl=sin(lonRotation);
           float ct=cos(latRotation),st=sin(latRotation);
           float wx=p.x*cl+z*ct*sl-p.y*st*sl;
           float wy=p.y*ct+z*st;
           float wz=-p.x*sl+z*ct*cl-p.y*st*cl;
-          float longitude=atan(wx,wz);
-          float latitude=asin(clamp(wy,-1.0,1.0));
-          // Exact inverse of the site's existing vector world-map coordinates.
-          float u=fract(0.5+longitude/6.28318530718);
-          float v=1.0-clamp((300.0-latitude*180.0/3.14159265359*3.15)/520.0,0.0,1.0);
-          vec3 color=texture2D(atlas,vec2(u,v)).rgb;
-          // A restrained spherical light; no dark edges or artificial square shadow.
-          float diffuse=0.91+0.09*z+0.025*p.x;
-          color*=diffuse;
-          float alpha=1.0-smoothstep(0.996,1.0,rr);
-          gl_FragColor=vec4(color,alpha);
+          float lng=atan(wx,wz);
+          float lat=asin(clamp(wy,-1.0,1.0));
+          float u=fract(.5+lng/6.28318530718);
+          float v=1.0-clamp((300.0-lat*180.0/3.14159265359*3.15)/520.0,0.0,1.0);
+          // Antialias the atlas boundaries and meridians in spherical coordinates.
+          vec4 border=texture2D(atlas,vec2(u,v));
+          float scale=3.14159265359/6.0;
+          float lonDist=abs(fract((lng+scale*.5)/scale)-.5)*scale;
+          float latDist=abs(fract((lat+scale*.5)/scale)-.5)*scale;
+          // Angular line width follows screen pixels, preventing thick polar convergence.
+          float lonPx=1.0/max(1.0,sphereRadius*max(.12,cos(lat)));
+          float latPx=1.0/max(1.0,sphereRadius);
+          float meridian=1.0-smoothstep(.0,lonPx*1.2,lonDist);
+          float parallel=1.0-smoothstep(.0,latPx*1.2,latDist);
+          float grid=max(meridian,parallel)*.28;
+          // White center, subtly silver-green silhouette, delicate geography.
+          vec3 color=vec3(1.0);
+          vec3 gridColor=vec3(.53,.70,.62);
+          color=mix(color,gridColor,grid);
+          color=mix(color,border.rgb,border.a);
+          float edge=1.0-smoothstep(1.0/max(sphereRadius,1.0),2.6/max(sphereRadius,1.0),1.0-sqrt(rr));
+          color=mix(color,vec3(.56,.73,.65),edge*.47);
+          gl_FragColor=vec4(color,1.0-smoothstep(.997,1.0,rr));
         }`;
       const compile=(source:string,type:number)=>{
         const shader=gl.createShader(type)!;
@@ -266,23 +276,24 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         radius:gl.getUniformLocation(program,'sphereRadius'),lon:gl.getUniformLocation(program,'lonRotation'),
         lat:gl.getUniformLocation(program,'latRotation'),atlas:gl.getUniformLocation(program,'atlas')
       };
-      // Paths remain vectors until drawn at 4K, removing the blurry outlines seen
-      // in the previous 1200 x 520 texture. Never scale up an existing screenshot.
+      // Country paths are stroked at high resolution onto a transparent atlas.
+      // No land fill: the globe stays a fine, airy wireframe on the white page.
       const texCanvas=document.createElement('canvas');
-      const scale=3.4;
-      texCanvas.width=Math.round(1200*scale);texCanvas.height=Math.round(520*scale);
+      const maxTex=gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
+      const scale=Math.min(3,Math.max(1,Math.floor(maxTex/1200)));
+      texCanvas.width=1200*scale;texCanvas.height=520*scale;
       const tex=texCanvas.getContext('2d')!;
       tex.scale(scale,scale);
-      tex.fillStyle='#f6faf7';tex.fillRect(0,0,1200,520);
+      tex.clearRect(0,0,1200,520);
       for(const region of BASE.base){
         const path=new Path2D(region.d);
-        tex.fillStyle='#dae5dd';tex.strokeStyle='#bacfc1';tex.lineWidth=.38;
-        tex.fill(path,'evenodd');tex.stroke(path);
+        tex.strokeStyle='rgba(134,164,146,.47)';tex.lineWidth=.48;
+        tex.stroke(path);
       }
       for(const name of countryNames){
         const path=new Path2D(BASE.featured[name]);
-        tex.fillStyle='#8cc6af';tex.strokeStyle='#278567';tex.lineWidth=.8;
-        tex.fill(path,'evenodd');tex.stroke(path);
+        tex.strokeStyle='rgba(31,134,94,.84)';tex.lineWidth=.95;
+        tex.stroke(path);
       }
       const texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
@@ -313,7 +324,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         width=Math.max(1,Math.round(b.width*dpr));height=Math.max(1,Math.round(b.height*dpr));
         canvas.width=width;canvas.height=height;
         cx=width/2;cy=height/2;
-        radius=Math.min(width*.37,height*.315)*zoom;
+        radius=Math.min(width*.34,height*.425)*zoom;
         requestDraw();
       }
       function geoAt(screenX:number,screenY:number){
@@ -343,7 +354,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         activeCountry=country;pinned=keep;tooltip.hidden=false;
       }
       // Keep the complete circular silhouette visible even at maximum zoom.
-      function changeZoom(next:number){zoom=clamp(next,.62,1.53);resize()}
+      function changeZoom(next:number){zoom=clamp(next,.68,1.15);resize()}
       shell.querySelectorAll<HTMLButtonElement>('[data-map-action]').forEach(btn=>btn.addEventListener('click',()=>{
         if(btn.dataset.mapAction==='in')changeZoom(zoom*1.18);
         if(btn.dataset.mapAction==='out')changeZoom(zoom/1.18);
