@@ -37,8 +37,16 @@ const usedLatin = new Set(indexed.map(x=>x.letter));
   </section>
 </Base>
 <style>
-  .people-index .archive-entry a{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:.7rem;row-gap:.12rem}
-  .person-native{font-size:.84em;color:var(--quiet);font-weight:400}
+  /* Compact name index: readable columns, never full-width rows for single names. */
+  #people-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(18px,2.4vw,38px);row-gap:0;border-top:1px solid var(--rule)}
+  .people-index .archive-entry{display:block;min-width:0;padding:14px 0;border-top:0;border-bottom:1px solid var(--rule)}
+  .people-index .archive-entry:last-child{border-bottom:1px solid var(--rule)}
+  .people-index .archive-entry a{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:.35rem;row-gap:0;font-size:clamp(14px,1.17vw,17px);line-height:1.55;overflow-wrap:anywhere}
+  .people-index .person-latin{font-weight:500}
+  @media(max-width:850px){#people-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:480px){#people-list{grid-template-columns:1fr}}
+
+  .person-native{font-size:.78em;color:var(--quiet);font-weight:400}
   .people-search-area{margin:0 0 1.5rem}
   .people-search-label{display:block;font-size:.72rem;letter-spacing:.12em;color:var(--quiet);margin-bottom:.6rem}
   #people-search{width:100%;max-width:440px;padding:.75rem .8rem;border:1px solid var(--rule);border-radius:2px;background:transparent;color:var(--ink);font:inherit;font-size:14px}

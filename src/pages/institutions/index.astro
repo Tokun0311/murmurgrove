@@ -39,13 +39,28 @@ const countryEntries = Object.entries(
     .map(([city, cityEntries]) => ({city, entries: cityEntries.sort((a,b)=>a.data.name.localeCompare(b.data.name))}))
     .sort((a,b)=>cityOrder.indexOf(a.city)-cityOrder.indexOf(b.city)),
 })).sort((a,b)=>countryOrder.indexOf(a.country)-countryOrder.indexOf(b.country));
-const cityMarkers = countryEntries.flatMap(({country,cities})=>cities.flatMap(({city,entries})=>{
-  const known = cityMeta[city];
-  const located = entries.find(entry=>entry.data.longitude !== undefined && entry.data.latitude !== undefined);
-  const lon = located?.data.longitude ?? known?.lon;
-  const lat = located?.data.latitude ?? known?.lat;
-  return Number.isFinite(lon) && Number.isFinite(lat) ? [{city,country,lon,lat,count:entries.length}] : [];
-}));
+// One representative marker per country, weighted toward documented institutions.
+// Compute a spherical mean so positions remain stable even near the date line.
+const countryMarkers = countryEntries.map(({country,cities,entries}) => {
+  const located = cities.flatMap(({city,entries:cityEntries}) => {
+    const known = cityMeta[city];
+    const custom = cityEntries.find(entry => entry.data.longitude !== undefined && entry.data.latitude !== undefined);
+    const lon = custom?.data.longitude ?? known?.lon;
+    const lat = custom?.data.latitude ?? known?.lat;
+    return Number.isFinite(lon) && Number.isFinite(lat)
+      ? [{lon,lat,count:cityEntries.length}] : [];
+  });
+  const avg = located.reduce((a,p) => {
+    const lon=p.lon*Math.PI/180,lat=p.lat*Math.PI/180;
+    a.x+=Math.sin(lon)*Math.cos(lat)*p.count;
+    a.y+=Math.sin(lat)*p.count;
+    a.z+=Math.cos(lon)*Math.cos(lat)*p.count;
+    return a;
+  },{x:0,y:0,z:0});
+  return {country,lon:Math.atan2(avg.x,avg.z)*180/Math.PI,
+    lat:Math.atan2(avg.y,Math.hypot(avg.x,avg.z))*180/Math.PI,
+    count:entries.length};
+}).filter(p=>Number.isFinite(p.lon)&&Number.isFinite(p.lat));
 const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.city]?.country);
 ---
 <Base title="Institutions & Spaces | TOW ARCHIVE">
@@ -61,10 +76,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           <button type="button" class="map-control" data-map-action="out" aria-label="Zoom out" title="Zoom out">−</button>
           <button type="button" class="map-control map-reset" data-map-action="reset" title="Reset map view">Reset</button>
         </div>
-        <div class="world-map" id="institution-world-map" role="group" aria-label="Interactive wireframe globe with city markers. Drag to rotate, scroll to zoom, and select a city dot to explore institutions." tabindex="0">
+        <div class="world-map" id="institution-world-map" role="group" aria-label="Interactive globe with coastlines and one density glow per country. Drag to rotate, scroll to zoom, and select a marker to explore institutions." tabindex="0">
           <canvas class="globe-canvas" id="institution-globe" aria-hidden="true"></canvas>
           <canvas class="globe-dots" id="institution-dots" aria-hidden="true"></canvas>
-          <script id="globe-city-data" type="application/json" set:html={JSON.stringify(cityMarkers).replaceAll("<", "\\u003c")} />
+          <script id="globe-city-data" type="application/json" set:html={JSON.stringify(countryMarkers).replaceAll("<", "\\u003c")} />
           <div class="globe-loading" id="globe-loading">Preparing globe…</div>
         </div>
         <div class="map-tooltip" id="institution-map-tooltip" hidden aria-live="polite"></div>
@@ -100,7 +115,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         <p class="geo-index-help">Choose a country to rotate the globe and filter the archive.</p>
       </aside>
       </div>
-      <p class="map-note">Drag to rotate · Scroll to zoom · Select a city dot or country to explore.</p>
+      <p class="map-note">Drag to rotate · Scroll to zoom · Select a country glow to explore.</p>
     </section>
 
     <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries · grouped by country and city</span></div>
@@ -226,9 +241,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   const details = document.getElementById('institution-map-details') as HTMLElement | null;
   const loading = document.getElementById('globe-loading');
   if (shell && map && canvas instanceof HTMLCanvasElement && dotsCanvas instanceof HTMLCanvasElement && tooltip && details) {
-    // Geographic coordinates of the cities represented by the archive.
-    // Dots indicate city locations, never political boundaries.
-    type CityMarker={city:string,country:string,lon:number,lat:number,count:number};
+    // One representative location per country. No political borders or cluster counts.
+    type CityMarker={country:string,lon:number,lat:number,count:number};
     const cityDataElement=document.querySelector('#globe-city-data');
     const cities:CityMarker[]=cityDataElement?.textContent ? JSON.parse(cityDataElement.textContent) : [];
     const dotCtx=dotsCanvas.getContext('2d');
@@ -252,6 +266,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         uniform float sphereRadius;
         uniform float lonRotation;
         uniform float latRotation;
+        uniform sampler2D landMask;
         void main(){
           vec2 p=(gl_FragCoord.xy-center)/sphereRadius;
           float rr=dot(p,p);
@@ -272,9 +287,13 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           float meridian=1.0-smoothstep(.0,lonPx*.96,lonDist);
           float parallel=1.0-smoothstep(.0,latPx*.96,latDist);
           float grid=max(meridian,parallel)*.37;
-          vec3 color=mix(vec3(1.0),vec3(.64,.77,.68),grid);
+          // Sample a merged land mask. Countries share the same fill and have NO internal borders.
+          vec2 uv=vec2(fract(lng/6.28318530718+.5),clamp(lat/3.14159265359+.5,0.001,.999));
+          float land=texture2D(landMask,uv).a;
+          vec3 color=mix(vec3(1.0),vec3(.945,.974,.950),land*.95);
+          color=mix(color,vec3(.73,.84,.76),grid*.56);
           float edge=1.0-smoothstep(.65/max(sphereRadius,1.0),2.2/max(sphereRadius,1.0),1.0-sqrt(rr));
-          color=mix(color,vec3(.53,.72,.60),edge*.52);
+          color=mix(color,vec3(.60,.77,.65),edge*.35);
           gl_FragColor=vec4(color,1.0-smoothstep(.998,1.0,rr));
         }`;
       const compile=(source:string,type:number)=>{
@@ -296,8 +315,25 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       const uniforms={
         size:gl.getUniformLocation(program,'viewSize'),center:gl.getUniformLocation(program,'center'),
         radius:gl.getUniformLocation(program,'sphereRadius'),lon:gl.getUniformLocation(program,'lonRotation'),
-        lat:gl.getUniformLocation(program,'latRotation')
+        lat:gl.getUniformLocation(program,'latRotation'),
+        land:gl.getUniformLocation(program,'landMask')
       };
+      const landTexture=gl.createTexture()!;
+      gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,landTexture);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([0,0,0,0]));
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.uniform1i(uniforms.land,0);
+      const landImage=new Image();
+      landImage.onload=()=>{
+        gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,landTexture);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+        gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,landImage);
+        requestDraw();
+      };
+      landImage.src='/land-mask.png';
       loading?.setAttribute('hidden','');
 
       function requestDraw(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;draw()})}
@@ -342,49 +378,37 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         const depth=wy*st+t*ct;
         return depth>0?[cx+x*radius,cy-y*radius]:null;
       }
-      type ProjectedCluster={x:number,y:number,cities:CityMarker[]};
-      let projectedClusters:ProjectedCluster[]=[];
-      function makeClusters(){
-        const result:ProjectedCluster[]=[];
-        const dpr=Math.min(window.devicePixelRatio||1,2);
-        const threshold=(zoom<.95?20:zoom<1.08?15:11)*dpr;
-        for(const point of cities){
-          const pos=dotPosition(point.lon,point.lat);if(!pos)continue;
-          const [x,y]=pos;
-          let cluster=result.find(c=>Math.hypot(c.x-x,c.y-y)<threshold);
-          if(cluster){
-            const old=cluster.cities.length;
-            cluster.x=(cluster.x*old+x)/(old+1);cluster.y=(cluster.y*old+y)/(old+1);
-            cluster.cities.push(point);
-          } else result.push({x,y,cities:[point]});
-        }
-        return result;
-      }
+      type ProjectedCountry={x:number,y:number,point:CityMarker};
+      let visibleCountries:ProjectedCountry[]=[];
       function drawDots(){
         if(!dotCtx)return;
         dotCtx.clearRect(0,0,width,height);
-        projectedClusters=makeClusters();
+        visibleCountries=[];
         const dpr=Math.min(window.devicePixelRatio||1,2);
-        for(const point of projectedClusters){
-          const multiple=point.cities.length>1;
-          const radius=(multiple?6.6:3.1)*dpr;
-          dotCtx.beginPath();dotCtx.arc(point.x,point.y,radius,0,PI*2);
-          dotCtx.fillStyle='#2c8a61';dotCtx.fill();
-          dotCtx.beginPath();dotCtx.arc(point.x,point.y,radius+3*dpr,0,PI*2);
-          dotCtx.strokeStyle='rgba(71,151,108,.22)';dotCtx.lineWidth=1*dpr;dotCtx.stroke();
-          if(multiple){
-            dotCtx.font=`${9*dpr}px sans-serif`;
-            dotCtx.textAlign='center';dotCtx.textBaseline='middle';
-            dotCtx.fillStyle='#fff';dotCtx.fillText(String(point.cities.length),point.x,point.y+.5*dpr);
-          }
+        for(const point of cities){
+          const pos=dotPosition(point.lon,point.lat);if(!pos)continue;
+          const [x,y]=pos;
+          visibleCountries.push({x,y,point});
+          // Density is represented by a soft, borderless fade, not by numbers.
+          // Logarithmic scaling avoids letting Japan overpower all other regions.
+          const density=Math.log1p(point.count)/Math.log(41);
+          const spread=(16+18*density)*dpr;
+          const glow=dotCtx.createRadialGradient(x,y,0,x,y,spread);
+          glow.addColorStop(0,`rgba(16,133,78,${(.13+.46*density).toFixed(3)})`);
+          glow.addColorStop(.35,`rgba(38,177,99,${(.07+.21*density).toFixed(3)})`);
+          glow.addColorStop(1,'rgba(50,184,103,0)');
+          dotCtx.beginPath();dotCtx.arc(x,y,spread,0,PI*2);
+          dotCtx.fillStyle=glow;dotCtx.fill();
+          dotCtx.beginPath();dotCtx.arc(x,y,2.3*dpr,0,PI*2);
+          dotCtx.fillStyle='rgba(31,122,76,.78)';dotCtx.fill();
         }
       }
-      function cityAt(clientX:number,clientY:number){
+      function countryAt(clientX:number,clientY:number){
         const b=map.getBoundingClientRect();
         const x=(clientX-b.left)*width/b.width,y=(clientY-b.top)*height/b.height;
         const dpr=Math.min(window.devicePixelRatio||1,2);
-        const closest=projectedClusters.map(p=>({p,dist:Math.hypot(x-p.x,y-p.y)})).sort((a,b)=>a.dist-b.dist)[0];
-        return closest && closest.dist<14*dpr?closest.p.cities:null;
+        const nearest=visibleCountries.map(p=>({p,d:Math.hypot(x-p.x,y-p.y)})).sort((a,b)=>a.d-b.d)[0];
+        return nearest && nearest.d<15*dpr?nearest.p.point.country:null;
       }
       function resize(){
         const b=map.getBoundingClientRect();
@@ -404,17 +428,6 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         if(activeCountry!==country||tooltip.hidden)tooltip.replaceChildren(...Array.from(el.children).map(c=>c.cloneNode(true)));
         activeCountry=country;pinned=keep;tooltip.hidden=false;
       }
-      function showCityGroup(group:CityMarker[],keep=false){
-        if(group.length===1){showTip(group[0].country,keep);return;}
-        clearTimeout(closeTimer);
-        activeCountry='cluster';pinned=keep;tooltip.hidden=false;
-        tooltip.replaceChildren();
-        const head=document.createElement('div');head.className='map-popup-country';
-        head.textContent=`${group.length} nearby cities`;tooltip.append(head);
-        const list=document.createElement('ul');list.className='map-popup-groups';
-        for(const city of group){const li=document.createElement('li');const btn=document.createElement('button');btn.type='button';btn.textContent=`${city.city} · ${city.country}`;btn.className='cluster-city-link';btn.addEventListener('click',()=>{filterCountry(city.country,true);focusGlobeCountry(city.country);hideTip()});li.append(btn);list.append(li)}
-        tooltip.append(list);
-      }
       // Keep the complete circular silhouette visible even at maximum zoom.
       function changeZoom(next:number){zoom=clamp(next,.68,1.15);resize()}
       shell.querySelectorAll<HTMLButtonElement>('[data-map-action]').forEach(btn=>btn.addEventListener('click',()=>{
@@ -431,7 +444,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       });
       map.addEventListener('pointermove',e=>{
         if(!dragging||dragging.id!==e.pointerId){
-          if(!pinned){const country=cityAt(e.clientX,e.clientY);if(country)showCityGroup(country);else if(activeCountry)hideTip()}
+          if(!pinned){const country=countryAt(e.clientX,e.clientY);if(country)showTip(country);else if(activeCountry)hideTip()}
           return;
         }
         if(Math.abs(e.clientX-dragging.x)+Math.abs(e.clientY-dragging.y)>4)moved=true;
@@ -445,7 +458,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       });
       map.addEventListener('pointerup',e=>{
         if(dragging?.id!==e.pointerId)return;
-        if(!moved){const country=cityAt(e.clientX,e.clientY);if(country){showCityGroup(country,true)}else hideTip()}
+        if(!moved){const country=countryAt(e.clientX,e.clientY);if(country){showTip(country,true)}else hideTip()}
         dragging=null;map.classList.remove('is-dragging');
       });
       map.addEventListener('pointercancel',()=>{dragging=null;map.classList.remove('is-dragging')});
