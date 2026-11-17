@@ -83,7 +83,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       <div class="map-heading"><span>GEOGRAPHIC INDEX</span><span>{countryEntries.length} countries · {items.length} entries</span></div>
       <div class="globe-index-layout">
       <div class="map-shell" id="institution-map-shell">
-        <button type="button" class="map-reset-minimal" data-map-action="reset" title="Return to global view" hidden>← Global view</button>
+        <div class="globe-zoom-controls" id="globe-zoom-controls" hidden aria-label="Focused map zoom">
+          <button type="button" data-map-action="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+          <button type="button" data-map-action="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+        </div>
         <div class="world-map" id="institution-world-map" role="group" aria-label="Rotatable geographic globe. Choose a country from the geographic index to enlarge its region and reveal recorded cities." tabindex="0">
           <canvas class="globe-canvas" id="institution-globe" aria-hidden="true"></canvas>
           <canvas class="globe-dots" id="institution-dots" aria-hidden="true"></canvas>
@@ -123,7 +126,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
             <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
           ))}
         </div>
-        <p class="geo-index-help">Select a country to reveal its cities. City markers are approximate; venues without verified coordinates are listed by city.</p>
+        <p class="geo-index-help">Select a country to focus the map. Use + / − to zoom further; select All institutions to return.</p>
       </aside>
       </div>
     </section>
@@ -238,31 +241,35 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .geo-index button,.geo-index p,.geo-index h2{position:relative;z-index:2}
   .geo-index .geo-country-button span{color:#264b3d}
   .map-location-precision{font-size:.69rem;line-height:1.45;color:#748d80;margin:-.2rem 0 .8rem}
-  .map-tooltip{background:rgba(255,255,255,.76);-webkit-backdrop-filter:blur(14px) saturate(115%);backdrop-filter:blur(14px) saturate(115%);border-color:rgba(127,168,147,.45);box-shadow:0 10px 28px rgba(42,81,62,.10);color:#234534}
-  .map-tooltip a{color:#205d43}
-  @supports not (backdrop-filter:blur(1px)){.map-tooltip{background:rgba(255,255,255,.9)}}
   @media(max-width:700px){.globe-index-layout .geo-index{padding-left:0!important}}
 
-  /* Global view: restore the restrained left-hand globe, with the index alongside. */
-  .world-map-section .globe-index-layout{display:grid!important;grid-template-columns:minmax(0,1.22fr) minmax(0,1fr)!important;column-gap:clamp(24px,4vw,64px)!important;min-height:0!important;overflow:visible!important;align-items:center!important;isolation:auto!important}
-  .world-map-section .map-shell{position:relative!important;inset:auto!important;left:auto!important;width:100%!important;height:clamp(460px,45vw,610px)!important;z-index:0!important;overflow:visible!important;background:transparent!important}
-  .world-map-section .world-map{width:100%!important;height:100%!important;background:transparent!important;overflow:visible!important}
-  .world-map-section .geo-index{position:relative!important;inset:auto!important;z-index:4!important;width:100%!important;min-height:auto!important;padding:20px 0!important;margin:0!important;background:none!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.45rem 1.15rem!important;align-content:center!important}
-  .world-map-section .map-tooltip{right:0!important;top:16px!important;max-width:310px!important;z-index:30!important}
-  /* Country view: only the map becomes a full-page background; the text layout stays unchanged. */
-  body.globe-country-focused .world-map-section .globe-index-layout{isolation:auto!important}
-  body.globe-country-focused .world-map-section .map-shell{position:relative!important;z-index:0!important;pointer-events:none!important}
-  body.globe-country-focused .world-map-section .world-map{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;z-index:1!important;pointer-events:auto!important;background:transparent!important}
-  body.globe-country-focused .world-map-section .geo-index{z-index:5!important}
-  body.globe-country-focused .mast,
-  body.globe-country-focused .world-map-section .map-heading,
-  body.globe-country-focused .world-map-section .map-meta,
-  body.globe-country-focused .world-map-section .geo-index{position:relative!important;z-index:6!important;background:transparent!important}
-  body.globe-country-focused .world-map-section .map-tooltip{position:fixed!important;right:calc(37% + 25px)!important;top:14vh!important;z-index:8!important}
-  body.globe-country-focused .world-map-section .map-reset-minimal{position:fixed!important;left:clamp(14px,5vw,78px)!important;top:clamp(105px,15vh,160px)!important;z-index:7!important;pointer-events:auto!important}
-  .world-map-section .map-reset-minimal{background:rgba(255,255,255,.84)!important}
+  /* GLOBAL: original restrained, left-aligned globe and fixed index layout. */
+  .world-map-section .globe-index-layout{display:grid!important;grid-template-columns:minmax(0,1.22fr) minmax(0,1fr)!important;column-gap:clamp(24px,4vw,64px)!important;min-height:0!important;align-items:center!important;overflow:visible!important;isolation:auto!important}
+  .world-map-section .map-shell{position:relative!important;inset:auto!important;left:auto!important;top:auto!important;width:100%!important;height:clamp(460px,45vw,610px)!important;z-index:auto!important;overflow:visible!important;background:transparent!important;pointer-events:auto!important}
+  .world-map-section .world-map{position:relative!important;inset:auto!important;width:100%!important;height:100%!important;background:transparent!important;overflow:visible!important}
+  .world-map-section .geo-index{position:relative!important;inset:auto!important;width:100%!important;min-height:auto!important;padding:20px 0!important;margin:0!important;background:transparent!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.45rem 1.15rem!important;align-content:center!important;z-index:6!important}
+  .world-map-section .map-tooltip{position:absolute!important;left:14px!important;right:auto!important;top:48px!important;width:min(330px,calc(100% - 28px))!important;max-width:330px!important;max-height:340px!important;z-index:10!important}
+  /* FOCUS: viewport map is the ONLY element that expands. Layout boxes stay unchanged. */
+  body.globe-country-focused .world-map-section .globe-index-layout{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr)!important;isolation:auto!important}
+  body.globe-country-focused .world-map-section .map-shell{position:relative!important;inset:auto!important;left:auto!important;width:100%!important;height:clamp(460px,45vw,610px)!important;pointer-events:none!important}
+  body.globe-country-focused .world-map-section .world-map{position:fixed!important;inset:0!important;left:0!important;top:0!important;width:100vw!important;height:100dvh!important;z-index:1!important;pointer-events:auto!important}
+  body.globe-country-focused .mast{position:relative!important;z-index:20!important;background:transparent!important}
+  body.globe-country-focused .world-map-section .map-heading{position:relative!important;z-index:12!important;background:transparent!important}
+  body.globe-country-focused .world-map-section .geo-index{position:relative!important;z-index:12!important;background:transparent!important}
+  /* Put popup in map's upper-left empty space, away from the country index. */
+  body.globe-country-focused .world-map-section .map-tooltip{position:fixed!important;left:clamp(24px,5vw,100px)!important;right:auto!important;top:clamp(160px,19vh,220px)!important;width:min(335px,32vw)!important;max-width:335px!important;max-height:min(380px,48vh)!important;z-index:16!important;pointer-events:auto!important}
+  .world-map-section .map-tooltip{background:rgba(255,255,255,.47)!important;-webkit-backdrop-filter:blur(2px)!important;backdrop-filter:blur(2px)!important;border:1px solid rgba(83,149,121,.30)!important;box-shadow:0 10px 36px rgba(32,81,58,.055)!important;color:#174833!important;scrollbar-width:none}
+  .world-map-section .map-tooltip::-webkit-scrollbar{display:none}
+  .world-map-section .map-tooltip a{color:#194b37!important}
+  .world-map-section .map-tooltip .map-popup-country,.world-map-section .map-tooltip h3{color:#17553e!important}
+  /* Focus zoom controls, not a second navigation screen. All institutions resets the view. */
+  .globe-zoom-controls{display:flex;gap:6px;align-items:center;position:absolute;top:12px;left:14px;z-index:11;pointer-events:auto}
+  .globe-zoom-controls[hidden]{display:none!important}
+  .globe-zoom-controls button{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid rgba(83,149,121,.35);background:rgba(255,255,255,.59);color:#216347;font:400 20px/1 system-ui,sans-serif;cursor:pointer}
+  .globe-zoom-controls button:hover,.globe-zoom-controls button:focus-visible{background:rgba(231,247,237,.85)}
+  body.globe-country-focused .globe-zoom-controls{position:fixed!important;top:clamp(115px,16vh,160px)!important;left:clamp(24px,5vw,100px)!important;z-index:18!important}
   @media(max-width:960px){.world-map-section .globe-index-layout{grid-template-columns:minmax(0,1fr) minmax(0,.93fr)!important;column-gap:20px!important}.world-map-section .geo-index{padding:10px 0!important}}
-  @media(max-width:700px){.world-map-section .globe-index-layout{display:flex!important;flex-direction:column!important;gap:10px!important}.world-map-section .map-shell{position:relative!important;left:auto!important;width:100%!important;height:clamp(320px,85vw,490px)!important}.world-map-section .geo-index{width:100%!important;padding:10px 0!important}.world-map-section .map-tooltip{position:static!important;max-width:100%!important}body.globe-country-focused .world-map-section .map-shell{position:relative!important;width:100%!important;height:clamp(340px,85vw,490px)!important;pointer-events:auto!important}body.globe-country-focused .world-map-section .world-map{position:relative!important;inset:auto!important;width:100%!important;height:100%!important}body.globe-country-focused .world-map-section .map-reset-minimal{position:absolute!important;top:10px!important;left:12px!important}body.globe-country-focused .world-map-section .map-tooltip{position:static!important;max-width:100%!important}}
+  @media(max-width:700px){.world-map-section .globe-index-layout,body.globe-country-focused .world-map-section .globe-index-layout{display:flex!important;flex-direction:column!important;gap:10px!important}.world-map-section .map-shell,body.globe-country-focused .world-map-section .map-shell{position:relative!important;left:auto!important;width:100%!important;height:clamp(320px,85vw,490px)!important;pointer-events:auto!important}.world-map-section .geo-index{width:100%!important;padding:10px 0!important}.world-map-section .map-tooltip,body.globe-country-focused .world-map-section .map-tooltip{position:static!important;max-width:100%!important;width:100%!important;max-height:320px!important}.world-map-section .world-map,body.globe-country-focused .world-map-section .world-map{position:relative!important;inset:auto!important;width:100%!important;height:100%!important;pointer-events:auto!important}body.globe-country-focused .globe-zoom-controls{position:absolute!important;top:10px!important;left:12px!important}}
 </style>
 <script>
   const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
@@ -338,7 +345,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       const focusZoom=clamp(39/span,2.8,6.2);
       return {lon:focusLon,lat:clamp(focusLat,-PI*.44,PI*.44),zoom:focusZoom};
     }
-    const resetButton=shell.querySelector<HTMLButtonElement>('[data-map-action="reset"]');
+    const zoomControls=shell.querySelector<HTMLElement>('#globe-zoom-controls');
     let width=1,height=1,cx=0,cy=0,radius=1;
     let dragging: {id:number,x:number,y:number,lon:number,lat:number}|null=null;
     let moved=false, activeCountry:string|null=null, pinned=false, closeTimer:any;
@@ -433,7 +440,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         hideTip();
         selectedGlobeCountry=country==='all'?null:country;
         document.body.classList.toggle('globe-country-focused',!!selectedGlobeCountry);
-        resetButton?.toggleAttribute('hidden',!selectedGlobeCountry);
+        zoomControls?.toggleAttribute('hidden',!selectedGlobeCountry);
         const focus=selectedGlobeCountry?getCountryFocus(selectedGlobeCountry):defaultGlobe;
         const targetLon=focus.lon;
         const targetLat=focus.lat;
@@ -545,7 +552,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
         if(dotsCanvas.width!==width||dotsCanvas.height!==height){dotsCanvas.width=width;dotsCanvas.height=height;}
         const focused=!!selectedGlobeCountry;
-        cx=width*(focused?.43:.49);
+        cx=width*(focused?.305:.49);
         cy=height*(focused?.52:.51);
         const baseRadius=focused?Math.min(width*.31,height*.48):Math.min(width*.46,height*.47);
         radius=baseRadius*zoom;
@@ -568,7 +575,13 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         }
         activeCountry=country;pinned=keep;tooltip.hidden=false;
       }
-      resetButton?.addEventListener('click',()=>{filterCountry('all');focusGlobeCountry('all')});
+      zoomControls?.querySelectorAll<HTMLButtonElement>('[data-map-action]').forEach(button=>button.addEventListener('click',()=>{
+        if(!selectedGlobeCountry)return;
+        if(turnAnimation){cancelAnimationFrame(turnAnimation);turnAnimation=0;}
+        const factor=button.dataset.mapAction==='zoom-in'?1.28:1/1.28;
+        zoom=clamp(zoom*factor,1.65,10.5);
+        resize();
+      }));
       map.addEventListener('pointerdown',e=>{
         if(e.button!==0)return;
         if(turnAnimation)cancelAnimationFrame(turnAnimation);
