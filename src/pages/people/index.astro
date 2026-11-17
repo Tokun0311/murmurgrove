@@ -30,13 +30,15 @@ const usedLatin = new Set(indexed.map(x=>x.letter));
     </div>
     <ol class="archive-list" id="people-list">
       {indexed.map(({item,letter})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''}`.toLocaleLowerCase()} data-letter={letter}>
-        <span class="eyebrow">INDEX</span><a href={`/people/${item.id}/`}>{item.data.name}</a>
+        <a href={`/people/${item.id}/`}>{item.data.name.includes(" / ") ? <><span class="person-latin">{item.data.name.split(" / ")[0]}</span><span class="person-native">{item.data.name.split(" / ").slice(1).join(" / ")}</span></> : <span class="person-latin">{item.data.name}</span>}</a>
       </li>)}
     </ol>
     <p id="people-empty" class="people-result-count" hidden>No matching people found.</p>
   </section>
 </Base>
 <style>
+  .people-index .archive-entry a{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:.7rem;row-gap:.12rem}
+  .person-native{font-size:.84em;color:var(--quiet);font-weight:400}
   .people-search-area{margin:0 0 1.5rem}
   .people-search-label{display:block;font-size:.72rem;letter-spacing:.12em;color:var(--quiet);margin-bottom:.6rem}
   #people-search{width:100%;max-width:440px;padding:.75rem .8rem;border:1px solid var(--rule);border-radius:2px;background:transparent;color:var(--ink);font:inherit;font-size:14px}

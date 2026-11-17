@@ -1,5 +1,5 @@
 ---
-name: やんツー / YANG02
+name: YANG02 / やんツー
 reading: やんつー
 sortName: YANG02
 kind: artist

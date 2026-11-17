@@ -4,25 +4,25 @@ import {getCollection} from 'astro:content';
 const items=await getCollection('institutions');
 
 const cityMeta = {
-  Tokyo: { country: 'Japan' },
-  Yokohama: { country: 'Japan' },
-  Fukuoka: { country: 'Japan' },
-  Kitakyushu: { country: 'Japan' },
-  Kyoto: { country: 'Japan' },
-  Hiroshima: { country: 'Japan' },
-  Gero: { country: 'Japan' },
-  Tokamachi: { country: 'Japan' },
-  Seoul: { country: 'South Korea' },
-  Gwangju: { country: 'South Korea' },
-  Busan: { country: 'South Korea' },
-  'Hong Kong': { country: 'Hong Kong' },
-  Singapore: { country: 'Singapore' },
-  'East Java': { country: 'Indonesia' },
-  Phuket: { country: 'Thailand' },
-  Berlin: { country: 'Germany' },
-  Copenhagen: { country: 'Denmark' },
-  London: { country: 'United Kingdom' },
-  Arles: { country: 'France' },
+  Tokyo: { lon: 139.692, lat: 35.69, country: 'Japan' },
+  Yokohama: { lon: 139.638, lat: 35.44, country: 'Japan' },
+  Fukuoka: { lon: 130.402, lat: 33.59, country: 'Japan' },
+  Kitakyushu: { lon: 130.875, lat: 33.88, country: 'Japan' },
+  Kyoto: { lon: 135.768, lat: 35.01, country: 'Japan' },
+  Hiroshima: { lon: 132.459, lat: 34.39, country: 'Japan' },
+  Gero: { lon: 137.245, lat: 35.81, country: 'Japan' },
+  Tokamachi: { lon: 138.757, lat: 37.13, country: 'Japan' },
+  Seoul: { lon: 126.978, lat: 37.57, country: 'South Korea' },
+  Gwangju: { lon: 126.852, lat: 35.16, country: 'South Korea' },
+  Busan: { lon: 129.075, lat: 35.18, country: 'South Korea' },
+  'Hong Kong': { lon: 114.17, lat: 22.31, country: 'Hong Kong' },
+  Singapore: { lon: 103.82, lat: 1.35, country: 'Singapore' },
+  'East Java': { lon: 112.75, lat: -7.25, country: 'Indonesia' },
+  Phuket: { lon: 98.39, lat: 7.88, country: 'Thailand' },
+  Berlin: { lon: 13.405, lat: 52.52, country: 'Germany' },
+  Copenhagen: { lon: 12.57, lat: 55.68, country: 'Denmark' },
+  London: { lon: -0.128, lat: 51.51, country: 'United Kingdom' },
+  Arles: { lon: 4.63, lat: 43.68, country: 'France' },
 };
 
 const countryOrder = ['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand','Germany','Denmark','United Kingdom','France'];
@@ -39,7 +39,13 @@ const countryEntries = Object.entries(
     .map(([city, cityEntries]) => ({city, entries: cityEntries.sort((a,b)=>a.data.name.localeCompare(b.data.name))}))
     .sort((a,b)=>cityOrder.indexOf(a.city)-cityOrder.indexOf(b.city)),
 })).sort((a,b)=>countryOrder.indexOf(a.country)-countryOrder.indexOf(b.country));
-const featuredCountries = new Map(countryEntries.map(group => [group.country,group]));
+const cityMarkers = countryEntries.flatMap(({country,cities})=>cities.flatMap(({city,entries})=>{
+  const known = cityMeta[city];
+  const located = entries.find(entry=>entry.data.longitude !== undefined && entry.data.latitude !== undefined);
+  const lon = located?.data.longitude ?? known?.lon;
+  const lat = located?.data.latitude ?? known?.lat;
+  return Number.isFinite(lon) && Number.isFinite(lat) ? [{city,country,lon,lat,count:entries.length}] : [];
+}));
 const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.city]?.country);
 ---
 <Base title="Institutions & Spaces | TOW ARCHIVE">
@@ -47,7 +53,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     <h1 class="sr-only">Institutions &amp; Spaces</h1>
 
     <section class="world-map-section" aria-label="Explore institution locations">
-      <div class="map-heading"><span>GEOGRAPHIC INDEX</span><span>{countryEntries.length} places · {items.length} entries</span></div>
+      <div class="map-heading"><span>GEOGRAPHIC INDEX</span><span>{countryEntries.length} countries · {items.length} entries</span></div>
       <div class="globe-index-layout">
       <div class="map-shell" id="institution-map-shell">
         <div class="map-controls" aria-label="Map navigation">
@@ -58,6 +64,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         <div class="world-map" id="institution-world-map" role="group" aria-label="Interactive wireframe globe with city markers. Drag to rotate, scroll to zoom, and select a city dot to explore institutions." tabindex="0">
           <canvas class="globe-canvas" id="institution-globe" aria-hidden="true"></canvas>
           <canvas class="globe-dots" id="institution-dots" aria-hidden="true"></canvas>
+          <script id="globe-city-data" type="application/json" set:html={JSON.stringify(cityMarkers).replaceAll("<", "\\u003c")} />
           <div class="globe-loading" id="globe-loading">Preparing globe…</div>
         </div>
         <div class="map-tooltip" id="institution-map-tooltip" hidden aria-live="polite"></div>
@@ -79,30 +86,24 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       </div>
       <aside class="geo-index" aria-label="Browse institutions by location">
         <p class="geo-index-kicker">EXPLORE BY REGION</p>
+        <button type="button" class="geo-all-button is-active" data-jump-country="all" aria-pressed="true">All institutions <span>{items.length}</span></button>
         <div class="geo-index-group"><h2>Asia</h2>
           {countryEntries.filter(g=>['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand'].includes(g.country)).map(({country,cities,entries})=>(
-            <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country}><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
+            <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
           ))}
         </div>
         <div class="geo-index-group"><h2>Europe</h2>
           {countryEntries.filter(g=>['Germany','Denmark','United Kingdom','France'].includes(g.country)).map(({country,cities,entries})=>(
-            <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country}><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
+            <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
           ))}
         </div>
-        <p class="geo-index-help">Select a country to browse its institutions below.</p>
+        <p class="geo-index-help">Choose a country to rotate the globe and filter the archive.</p>
       </aside>
       </div>
-      <p class="map-note">Drag to rotate · Scroll to zoom · Select a green city dot or choose a country from the index.</p>
+      <p class="map-note">Drag to rotate · Scroll to zoom · Select a city dot or country to explore.</p>
     </section>
 
     <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries · grouped by country and city</span></div>
-    <div class="filters institution-filters">
-      <div class="filter-languages" aria-label="Country and region filters">
-        <button type="button" data-institution-region="all" aria-pressed="true">All</button>
-        {countryEntries.map(({country})=><button type="button" data-institution-region={country} aria-pressed="false">{country}</button>)}
-        {unmapped.length > 0 && <button type="button" data-institution-region="unmapped" aria-pressed="false">Other</button>}
-      </div>
-    </div>
     <p class="institution-filter-count" id="institution-filter-count" role="status" aria-live="polite">{items.length} institutions</p>
     <div class="institution-geography-index">
       {countryEntries.map(({country,cities,entries}) => (
@@ -134,22 +135,22 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
 </Base>
 
 <style>
-  .world-map-section{margin:2.1rem 0 2.8rem}
-  .globe-index-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(230px,.85fr);gap:clamp(20px,4vw,62px);align-items:center}
-  .geo-index{align-self:center;max-height:560px;overflow:auto;padding:1rem 0 1rem .7rem;scrollbar-width:thin}
-  .geo-index-kicker{font-size:.66rem;letter-spacing:.15em;color:#799486;margin:0 0 1.6rem}
-  .geo-index-group{padding:0 0 1rem;margin-bottom:1.2rem;border-bottom:1px solid #e5ece7}
-  .geo-index-group h2{font-size:1.08rem;font-weight:400;color:#276148;margin:0 0 .8rem}
-  .geo-country{margin-bottom:.78rem}
+  .world-map-section{margin:0 0 2.8rem}
+  .globe-index-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.95fr);gap:clamp(20px,4vw,62px);align-items:center}
+  .geo-index{align-self:center;max-height:none;overflow:visible;padding:.25rem 0 .25rem .5rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 1.1rem}
+  .geo-index-kicker{grid-column:1/-1;font-size:.66rem;letter-spacing:.15em;color:#799486;margin:0 0 .35rem}
+  .geo-index-group{padding:0;margin:0;border-bottom:0;min-width:0}
+  .geo-index-group h2{font-size:.92rem;font-weight:500;color:#276148;margin:0 0 .6rem}
+  .geo-country{margin-bottom:.47rem}
   .geo-country-button{border:0;background:none;display:flex;justify-content:space-between;align-items:baseline;width:100%;padding:.22rem 0;font:inherit;color:#213d30;cursor:pointer;text-align:left}
-  .geo-country-button span{font-size:.9rem}.geo-country-button small{font-size:.72rem;color:#8da498}
+  .geo-country-button span{font-size:.78rem}.geo-country-button small{font-size:.67rem;color:#8da498}
   .geo-country-button:hover span,.geo-country-button:focus-visible span{color:#16835b;text-decoration:underline;text-underline-offset:3px}
-  .geo-country p{font-size:.7rem;color:#91a499;line-height:1.5;margin:.1rem 0 0}
-  .geo-index-help{font-size:.72rem;color:#8c9e92;line-height:1.6}
-  @media(max-width:780px){.globe-index-layout{grid-template-columns:1fr;gap:8px}.geo-index{max-height:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:1rem}.geo-index-kicker,.geo-index-help{grid-column:1/-1;margin:0}.geo-index-group{margin:0}.world-map{height:clamp(310px,75vw,490px)!important}}
+  .geo-country p{font-size:.63rem;color:#91a499;line-height:1.35;margin:.08rem 0 0}
+  .geo-index-help{grid-column:1/-1;font-size:.7rem;color:#8c9e92;line-height:1.5;margin:.25rem 0 0}
+  @media(max-width:780px){.globe-index-layout{grid-template-columns:1fr;gap:8px}.geo-index{max-height:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.75rem}.geo-index-kicker,.geo-index-help{grid-column:1/-1;margin:0}.geo-index-group{margin:0}.world-map{height:clamp(310px,75vw,490px)!important}}
   .map-heading{display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.72rem;letter-spacing:.12em;color:#668075;text-transform:uppercase;margin:0 0 .9rem}
   .map-shell{position:relative;border:0;border-radius:0;background:#fff;isolation:isolate;overflow:visible}
-  .world-map{position:relative;width:100%;height:clamp(390px,48vw,650px);overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none;background:#fff}
+  .world-map{position:relative;width:100%;height:clamp(330px,42vw,520px);overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none;background:#fff}
   .world-map.is-dragging{cursor:grabbing}
   .globe-canvas,.globe-dots{width:100%;height:100%;display:block;pointer-events:none}
   .globe-dots{position:absolute;inset:0}
@@ -161,6 +162,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-control:hover,.map-control:focus-visible{background:#eaf3ed;border-color:#78a18a}
   .map-tooltip{position:absolute;right:12px;top:12px;z-index:21;width:min(310px,calc(100% - 24px));max-height:min(390px,calc(100% - 24px));overflow:auto;background:#fff;border:1px solid #bdd4c5;box-shadow:0 7px 24px #354b3e26;padding:12px 14px;text-align:left}
   .map-tooltip[hidden],#institution-map-details[hidden]{display:none}
+  .cluster-city-link{display:block;width:100%;border:0;background:none;color:#245a40;text-align:left;padding:.4rem 0;font:inherit;font-size:.82rem;cursor:pointer}
+  .cluster-city-link:hover{text-decoration:underline}
   .map-popup-country{display:flex;justify-content:space-between;gap:1rem;color:#175f47;font-size:.94rem;font-weight:650;margin-bottom:.65rem}
   .map-popup-country span{color:#789084;font-weight:400}
   .map-popup-groups{display:grid;gap:.8rem}
@@ -171,7 +174,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-popup-group li a:hover,.map-popup-group li a:focus-visible{color:#087d55;text-decoration:underline;text-underline-offset:3px}
   .map-note{font-size:.78rem;color:#738479;margin-top:.65rem;line-height:1.6}
   .archive-list-heading{margin-bottom:0}
-  .institution-filters{margin:1.2rem 0 .65rem}
+  .geo-all-button{grid-column:1/-1;width:100%;display:flex;justify-content:space-between;background:none;border:0;padding:.45rem 0;margin:0 0 1.15rem;text-align:left;font:inherit;color:#275840;cursor:pointer;font-size:.92rem}
+  .geo-all-button span{font-size:.72rem;color:#819b88}
+  .geo-all-button.is-active,.geo-country-button.is-active span{color:#148653;font-weight:600}
+  .geo-country-button:focus-visible,.geo-all-button:focus-visible{outline:2px solid #67b58e;outline-offset:3px}
   .institution-filter-count{font-size:.77rem;color:var(--quiet);margin:0 0 1rem}
   .institution-country-group[hidden]{display:none!important}
   .institution-country-group{border-top:1px solid #c6dfd2;padding:1.65rem 0 1.3rem}
@@ -188,28 +194,29 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .institution-city-list a{font-size:clamp(16px,1.65vw,21px);line-height:1.5;letter-spacing:-.02em;overflow-wrap:anywhere}
   .institution-city-list a:hover,.institution-city-list a:focus-visible{color:#056848;text-decoration:underline;text-underline-offset:4px}
   .institution-ungrouped-list{margin-left:calc(19% + 1.2rem)}
-  @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{height:clamp(310px,88vw,480px)}.world-map-section{margin:1.5rem 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
+  @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{height:clamp(310px,88vw,480px)}.world-map-section{margin:0 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
   @media(prefers-reduced-motion:reduce){.world-map{scroll-behavior:auto}}
 </style>
 <script>
-  const institutionButtons=[...document.querySelectorAll<HTMLButtonElement>('[data-institution-region]')];
   const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
   const institutionCount=document.querySelector<HTMLElement>('#institution-filter-count');
-  institutionButtons.forEach(button=>button.addEventListener('click',()=>{
-    const selected=button.dataset.institutionRegion||'all';
-    institutionButtons.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+  const geoButtons=[...document.querySelectorAll<HTMLButtonElement>('[data-jump-country]')];
+  const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  function filterCountry(country:string,scroll=false){
+    geoButtons.forEach(b=>{const active=b.dataset.jumpCountry===country;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active))});
     let total=0;
     institutionGroups.forEach(group=>{
-      group.hidden=selected!=='all'&&group.dataset.institutionGroup!==selected;
+      group.hidden=country!=='all'&&group.dataset.institutionGroup!==country;
       if(!group.hidden)total+=group.querySelectorAll('.institution-city-list li').length;
     });
     if(institutionCount)institutionCount.textContent=`${total} ${total===1?'institution':'institutions'}`;
-  }));
-  document.querySelectorAll<HTMLButtonElement>('[data-jump-country]').forEach(button=>button.addEventListener('click',()=>{
-    const country=button.dataset.jumpCountry;
-    const matching=institutionButtons.find(b=>b.dataset.institutionRegion===country);
-    matching?.click();
-    document.querySelector('.archive-list-heading')?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+    if(scroll)document.querySelector('.archive-list-heading')?.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'start'});
+  }
+  let focusGlobeCountry:(country:string)=>void=()=>{};
+  geoButtons.forEach(button=>button.addEventListener('click',()=>{
+    const country=button.dataset.jumpCountry||'all';
+    filterCountry(country);
+    focusGlobeCountry(country);
   }));
   const shell = document.getElementById('institution-map-shell') as HTMLElement | null;
   const map = document.getElementById('institution-world-map') as HTMLElement | null;
@@ -221,20 +228,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   if (shell && map && canvas instanceof HTMLCanvasElement && dotsCanvas instanceof HTMLCanvasElement && tooltip && details) {
     // Geographic coordinates of the cities represented by the archive.
     // Dots indicate city locations, never political boundaries.
-    const cityLocations = [
-      ['Tokyo','Japan',139.692,35.69],['Yokohama','Japan',139.638,35.44],
-      ['Fukuoka','Japan',130.402,33.59],['Kitakyushu','Japan',130.875,33.88],
-      ['Kyoto','Japan',135.768,35.01],['Hiroshima','Japan',132.459,34.39],
-      ['Gero','Japan',137.245,35.81],['Tokamachi','Japan',138.757,37.13],
-      ['Seoul','South Korea',126.978,37.57],['Gwangju','South Korea',126.852,35.16],
-      ['Busan','South Korea',129.075,35.18],['Hong Kong','Hong Kong',114.17,22.31],
-      ['Singapore','Singapore',103.82,1.35],['East Java','Indonesia',112.75,-7.25],
-      ['Phuket','Thailand',98.39,7.88],['Berlin','Germany',13.405,52.52],
-      ['Copenhagen','Denmark',12.57,55.68],['London','United Kingdom',-.128,51.51],
-      ['Arles','France',4.63,43.68],
-    ] as const;
-    const countries=new Set(Array.from(details.children).map(el=>el.getAttribute('data-country-details')));
-    const cities=cityLocations.filter(([city,country])=>countries.has(country));
+    type CityMarker={city:string,country:string,lon:number,lat:number,count:number};
+    const cityDataElement=document.querySelector('#globe-city-data');
+    const cities:CityMarker[]=cityDataElement?.textContent ? JSON.parse(cityDataElement.textContent) : [];
     const dotCtx=dotsCanvas.getContext('2d');
     const clamp = (n:number,a:number,b:number) => Math.min(b,Math.max(a,n));
     const PI = Math.PI;
@@ -243,6 +239,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     let dragging: {id:number,x:number,y:number,lon:number,lat:number}|null=null;
     let moved=false, activeCountry:string|null=null, pinned=false, closeTimer:any;
     let frame=0;
+    let turnAnimation=0;
 
     const gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,preserveDrawingBuffer:false});
     if (!gl) {
@@ -304,6 +301,26 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       loading?.setAttribute('hidden','');
 
       function requestDraw(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;draw()})}
+      // Smoothly align the chosen country with the viewer, without moving the page.
+      focusGlobeCountry=(country:string)=>{
+        if(turnAnimation)cancelAnimationFrame(turnAnimation);
+        if(country==='all'){hideTip();return;}
+        const chosen=cities.filter(c=>c.country===country);
+        if(!chosen.length)return;
+        const avg=chosen.reduce((sum,c)=>({x:sum.x+Math.cos(c.lat*PI/180)*Math.sin(c.lon*PI/180),y:sum.y+Math.sin(c.lat*PI/180),z:sum.z+Math.cos(c.lat*PI/180)*Math.cos(c.lon*PI/180)}),{x:0,y:0,z:0});
+        const targetLon=Math.atan2(avg.x,avg.z);
+        const targetLat=clamp(Math.atan2(avg.y,Math.hypot(avg.x,avg.z)),-PI*.46,PI*.46);
+        const shift=Math.atan2(Math.sin(targetLon-longitude),Math.cos(targetLon-longitude));
+        const startLon=longitude,startLat=latitude;
+        if(reducedMotion.matches){longitude=startLon+shift;latitude=targetLat;requestDraw();return;}
+        const start=performance.now(),duration=650;
+        const tick=(time:number)=>{
+          const t=Math.min(1,(time-start)/duration);const ease=t*t*(3-2*t);
+          longitude=startLon+shift*ease;latitude=startLat+(targetLat-startLat)*ease;
+          requestDraw();if(t<1)turnAnimation=requestAnimationFrame(tick);else turnAnimation=0;
+        };
+        turnAnimation=requestAnimationFrame(tick);
+      };
       function draw(){
         gl.viewport(0,0,width,height);
         gl.clearColor(1,1,1,0);gl.clear(gl.COLOR_BUFFER_BIT);
@@ -325,30 +342,49 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         const depth=wy*st+t*ct;
         return depth>0?[cx+x*radius,cy-y*radius]:null;
       }
+      type ProjectedCluster={x:number,y:number,cities:CityMarker[]};
+      let projectedClusters:ProjectedCluster[]=[];
+      function makeClusters(){
+        const result:ProjectedCluster[]=[];
+        const dpr=Math.min(window.devicePixelRatio||1,2);
+        const threshold=(zoom<.95?20:zoom<1.08?15:11)*dpr;
+        for(const point of cities){
+          const pos=dotPosition(point.lon,point.lat);if(!pos)continue;
+          const [x,y]=pos;
+          let cluster=result.find(c=>Math.hypot(c.x-x,c.y-y)<threshold);
+          if(cluster){
+            const old=cluster.cities.length;
+            cluster.x=(cluster.x*old+x)/(old+1);cluster.y=(cluster.y*old+y)/(old+1);
+            cluster.cities.push(point);
+          } else result.push({x,y,cities:[point]});
+        }
+        return result;
+      }
       function drawDots(){
         if(!dotCtx)return;
         dotCtx.clearRect(0,0,width,height);
+        projectedClusters=makeClusters();
         const dpr=Math.min(window.devicePixelRatio||1,2);
-        for(const [city,country,lon,lat] of cities){
-          const pos=dotPosition(lon,lat);if(!pos)continue;
-          const [x,y]=pos;
-          dotCtx.beginPath();dotCtx.arc(x,y,3.1*dpr,0,PI*2);
+        for(const point of projectedClusters){
+          const multiple=point.cities.length>1;
+          const radius=(multiple?6.6:3.1)*dpr;
+          dotCtx.beginPath();dotCtx.arc(point.x,point.y,radius,0,PI*2);
           dotCtx.fillStyle='#2c8a61';dotCtx.fill();
-          dotCtx.beginPath();dotCtx.arc(x,y,6*dpr,0,PI*2);
-          dotCtx.strokeStyle='rgba(71,151,108,.25)';dotCtx.lineWidth=1.2*dpr;dotCtx.stroke();
+          dotCtx.beginPath();dotCtx.arc(point.x,point.y,radius+3*dpr,0,PI*2);
+          dotCtx.strokeStyle='rgba(71,151,108,.22)';dotCtx.lineWidth=1*dpr;dotCtx.stroke();
+          if(multiple){
+            dotCtx.font=`${9*dpr}px sans-serif`;
+            dotCtx.textAlign='center';dotCtx.textBaseline='middle';
+            dotCtx.fillStyle='#fff';dotCtx.fillText(String(point.cities.length),point.x,point.y+.5*dpr);
+          }
         }
       }
       function cityAt(clientX:number,clientY:number){
         const b=map.getBoundingClientRect();
         const x=(clientX-b.left)*width/b.width,y=(clientY-b.top)*height/b.height;
         const dpr=Math.min(window.devicePixelRatio||1,2);
-        let best:{country:string,distance:number}|null=null;
-        for(const [city,country,lon,lat] of cities){
-          const pos=dotPosition(lon,lat);if(!pos)continue;
-          const distance=Math.hypot(x-pos[0],y-pos[1]);
-          if(distance<12*dpr&&(!best||distance<best.distance))best={country,distance};
-        }
-        return best?.country||null;
+        const closest=projectedClusters.map(p=>({p,dist:Math.hypot(x-p.x,y-p.y)})).sort((a,b)=>a.dist-b.dist)[0];
+        return closest && closest.dist<14*dpr?closest.p.cities:null;
       }
       function resize(){
         const b=map.getBoundingClientRect();
@@ -357,7 +393,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         canvas.width=width;canvas.height=height;
         dotsCanvas.width=width;dotsCanvas.height=height;
         cx=width/2;cy=height/2;
-        radius=Math.min(width*.34,height*.425)*zoom;
+        radius=Math.min(width*.30,height*.40)*zoom;
         requestDraw();
       }
       function hideTip(){clearTimeout(closeTimer);activeCountry=null;pinned=false;tooltip.hidden=true;tooltip.replaceChildren()}
@@ -368,22 +404,34 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         if(activeCountry!==country||tooltip.hidden)tooltip.replaceChildren(...Array.from(el.children).map(c=>c.cloneNode(true)));
         activeCountry=country;pinned=keep;tooltip.hidden=false;
       }
+      function showCityGroup(group:CityMarker[],keep=false){
+        if(group.length===1){showTip(group[0].country,keep);return;}
+        clearTimeout(closeTimer);
+        activeCountry='cluster';pinned=keep;tooltip.hidden=false;
+        tooltip.replaceChildren();
+        const head=document.createElement('div');head.className='map-popup-country';
+        head.textContent=`${group.length} nearby cities`;tooltip.append(head);
+        const list=document.createElement('ul');list.className='map-popup-groups';
+        for(const city of group){const li=document.createElement('li');const btn=document.createElement('button');btn.type='button';btn.textContent=`${city.city} · ${city.country}`;btn.className='cluster-city-link';btn.addEventListener('click',()=>{filterCountry(city.country,true);focusGlobeCountry(city.country);hideTip()});li.append(btn);list.append(li)}
+        tooltip.append(list);
+      }
       // Keep the complete circular silhouette visible even at maximum zoom.
       function changeZoom(next:number){zoom=clamp(next,.68,1.15);resize()}
       shell.querySelectorAll<HTMLButtonElement>('[data-map-action]').forEach(btn=>btn.addEventListener('click',()=>{
         if(btn.dataset.mapAction==='in')changeZoom(zoom*1.18);
         if(btn.dataset.mapAction==='out')changeZoom(zoom/1.18);
-        if(btn.dataset.mapAction==='reset'){longitude=75*PI/180;latitude=19*PI/180;hideTip();changeZoom(1)}
+        if(btn.dataset.mapAction==='reset'){if(turnAnimation)cancelAnimationFrame(turnAnimation);filterCountry('all');longitude=75*PI/180;latitude=19*PI/180;hideTip();changeZoom(1)}
       }));
       map.addEventListener('wheel',e=>{e.preventDefault();changeZoom(zoom*(e.deltaY<0?1.09:1/1.09))},{passive:false});
       map.addEventListener('pointerdown',e=>{
         if(e.button!==0)return;
+        if(turnAnimation)cancelAnimationFrame(turnAnimation);
         dragging={id:e.pointerId,x:e.clientX,y:e.clientY,lon:longitude,lat:latitude};moved=false;
         map.setPointerCapture(e.pointerId);
       });
       map.addEventListener('pointermove',e=>{
         if(!dragging||dragging.id!==e.pointerId){
-          if(!pinned){const country=cityAt(e.clientX,e.clientY);if(country)showTip(country);else if(activeCountry)hideTip()}
+          if(!pinned){const country=cityAt(e.clientX,e.clientY);if(country)showCityGroup(country);else if(activeCountry)hideTip()}
           return;
         }
         if(Math.abs(e.clientX-dragging.x)+Math.abs(e.clientY-dragging.y)>4)moved=true;
@@ -397,7 +445,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       });
       map.addEventListener('pointerup',e=>{
         if(dragging?.id!==e.pointerId)return;
-        if(!moved){const country=cityAt(e.clientX,e.clientY);if(country){if(pinned&&activeCountry===country)hideTip();else showTip(country,true)}else hideTip()}
+        if(!moved){const country=cityAt(e.clientX,e.clientY);if(country){showCityGroup(country,true)}else hideTip()}
         dragging=null;map.classList.remove('is-dragging');
       });
       map.addEventListener('pointercancel',()=>{dragging=null;map.classList.remove('is-dragging')});

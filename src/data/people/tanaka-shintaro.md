@@ -1,5 +1,5 @@
 ---
-name: 田中信太郎 / Tanaka Shintaro
+name: Tanaka Shintaro / 田中信太郎
 reading: たなかしんたろう
 sortName: Tanaka Shintaro
 kind: artist

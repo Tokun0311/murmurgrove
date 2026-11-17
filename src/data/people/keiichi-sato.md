@@ -1,5 +1,5 @@
 ---
-name: 佐藤恵一 / Keiichi Sato
+name: Sato Keiichi / 佐藤恵一
 reading: さとうけいいち
 sortName: Sato Keiichi
 kind: organizer

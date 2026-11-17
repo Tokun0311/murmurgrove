@@ -1,5 +1,5 @@
 ---
-name: 柳幸典 / Yukinori Yanagi
+name: Yanagi Yukinori / 柳幸典
 reading: やなぎゆきのり
 sortName: Yanagi Yukinori
 kind: artist

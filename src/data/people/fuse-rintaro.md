@@ -1,5 +1,5 @@
 ---
-name: 布施琳太郎 / Fuse Rintaro
+name: Fuse Rintaro / 布施琳太郎
 reading: ふせりんたろう
 sortName: Fuse Rintaro
 kind: artist

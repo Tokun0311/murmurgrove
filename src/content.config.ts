@@ -28,7 +28,7 @@ const people = defineCollection({
 });
 const institutions = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/institutions' }),
-  schema: z.object({ name: z.string(), city: z.string().optional() })
+  schema: z.object({ name: z.string(), city: z.string().optional(), longitude: z.number().optional(), latitude: z.number().optional() })
 });
 const concepts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/concepts' }),

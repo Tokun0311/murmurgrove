@@ -214,3 +214,17 @@ button.exhibition-calendar-day.has-records.selected{background:var(--ink);color:
 /* The light trail replaces the visible pointer on desktop; never captures clicks. */
 #cursor-light-trail {position:fixed;inset:0;width:100%;height:100%;z-index:1000;pointer-events:none;contain:strict;}
 @media (pointer:coarse), (prefers-reduced-motion:reduce) {#cursor-light-trail{display:none}}
+
+/* 2026-11-17: one consistent gap below the masthead on every top-level page.
+   Keep the green masthead rule and structural dividers *inside* lists. */
+:root { --section-start-gap: 32px; }
+.archive, .exhibition-index { padding-top: var(--section-start-gap); }
+.calendar-home { padding-top: var(--section-start-gap); }
+.home-index { padding-top: var(--section-start-gap); }
+.article { padding-top: var(--section-start-gap); }
+/* The date explorer is the first element, so no extra rule above it. */
+.exhibition-date-explorer .exhibition-calendar,
+.exhibition-date-explorer .exhibition-day-preview { border-top: 0; }
+@media(max-width:650px) {
+  :root { --section-start-gap: 24px; }
+}

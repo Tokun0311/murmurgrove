@@ -1,5 +1,5 @@
 ---
-name: 名和晃平 / Nawa Kohei
+name: Nawa Kohei / 名和晃平
 reading: なわこうへい
 sortName: Nawa Kohei
 kind: artist
