@@ -275,3 +275,106 @@ body:has(.mast h1.brand) .mast .brand::before{content:"";position:absolute;inset
 body:has(.institutions-page) .frame{position:relative;isolation:isolate;}
 body:has(.institutions-page) .mast{position:relative;z-index:5;background:transparent;}
 body:has(.institutions-page) main{position:relative;z-index:1;}
+
+/* MOBILE-ONLY EXPERIENCE, 2026-11-17.
+   All rules are scoped to narrow screens; desktop CSS remains unchanged. */
+.mobile-nav, .mobile-calendar-toggle { display:none; }
+@media (max-width:650px) {
+  :root { --section-start-gap:20px; }
+  html { -webkit-text-size-adjust:100%; }
+  body { overflow-x:clip; }
+  .frame { padding:18px 19px max(56px,env(safe-area-inset-bottom)); }
+  .mast { position:relative; z-index:20; display:flex; flex-wrap:nowrap; align-items:center; gap:10px; padding:0 0 17px; }
+  .mast .brand { font-size:clamp(17px,4.65vw,21px); line-height:1.2; letter-spacing:.055em; white-space:nowrap; }
+  .mast > nav { display:none !important; }
+  .mobile-nav { display:block; margin-left:auto; flex:0 0 auto; position:relative; }
+  .mobile-nav summary { min-height:42px; display:flex; align-items:center; gap:9px; padding:8px 2px 8px 10px; cursor:pointer; color:var(--ink); font-size:12px; letter-spacing:.02em; list-style:none; }
+  .mobile-nav summary::-webkit-details-marker { display:none; }
+  .mobile-nav-symbol { display:block; width:15px;height:12px;border-top:1px solid currentColor;border-bottom:1px solid currentColor;position:relative; }
+  .mobile-nav-symbol::after { content:"";position:absolute;top:5px;left:0;right:0;border-top:1px solid currentColor; }
+  .mobile-nav[open] .mobile-nav-symbol { border-bottom:0;transform:translateY(4px) rotate(45deg);height:1px; }
+  .mobile-nav[open] .mobile-nav-symbol::after { transform:rotate(90deg);top:-1px; }
+  .mobile-nav nav { display:grid; gap:0; position:absolute;top:calc(100% + 13px);right:-1px;width:min(255px,calc(100vw - 38px));padding:6px 16px;background:#fff;border:1px solid var(--rule);box-shadow:0 15px 34px rgba(8,76,53,.09); }
+  .mobile-nav nav a { display:block;font-size:15px;line-height:1.4;padding:13px 3px;margin:0;border-bottom:1px solid #e7f0ea; }
+  .mobile-nav nav a:last-child { border-bottom:0; }
+  .mobile-nav nav a[aria-current="page"] { font-weight:600;color:var(--ink); }
+  .mobile-nav nav a[aria-current="page"]::before { display:none; }
+  .mobile-nav summary:focus-visible,.mobile-nav nav a:focus-visible { outline:2px solid var(--ink);outline-offset:3px; }
+  .home-index { padding-top:29px;padding-bottom:35px; }
+  .home-index .section-title { font-size:clamp(30px,8.5vw,38px);line-height:1.12;max-width:13ch;letter-spacing:-.045em; }
+  .home-index .section-lead { font-size:13px;line-height:1.75;margin-top:16px;max-width:33ch; }
+  .home-sections { margin:30px 0 42px; }
+  .home-sections>a { padding:16px 1px;font-size:19px;display:flex;flex-direction:row;align-items:center;gap:10px; }
+  .home-sections>a span { font-size:10px;text-align:right;max-width:130px; }
+  .home-recent-heading h2 { font-size:19px; }
+  .home-index .archive-entry:nth-child(n+5) { display:none; }
+  .archive-entry { grid-template-columns:1fr;gap:5px;padding:16px 0; }
+  .archive-entry a { font-size:16px;line-height:1.43;overflow-wrap:anywhere; }
+  .archive-entry time { font-size:11px; }
+  .section-title,.page-title,.article h1 { overflow-wrap:anywhere; }
+  .page-title { font-size:32px;margin:28px 0 17px; }
+  .article { padding:24px 0 45px; }
+  .article h1 { font-size:31px; }
+  .prose { font-size:15px;line-height:1.85;margin:30px 0; }
+  .prose h2 { font-size:20px; }
+  .filter-languages { gap:7px; }
+  .filter-languages button { min-height:37px;padding:7px 11px; }
+  .filters { align-items:flex-start; }
+  .exhibition-index { display:flex;flex-direction:column;min-width:0; }
+  .mobile-calendar-toggle { display:flex;align-items:center;justify-content:space-between;gap:12px;order:6;width:100%;min-height:48px;padding:13px 0;margin:33px 0 0;border:0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);background:none;color:var(--ink);font-size:14px;text-align:left;cursor:pointer; }
+  .mobile-calendar-toggle span { font-size:20px;font-weight:300; }
+  .mobile-calendar-toggle:focus-visible { outline:2px solid var(--ink);outline-offset:2px; }
+  .exhibition-date-explorer { order:7;display:none;gap:18px;margin:14px 0 0; }
+  .exhibition-date-explorer.mobile-calendar-open { display:grid; }
+  .exhibition-index-divider { order:0;margin-bottom:18px; }
+  .exhibition-index-heading { order:1;margin-bottom:16px; }
+  .exhibition-index-heading h2 { font-size:23px; }
+  .exhibition-index-heading p { font-size:11px;line-height:1.5; }
+  .exhibition-filters { order:2; }
+  .exhibition-result-count { order:3; }
+  #archive-list { order:4; }
+  #empty-message { order:5; }
+  .exhibition-date-explorer .exhibition-calendar { max-width:100%; }
+  .exhibition-calendar-controls button { min-height:38px;min-width:38px; }
+  .exhibition-date-explorer .exhibition-calendar-day { min-height:40px; }
+  .exhibition-day-preview { padding:14px 0; }
+  .people-index .archive-entry { padding:11px 0; }
+  .people-index #people-list { grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;row-gap:3px; }
+  .people-index .archive-entry a { font-size:13px; }
+  .people-index .person-native { font-size:.78em; }
+  .people-index-nav { gap:7px; }
+  .people-index-buttons { gap:4px; }
+  .people-index-buttons button { min-width:33px;min-height:35px;padding:6px; }
+  .institutions-page.archive { padding-top:20px; }
+  .institutions-page .globe-index-layout { min-height:0;display:block; }
+  .institutions-page .map-shell { display:none !important; }
+  .institutions-page .geo-index { display:block;padding:0 0 15px; }
+  .institutions-page .geo-index-kicker { font-size:10px;margin:0 0 13px; }
+  .institutions-page .geo-index-group { margin:0 0 13px; }
+  .institutions-page .geo-index-group h2 { font-size:11px;text-transform:uppercase;letter-spacing:.11em;margin:0 0 7px;color:var(--quiet); }
+  .institutions-page .geo-all-button { min-height:42px;padding:10px 11px;margin:0 0 18px;border:1px solid var(--rule);font-size:13px; }
+  .institutions-page .geo-country { display:inline-flex;margin:0 6px 7px 0; }
+  .institutions-page .geo-country-button { width:auto;min-height:38px;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--rule);font-size:13px; }
+  .institutions-page .geo-country-button span { font-size:12px; }
+  .institutions-page .geo-country-button.is-active { background:#eaf5ed;border-color:var(--ink); }
+  .institutions-page .geo-country p { display:none; }
+  .institutions-page .institution-geography-index { padding-top:16px; }
+  .institutions-page .institution-country-group { padding:17px 0;gap:10px;border-bottom:1px solid #e7f0ea; }
+  .institutions-page .institution-country-header h2 { font-size:19px; }
+  .institutions-page .institution-city-group { display:block;padding:7px 0 13px; }
+  .institutions-page .institution-city-group h3 { margin:0 0 9px;font-size:11px; }
+  .institutions-page .institution-city-list { grid-template-columns:1fr;gap:0; }
+  .institutions-page .institution-city-list li { border-bottom:1px solid #ecf2ee; }
+  .institutions-page .institution-city-list a { min-height:42px;display:flex;flex-direction:column;justify-content:center;padding:9px 0;font-size:14px; }
+  .concept-archive .concept-map-scroll { border:0; }
+  .concept-archive .concept-mobile-network { padding:0 0 14px; }
+  .concept-archive .mobile-concept-node,.concept-archive .mobile-concept-node:nth-child(even) { min-height:49px;padding:13px 2px;gap:12px; }
+  .concept-archive .mobile-concept-term { font-size:16px; }
+  .concept-archive .concept-note { font-size:11px;line-height:1.6; }
+}
+@media(max-width:360px) {
+  .frame { padding-left:15px;padding-right:15px; }
+  .mast .brand { font-size:16px;letter-spacing:.035em; }
+  .home-sections>a span { max-width:105px; }
+  .people-index #people-list { grid-template-columns:1fr; }
+}

@@ -12,7 +12,8 @@ const lastDate = calendarDates[0] || '2026-01-01';
   <section class="archive exhibition-index">
     <h1 class="sr-only">Exhibitions &amp; Events</h1>
 
-    <div class="exhibition-date-explorer">
+    <button class="mobile-calendar-toggle" id="mobile-calendar-toggle" type="button" aria-expanded="false" aria-controls="mobile-calendar-content">Browse by date <span aria-hidden="true">+</span></button>
+    <div class="exhibition-date-explorer" id="mobile-calendar-content">
     <section class="exhibition-calendar" aria-label="Browse exhibitions by date">
       <div class="exhibition-calendar-heading">
         <div>
@@ -270,4 +271,16 @@ const lastDate = calendarDates[0] || '2026-01-01';
   }));
   sorter?.addEventListener('change',updateList);
   renderCalendar();updateList();updatePreview();
+</script>
+
+<script>
+  const dateToggle = document.getElementById('mobile-calendar-toggle');
+  const dateContent = document.getElementById('mobile-calendar-content');
+  dateToggle?.addEventListener('click', () => {
+    const open = dateToggle.getAttribute('aria-expanded') !== 'true';
+    dateToggle.setAttribute('aria-expanded', String(open));
+    dateContent?.classList.toggle('mobile-calendar-open', open);
+    const sign = dateToggle.querySelector('span');
+    if (sign) sign.textContent = open ? '−' : '+';
+  });
 </script>
