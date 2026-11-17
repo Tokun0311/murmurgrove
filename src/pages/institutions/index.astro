@@ -57,7 +57,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         </div>
         <div class="world-map" id="institution-world-map" role="group" aria-label="Interactive globe. Drag to rotate, scroll to zoom, and select a highlighted country to explore institutions." tabindex="0">
           <canvas class="globe-canvas" id="institution-globe" aria-hidden="true"></canvas>
-          <div class="globe-loading" id="globe-loading">Loading globe…</div>
+          <div class="globe-loading" id="globe-loading">Preparing globe…</div>
         </div>
         <div class="map-tooltip" id="institution-map-tooltip" hidden aria-live="polite"></div>
         <div id="institution-map-details" hidden>
@@ -120,13 +120,13 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
 <style>
   .world-map-section{margin:2.1rem 0 2.8rem}
   .map-heading{display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.72rem;letter-spacing:.12em;color:#668075;text-transform:uppercase;margin:0 0 .9rem}
-  .map-shell{position:relative;border:1px solid #dbe7df;border-radius:3px;background:#f4f7f5;isolation:isolate}
-  .world-map{position:relative;width:100%;aspect-ratio:1200/520;overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none;background:radial-gradient(ellipse at center,#f7faf8 0%,#f4f7f5 72%)}
+  .map-shell{position:relative;border:0;border-radius:0;background:#fff;isolation:isolate;overflow:visible}
+  .world-map{position:relative;width:100%;height:clamp(480px,56vw,790px);overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none;background:#fff}
   .world-map.is-dragging{cursor:grabbing}
   .globe-canvas{width:100%;height:100%;display:block;pointer-events:none}
   .globe-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#789084;letter-spacing:.08em;pointer-events:none}
   .globe-loading[hidden]{display:none}
-  .map-controls{position:absolute;top:12px;left:12px;z-index:20;display:flex;gap:5px;align-items:center}
+  .map-controls{position:absolute;top:16px;left:16px;z-index:20;display:flex;gap:5px;align-items:center}
   .map-control{min-width:31px;height:31px;padding:0 8px;background:#fff;border:1px solid #bed3c5;color:#225c49;font:500 15px/1 inherit;cursor:pointer;border-radius:3px;box-shadow:0 1px 5px #24493513}
   .map-reset{font-size:12px;min-width:58px}
   .map-control:hover,.map-control:focus-visible{background:#eaf3ed;border-color:#78a18a}
@@ -159,7 +159,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .institution-city-list a{font-size:clamp(16px,1.65vw,21px);line-height:1.5;letter-spacing:-.02em;overflow-wrap:anywhere}
   .institution-city-list a:hover,.institution-city-list a:focus-visible{color:#056848;text-decoration:underline;text-underline-offset:4px}
   .institution-ungrouped-list{margin-left:calc(19% + 1.2rem)}
-  @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{aspect-ratio:1.4}.world-map-section{margin:1.5rem 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
+  @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{height:clamp(320px,95vw,540px)}.world-map-section{margin:1.5rem 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
   @media(prefers-reduced-motion:reduce){.world-map{scroll-behavior:auto}}
 </style>
 <script id="globe-geometry" type="application/json" set:html={JSON.stringify(geoPaths).replaceAll("<", "\\u003c")} />
@@ -184,167 +184,210 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   const details = document.getElementById('institution-map-details') as HTMLElement | null;
   const loading = document.getElementById('globe-loading');
   if (shell && map && canvas instanceof HTMLCanvasElement && tooltip && details) {
-    const ctx = canvas.getContext('2d', {alpha:false});
-    const texture = document.createElement('canvas');
-    texture.width = 1200; texture.height = 520;
-    const texCtx = texture.getContext('2d', {willReadFrequently:true});
-    const pickCanvas = document.createElement('canvas');
-    pickCanvas.width = 1200; pickCanvas.height = 520;
-    const pickCtx = pickCanvas.getContext('2d', {willReadFrequently:true});
+    // Unlike the old CPU pixel renderer, this globe uses a GPU shader. Rotating and
+    // zooming never resamples a low-resolution screenshot of the globe.
     const BASE = JSON.parse(document.getElementById('globe-geometry')?.textContent || '{}');
-    const countryNames = Object.keys(BASE.featured || {}).filter(n => Array.from(details.children).some(el=>el.getAttribute('data-country-details')===n));
-    const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
-    // Geographic centre of the visible hemisphere; rotation is in radians.
-    let longitude=75*Math.PI/180, latitude=19*Math.PI/180, zoom=1;
-    let W=0,H=0,D=0, CX=0,CY=0,R=0, dragging=null, moved=false;
-    let activeCountry=null, pinned=false, closeTimer, frame=0;
-    let pixels, picks;
-    // The project's original map is a simplified plate-carree-style SVG.
-    // Reuse it as the source texture so all existing highlighted regions remain aligned.
-    function initializeTextures(){
-      texCtx.fillStyle='#f4f7f5'; texCtx.fillRect(0,0,1200,520);
-      pickCtx.clearRect(0,0,1200,520);
+    const countryNames = Object.keys(BASE.featured || {}).filter(n =>
+      Array.from(details.children).some(el => el.getAttribute('data-country-details') === n));
+    const clamp = (n:number,a:number,b:number) => Math.min(b,Math.max(a,n));
+    const PI = Math.PI;
+    let longitude = 75 * PI / 180, latitude = 19 * PI / 180, zoom = 1;
+    let width=1,height=1,cx=0,cy=0,radius=1;
+    let dragging: {id:number,x:number,y:number,lon:number,lat:number}|null=null;
+    let moved=false, activeCountry:string|null=null, pinned=false, closeTimer:any;
+    let frame=0;
+
+    // Separate low-res picking buffer: interaction stays fast while rendering uses
+    // a much larger vector-rasterized texture with bilinear filtering.
+    const pickCanvas=document.createElement('canvas');
+    pickCanvas.width=1200;pickCanvas.height=520;
+    const pickCtx=pickCanvas.getContext('2d',{willReadFrequently:true});
+    if(!pickCtx)throw new Error('Picking canvas unavailable');
+    countryNames.forEach((name,i)=>{
+      pickCtx.fillStyle=`rgb(${i+1},0,0)`;
+      pickCtx.fill(new Path2D(BASE.featured[name]),'evenodd');
+    });
+    const picks=pickCtx.getImageData(0,0,1200,520).data;
+
+    const gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,preserveDrawingBuffer:false});
+    if (!gl) {
+      loading!.textContent='This globe requires WebGL. Please enable hardware acceleration.';
+    } else {
+      const vertex=`attribute vec2 pos;
+        void main(){gl_Position=vec4(pos,0.0,1.0);}`;
+      const fragment=`precision highp float;
+        uniform sampler2D atlas;
+        uniform vec2 viewSize;
+        uniform vec2 center;
+        uniform float sphereRadius;
+        uniform float lonRotation;
+        uniform float latRotation;
+        uniform float selected;
+        void main(){
+          vec2 p=(gl_FragCoord.xy-center)/sphereRadius;
+          float rr=dot(p,p);
+          if(rr>=1.0){discard;}
+          float z=sqrt(max(0.0,1.0-rr));
+          float cl=cos(lonRotation),sl=sin(lonRotation);
+          float ct=cos(latRotation),st=sin(latRotation);
+          float wx=p.x*cl+z*ct*sl-p.y*st*sl;
+          float wy=p.y*ct+z*st;
+          float wz=-p.x*sl+z*ct*cl-p.y*st*cl;
+          float longitude=atan(wx,wz);
+          float latitude=asin(clamp(wy,-1.0,1.0));
+          // Exact inverse of the site's existing vector world-map coordinates.
+          float u=fract(0.5+longitude/6.28318530718);
+          float v=1.0-clamp((300.0-latitude*180.0/3.14159265359*3.15)/520.0,0.0,1.0);
+          vec3 color=texture2D(atlas,vec2(u,v)).rgb;
+          // A restrained spherical light; no dark edges or artificial square shadow.
+          float diffuse=0.91+0.09*z+0.025*p.x;
+          color*=diffuse;
+          float alpha=1.0-smoothstep(0.996,1.0,rr);
+          gl_FragColor=vec4(color,alpha);
+        }`;
+      const compile=(source:string,type:number)=>{
+        const shader=gl.createShader(type)!;
+        gl.shaderSource(shader,source);gl.compileShader(shader);
+        if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(shader)||'Globe shader failed');
+        return shader;
+      };
+      const program=gl.createProgram()!;
+      gl.attachShader(program,compile(vertex,gl.VERTEX_SHADER));
+      gl.attachShader(program,compile(fragment,gl.FRAGMENT_SHADER));
+      gl.linkProgram(program);
+      if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program)||'Globe program failed');
+      gl.useProgram(program);
+      const quad=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,quad);
+      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+      const attr=gl.getAttribLocation(program,'pos');gl.enableVertexAttribArray(attr);
+      gl.vertexAttribPointer(attr,2,gl.FLOAT,false,0,0);
+      const uniforms={
+        size:gl.getUniformLocation(program,'viewSize'),center:gl.getUniformLocation(program,'center'),
+        radius:gl.getUniformLocation(program,'sphereRadius'),lon:gl.getUniformLocation(program,'lonRotation'),
+        lat:gl.getUniformLocation(program,'latRotation'),atlas:gl.getUniformLocation(program,'atlas')
+      };
+      // Paths remain vectors until drawn at 4K, removing the blurry outlines seen
+      // in the previous 1200 x 520 texture. Never scale up an existing screenshot.
+      const texCanvas=document.createElement('canvas');
+      const scale=3.4;
+      texCanvas.width=Math.round(1200*scale);texCanvas.height=Math.round(520*scale);
+      const tex=texCanvas.getContext('2d')!;
+      tex.scale(scale,scale);
+      tex.fillStyle='#f6faf7';tex.fillRect(0,0,1200,520);
       for(const region of BASE.base){
         const path=new Path2D(region.d);
-        texCtx.fillStyle='#dae5dd';texCtx.strokeStyle='#b8cbbd';texCtx.lineWidth=.65;
-        texCtx.fill(path,'evenodd');texCtx.stroke(path);
+        tex.fillStyle='#dae5dd';tex.strokeStyle='#bacfc1';tex.lineWidth=.38;
+        tex.fill(path,'evenodd');tex.stroke(path);
       }
-      countryNames.forEach((name,i)=>{
-        const path = new Path2D(BASE.featured[name]);
-        texCtx.fillStyle='#8ec6b1';texCtx.strokeStyle='#29866a';texCtx.lineWidth=1.4;
-        texCtx.fill(path,'evenodd');texCtx.stroke(path);
-        // Unique red channel index + 1, no antialias confusion from neighbouring pixels.
-        pickCtx.fillStyle=`rgb(${i+1},0,0)`;pickCtx.fill(path,'evenodd');
-      });
-      pixels=texCtx.getImageData(0,0,1200,520).data;
-      picks=pickCtx.getImageData(0,0,1200,520).data;
-      loading?.setAttribute('hidden','');resize();
-    }
-    function hideTip(){
-      clearTimeout(closeTimer);activeCountry=null;pinned=false;
-      tooltip.hidden=true;tooltip.replaceChildren();requestDraw();
-    }
-    function showTip(country,keep=false){
-      if(!country)return;
-      clearTimeout(closeTimer);
-      if(activeCountry===country && !tooltip.hidden && pinned===keep)return;
-      const el=Array.from(details.children).find(e=>e.getAttribute('data-country-details')===country);
-      if(!el)return;
-      if(activeCountry!==country||tooltip.hidden){
-        tooltip.replaceChildren(...Array.from(el.children).map(c=>c.cloneNode(true)));
+      for(const name of countryNames){
+        const path=new Path2D(BASE.featured[name]);
+        tex.fillStyle='#8cc6af';tex.strokeStyle='#278567';tex.lineWidth=.8;
+        tex.fill(path,'evenodd');tex.stroke(path);
       }
-      activeCountry=country;pinned=keep;tooltip.hidden=false;requestDraw();
-    }
-    function resize(){
-      const b=map.getBoundingClientRect();
-      const dpr=Math.min(window.devicePixelRatio||1,1.4);
-      W=Math.max(1,Math.round(b.width*dpr));H=Math.max(1,Math.round(b.height*dpr));
-      // Render at an efficient resolution, then scale up cleanly on HiDPI screens.
-      const ratio=Math.min(1,900/Math.max(W,H));W=Math.round(W*ratio);H=Math.round(H*ratio);
-      canvas.width=W;canvas.height=H;
-      CX=W/2;CY=H/2;R=Math.min(W*.32,H*.455)*zoom;
-      requestDraw();
-    }
-    function requestDraw(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;render()})}
-    function inverse(screenX,screenY){
-      const x=(screenX-CX)/R,y=(CY-screenY)/R;
-      const rr=x*x+y*y;
-      if(rr>1)return null;
-      const z=Math.sqrt(Math.max(0,1-rr));
-      const cosLat=Math.cos(latitude),sinLat=Math.sin(latitude);
-      const wx=x*Math.cos(longitude)+z*cosLat*Math.sin(longitude)-y*sinLat*Math.sin(longitude);
-      const wy=y*cosLat+z*sinLat;
-      const wz=-x*Math.sin(longitude)+z*cosLat*Math.cos(longitude)-y*sinLat*Math.cos(longitude);
-      return [Math.atan2(wx,wz),Math.asin(clamp(wy,-1,1)),z];
-    }
-    function texturePosition(lon,lat){
-      const tX=((600+(lon*180/Math.PI)*3.333333)%1200+1200)%1200;
-      const tY=clamp(300-(lat*180/Math.PI)*3.15,0,519);
-      return [Math.round(tX),Math.round(tY)];
-    }
-    function render(){
-      if(!ctx||!pixels)return;
-      const img=ctx.createImageData(W,H), out=img.data;
-      // Opaque pale background, softly lit sea and shaded land. No external library/network required.
-      for(let y=0;y<H;y++){
-        for(let x=0;x<W;x++){
-          const p=4*(y*W+x),dx=(x+.5-CX)/R,dy=(CY-y-.5)/R;
-          const rr=dx*dx+dy*dy;
-          if(rr>1){out[p]=244;out[p+1]=247;out[p+2]=245;out[p+3]=255;continue}
-          const loc=inverse(x+.5,y+.5);
-          if(!loc)continue;
-          const [tx,ty]=texturePosition(loc[0],loc[1]);
-          const i=4*(ty*1200+tx);
-          // Soft side shading and edge atmosphere help distinguish the sphere from a flat circle.
-          const shine=Math.max(0,.45+dx*(-.14)+dy*.25+loc[2]*.5);
-          const edge=Math.pow(1-loc[2],3);
-          const light=clamp(.84+shine*.16-edge*.10,.64,1.04);
-          let r=pixels[i],g=pixels[i+1],b=pixels[i+2];
-          const ci=picks[i];
-          if(ci>0&&ci<=countryNames.length&&countryNames[ci-1]===activeCountry){r=43;g=155;b=112}
-          out[p]=clamp(Math.round(r*light),0,255);
-          out[p+1]=clamp(Math.round(g*light),0,255);
-          out[p+2]=clamp(Math.round(b*light),0,255);
-          out[p+3]=255;
-        }
+      const texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,texCanvas);
+      gl.uniform1i(uniforms.atlas,0);
+      // Release the high-res CPU copy after upload.
+      texCanvas.width=1;texCanvas.height=1;
+      loading?.setAttribute('hidden','');
+
+      function requestDraw(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;draw()})}
+      function draw(){
+        gl.viewport(0,0,width,height);
+        gl.clearColor(1,1,1,0);gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform2f(uniforms.size,width,height);
+        gl.uniform2f(uniforms.center,cx,cy);
+        gl.uniform1f(uniforms.radius,radius);
+        gl.uniform1f(uniforms.lon,longitude);
+        gl.uniform1f(uniforms.lat,latitude);
+        gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
       }
-      ctx.putImageData(img,0,0);
-      // Thin outline identifies the limb against the almost-white ocean.
-      ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);
-      ctx.strokeStyle='rgba(57,117,83,.23)';ctx.lineWidth=Math.max(1,W/950);ctx.stroke();
-    }
-    function countryAt(clientX,clientY){
-      const rect=map.getBoundingClientRect();
-      const pos=inverse((clientX-rect.left)*W/rect.width,(clientY-rect.top)*H/rect.height);
-      if(!pos||!picks)return null;
-      const [tx,ty]=texturePosition(pos[0],pos[1]);
-      const code=picks[(ty*1200+tx)*4];
-      return countryNames[code-1]||null;
-    }
-    function changeZoom(next){zoom=clamp(next,.68,2.7);R=Math.min(W*.32,H*.455)*zoom;requestDraw()}
-    shell.querySelectorAll<HTMLButtonElement>('[data-map-action]').forEach(button=>button.addEventListener('click',()=>{
-      if(button.dataset.mapAction==='in')changeZoom(zoom*1.25);
-      if(button.dataset.mapAction==='out')changeZoom(zoom/1.25);
-      if(button.dataset.mapAction==='reset'){longitude=75*Math.PI/180;latitude=19*Math.PI/180;changeZoom(1);hideTip()}
-    }));
-    map.addEventListener('wheel',e=>{e.preventDefault();changeZoom(zoom*(e.deltaY<0?1.12:1/1.12))},{passive:false});
-    map.addEventListener('pointerdown',e=>{
-      if(e.button!==0)return;
-      dragging={id:e.pointerId,x:e.clientX,y:e.clientY,lon:longitude,lat:latitude};moved=false;
-      map.setPointerCapture(e.pointerId);
-    });
-    map.addEventListener('pointermove',e=>{
-      if(!dragging||dragging.id!==e.pointerId){
-        if(!pinned){const country=countryAt(e.clientX,e.clientY);if(country)showTip(country);else if(activeCountry)hideTip()}
-        return;
-      }
-      if(Math.abs(e.clientX-dragging.x)+Math.abs(e.clientY-dragging.y)>5)moved=true;
-      if(moved){
-        map.classList.add('is-dragging');
-        const rect=map.getBoundingClientRect();
-        longitude=dragging.lon-(e.clientX-dragging.x)/rect.width*5;
-        latitude=clamp(dragging.lat+(e.clientY-dragging.y)/rect.height*3,-Math.PI*.46,Math.PI*.46);
+      function resize(){
+        const b=map.getBoundingClientRect();
+        const dpr=Math.min(window.devicePixelRatio||1,2);
+        width=Math.max(1,Math.round(b.width*dpr));height=Math.max(1,Math.round(b.height*dpr));
+        canvas.width=width;canvas.height=height;
+        cx=width/2;cy=height/2;
+        radius=Math.min(width*.37,height*.315)*zoom;
         requestDraw();
       }
-    });
-    map.addEventListener('pointerup',e=>{
-      if(dragging?.id!==e.pointerId)return;
-      if(!moved){const country=countryAt(e.clientX,e.clientY);if(country){if(pinned&&activeCountry===country)hideTip();else showTip(country,true)}else hideTip()}
-      dragging=null;map.classList.remove('is-dragging');
-    });
-    map.addEventListener('pointercancel',()=>{dragging=null;map.classList.remove('is-dragging')});
-    map.addEventListener('pointerleave',()=>{if(!pinned)hideTip()});
-    map.addEventListener('keydown',e=>{
-      if(e.key==='+'||e.key==='='){e.preventDefault();changeZoom(zoom*1.25)}
-      else if(e.key==='-'){e.preventDefault();changeZoom(zoom/1.25)}
-      else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();longitude+=(e.key==='ArrowLeft'?1:-1)*.17;requestDraw()}
-      else if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();latitude=clamp(latitude+(e.key==='ArrowUp'?-1:1)*.15,-1.44,1.44);requestDraw()}
-      else if(e.key==='Escape')hideTip();
-    });
-    tooltip.addEventListener('pointerenter',()=>clearTimeout(closeTimer));
-    tooltip.addEventListener('pointerleave',()=>{if(!pinned)hideTip()});
-    document.addEventListener('pointerdown',e=>{if(!shell.contains(e.target as Node))hideTip()});
-    window.addEventListener('resize',resize);
-    initializeTextures();
+      function geoAt(screenX:number,screenY:number){
+        const x=(screenX-cx)/radius,y=(cy-screenY)/radius;
+        if(x*x+y*y>1)return null;
+        const z=Math.sqrt(Math.max(0,1-x*x-y*y));
+        const ct=Math.cos(latitude),st=Math.sin(latitude),cl=Math.cos(longitude),sl=Math.sin(longitude);
+        const wx=x*cl+z*ct*sl-y*st*sl;
+        const wy=y*ct+z*st;
+        const wz=-x*sl+z*ct*cl-y*st*cl;
+        return [Math.atan2(wx,wz),Math.asin(clamp(wy,-1,1))];
+      }
+      function countryAt(clientX:number,clientY:number){
+        const b=map.getBoundingClientRect();
+        const geo=geoAt((clientX-b.left)*width/b.width,(clientY-b.top)*height/b.height);
+        if(!geo)return null;
+        const tx=Math.round((((600+geo[0]*180/PI*3.333333)%1200)+1200)%1200);
+        const ty=Math.round(clamp(300-geo[1]*180/PI*3.15,0,519));
+        return countryNames[picks[(ty*1200+tx)*4]-1]||null;
+      }
+      function hideTip(){clearTimeout(closeTimer);activeCountry=null;pinned=false;tooltip.hidden=true;tooltip.replaceChildren()}
+      function showTip(country:string,keep=false){
+        clearTimeout(closeTimer);
+        const el=Array.from(details.children).find(e=>e.getAttribute('data-country-details')===country);
+        if(!el)return;
+        if(activeCountry!==country||tooltip.hidden)tooltip.replaceChildren(...Array.from(el.children).map(c=>c.cloneNode(true)));
+        activeCountry=country;pinned=keep;tooltip.hidden=false;
+      }
+      // Keep the complete circular silhouette visible even at maximum zoom.
+      function changeZoom(next:number){zoom=clamp(next,.62,1.53);resize()}
+      shell.querySelectorAll<HTMLButtonElement>('[data-map-action]').forEach(btn=>btn.addEventListener('click',()=>{
+        if(btn.dataset.mapAction==='in')changeZoom(zoom*1.18);
+        if(btn.dataset.mapAction==='out')changeZoom(zoom/1.18);
+        if(btn.dataset.mapAction==='reset'){longitude=75*PI/180;latitude=19*PI/180;hideTip();changeZoom(1)}
+      }));
+      map.addEventListener('wheel',e=>{e.preventDefault();changeZoom(zoom*(e.deltaY<0?1.09:1/1.09))},{passive:false});
+      map.addEventListener('pointerdown',e=>{
+        if(e.button!==0)return;
+        dragging={id:e.pointerId,x:e.clientX,y:e.clientY,lon:longitude,lat:latitude};moved=false;
+        map.setPointerCapture(e.pointerId);
+      });
+      map.addEventListener('pointermove',e=>{
+        if(!dragging||dragging.id!==e.pointerId){
+          if(!pinned){const country=countryAt(e.clientX,e.clientY);if(country)showTip(country);else if(activeCountry)hideTip()}
+          return;
+        }
+        if(Math.abs(e.clientX-dragging.x)+Math.abs(e.clientY-dragging.y)>4)moved=true;
+        if(moved){
+          map.classList.add('is-dragging');
+          const b=map.getBoundingClientRect();
+          longitude=dragging.lon-(e.clientX-dragging.x)/b.width*4.0;
+          latitude=clamp(dragging.lat+(e.clientY-dragging.y)/b.height*2.6,-PI*.46,PI*.46);
+          requestDraw();
+        }
+      });
+      map.addEventListener('pointerup',e=>{
+        if(dragging?.id!==e.pointerId)return;
+        if(!moved){const country=countryAt(e.clientX,e.clientY);if(country){if(pinned&&activeCountry===country)hideTip();else showTip(country,true)}else hideTip()}
+        dragging=null;map.classList.remove('is-dragging');
+      });
+      map.addEventListener('pointercancel',()=>{dragging=null;map.classList.remove('is-dragging')});
+      map.addEventListener('pointerleave',()=>{if(!pinned)hideTip()});
+      map.addEventListener('keydown',e=>{
+        if(e.key==='+'||e.key==='='){e.preventDefault();changeZoom(zoom*1.18)}
+        else if(e.key==='-'){e.preventDefault();changeZoom(zoom/1.18)}
+        else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();longitude+=(e.key==='ArrowLeft'?1:-1)*.17;requestDraw()}
+        else if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();latitude=clamp(latitude+(e.key==='ArrowUp'?-1:1)*.15,-1.44,1.44);requestDraw()}
+        else if(e.key==='Escape')hideTip();
+      });
+      tooltip.addEventListener('pointerenter',()=>clearTimeout(closeTimer));
+      tooltip.addEventListener('pointerleave',()=>{if(!pinned)hideTip()});
+      document.addEventListener('pointerdown',e=>{if(!shell.contains(e.target as Node))hideTip()});
+      const observer=new ResizeObserver(resize);observer.observe(map);
+      resize();
+    }
   }
 </script>

@@ -1,5 +1,5 @@
 ---
-name: 上田佳奈
+name: 上田佳奈 / Ueda Kana
 reading: うえだかな
 sortName: Ueda Kana
 kind: artist

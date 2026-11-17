@@ -1,5 +1,5 @@
 ---
-name: 呉夏枝
+name: 呉夏枝 / Oh Natsue
 reading: おなつえ
 sortName: Oh Natsue
 kind: artist

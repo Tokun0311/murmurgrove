@@ -1,5 +1,5 @@
 ---
-name: 山城知佳子
+name: 山城知佳子 / Yamashiro Chikako
 reading: やましろちかこ
 sortName: Yamashiro Chikako
 kind: artist

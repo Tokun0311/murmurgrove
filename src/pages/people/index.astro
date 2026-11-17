@@ -5,26 +5,14 @@ const items = (await getCollection('people')).sort((a,b)=>
   (a.data.sortName || a.data.name).localeCompare(b.data.sortName || b.data.name, 'en')
 );
 const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-const kanaRows = [
-  ['あ','あいうえおぁぃぅぇぉ'],['か','かきくけこがぎぐげご'],
-  ['さ','さしすせそざじずぜぞ'],['た','たちつてとだぢづでど'],
-  ['な','なにぬねの'],['は','はひふへほばびぶべぼぱぴぷぺぽ'],
-  ['ま','まみむめも'],['や','やゆよゃゅょ'],
-  ['ら','らりるれろ'],['わ','わをん']
-];
 const normalize = (value) => (value || '').normalize('NFKC').trim();
 const latinKey = (item) => {
   const value = normalize(item.data.sortName || item.data.name);
   const initial = value.match(/^[A-Za-z]/)?.[0]?.toUpperCase();
   return initial && latin.includes(initial) ? initial : '';
 };
-const kanaKey = (item) => {
-  const reading = normalize(item.data.reading).replace(/[\u30a1-\u30f6]/g, ch=>String.fromCharCode(ch.charCodeAt(0)-0x60));
-  return kanaRows.find(([, chars])=>chars.includes(reading[0]))?.[0] || '';
-};
-const indexed = items.map(item=>({item,letter:latinKey(item),kana:kanaKey(item)}));
+const indexed = items.map(item=>({item,letter:latinKey(item)}));
 const usedLatin = new Set(indexed.map(x=>x.letter));
-const usedKana = new Set(indexed.map(x=>x.kana));
 ---
 <Base title="People & Collectives | TOW ARCHIVE">
   <section class="archive people-index">
@@ -37,14 +25,11 @@ const usedKana = new Set(indexed.map(x=>x.kana));
           <button type="button" data-people-filter="all" aria-pressed="true">All</button>
           {latin.map(letter=><button type="button" data-people-filter={letter} aria-pressed="false" disabled={!usedLatin.has(letter)}>{letter}</button>)}
         </div>
-        <div class="filter-languages people-index-buttons" aria-label="Japanese syllabary filters">
-          {kanaRows.map(([row])=><button type="button" data-people-filter={`kana-${row}`} aria-pressed="false" disabled={!usedKana.has(row)}>{row}</button>)}
-        </div>
       </nav>
       <p id="people-result-count" class="people-result-count" role="status" aria-live="polite">{items.length} people &amp; collectives</p>
     </div>
     <ol class="archive-list" id="people-list">
-      {indexed.map(({item,letter,kana})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''}`.toLocaleLowerCase()} data-letter={letter} data-kana={kana}>
+      {indexed.map(({item,letter})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''}`.toLocaleLowerCase()} data-letter={letter}>
         <span class="eyebrow">INDEX</span><a href={`/people/${item.id}/`}>{item.data.name}</a>
       </li>)}
     </ol>
@@ -74,7 +59,7 @@ const usedKana = new Set(indexed.map(x=>x.kana));
     const q=(search?.value||'').normalize('NFKC').trim().toLocaleLowerCase();
     let shown=0;
     for(const row of rows){
-      const matchesFilter=selected==='all'||(selected.startsWith('kana-')?row.dataset.kana===selected.slice(5):row.dataset.letter===selected);
+      const matchesFilter=selected==='all'||row.dataset.letter===selected;
       const matchesSearch=!q||(row.dataset.peopleName||'').normalize('NFKC').includes(q);
       row.hidden=!(matchesFilter&&matchesSearch);
       if(!row.hidden)shown++;
