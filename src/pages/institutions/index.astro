@@ -80,7 +80,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     <h1 class="sr-only">Institutions &amp; Spaces</h1>
 
     <section class="world-map-section" aria-label="Explore institution locations">
-      <div class="map-heading"><span>GEOGRAPHIC INDEX</span><span>{countryEntries.length} countries · {items.length} entries</span></div>
+      <div class="map-heading"><span class="map-heading-label">GEOGRAPHIC INDEX</span><span class="map-heading-meta">{countryEntries.length} countries · {items.length} entries</span></div>
       <div class="globe-index-layout">
       <div class="map-shell" id="institution-map-shell">
         <div class="globe-zoom-controls" id="globe-zoom-controls" hidden aria-label="Focused map zoom">
@@ -105,7 +105,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
                 {cities.map(({city,entries}) => (
                   <section class="map-popup-group">
                     <h3>{city}</h3>
-                    <ul>{entries.map(item=><li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}</ul>
+                    <ul>{entries.map(item=><li><a href={`/institutions/${item.id}/`}>{(item.data.venueStatus==='reference' ? item.data.name : item.data.venueName || item.data.name)}</a></li>)}</ul>
                   </section>
                 ))}
               </div>
@@ -142,7 +142,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
             <section class="institution-city-group" aria-label={`${city} institutions`}>
               <h3>{city}</h3>
               <ul class="institution-city-list">
-                {cityEntries.map(item => <li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}
+                {cityEntries.map(item => <li><a href={`/institutions/${item.id}/`}>{(item.data.venueStatus==='reference' ? item.data.name : item.data.venueName || item.data.name)}{item.data.venueStatus!=='reference' && item.data.venueName && item.data.name !== item.data.venueName && <small class="institution-related-title">{item.data.name}</small>}</a></li>)}
               </ul>
             </section>
           ))}
@@ -152,7 +152,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         <section class="institution-country-group" data-institution-group="unmapped" aria-label="Unclassified institutions">
           <header class="institution-country-header"><h2>Location not yet specified</h2></header>
           <ul class="institution-city-list institution-ungrouped-list">
-            {unmapped.map(item => <li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}
+            {unmapped.map(item => <li><a href={`/institutions/${item.id}/`}>{(item.data.venueStatus==='reference' ? item.data.name : item.data.venueName || item.data.name)}{item.data.venueStatus!=='reference' && item.data.venueName && item.data.name !== item.data.venueName && <small class="institution-related-title">{item.data.name}</small>}</a></li>)}
           </ul>
         </section>
       )}
@@ -224,16 +224,17 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .institution-country-header{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.1rem}
   .institution-country-header h2{font-size:clamp(22px,2.3vw,29px);font-weight:400;line-height:1.3;letter-spacing:-.02em;margin:0}
   
-  .institution-city-group{display:grid;grid-template-columns:minmax(110px,19%) minmax(0,1fr);gap:1.2rem;padding:.4rem 0 1.2rem}
-  .institution-city-group+.institution-city-group{border-top:1px solid #e4ede7;padding-top:1.1rem}
-  .institution-city-group h3{font-size:.83rem;color:#668075;font-weight:500;line-height:1.5;margin:.35rem 0 0}
-  .institution-city-list{list-style:none;padding:0;margin:0}
-  .institution-city-list li{padding:.45rem 0}
-  .institution-city-list li+li{border-top:1px solid #e4ede7}
-  .institution-city-list a{font-size:clamp(16px,1.65vw,21px);line-height:1.5;letter-spacing:-.02em;overflow-wrap:anywhere}
-  .institution-city-list a:hover,.institution-city-list a:focus-visible{color:#056848;text-decoration:underline;text-underline-offset:4px}
-  .institution-ungrouped-list{margin-left:calc(19% + 1.2rem)}
-  @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{height:clamp(310px,88vw,480px)}.world-map-section{margin:0 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
+  .institution-city-group{padding:.45rem 0 1.15rem}
+  .institution-city-group+.institution-city-group{border-top:1px solid #e4ede7;padding-top:1.05rem}
+  .institution-city-group h3{font-size:.8rem;color:#668075;font-weight:500;line-height:1.5;margin:0 0 .55rem}
+  .institution-city-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55rem .75rem}
+  .institution-city-list li{margin:0}
+  .institution-related-title{display:block;margin-top:.2rem;font-size:.7em;color:#728c7e;font-weight:400}
+  .institution-city-list a{display:block;min-height:100%;padding:.72rem .8rem;border:1px solid #e4ede7;font-size:clamp(14px,1.2vw,18px);line-height:1.35;letter-spacing:-.01em;overflow-wrap:anywhere;background:#fff}
+  .institution-city-list a:hover,.institution-city-list a:focus-visible{color:#056848;text-decoration:underline;text-underline-offset:4px;border-color:#bfd4c6;background:#fbfdfb}
+  .institution-ungrouped-list{margin-left:0;grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media(max-width:980px){.institution-city-list,.institution-ungrouped-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:680px){.institution-city-group{gap:.25rem}.institution-city-group h3{margin:0 0 .5rem;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-city-list,.institution-ungrouped-list{grid-template-columns:1fr}.world-map{height:clamp(310px,88vw,480px)}.world-map-section{margin:0 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
   @media(prefers-reduced-motion:reduce){.world-map{scroll-behavior:auto}}
   /* The index floats directly on the white page, with no opaque gradient panel. */
   .globe-index-layout .geo-index{background:none!important;box-shadow:none!important;backdrop-filter:none!important;padding-left:clamp(12px,2vw,30px)!important}
@@ -274,6 +275,26 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   body.globe-country-focused .globe-zoom-controls{position:absolute!important;top:12px!important;left:14px!important;z-index:18!important}
   @media(max-width:960px){.world-map-section .globe-index-layout{grid-template-columns:minmax(0,1fr) minmax(0,.93fr)!important;column-gap:20px!important}.world-map-section .geo-index{padding:10px 0!important}}
   @media(max-width:700px){.world-map-section .globe-index-layout,body.globe-country-focused .world-map-section .globe-index-layout{display:flex!important;flex-direction:column!important;gap:10px!important}.world-map-section .map-shell,body.globe-country-focused .world-map-section .map-shell{position:relative!important;left:auto!important;width:100%!important;height:clamp(320px,85vw,490px)!important;pointer-events:auto!important}.world-map-section .geo-index{width:100%!important;padding:10px 0!important}.world-map-section .map-tooltip,body.globe-country-focused .world-map-section .map-tooltip{position:static!important;max-width:100%!important;width:100%!important;max-height:320px!important}.world-map-section .world-map,body.globe-country-focused .world-map-section .world-map{position:relative!important;inset:auto!important;width:100%!important;height:100%!important;pointer-events:auto!important}body.globe-country-focused .globe-zoom-controls{position:absolute!important;top:10px!important;left:12px!important}}
+
+  /* Final cleanup: remove the GEOGRAPHIC INDEX label and let the map live as a full-width background layer. */
+  .world-map-section{position:relative!important;overflow:hidden!important;margin:0 0 18px!important;padding-top:0!important}
+  .world-map-section .map-heading{position:absolute!important;top:0!important;right:0!important;left:0!important;z-index:9!important;display:block!important;margin:0!important;pointer-events:none!important}
+  .world-map-section .map-heading-label{display:none!important}
+  .world-map-section .map-heading-meta{display:block!important;width:max-content!important;margin-left:auto!important;font-size:.72rem!important;letter-spacing:.12em!important;color:#668075!important;text-transform:uppercase!important}
+  .world-map-section .globe-index-layout{position:relative!important;display:grid!important;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr)!important;column-gap:clamp(24px,4vw,64px)!important;align-items:stretch!important;min-height:clamp(500px,46vw,620px)!important;padding-top:clamp(26px,2.4vw,34px)!important;isolation:isolate!important;overflow:visible!important}
+  .world-map-section .map-shell{position:absolute!important;inset:0!important;left:0!important;top:0!important;width:100%!important;height:100%!important;z-index:0!important;background:transparent!important;overflow:hidden!important;pointer-events:auto!important}
+  .world-map-section .world-map{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;background:transparent!important;overflow:hidden!important}
+  .world-map-section .geo-index{position:relative!important;grid-column:2!important;align-self:center!important;z-index:6!important;width:100%!important;min-height:auto!important;margin:0!important;padding:32px 0 18px clamp(14px,2.4vw,28px)!important;background:transparent!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.45rem 1.15rem!important}
+  .world-map-section .map-tooltip{position:absolute!important;left:clamp(14px,2vw,26px)!important;right:auto!important;top:clamp(64px,10vh,92px)!important;width:min(330px,calc(100% - 28px))!important;max-width:330px!important;max-height:min(390px,calc(100% - 80px))!important;z-index:12!important}
+  .world-map-section .globe-zoom-controls{position:absolute!important;top:42px!important;left:16px!important;z-index:14!important}
+  body.globe-country-focused .world-map-section .map-shell{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;pointer-events:auto!important;z-index:0!important}
+  body.globe-country-focused .world-map-section .world-map{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;pointer-events:auto!important;background:transparent!important}
+  body.globe-country-focused .world-map-section .geo-index{position:relative!important;z-index:6!important;background:transparent!important}
+  body.globe-country-focused .world-map-section .map-heading{position:absolute!important;z-index:9!important;background:transparent!important}
+  body.globe-country-focused .world-map-section .globe-zoom-controls{top:42px!important;left:16px!important;z-index:16!important}
+  @media(max-width:960px){.world-map-section .globe-index-layout{grid-template-columns:minmax(0,1fr) minmax(290px,.92fr)!important;column-gap:20px!important}.world-map-section .geo-index{padding-left:12px!important}}
+  @media(max-width:700px){.world-map-section .map-heading{position:static!important;display:flex!important;justify-content:flex-end!important;margin:0 0 .5rem!important}.world-map-section .map-heading-meta{margin-left:0!important}.world-map-section .globe-index-layout,body.globe-country-focused .world-map-section .globe-index-layout{display:flex!important;flex-direction:column!important;gap:10px!important;min-height:0!important;padding-top:0!important}.world-map-section .map-shell,body.globe-country-focused .world-map-section .map-shell{position:relative!important;inset:auto!important;width:100%!important;height:clamp(320px,85vw,490px)!important}.world-map-section .world-map,body.globe-country-focused .world-map-section .world-map{position:relative!important;inset:auto!important;width:100%!important;height:100%!important}.world-map-section .geo-index{grid-column:auto!important;width:100%!important;padding:10px 0 0!important}.world-map-section .globe-zoom-controls,body.globe-country-focused .world-map-section .globe-zoom-controls{top:10px!important;left:12px!important}}
+
 </style>
 <script>
   const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
@@ -517,18 +538,6 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           dotCtx.fillStyle='rgba(255,255,255,.96)';dotCtx.fill();
           dotCtx.beginPath();dotCtx.arc(x,y,(selected?2.8:1.7)*dpr,0,2*PI);
           dotCtx.fillStyle='rgba(25,112,80,.95)';dotCtx.fill();
-          if(selected){
-            dotCtx.save();
-            dotCtx.font=`${(isSite(point)?10:12)*dpr}px system-ui, sans-serif`;
-            dotCtx.textBaseline='bottom';
-            dotCtx.lineWidth=3.5*dpr;
-            dotCtx.strokeStyle='rgba(255,255,255,.96)';
-            dotCtx.fillStyle='rgba(23,86,62,.98)';
-            const title=isSite(point)?point.name:(isCity(point)?point.city:point.country);
-            dotCtx.strokeText(title,x+7*dpr,y-7*dpr);
-            dotCtx.fillText(title,x+7*dpr,y-7*dpr);
-            dotCtx.restore();
-          }
         }
       }
       function pointAt(clientX:number,clientY:number):GeographicPoint|null{
