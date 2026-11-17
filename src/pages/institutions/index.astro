@@ -48,28 +48,16 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     <h1 class="sr-only">Institutions &amp; Spaces</h1>
 
     <section class="world-map-section" aria-label="Institution locations by country and region">
-      <div class="map-heading"><span>WORLD MAP</span><span>{countryEntries.length} places · {items.length} entries</span></div>
+      <div class="map-heading"><span>WORLD GLOBE</span><span>{countryEntries.length} places · {items.length} entries</span></div>
       <div class="map-shell" id="institution-map-shell">
         <div class="map-controls" aria-label="Map navigation">
           <button type="button" class="map-control" data-map-action="in" aria-label="Zoom in" title="Zoom in">+</button>
           <button type="button" class="map-control" data-map-action="out" aria-label="Zoom out" title="Zoom out">−</button>
           <button type="button" class="map-control map-reset" data-map-action="reset" title="Reset map view">Reset</button>
         </div>
-        <div class="world-map" id="institution-world-map" role="group" aria-label="World map. Hover, focus, or tap a shaded country or region to see its institutions." tabindex="0">
-          <div class="map-stage" id="institution-map-stage">
-            <svg class="map-svg" id="institution-map-svg" viewBox="0 0 1200 520" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-label="Map showing institutional locations by country and region">
-              <g class="map-land" aria-hidden="true">
-                {geoPaths.base.map(region => <path d={region.d} />)}
-              </g>
-              <g class="map-highlight">
-                {countryEntries.map(group => geoPaths.featured[group.country] && (
-                  <path class="map-country-shape" d={geoPaths.featured[group.country]} data-country={group.country}
-                    role="button" tabindex="0" aria-label={`${group.country}: ${group.entries.length} institutions or projects`}
-                    aria-expanded="false" />
-                ))}
-              </g>
-            </svg>
-          </div>
+        <div class="world-map" id="institution-world-map" role="group" aria-label="Interactive globe. Drag to rotate, scroll to zoom, and select a highlighted country to explore institutions." tabindex="0">
+          <canvas class="globe-canvas" id="institution-globe" aria-hidden="true"></canvas>
+          <div class="globe-loading" id="globe-loading">Loading globe…</div>
         </div>
         <div class="map-tooltip" id="institution-map-tooltip" hidden aria-live="polite"></div>
         <div id="institution-map-details" hidden>
@@ -88,7 +76,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           ))}
         </div>
       </div>
-      <p class="map-note">Hover or tap a shaded place to explore institutions by city. Scroll or use + / − to zoom; drag to explore.</p>
+      <p class="map-note">Drag to rotate the globe. Scroll or use + / − to zoom. Select a green country to explore institutions by city. Keyboard: arrows to rotate, + / − to zoom.</p>
     </section>
 
     <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries · grouped by country and city</span></div>
@@ -133,13 +121,11 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .world-map-section{margin:2.1rem 0 2.8rem}
   .map-heading{display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.72rem;letter-spacing:.12em;color:#668075;text-transform:uppercase;margin:0 0 .9rem}
   .map-shell{position:relative;border:1px solid #dbe7df;border-radius:3px;background:#f4f7f5;isolation:isolate}
-  .world-map{position:relative;width:100%;aspect-ratio:1200/520;overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none}
+  .world-map{position:relative;width:100%;aspect-ratio:1200/520;overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none;background:radial-gradient(ellipse at center,#f7faf8 0%,#f4f7f5 72%)}
   .world-map.is-dragging{cursor:grabbing}
-  .map-stage{position:absolute;inset:0}
-  .map-svg{display:block;width:100%;height:100%;pointer-events:none;user-select:none}
-  .map-land path{fill:#dae5dd;stroke:#b2c7b9;stroke-width:.36;vector-effect:non-scaling-stroke;fill-rule:evenodd}
-  .map-country-shape{fill:rgba(11,120,82,.34);stroke:#338469;stroke-width:1.15;vector-effect:non-scaling-stroke;fill-rule:evenodd;pointer-events:visiblePainted;cursor:pointer;outline:none;transition:fill .12s ease}
-  .map-country-shape:hover,.map-country-shape:focus-visible,.map-country-shape.is-active{fill:rgba(7,127,91,.65);stroke:#086647;stroke-width:1.7}
+  .globe-canvas{width:100%;height:100%;display:block;pointer-events:none}
+  .globe-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#789084;letter-spacing:.08em;pointer-events:none}
+  .globe-loading[hidden]{display:none}
   .map-controls{position:absolute;top:12px;left:12px;z-index:20;display:flex;gap:5px;align-items:center}
   .map-control{min-width:31px;height:31px;padding:0 8px;background:#fff;border:1px solid #bed3c5;color:#225c49;font:500 15px/1 inherit;cursor:pointer;border-radius:3px;box-shadow:0 1px 5px #24493513}
   .map-reset{font-size:12px;min-width:58px}
@@ -174,8 +160,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .institution-city-list a:hover,.institution-city-list a:focus-visible{color:#056848;text-decoration:underline;text-underline-offset:4px}
   .institution-ungrouped-list{margin-left:calc(19% + 1.2rem)}
   @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{aspect-ratio:1.4}.world-map-section{margin:1.5rem 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
-  @media(prefers-reduced-motion:reduce){.map-country-shape{transition:none}}
+  @media(prefers-reduced-motion:reduce){.world-map{scroll-behavior:auto}}
 </style>
+<script id="globe-geometry" type="application/json" set:html={JSON.stringify(geoPaths).replaceAll("<", "\\u003c")} />
 <script>
   const institutionButtons=[...document.querySelectorAll<HTMLButtonElement>('[data-institution-region]')];
   const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
@@ -190,111 +177,174 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     });
     if(institutionCount)institutionCount.textContent=`${total} ${total===1?'institution':'institutions'}`;
   }));
-  const shell = document.getElementById('institution-map-shell');
-  const map = document.getElementById('institution-world-map');
-  const stage = document.getElementById('institution-map-stage');
-  const svg = document.getElementById('institution-map-svg');
-  const tooltip = document.getElementById('institution-map-tooltip');
-  const details = document.getElementById('institution-map-details');
-  if (shell && map && stage && svg && tooltip && details) {
-    // Pan and zoom by changing the SVG viewBox: no rasterized CSS transform layer.
-    const W = 1200, H = 520;
-    let zoom = 1, vx = 0, vy = 0;
-    let active=null,locked=false,closeTimer,drag=null,moved=false;
-    const shapes=[...map.querySelectorAll('.map-country-shape')];
-    const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
-    function render(){
-      const vw = W / zoom, vh = H / zoom;
-      vx = clamp(vx, 0, W - vw);
-      vy = clamp(vy, 0, H - vh);
-      svg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
+  const shell = document.getElementById('institution-map-shell') as HTMLElement | null;
+  const map = document.getElementById('institution-world-map') as HTMLElement | null;
+  const canvas = document.getElementById('institution-globe') as HTMLCanvasElement | null;
+  const tooltip = document.getElementById('institution-map-tooltip') as HTMLElement | null;
+  const details = document.getElementById('institution-map-details') as HTMLElement | null;
+  const loading = document.getElementById('globe-loading');
+  if (shell && map && canvas instanceof HTMLCanvasElement && tooltip && details) {
+    const ctx = canvas.getContext('2d', {alpha:false});
+    const texture = document.createElement('canvas');
+    texture.width = 1200; texture.height = 520;
+    const texCtx = texture.getContext('2d', {willReadFrequently:true});
+    const pickCanvas = document.createElement('canvas');
+    pickCanvas.width = 1200; pickCanvas.height = 520;
+    const pickCtx = pickCanvas.getContext('2d', {willReadFrequently:true});
+    const BASE = JSON.parse(document.getElementById('globe-geometry')?.textContent || '{}');
+    const countryNames = Object.keys(BASE.featured || {}).filter(n => Array.from(details.children).some(el=>el.getAttribute('data-country-details')===n));
+    const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
+    // Geographic centre of the visible hemisphere; rotation is in radians.
+    let longitude=75*Math.PI/180, latitude=19*Math.PI/180, zoom=1;
+    let W=0,H=0,D=0, CX=0,CY=0,R=0, dragging=null, moved=false;
+    let activeCountry=null, pinned=false, closeTimer, frame=0;
+    let pixels, picks;
+    // The project's original map is a simplified plate-carree-style SVG.
+    // Reuse it as the source texture so all existing highlighted regions remain aligned.
+    function initializeTextures(){
+      texCtx.fillStyle='#f4f7f5'; texCtx.fillRect(0,0,1200,520);
+      pickCtx.clearRect(0,0,1200,520);
+      for(const region of BASE.base){
+        const path=new Path2D(region.d);
+        texCtx.fillStyle='#dae5dd';texCtx.strokeStyle='#b8cbbd';texCtx.lineWidth=.65;
+        texCtx.fill(path,'evenodd');texCtx.stroke(path);
+      }
+      countryNames.forEach((name,i)=>{
+        const path = new Path2D(BASE.featured[name]);
+        texCtx.fillStyle='#8ec6b1';texCtx.strokeStyle='#29866a';texCtx.lineWidth=1.4;
+        texCtx.fill(path,'evenodd');texCtx.stroke(path);
+        // Unique red channel index + 1, no antialias confusion from neighbouring pixels.
+        pickCtx.fillStyle=`rgb(${i+1},0,0)`;pickCtx.fill(path,'evenodd');
+      });
+      pixels=texCtx.getImageData(0,0,1200,520).data;
+      picks=pickCtx.getImageData(0,0,1200,520).data;
+      loading?.setAttribute('hidden','');resize();
     }
     function hideTip(){
+      clearTimeout(closeTimer);activeCountry=null;pinned=false;
+      tooltip.hidden=true;tooltip.replaceChildren();requestDraw();
+    }
+    function showTip(country,keep=false){
+      if(!country)return;
       clearTimeout(closeTimer);
-      active?.classList.remove('is-active');
-      active?.setAttribute('aria-expanded','false');
-      active=null;locked=false;tooltip.hidden=true;tooltip.replaceChildren();
+      if(activeCountry===country && !tooltip.hidden && pinned===keep)return;
+      const el=Array.from(details.children).find(e=>e.getAttribute('data-country-details')===country);
+      if(!el)return;
+      if(activeCountry!==country||tooltip.hidden){
+        tooltip.replaceChildren(...Array.from(el.children).map(c=>c.cloneNode(true)));
+      }
+      activeCountry=country;pinned=keep;tooltip.hidden=false;requestDraw();
     }
-    function showTip(shape,keep=false){
-      if(!shape)return;
-      clearTimeout(closeTimer);
-      active?.classList.remove('is-active');
-      active?.setAttribute('aria-expanded','false');
-      active=shape;locked=keep;
-      active.classList.add('is-active');
-      active.setAttribute('aria-expanded','true');
-      const country=shape.getAttribute('data-country');
-      const section=[...details.children].find(el=>el.getAttribute('data-country-details')===country);
-      if(!section)return;
-      tooltip.replaceChildren(...[...section.children].map(child=>child.cloneNode(true)));
-      tooltip.hidden=false;
+    function resize(){
+      const b=map.getBoundingClientRect();
+      const dpr=Math.min(window.devicePixelRatio||1,1.4);
+      W=Math.max(1,Math.round(b.width*dpr));H=Math.max(1,Math.round(b.height*dpr));
+      // Render at an efficient resolution, then scale up cleanly on HiDPI screens.
+      const ratio=Math.min(1,900/Math.max(W,H));W=Math.round(W*ratio);H=Math.round(H*ratio);
+      canvas.width=W;canvas.height=H;
+      CX=W/2;CY=H/2;R=Math.min(W*.32,H*.455)*zoom;
+      requestDraw();
     }
-    function zoomAt(next,px,py){
-      next=clamp(next,1,10);
-      const xFraction=clamp(px/map.clientWidth,0,1);
-      const yFraction=clamp(py/map.clientHeight,0,1);
-      const anchoredX=vx+xFraction*(W/zoom);
-      const anchoredY=vy+yFraction*(H/zoom);
-      zoom=next;
-      vx=anchoredX-xFraction*(W/zoom);
-      vy=anchoredY-yFraction*(H/zoom);
-      hideTip();render();
+    function requestDraw(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;render()})}
+    function inverse(screenX,screenY){
+      const x=(screenX-CX)/R,y=(CY-screenY)/R;
+      const rr=x*x+y*y;
+      if(rr>1)return null;
+      const z=Math.sqrt(Math.max(0,1-rr));
+      const cosLat=Math.cos(latitude),sinLat=Math.sin(latitude);
+      const wx=x*Math.cos(longitude)+z*cosLat*Math.sin(longitude)-y*sinLat*Math.sin(longitude);
+      const wy=y*cosLat+z*sinLat;
+      const wz=-x*Math.sin(longitude)+z*cosLat*Math.cos(longitude)-y*sinLat*Math.cos(longitude);
+      return [Math.atan2(wx,wz),Math.asin(clamp(wy,-1,1)),z];
     }
-    shell.querySelectorAll('[data-map-action]').forEach(button=>button.addEventListener('click',()=>{
-      const action=button.dataset.mapAction;
-      if(action==='in')zoomAt(zoom*1.55,map.clientWidth/2,map.clientHeight/2);
-      if(action==='out')zoomAt(zoom/1.55,map.clientWidth/2,map.clientHeight/2);
-      if(action==='reset'){zoom=1;vx=0;vy=0;hideTip();render()}
+    function texturePosition(lon,lat){
+      const tX=((600+(lon*180/Math.PI)*3.333333)%1200+1200)%1200;
+      const tY=clamp(300-(lat*180/Math.PI)*3.15,0,519);
+      return [Math.round(tX),Math.round(tY)];
+    }
+    function render(){
+      if(!ctx||!pixels)return;
+      const img=ctx.createImageData(W,H), out=img.data;
+      // Opaque pale background, softly lit sea and shaded land. No external library/network required.
+      for(let y=0;y<H;y++){
+        for(let x=0;x<W;x++){
+          const p=4*(y*W+x),dx=(x+.5-CX)/R,dy=(CY-y-.5)/R;
+          const rr=dx*dx+dy*dy;
+          if(rr>1){out[p]=244;out[p+1]=247;out[p+2]=245;out[p+3]=255;continue}
+          const loc=inverse(x+.5,y+.5);
+          if(!loc)continue;
+          const [tx,ty]=texturePosition(loc[0],loc[1]);
+          const i=4*(ty*1200+tx);
+          // Soft side shading and edge atmosphere help distinguish the sphere from a flat circle.
+          const shine=Math.max(0,.45+dx*(-.14)+dy*.25+loc[2]*.5);
+          const edge=Math.pow(1-loc[2],3);
+          const light=clamp(.84+shine*.16-edge*.10,.64,1.04);
+          let r=pixels[i],g=pixels[i+1],b=pixels[i+2];
+          const ci=picks[i];
+          if(ci>0&&ci<=countryNames.length&&countryNames[ci-1]===activeCountry){r=43;g=155;b=112}
+          out[p]=clamp(Math.round(r*light),0,255);
+          out[p+1]=clamp(Math.round(g*light),0,255);
+          out[p+2]=clamp(Math.round(b*light),0,255);
+          out[p+3]=255;
+        }
+      }
+      ctx.putImageData(img,0,0);
+      // Thin outline identifies the limb against the almost-white ocean.
+      ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);
+      ctx.strokeStyle='rgba(57,117,83,.23)';ctx.lineWidth=Math.max(1,W/950);ctx.stroke();
+    }
+    function countryAt(clientX,clientY){
+      const rect=map.getBoundingClientRect();
+      const pos=inverse((clientX-rect.left)*W/rect.width,(clientY-rect.top)*H/rect.height);
+      if(!pos||!picks)return null;
+      const [tx,ty]=texturePosition(pos[0],pos[1]);
+      const code=picks[(ty*1200+tx)*4];
+      return countryNames[code-1]||null;
+    }
+    function changeZoom(next){zoom=clamp(next,.68,2.7);R=Math.min(W*.32,H*.455)*zoom;requestDraw()}
+    shell.querySelectorAll<HTMLButtonElement>('[data-map-action]').forEach(button=>button.addEventListener('click',()=>{
+      if(button.dataset.mapAction==='in')changeZoom(zoom*1.25);
+      if(button.dataset.mapAction==='out')changeZoom(zoom/1.25);
+      if(button.dataset.mapAction==='reset'){longitude=75*Math.PI/180;latitude=19*Math.PI/180;changeZoom(1);hideTip()}
     }));
-    map.addEventListener('wheel',e=>{
-      e.preventDefault();const r=map.getBoundingClientRect();
-      zoomAt(zoom*(e.deltaY<0?1.25:.8),e.clientX-r.left,e.clientY-r.top);
-    },{passive:false});
+    map.addEventListener('wheel',e=>{e.preventDefault();changeZoom(zoom*(e.deltaY<0?1.12:1/1.12))},{passive:false});
     map.addEventListener('pointerdown',e=>{
       if(e.button!==0)return;
-      drag={id:e.pointerId,x:e.clientX,y:e.clientY,vx,vy,zoom};moved=false;
+      dragging={id:e.pointerId,x:e.clientX,y:e.clientY,lon:longitude,lat:latitude};moved=false;
       map.setPointerCapture(e.pointerId);
     });
     map.addEventListener('pointermove',e=>{
-      if(!drag||drag.id!==e.pointerId)return;
-      if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>5)moved=true;
+      if(!dragging||dragging.id!==e.pointerId){
+        if(!pinned){const country=countryAt(e.clientX,e.clientY);if(country)showTip(country);else if(activeCountry)hideTip()}
+        return;
+      }
+      if(Math.abs(e.clientX-dragging.x)+Math.abs(e.clientY-dragging.y)>5)moved=true;
       if(moved){
         map.classList.add('is-dragging');
-        vx=drag.vx-(e.clientX-drag.x)*(W/drag.zoom)/map.clientWidth;
-        vy=drag.vy-(e.clientY-drag.y)*(H/drag.zoom)/map.clientHeight;
-        render();
+        const rect=map.getBoundingClientRect();
+        longitude=dragging.lon-(e.clientX-dragging.x)/rect.width*5;
+        latitude=clamp(dragging.lat+(e.clientY-dragging.y)/rect.height*3,-Math.PI*.46,Math.PI*.46);
+        requestDraw();
       }
     });
-    function endDrag(e){if(drag?.id===e.pointerId){drag=null;map.classList.remove('is-dragging')}}
-    map.addEventListener('pointerup',endDrag);map.addEventListener('pointercancel',endDrag);
-    shapes.forEach(shape=>{
-      shape.addEventListener('pointerenter',()=>{if(!locked&&!drag)showTip(shape)});
-      shape.addEventListener('pointerleave',()=>{if(!locked)closeTimer=setTimeout(()=>{if(!tooltip.matches(':hover'))hideTip()},220)});
-      shape.addEventListener('focus',()=>showTip(shape,true));
-      shape.addEventListener('click',e=>{
-        e.stopPropagation();
-        if(moved)return;
-        if(active===shape&&locked)hideTip();else showTip(shape,true);
-      });
-      shape.addEventListener('keydown',e=>{
-        if(e.key==='Enter'||e.key===' '){e.preventDefault();if(active===shape&&locked)hideTip();else showTip(shape,true)}
-      });
+    map.addEventListener('pointerup',e=>{
+      if(dragging?.id!==e.pointerId)return;
+      if(!moved){const country=countryAt(e.clientX,e.clientY);if(country){if(pinned&&activeCountry===country)hideTip();else showTip(country,true)}else hideTip()}
+      dragging=null;map.classList.remove('is-dragging');
+    });
+    map.addEventListener('pointercancel',()=>{dragging=null;map.classList.remove('is-dragging')});
+    map.addEventListener('pointerleave',()=>{if(!pinned)hideTip()});
+    map.addEventListener('keydown',e=>{
+      if(e.key==='+'||e.key==='='){e.preventDefault();changeZoom(zoom*1.25)}
+      else if(e.key==='-'){e.preventDefault();changeZoom(zoom/1.25)}
+      else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();longitude+=(e.key==='ArrowLeft'?1:-1)*.17;requestDraw()}
+      else if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();latitude=clamp(latitude+(e.key==='ArrowUp'?-1:1)*.15,-1.44,1.44);requestDraw()}
+      else if(e.key==='Escape')hideTip();
     });
     tooltip.addEventListener('pointerenter',()=>clearTimeout(closeTimer));
-    tooltip.addEventListener('pointerleave',()=>{if(!locked)hideTip()});
-    map.addEventListener('click',e=>{if(!e.target.closest('.map-country-shape')&&!moved)hideTip();moved=false});
-    document.addEventListener('pointerdown',e=>{if(!shell.contains(e.target))hideTip()});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')hideTip()});
-    map.addEventListener('keydown',e=>{
-      if(e.target!==map)return;
-      if(e.key==='+'||e.key==='='){e.preventDefault();zoomAt(zoom*1.4,map.clientWidth/2,map.clientHeight/2)}
-      if(e.key==='-'){e.preventDefault();zoomAt(zoom/1.4,map.clientWidth/2,map.clientHeight/2)}
-      if(['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key)){
-        e.preventDefault();const d=48;
-        vx+=(e.key==='ArrowRight'?d:e.key==='ArrowLeft'?-d:0)/zoom;
-        vy+=(e.key==='ArrowDown'?d:e.key==='ArrowUp'?-d:0)/zoom;render()
-      }
-    });
-    window.addEventListener('resize',render);render();
+    tooltip.addEventListener('pointerleave',()=>{if(!pinned)hideTip()});
+    document.addEventListener('pointerdown',e=>{if(!shell.contains(e.target as Node))hideTip()});
+    window.addEventListener('resize',resize);
+    initializeTextures();
   }
 </script>
