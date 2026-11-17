@@ -198,9 +198,19 @@ button.exhibition-calendar-day.has-records.selected{background:var(--ink);color:
 @media(max-width:900px){.exhibition-date-explorer{grid-template-columns:1fr;gap:23px}.exhibition-day-preview{min-height:0}.exhibition-date-explorer .exhibition-calendar{max-width:610px}}
 @media(max-width:650px){.exhibition-date-explorer .exhibition-calendar-day{aspect-ratio:1/1;height:auto;padding:6px}.exhibition-date-explorer{margin-bottom:32px}.exhibition-index-heading{gap:7px}.exhibition-index-heading h2{font-size:21px}}
 
-/* One location indicator in the masthead; section pages do not repeat a visible title. */
-.mast nav a { display:inline-block; padding:7px 9px; margin:-7px -9px; line-height:1.3; transition:background-color .15s ease,color .15s ease; }
-.mast nav a[aria-current="page"] { background:#075e43; color:#fff; text-decoration:none; }
-.mast nav a[aria-current="page"]:hover { background:#044c36; color:#fff; text-decoration:none; }
-.mast nav a:focus-visible { outline:2px solid var(--ink); outline-offset:3px; }
-@media(max-width:650px){ .mast nav a{padding:7px 8px;margin:-4px -6px} .mast nav{row-gap:11px} }
+/* Active section: a diffuse, borderless oval of green light, not a box. */
+.mast nav a { position:relative; isolation:isolate; display:inline-block; padding:7px 9px; margin:-7px -9px; line-height:1.3; white-space:nowrap; transition:color .2s ease; }
+.mast nav a[aria-current="page"] { color:#075e43; background:transparent; text-decoration:none; }
+.mast nav a[aria-current="page"]::before {
+  content:""; position:absolute; z-index:-1; pointer-events:none;
+  inset:-21px -31px; border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(102,235,113,.43) 0%,rgba(118,237,128,.27) 33%,rgba(126,237,137,.10) 62%,transparent 78%);
+  filter:blur(8px); opacity:.9; transition:opacity .25s ease,transform .25s ease;
+}
+.mast nav a[aria-current="page"]:hover { color:#044c36; background:transparent; text-decoration:none; }
+.mast nav a[aria-current="page"]:hover::before { opacity:1; transform:scale(1.09); }
+.mast nav a:focus-visible { outline:2px solid var(--ink); outline-offset:5px; border-radius:20px; }
+@media(max-width:650px){ .mast nav a{padding:7px 8px;margin:-4px -6px} .mast nav{row-gap:11px} .mast nav a[aria-current="page"]::before{inset:-12px -17px;filter:blur(7px)} }
+/* The trail is decoration: it never captures clicks or changes the cursor. */
+#cursor-light-trail {position:fixed;inset:0;width:100%;height:100%;z-index:1000;pointer-events:none;contain:strict;}
+@media (pointer:coarse), (prefers-reduced-motion:reduce) {#cursor-light-trail{display:none}}

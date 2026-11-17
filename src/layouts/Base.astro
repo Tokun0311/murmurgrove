@@ -12,7 +12,7 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="tow-archive-release" content="section-nav-active-v5-20261117" />
+    <meta name="tow-archive-release" content="soft-glow-cursor-trail-v1-20261117" />
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
@@ -34,5 +34,63 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
       </header>
       <main><slot /></main>
     </div>
+    <script>
+      // Subtle luminous cursor path, drawn only while a fine pointer is moving.
+      const finePointer = window.matchMedia('(pointer:fine)');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
+      if (finePointer.matches && !reducedMotion.matches) {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'cursor-light-trail';
+        canvas.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          let width = 0, height = 0, dpr = 1, frame = 0, lastMove = 0;
+          let points: {x:number,y:number,t:number}[] = [];
+          const lifetime = 580;
+          function resize() {
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            width = window.innerWidth; height = window.innerHeight;
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+            ctx!.setTransform(dpr,0,0,dpr,0,0);
+          }
+          function draw(now: number) {
+            frame = 0;
+            ctx!.clearRect(0, 0, width, height);
+            points = points.filter(p => now - p.t < lifetime);
+            if (points.length > 1) {
+              ctx!.lineCap = 'round'; ctx!.lineJoin = 'round';
+              for (let i = 1; i < points.length; i++) {
+                const older = points[i - 1], newer = points[i];
+                const alpha = Math.max(0, 1 - (now - newer.t) / lifetime);
+                const distance = Math.hypot(newer.x-older.x,newer.y-older.y);
+                if (distance > 110) continue;
+                ctx!.beginPath();ctx!.moveTo(older.x,older.y);ctx!.lineTo(newer.x,newer.y);
+                ctx!.strokeStyle = `rgba(107,234,117,${(alpha * .18).toFixed(3)})`;
+                ctx!.lineWidth = 9 * alpha + 2; ctx!.shadowColor = '#70ee88'; ctx!.shadowBlur = 12;
+                ctx!.stroke();
+                ctx!.strokeStyle = `rgba(79,221,106,${(alpha * .58).toFixed(3)})`;
+                ctx!.lineWidth = Math.max(.5, 1.35 * alpha);ctx!.shadowBlur = 5;ctx!.stroke();
+              }
+              ctx!.shadowBlur = 0;
+            }
+            if (points.length) frame = requestAnimationFrame(draw);
+          }
+          const onMove = (event: PointerEvent) => {
+            const now = performance.now();
+            if (now - lastMove < 12) return;
+            lastMove = now;
+            points.push({x:event.clientX,y:event.clientY,t:now});
+            if (points.length > 48) points.shift();
+            if (!frame) frame = requestAnimationFrame(draw);
+          };
+          resize();
+          window.addEventListener('resize', resize, {passive:true});
+          window.addEventListener('pointermove', onMove, {passive:true});
+          window.addEventListener('blur', () => {points=[];ctx.clearRect(0,0,width,height);});
+        }
+      }
+    </script>
   </body>
 </html>
