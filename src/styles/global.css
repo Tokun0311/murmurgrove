@@ -633,3 +633,19 @@ body:has(.institutions-page) main{position:relative;z-index:1;}
   .exhibition-index .exhibition-preview-count { margin:9px 0 13px; }
   .exhibition-index .exhibition-preview-entry { padding:12px 0;gap:4px; }
 }
+
+/* Fixed six-week calendar footprint. Keep the archive below in a stable position
+   when navigating months with different numbers of weeks. Desktop-only spacing. */
+@media (min-width:901px) {
+  .exhibition-index .exhibition-date-explorer.mobile-calendar-open {
+    margin-bottom:18px;
+    padding-bottom:12px;
+  }
+  .exhibition-index .exhibition-calendar-grid {
+    grid-template-rows:repeat(6,clamp(37px,5.3vh,48px));
+    align-content:start;
+  }
+  .exhibition-index .exhibition-date-explorer .exhibition-calendar-day {
+    height:100%;
+  }
+}
