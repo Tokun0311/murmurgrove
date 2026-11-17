@@ -38,9 +38,9 @@ const usedLatin = new Set(indexed.map(x=>x.letter));
 </Base>
 <style>
   /* Compact name index: readable columns, never full-width rows for single names. */
-  #people-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(18px,2.4vw,38px);row-gap:0;border-top:1px solid var(--rule)}
-  .people-index .archive-entry{display:block;min-width:0;padding:14px 0;border-top:0;border-bottom:1px solid var(--rule)}
-  .people-index .archive-entry:last-child{border-bottom:1px solid var(--rule)}
+  #people-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(18px,2.4vw,38px);row-gap:7px;border:0}
+  .people-index .archive-entry{display:block;min-width:0;padding:11px 0;border:0}
+  .people-index .archive-entry:last-child{border:0}
   .people-index .archive-entry a{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:.35rem;row-gap:0;font-size:clamp(14px,1.17vw,17px);line-height:1.55;overflow-wrap:anywhere}
   .people-index .person-latin{font-weight:500}
   @media(max-width:850px){#people-list{grid-template-columns:repeat(2,minmax(0,1fr))}}

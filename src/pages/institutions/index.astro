@@ -168,7 +168,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .world-map-section { position:relative; margin:0; min-height:0; }
   .institutions-page.archive { padding-top:clamp(12px,1.6vw,22px); }
   .map-heading { display:none; }
-  .globe-index-layout { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr); gap:clamp(20px,3.6vw,64px); min-height:clamp(510px,calc(100dvh - 230px),620px); align-items:center; position:relative; }
+  .globe-index-layout { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr); gap:clamp(20px,3.6vw,64px); min-height:clamp(550px,calc(100dvh - 175px),675px); align-items:center; position:relative; }
   /* The canvas starts at the actual browser edge, *behind* the header, and stops before the institution list. */
   .map-shell { position:absolute; inset:auto; top:calc(-1 * var(--globe-page-overlap, 145px)); left:calc(50% - 50vw); width:100vw; height:calc(100% + var(--globe-page-overlap, 145px)); z-index:0; background:transparent; pointer-events:none; }
   .world-map { position:absolute; inset:0; width:100%; height:100%; overflow:hidden; background:transparent; cursor:grab; touch-action:none; outline-offset:-6px; user-select:none; -webkit-user-select:none; pointer-events:auto; }
@@ -202,7 +202,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-popup-group li a,.cluster-city-link{display:block;padding:.42rem 0;font-size:.82rem;line-height:1.45;color:#244d39;text-decoration:none;}
   .map-popup-group li a:hover,.cluster-city-link:hover{text-decoration:underline;text-underline-offset:3px;}
   .cluster-city-link{background:none;border:0;text-align:left;cursor:pointer;}
-  .globe-zoom-controls{position:absolute;top:calc(var(--globe-page-overlap, 145px) + 10px);left:clamp(24px,6vw,100px);z-index:8;display:flex;gap:4px;align-items:center;pointer-events:auto;}
+  .globe-zoom-controls{position:absolute;top:calc(var(--globe-page-overlap, 145px) + 10px);left:max(42px, calc((100vw - 1280px) / 2 + 42px));z-index:8;display:flex;gap:4px;align-items:center;pointer-events:auto;}
   .globe-zoom-controls[hidden]{display:none;}
   .globe-zoom-controls button{width:36px;height:36px;padding:0;border:0;border-radius:50%;background:transparent;color:#26674c;font:400 22px/1 system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;transition:color .18s ease,transform .18s ease;}
   .globe-zoom-controls button:hover{color:#0b8a58;transform:scale(1.13);}
@@ -210,22 +210,25 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   /* The white list is a clean continuation: country | city | three institution names. */
   .institution-filter-count {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
   .institution-geography-index{position:relative;z-index:2;background:#fff;padding-top:0;}
+  /* One continuous full-viewport line separates the spatial index from the archive list. */
+  .institution-geography-index::before{content:"";position:absolute;top:0;left:50%;width:100vw;transform:translateX(-50%);border-top:1px solid #d6e5da;pointer-events:none;}
+  .institution-country-group:first-child{border-top:0;}
   .institution-country-group[hidden]{display:none!important;}
-  .institution-country-group{display:grid;grid-template-columns:clamp(105px,11.5vw,166px) minmax(0,1fr);gap:clamp(12px,2vw,30px);padding:21px 0 27px;border-top:1px solid #d6e5da;}
+  .institution-country-group{display:grid;grid-template-columns:clamp(155px,13.2vw,190px) minmax(0,1fr);gap:clamp(12px,1.8vw,26px);padding:22px 0 24px;border-top:1px solid #d6e5da;}
   .institution-country-header{margin:0;min-width:0;}
-  .institution-country-header h2{font-size:clamp(19px,1.75vw,25px);font-weight:400;line-height:1.3;letter-spacing:-.02em;margin:0;}
+  .institution-country-header h2{font-size:clamp(17px,1.38vw,21px);font-weight:400;line-height:1.4;letter-spacing:-.01em;margin:0;white-space:nowrap;}
   .institution-country-cities{min-width:0;}
-  .institution-city-group{display:grid;grid-template-columns:clamp(88px,9vw,128px) minmax(0,1fr);gap:12px;padding:4px 0 14px;}
+  .institution-city-group{display:grid;grid-template-columns:clamp(82px,8vw,113px) minmax(0,1fr);gap:12px;padding:4px 0 13px;}
   .institution-city-group+.institution-city-group{border-top:1px solid #edf2ee;padding-top:15px;}
-  .institution-city-group h3{font-size:.8rem;line-height:1.5;font-weight:500;color:#6c8a7b;margin:4px 0 0;}
-  .institution-city-list{min-width:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px 19px;margin:0;padding:0;}
+  .institution-city-group h3{font-size:.76rem;line-height:1.5;font-weight:500;color:#6c8a7b;margin:4px 0 0;}
+  .institution-city-list{min-width:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 17px;margin:0;padding:0;}
   .institution-city-list li{min-width:0;padding:0;margin:0;}
-  .institution-city-list a{display:block;font-size:clamp(14px,1.18vw,18px);line-height:1.48;letter-spacing:-.012em;overflow-wrap:anywhere;color:var(--ink);background:transparent;border:0;padding:2px 0;}
+  .institution-city-list a{display:block;font-size:clamp(13px,1.08vw,16px);line-height:1.47;letter-spacing:-.012em;overflow-wrap:anywhere;color:var(--ink);background:transparent;border:0;padding:2px 0;}
   .institution-related-title{display:block;font-size:.68em;color:#879f8f;font-weight:400;margin-top:3px;line-height:1.4;}
   .institution-city-list a:hover,.institution-city-list a:focus-visible{text-decoration:underline;text-underline-offset:4px;color:#056848;}
   .institution-ungrouped-list{grid-column:2;}
   @media(max-width:1070px){.globe-index-layout{grid-template-columns:minmax(0,1fr) minmax(310px,.95fr)}.institution-city-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(max-width:760px){.globe-index-layout{display:flex;flex-direction:column;align-items:stretch;gap:5px;min-height:0;}.map-shell{position:relative;left:calc(50% - 50vw);top:auto;width:100vw;height:clamp(300px,80vw,450px);}.world-map{position:relative;height:100%;}.geo-index{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:14px 0 10px;}.map-tooltip{position:absolute;top:14px;left:14px;width:min(320px,calc(100% - 28px));max-height:280px;}.globe-zoom-controls{top:10px;left:12px;}.institution-country-group{grid-template-columns:1fr;gap:12px;}.institution-city-group{grid-template-columns:100px minmax(0,1fr);}.institution-city-list{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  @media(max-width:760px){.globe-index-layout{display:flex;flex-direction:column;align-items:stretch;gap:5px;min-height:0;}.map-shell{position:relative;left:calc(50% - 50vw);top:auto;width:100vw;height:clamp(300px,80vw,450px);}.world-map{position:relative;height:100%;}.geo-index{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:14px 0 10px;}.map-tooltip{position:absolute;top:14px;left:14px;width:min(320px,calc(100% - 28px));max-height:280px;}.globe-zoom-controls{top:10px;left:12px;}.institution-country-group{grid-template-columns:1fr;gap:12px;}.institution-country-header h2{white-space:normal;}.institution-city-group{grid-template-columns:100px minmax(0,1fr);}.institution-city-list{grid-template-columns:repeat(2,minmax(0,1fr));}}
   @media(max-width:480px){.institution-city-group{grid-template-columns:1fr;gap:7px}.institution-city-list{grid-template-columns:1fr 1fr;gap:12px}.institution-city-list a{font-size:13px}}
   @media(prefers-reduced-motion:reduce){.world-map{scroll-behavior:auto}}
 </style>
@@ -506,7 +509,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         const baseRadius=Math.min(width*.205,height*.37);
         radius=baseRadius*zoom;
         cx=width*.285;
-        cy=height*.52;
+        cy=height*.54;
       }
       function resize(){
         const b=map.getBoundingClientRect();
