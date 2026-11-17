@@ -12,7 +12,7 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="tow-archive-release" content="soft-glow-cursor-trail-v1-20261117" />
+    <meta name="tow-archive-release" content="soft-glow-trail-only-v2-20261117" />
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
@@ -46,6 +46,7 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
         const ctx = canvas.getContext('2d');
         if (ctx) {
           let width = 0, height = 0, dpr = 1, frame = 0, lastMove = 0;
+          let lastPosition: {x:number,y:number} | null = null;
           let points: {x:number,y:number,t:number}[] = [];
           const lifetime = 580;
           function resize() {
@@ -75,12 +76,24 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
               }
               ctx!.shadowBlur = 0;
             }
-            if (points.length) frame = requestAnimationFrame(draw);
+            // A small luminous head makes links targetable even with the arrow hidden.
+            if (lastPosition && now-lastMove < 2400) {
+              const age = now-lastMove;
+              const strength = age < 1600 ? 1 : Math.max(0,(2400-age)/800);
+              const x=lastPosition.x, y=lastPosition.y;
+              const bloom=ctx!.createRadialGradient(x,y,0,x,y,13);
+              bloom.addColorStop(0,`rgba(47,189,87,${(.65*strength).toFixed(3)})`);
+              bloom.addColorStop(.27,`rgba(93,239,125,${(.38*strength).toFixed(3)})`);
+              bloom.addColorStop(1,'rgba(93,239,125,0)');
+              ctx!.fillStyle=bloom;ctx!.beginPath();ctx!.arc(x,y,13,0,Math.PI*2);ctx!.fill();
+            }
+            if (points.length || (lastPosition && now-lastMove < 2400)) frame = requestAnimationFrame(draw);
           }
           const onMove = (event: PointerEvent) => {
             const now = performance.now();
             if (now - lastMove < 12) return;
             lastMove = now;
+            lastPosition = {x:event.clientX,y:event.clientY};
             points.push({x:event.clientX,y:event.clientY,t:now});
             if (points.length > 48) points.shift();
             if (!frame) frame = requestAnimationFrame(draw);
@@ -88,7 +101,8 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
           resize();
           window.addEventListener('resize', resize, {passive:true});
           window.addEventListener('pointermove', onMove, {passive:true});
-          window.addEventListener('blur', () => {points=[];ctx.clearRect(0,0,width,height);});
+          window.addEventListener('blur', () => {points=[];lastPosition=null;ctx.clearRect(0,0,width,height);});
+          document.addEventListener('pointerleave', () => {points=[];lastPosition=null;ctx.clearRect(0,0,width,height);});
         }
       }
     </script>
