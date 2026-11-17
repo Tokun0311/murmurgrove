@@ -1,4 +1,4 @@
-﻿Type,slug,Status,Description
+Type,slug,Status,Description
 person,alfredo-jaar,draft / editorial review,智利出生的艺术家、建筑师和电影创作者，长期以摄影、装置与公共项目讨论新闻图像的传播、政治暴力以及观看者的伦理责任。
 person,bagus-pandega,draft / editorial review,印度尼西亚艺术家，实践涉及机械装置、声音、光线与技术系统，常通过电子设备和植物等材料探索人与环境的关系。
 person,carsten-nicolai,draft / editorial review,德国艺术家与音乐创作者，以声音、光学现象和数字技术为媒介，研究可感知与不可感知的物理结构。
@@ -18,7 +18,7 @@ person,miet-warlop,draft / editorial review,比利时艺术家及表演创作者
 person,mikami-seiko,draft / editorial review,日本媒体艺术家，运用感应技术与交互装置，研究身体感知、信息环境及人与技术的边界。
 person,nawa-kohei,draft / editorial review,日本雕塑家，以材料、表面、感知和数字技术之间的关系为核心，创作雕塑与大型装置。
 person,noe-aoki,draft / editorial review,日本雕塑家，主要以铁等材料构成轻盈的线性和空间结构，探索雕塑与周围空间的关系。
-person,orm-project,draft / editorial review,与福冈独立空间 SYNDICATE 有联系的艺术家组合。本档案收录了与其合作和地方艺术空间相关的活动记录。
+person,orm-project,draft / editorial review,与香川县高松市的独立艺术空间 SYNDICATE 有联系的艺术家组合。
 person,ruangrupa,draft / editorial review,成立于印度尼西亚雅加达的艺术家集体，以协作、知识共享和社区网络为核心，曾担任 documenta fifteen 的艺术总监。
 person,saeborg,draft / editorial review,日本艺术家，以充气乳胶服装、角色扮演和表演构建跨越人类与非人类界限的世界。
 person,shiga-lieko,draft / editorial review,日本摄影艺术家，以摄影、叙事和社区合作探索土地、记忆、灾害与图像的生成过程。
@@ -84,7 +84,7 @@ place,shibuya-hikarie,address not verified,涩谷 Hikarie 是东京的商业与�
 place,singapore-art-museum,street verified,新加坡美术馆（SAM）以当代艺术为核心，其 Tanjong Pagar Distripark 场地开展展览及公共项目。
 place,skwat,address not verified,SKWAT 是东京的文化及艺术空间项目，涉及书籍、艺术、设计和空间再利用。
 place,space-un,address not verified,SPACE UN 是东京的展览空间，本档案记录其当代艺术展览活动。
-place,syndicate-fukuoka,address not verified,SYNDICATE 是位于福冈的独立艺术空间，与艺术家协作及地方艺术交流相关。
+place,syndicate-takamatsu,address not verified,高松市のアーティストランスペース。2021年設立。
 place,thailand-biennale,address not verified,泰国双年展的普吉地区活动记录。此项目跨不同场地举行，没有可以代表全部活动的单一街道地址。
 place,tokas,address not verified,Tokyo Arts and Space（TOKAS）是东京都运营的艺术支持体系，开展展览、驻留与创作者支持项目，设有多个场所。
 place,tokyo-bunka-kaikan,street verified,东京文化会馆位于上野公园，是音乐会、歌剧、舞蹈及表演艺术的重要场馆。
