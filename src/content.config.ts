@@ -24,7 +24,7 @@ const exhibitions = defineCollection({
 });
 const people = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/people' }),
-  schema: z.object({ name: z.string(), kind: z.string().default('artist') })
+  schema: z.object({ name: z.string(), kind: z.string().default('artist'), reading: z.string().optional(), sortName: z.string().optional() })
 });
 const institutions = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/institutions' }),

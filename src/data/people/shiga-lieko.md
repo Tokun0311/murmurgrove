@@ -1,5 +1,7 @@
 ---
 name: 志賀理江子
+reading: しがりえこ
+sortName: Shiga Lieko
 kind: artist
 ---
 

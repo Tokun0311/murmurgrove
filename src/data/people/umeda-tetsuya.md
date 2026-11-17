@@ -1,5 +1,7 @@
 ---
 name: 梅田哲也
+reading: うめだてつや
+sortName: Umeda Tetsuya
 kind: artist
 ---
 

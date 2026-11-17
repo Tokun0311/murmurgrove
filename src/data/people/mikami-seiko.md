@@ -1,5 +1,7 @@
 ---
 name: 三上晴子
+reading: みかみせいこ
+sortName: Mikami Seiko
 kind: artist
 ---
 

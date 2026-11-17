@@ -1,6 +1,91 @@
 ---
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
-const items=(await getCollection('people')).sort((a,b)=>a.data.name.localeCompare(b.data.name));
+const items = (await getCollection('people')).sort((a,b)=>
+  (a.data.sortName || a.data.name).localeCompare(b.data.sortName || b.data.name, 'en')
+);
+const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const kanaRows = [
+  ['あ','あいうえおぁぃぅぇぉ'],['か','かきくけこがぎぐげご'],
+  ['さ','さしすせそざじずぜぞ'],['た','たちつてとだぢづでど'],
+  ['な','なにぬねの'],['は','はひふへほばびぶべぼぱぴぷぺぽ'],
+  ['ま','まみむめも'],['や','やゆよゃゅょ'],
+  ['ら','らりるれろ'],['わ','わをん']
+];
+const normalize = (value) => (value || '').normalize('NFKC').trim();
+const latinKey = (item) => {
+  const value = normalize(item.data.sortName || item.data.name);
+  const initial = value.match(/^[A-Za-z]/)?.[0]?.toUpperCase();
+  return initial && latin.includes(initial) ? initial : '';
+};
+const kanaKey = (item) => {
+  const reading = normalize(item.data.reading).replace(/[\u30a1-\u30f6]/g, ch=>String.fromCharCode(ch.charCodeAt(0)-0x60));
+  return kanaRows.find(([, chars])=>chars.includes(reading[0]))?.[0] || '';
+};
+const indexed = items.map(item=>({item,letter:latinKey(item),kana:kanaKey(item)}));
+const usedLatin = new Set(indexed.map(x=>x.letter));
+const usedKana = new Set(indexed.map(x=>x.kana));
 ---
-<Base title="People & Collectives | TOW ARCHIVE"><section class="archive"><h1 class="sr-only">People &amp; Collectives</h1><ol class="archive-list">{items.map(item=><li class="archive-entry"><span class="eyebrow">INDEX</span><a href={`/people/${item.id}/`}>{item.data.name}</a></li>)}</ol></section></Base>
+<Base title="People & Collectives | TOW ARCHIVE">
+  <section class="archive people-index">
+    <h1 class="sr-only">People &amp; Collectives</h1>
+    <div class="people-search-area">
+      <label class="people-search-label" for="people-search">SEARCH PEOPLE</label>
+      <input id="people-search" type="search" placeholder="Search by name..." autocomplete="off" />
+      <nav class="people-index-nav" aria-label="Browse people alphabetically">
+        <div class="filter-languages people-index-buttons" aria-label="Latin alphabet filters">
+          <button type="button" data-people-filter="all" aria-pressed="true">All</button>
+          {latin.map(letter=><button type="button" data-people-filter={letter} aria-pressed="false" disabled={!usedLatin.has(letter)}>{letter}</button>)}
+        </div>
+        <div class="filter-languages people-index-buttons" aria-label="Japanese syllabary filters">
+          {kanaRows.map(([row])=><button type="button" data-people-filter={`kana-${row}`} aria-pressed="false" disabled={!usedKana.has(row)}>{row}</button>)}
+        </div>
+      </nav>
+      <p id="people-result-count" class="people-result-count" role="status" aria-live="polite">{items.length} people &amp; collectives</p>
+    </div>
+    <ol class="archive-list" id="people-list">
+      {indexed.map(({item,letter,kana})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''}`.toLocaleLowerCase()} data-letter={letter} data-kana={kana}>
+        <span class="eyebrow">INDEX</span><a href={`/people/${item.id}/`}>{item.data.name}</a>
+      </li>)}
+    </ol>
+    <p id="people-empty" class="people-result-count" hidden>No matching people found.</p>
+  </section>
+</Base>
+<style>
+  .people-search-area{margin:0 0 1.5rem}
+  .people-search-label{display:block;font-size:.72rem;letter-spacing:.12em;color:var(--quiet);margin-bottom:.6rem}
+  #people-search{width:100%;max-width:440px;padding:.75rem .8rem;border:1px solid var(--rule);border-radius:2px;background:transparent;color:var(--ink);font:inherit;font-size:14px}
+  #people-search:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+  .people-index-nav{display:grid;gap:12px;margin-top:1.25rem}
+  .people-index-buttons{display:flex;flex-wrap:wrap;gap:6px}
+  .people-index-buttons button{min-width:34px;padding:7px 9px}
+  .people-index-buttons button:disabled{opacity:.28;cursor:default;pointer-events:none}
+  .people-result-count{font-size:.77rem;color:var(--quiet);margin:1rem 0 0}
+  [hidden]{display:none!important}
+</style>
+<script>
+  const search = document.querySelector<HTMLInputElement>('#people-search');
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-people-filter]')];
+  const rows = [...document.querySelectorAll<HTMLLIElement>('#people-list .archive-entry')];
+  const count = document.querySelector<HTMLElement>('#people-result-count');
+  const empty = document.querySelector<HTMLElement>('#people-empty');
+  let selected = 'all';
+  function updatePeople() {
+    const q=(search?.value||'').normalize('NFKC').trim().toLocaleLowerCase();
+    let shown=0;
+    for(const row of rows){
+      const matchesFilter=selected==='all'||(selected.startsWith('kana-')?row.dataset.kana===selected.slice(5):row.dataset.letter===selected);
+      const matchesSearch=!q||(row.dataset.peopleName||'').normalize('NFKC').includes(q);
+      row.hidden=!(matchesFilter&&matchesSearch);
+      if(!row.hidden)shown++;
+    }
+    if(count)count.textContent=`${shown} ${shown===1?'person / collective':'people & collectives'}`;
+    if(empty)empty.hidden=shown!==0;
+  }
+  buttons.forEach(button=>button.addEventListener('click',()=>{
+    selected=button.dataset.peopleFilter||'all';
+    buttons.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    updatePeople();
+  }));
+  search?.addEventListener('input',updatePeople);
+</script>

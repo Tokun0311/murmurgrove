@@ -1,5 +1,7 @@
 ---
 name: 呉夏枝
+reading: おなつえ
+sortName: Oh Natsue
 kind: artist
 ---
 

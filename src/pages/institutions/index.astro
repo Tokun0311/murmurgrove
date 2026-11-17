@@ -92,9 +92,17 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     </section>
 
     <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries · grouped by country and city</span></div>
+    <div class="filters institution-filters">
+      <div class="filter-languages" aria-label="Country and region filters">
+        <button type="button" data-institution-region="all" aria-pressed="true">All</button>
+        {countryEntries.map(({country})=><button type="button" data-institution-region={country} aria-pressed="false">{country}</button>)}
+        {unmapped.length > 0 && <button type="button" data-institution-region="unmapped" aria-pressed="false">Other</button>}
+      </div>
+    </div>
+    <p class="institution-filter-count" id="institution-filter-count" role="status" aria-live="polite">{items.length} institutions</p>
     <div class="institution-geography-index">
       {countryEntries.map(({country,cities,entries}) => (
-        <section class="institution-country-group" aria-label={`${country} institutions`}>
+        <section class="institution-country-group" data-institution-group={country} aria-label={`${country} institutions`}>
           <header class="institution-country-header">
             <h2>{country}</h2>
             <span>{entries.length} {entries.length === 1 ? 'entry' : 'entries'}</span>
@@ -110,7 +118,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         </section>
       ))}
       {unmapped.length > 0 && (
-        <section class="institution-country-group" aria-label="Unclassified institutions">
+        <section class="institution-country-group" data-institution-group="unmapped" aria-label="Unclassified institutions">
           <header class="institution-country-header"><h2>Location not yet specified</h2><span>{unmapped.length} entries</span></header>
           <ul class="institution-city-list institution-ungrouped-list">
             {unmapped.map(item => <li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}
@@ -148,6 +156,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-popup-group li a:hover,.map-popup-group li a:focus-visible{color:#087d55;text-decoration:underline;text-underline-offset:3px}
   .map-note{font-size:.78rem;color:#738479;margin-top:.65rem;line-height:1.6}
   .archive-list-heading{margin-bottom:0}
+  .institution-filters{margin:1.2rem 0 .65rem}
+  .institution-filter-count{font-size:.77rem;color:var(--quiet);margin:0 0 1rem}
+  .institution-country-group[hidden]{display:none!important}
   .institution-country-group{border-top:1px solid #c6dfd2;padding:1.65rem 0 1.3rem}
   .institution-country-group:last-child{border-bottom:1px solid #c6dfd2}
   .institution-country-header{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.1rem}
@@ -166,6 +177,19 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   @media(prefers-reduced-motion:reduce){.map-country-shape{transition:none}}
 </style>
 <script>
+  const institutionButtons=[...document.querySelectorAll<HTMLButtonElement>('[data-institution-region]')];
+  const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
+  const institutionCount=document.querySelector<HTMLElement>('#institution-filter-count');
+  institutionButtons.forEach(button=>button.addEventListener('click',()=>{
+    const selected=button.dataset.institutionRegion||'all';
+    institutionButtons.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    let total=0;
+    institutionGroups.forEach(group=>{
+      group.hidden=selected!=='all'&&group.dataset.institutionGroup!==selected;
+      if(!group.hidden)total+=group.querySelectorAll('.institution-city-list li').length;
+    });
+    if(institutionCount)institutionCount.textContent=`${total} ${total===1?'institution':'institutions'}`;
+  }));
   const shell = document.getElementById('institution-map-shell');
   const map = document.getElementById('institution-world-map');
   const stage = document.getElementById('institution-map-stage');

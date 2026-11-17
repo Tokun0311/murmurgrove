@@ -1,5 +1,7 @@
 ---
 name: 寺江圭一朗 / Keiichiro Terae
+reading: てらえけいいちろう
+sortName: Terae Keiichiro
 kind: artist
 ---
 

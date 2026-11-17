@@ -1,5 +1,7 @@
 ---
 name: 高木由利子
+reading: たかぎゆりこ
+sortName: Takagi Yuriko
 kind: artist
 ---
 

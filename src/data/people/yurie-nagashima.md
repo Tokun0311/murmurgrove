@@ -1,5 +1,7 @@
 ---
 name: 长岛有里枝 / Yurie Nagashima
+reading: ながしまゆりえ
+sortName: Nagashima Yurie
 kind: artist
 ---
 

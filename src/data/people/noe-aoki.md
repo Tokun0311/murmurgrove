@@ -1,5 +1,7 @@
 ---
 name: 青木野枝 / Noe Aoki
+reading: あおきのえ
+sortName: Aoki Noe
 kind: artist
 ---
 

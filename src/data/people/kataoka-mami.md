@@ -1,5 +1,7 @@
 ---
 name: 片岡真実
+reading: かたおかまみ
+sortName: Kataoka Mami
 kind: artist
 ---
 
