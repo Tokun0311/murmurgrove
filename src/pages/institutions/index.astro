@@ -115,7 +115,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       </div>
       <aside class="geo-index" aria-label="Browse institutions by location">
         <p class="geo-index-kicker">EXPLORE BY LOCATION</p>
-        <p class="mobile-geo-hint">Use the globe for spatial exploration, or choose a country for a quicker reading view.</p>
+        <p class="mobile-geo-hint">Explore places · Select a country to browse</p>
         <button type="button" class="geo-all-button is-active" data-jump-country="all" aria-pressed="true">All institutions <span>{items.length}</span></button>
         <div class="geo-index-group"><h2>Asia</h2>
           {countryEntries.filter(g=>['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand'].includes(g.country)).map(({country,cities,entries})=>(
@@ -239,8 +239,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   @media(max-width:650px){
     .institutions-page .map-heading{display:none;}
     .institutions-page .globe-index-layout{display:block;min-height:0;}
-    .institutions-page .map-shell{display:block !important;position:relative;left:auto;top:auto;width:100%;height:clamp(224px,56vw,310px);margin:0 0 16px;border:1px solid #d8e8de;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,rgba(243,248,244,.9),rgba(255,255,255,.96));pointer-events:auto;}
-    .institutions-page .world-map{position:relative;inset:0;height:100%;cursor:grab;touch-action:none;}
+    .institutions-page .map-shell{display:block !important;position:relative;left:auto;top:auto;width:100%;height:clamp(275px,77vw,350px);margin:0 0 4px;border:0;border-radius:0;overflow:hidden;background:transparent;pointer-events:auto;}
+    .institutions-page .world-map{position:relative;inset:0;height:100%;cursor:grab;touch-action:pan-y;}
     .institutions-page .world-map:active{cursor:grabbing;}
     .institutions-page .globe-canvas,.institutions-page .globe-dots{position:absolute;inset:0;width:100%;height:100%;}
     .institutions-page .globe-loading{font-size:11px;}
@@ -485,7 +485,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         selectedGlobeCountry=country==='all'?null:country;
         document.body.classList.toggle('globe-country-focused',!!selectedGlobeCountry);
         zoomControls?.toggleAttribute('hidden',!selectedGlobeCountry);
-        animateCamera(selectedGlobeCountry?getFocusTarget(selectedGlobeCountry):defaultGlobe);
+        const target=selectedGlobeCountry?getFocusTarget(selectedGlobeCountry):defaultGlobe;
+        animateCamera(compactMobile.matches?{...target,zoom:Math.min(target.zoom,2.15)}:target);
       };
       function draw(){
         updateProjection();
@@ -528,6 +529,23 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           const [x,y]=pos;
           if(x<0||x>width||y<0||y>height)continue;
           visiblePoints.push({x,y,point});
+          if(compactMobile.matches){
+            // Mobile spatial field: diffuse geographical presence, not map pins.
+            // Keep the real projected positions and hit testing, without dot clusters.
+            const density=Math.min(1,Math.log1p('count' in point?point.count:1)/Math.log(41));
+            const spread=(selectedGlobeCountry?28:45)*dpr+(selectedGlobeCountry?12:34)*density*dpr;
+            const haze=dotCtx.createRadialGradient(x,y,0,x,y,spread);
+            haze.addColorStop(0,`rgba(72,163,119,${(.12+.10*density).toFixed(3)})`);
+            haze.addColorStop(.46,`rgba(100,186,146,${(.065+.06*density).toFixed(3)})`);
+            haze.addColorStop(1,'rgba(100,186,146,0)');
+            dotCtx.fillStyle=haze;
+            dotCtx.beginPath();dotCtx.arc(x,y,spread,0,PI*2);dotCtx.fill();
+            // An archival tick rather than a circular map marker.
+            dotCtx.strokeStyle='rgba(30,111,78,.42)';
+            dotCtx.lineWidth=.8*dpr;
+            dotCtx.beginPath();dotCtx.moveTo(x-3.8*dpr,y);dotCtx.lineTo(x+3.8*dpr,y);dotCtx.stroke();
+            continue;
+          }
           const selected=!!selectedGlobeCountry;
           const density=Math.min(1,Math.log1p('count' in point?point.count:1)/Math.log(41));
           const spread=(selected?20:21)+(selected?10:27)*density;
@@ -566,10 +584,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         // On mobile, recentre the globe so it acts like a compact exploratory card
         // rather than a cropped background element.
         if(compactMobile.matches){
-          const baseRadius=Math.min(width*.31,height*.41);
+          const baseRadius=Math.min(width*.355,height*.43);
           radius=baseRadius*zoom;
           cx=width*.5;
-          cy=height*.57;
+          cy=height*.51;
           return;
         }
         const baseRadius=Math.min(width*.205,height*.37);
