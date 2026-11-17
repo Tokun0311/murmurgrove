@@ -82,6 +82,18 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     <section class="world-map-section" aria-label="Explore institution locations">
       <div class="map-heading"><span class="map-heading-label">GEOGRAPHIC INDEX</span><span class="map-heading-meta">{countryEntries.length} countries · {items.length} entries</span></div>
       <div class="globe-index-layout">
+      <!-- Mobile uses a resilient 2D land silhouette instead of alpha WebGL.
+           It shares the existing country filter state, without touching desktop. -->
+      <div class="mobile-land-atlas" id="mobile-land-atlas" aria-label="Interactive geographic overview">
+        <div class="mobile-land-atlas-graphic" id="mobile-land-atlas-graphic">
+          <div class="mobile-land-atlas-silhouette" aria-hidden="true"></div>
+          <button type="button" class="mobile-land-atlas-tap" id="mobile-land-atlas-tap" aria-label="Select the nearest archived country on the map"></button>
+          <div class="mobile-land-atlas-selection" id="mobile-land-atlas-selection" hidden>
+            <span class="mobile-land-atlas-marker" aria-hidden="true"></span>
+            <span class="mobile-land-atlas-country"></span>
+          </div>
+        </div>
+      </div>
       <div class="map-shell" id="institution-map-shell">
         <div class="globe-zoom-controls" id="globe-zoom-controls" hidden aria-label="Focused map zoom">
           <button type="button" data-map-action="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
@@ -236,10 +248,31 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   /* Mobile redesign: preserve the geographic explorer, but turn it into a compact card
      with quick country chips and a lighter institution list. Desktop remains unchanged. */
   .mobile-geo-hint{display:none;}
+  .mobile-land-atlas{display:none;}
+  @media(max-width:650px){
+    /* A compact flat geographic field. Transparent sea; reliably visible land. */
+    .institutions-page .mobile-land-atlas{display:block;position:relative;width:100%;margin:3px 0 22px;}
+    .institutions-page .mobile-land-atlas-graphic{position:relative;width:100%;aspect-ratio:2/1;min-height:155px;max-height:235px;overflow:hidden;background:transparent;}
+    .institutions-page .mobile-land-atlas-silhouette{position:absolute;inset:0;background-color:#b9d9cb;
+      -webkit-mask-image:url('/land-mask.png');mask-image:url('/land-mask.png');
+      -webkit-mask-size:100% 100%;mask-size:100% 100%;
+      -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+      opacity:.82;pointer-events:none;}
+    .institutions-page .mobile-land-atlas-tap{position:absolute;inset:0;border:0;background:transparent;padding:0;cursor:crosshair;width:100%;height:100%;}
+    .institutions-page .mobile-land-atlas-tap:focus-visible{outline:2px solid #0d8e61;outline-offset:-3px;}
+    .institutions-page .mobile-land-atlas-selection{position:absolute;left:var(--atlas-x,50%);top:var(--atlas-y,50%);transform:translate(-50%,-100%);display:flex;align-items:center;flex-direction:column;pointer-events:none;z-index:2;gap:4px;}
+    .institutions-page .mobile-land-atlas-selection[hidden]{display:none;}
+    .institutions-page .mobile-land-atlas-marker{display:block;width:10px;height:10px;border-radius:50%;background:#0b8459;border:2px solid #fff;box-shadow:0 0 0 4px rgba(32,142,98,.18);}
+    .institutions-page .mobile-land-atlas-country{display:block;padding:3px 7px;color:#155b43;background:rgba(255,255,255,.96);font-size:11px;white-space:nowrap;border-radius:3px;}
+    /* The WebGL globe is still kept intact for the desktop experience. */
+    .institutions-page .map-shell{display:none !important;}
+    .institutions-page .mobile-geo-hint{display:none;}
+    .institutions-page .geo-index-kicker{margin-bottom:7px;}
+  }
   @media(max-width:650px){
     .institutions-page .map-heading{display:none;}
     .institutions-page .globe-index-layout{display:block;min-height:0;}
-    .institutions-page .map-shell{display:block !important;position:relative;left:auto;top:auto;width:100%;height:clamp(315px,92vw,425px);margin:0 0 2px;border:0;border-radius:0;overflow:hidden;background:transparent;pointer-events:auto;}
+    .institutions-page .map-shell{display:none !important;position:relative;left:auto;top:auto;width:100%;height:clamp(315px,92vw,425px);margin:0 0 2px;border:0;border-radius:0;overflow:hidden;background:transparent;pointer-events:auto;}
     .institutions-page .world-map{position:relative;inset:0;height:100%;cursor:grab;touch-action:pan-y;}
     .institutions-page .world-map:active{cursor:grabbing;}
     .institutions-page .globe-canvas,.institutions-page .globe-dots{position:absolute;inset:0;width:100%;height:100%;}
@@ -267,6 +300,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     .institutions-page .geo-all-button.is-active,
     .institutions-page .geo-country-button.is-active,
     .institutions-page .geo-country-button[aria-pressed="true"]{background:#0d8e61;border-color:#0d8e61;color:#fff;font-weight:400;}
+    .institutions-page .geo-country-button[aria-pressed="true"] span{color:#fff;text-decoration:none;font-weight:400;}
     .institutions-page .geo-country-button.is-active span,
     .institutions-page .geo-country-button[aria-pressed="true"] span{color:#fff;text-decoration:none;font-weight:400;}
     .institutions-page .geo-all-button:focus-visible,
@@ -296,7 +330,38 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   const institutionCount=document.querySelector<HTMLElement>('#institution-filter-count');
   const geoButtons=[...document.querySelectorAll<HTMLButtonElement>('[data-jump-country]')];
   const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const mobileAtlas=document.getElementById('mobile-land-atlas');
+  const mobileAtlasTap=document.getElementById('mobile-land-atlas-tap');
+  const atlasSelection=document.getElementById('mobile-land-atlas-selection');
+  const atlasCountryName=atlasSelection?.querySelector<HTMLElement>('.mobile-land-atlas-country');
+  const atlasLocations: {country:string,lon:number,lat:number}[]=JSON.parse(document.getElementById('globe-city-data')?.textContent||'[]');
+  const atlasPosition=(lon:number,lat:number)=>({x:(lon+180)/360*100,y:(90-lat)/180*100});
+  function updateMobileAtlas(country:string){
+    if(!mobileAtlas||!atlasSelection)return;
+    const marker=atlasLocations.find(item=>item.country===country);
+    atlasSelection.hidden=!marker;
+    if(marker){
+      const pos=atlasPosition(marker.lon,marker.lat);
+      mobileAtlas.style.setProperty('--atlas-x',`${pos.x}%`);
+      mobileAtlas.style.setProperty('--atlas-y',`${pos.y}%`);
+      if(atlasCountryName)atlasCountryName.textContent=country;
+    }
+  }
+  mobileAtlasTap?.addEventListener('click',event=>{
+    const box=mobileAtlasTap.getBoundingClientRect();
+    const x=(event.clientX-box.left)/box.width;
+    const y=(event.clientY-box.top)/box.height;
+    const nearest=atlasLocations.map(item=>{
+      const pt=atlasPosition(item.lon,item.lat);
+      // Equirectangular coordinates, corrected for higher-latitude distortion.
+      const dx=(x-pt.x/100)*Math.max(.3,Math.cos(item.lat*Math.PI/180));
+      const dy=(y-pt.y/100);
+      return {country:item.country,dist:Math.hypot(dx,dy)};
+    }).sort((a,b)=>a.dist-b.dist)[0];
+    if(nearest && nearest.dist<.13) filterCountry(nearest.country);
+  });
   function filterCountry(country:string,scroll=false){
+    updateMobileAtlas(country);
     geoButtons.forEach(b=>{const active=b.dataset.jumpCountry===country;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active))});
     let total=0;
     institutionGroups.forEach(group=>{
@@ -319,7 +384,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   const tooltip = document.getElementById('institution-map-tooltip') as HTMLElement | null;
   const details = document.getElementById('institution-map-details') as HTMLElement | null;
   const loading = document.getElementById('globe-loading');
-  if (shell && map && canvas instanceof HTMLCanvasElement && dotsCanvas instanceof HTMLCanvasElement && tooltip && details) {
+  if (shell && map && canvas instanceof HTMLCanvasElement && dotsCanvas instanceof HTMLCanvasElement && tooltip && details && !window.matchMedia('(max-width: 650px)').matches) {
     // One representative location per country. No political borders or cluster counts.
     type CityMarker={country:string,lon:number,lat:number,count:number};
     const cityDataElement=document.querySelector('#globe-city-data');
