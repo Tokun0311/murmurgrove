@@ -497,3 +497,60 @@ body:has(.institutions-page) main{position:relative;z-index:1;}
   .institutions-page .geo-country-button { padding:9px 10px; }
   .institutions-page .geo-country-button span { font-size:12px; }
 }
+
+/* Date browser: the same optional top-of-page explorer on desktop and mobile.
+   Its closed state never pushes the exhibition index below the list. */
+.exhibition-index .mobile-calendar-toggle {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  width:100%;
+  min-height:56px;
+  padding:12px 0 15px;
+  margin:0 0 30px;
+  background:transparent;
+  border:0;
+  border-bottom:1px solid var(--rule);
+  color:var(--ink);
+  font:inherit;
+  font-size:clamp(15px,1.35vw,19px);
+  font-weight:400;
+  text-align:left;
+  cursor:pointer;
+}
+.exhibition-index .mobile-calendar-toggle span {
+  font-size:23px;
+  font-weight:300;
+  line-height:1;
+}
+.exhibition-index .mobile-calendar-toggle:focus-visible {
+  outline:2px solid var(--ink);
+  outline-offset:3px;
+}
+.exhibition-index .exhibition-date-explorer { display:none; }
+.exhibition-index .exhibition-date-explorer.mobile-calendar-open {
+  display:grid;
+  margin:0 0 42px;
+}
+.exhibition-index .exhibition-index-divider { display:none; }
+@media(max-width:650px) {
+  .exhibition-index .mobile-calendar-toggle {
+    order:0;
+    min-height:54px;
+    padding:11px 0 13px;
+    margin:0 0 28px;
+    font-size:15px;
+  }
+  .exhibition-index .exhibition-date-explorer { order:1; }
+  .exhibition-index .exhibition-date-explorer.mobile-calendar-open {
+    margin:0 0 30px;
+    gap:18px;
+  }
+  .exhibition-index .exhibition-index-divider { display:none; }
+  .exhibition-index .exhibition-index-heading {order:2;}
+  .exhibition-index .exhibition-filters {order:3;}
+  .exhibition-index .exhibition-result-count {order:4;}
+  .exhibition-index #archive-list {order:5;}
+  .exhibition-index #empty-message {order:6;}
+}
