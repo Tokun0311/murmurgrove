@@ -168,7 +168,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .world-map-section { position:relative; margin:0; min-height:0; }
   .institutions-page.archive { padding-top:clamp(12px,1.6vw,22px); }
   .map-heading { display:none; }
-  .globe-index-layout { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr); gap:clamp(20px,3.6vw,64px); min-height:clamp(550px,calc(100dvh - 175px),675px); align-items:center; position:relative; }
+  .globe-index-layout { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr); gap:clamp(20px,3.6vw,64px); min-height:max(550px,calc(100dvh - 160px)); align-items:center; position:relative; }
   /* The canvas starts at the actual browser edge, *behind* the header, and stops before the institution list. */
   .map-shell { position:absolute; inset:auto; top:calc(-1 * var(--globe-page-overlap, 145px)); left:calc(50% - 50vw); width:100vw; height:calc(100% + var(--globe-page-overlap, 145px)); z-index:0; background:transparent; pointer-events:none; }
   .world-map { position:absolute; inset:0; width:100%; height:100%; overflow:hidden; background:transparent; cursor:grab; touch-action:none; outline-offset:-6px; user-select:none; -webkit-user-select:none; pointer-events:auto; }
@@ -209,7 +209,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .globe-zoom-controls button:focus-visible{outline:1px solid #5b9776;outline-offset:-3px;}
   /* The white list is a clean continuation: country | city | three institution names. */
   .institution-filter-count {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
-  .institution-geography-index{position:relative;z-index:2;background:#fff;padding-top:36px;}
+  .institution-geography-index{position:relative;z-index:2;background:#fff;padding-top:28px;}
   /* One continuous full-viewport line separates the spatial index from the archive list. */
   .institution-geography-index::before{content:"";position:absolute;top:0;left:50%;width:100vw;transform:translateX(-50%);border-top:1px solid #d6e5da;pointer-events:none;}
   .institution-country-group:first-child{border-top:0;}
@@ -586,6 +586,15 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         // Offset from the page top to the globe layout. The background ends at the bottom of this section.
         const top=layout.getBoundingClientRect().top+window.scrollY;
         layout.style.setProperty('--globe-page-overlap',`${Math.round(top)}px`);
+        // Fit the geographic section to the first viewport rather than a capped 675px height.
+        // The full-width boundary sits at the fold; the white institution list starts below it.
+        // Calculate from document coordinates so scrolling cannot change the layout height.
+        if (window.matchMedia('(min-width:761px)').matches) {
+          const targetHeight=Math.max(550,Math.round(window.innerHeight-top));
+          if(layout.style.minHeight!==`${targetHeight}px`) layout.style.minHeight=`${targetHeight}px`;
+        } else if(layout.style.minHeight) {
+          layout.style.removeProperty('min-height');
+        }
       }
       const observer=new ResizeObserver(()=>{updateMapOverlap();resize()});observer.observe(map);
       updateMapOverlap();
