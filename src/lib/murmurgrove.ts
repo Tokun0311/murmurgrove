@@ -1,7 +1,7 @@
 /** Stable, content-derived homepage morphology. No homepage editorial data to maintain. */
 export type CollectionItem = {id:string; data:Record<string, any>};
 export type GroveInput = {exhibitions:CollectionItem[]; people:CollectionItem[]; institutions:CollectionItem[]; concepts:CollectionItem[]};
-export type GroveMark = {key:string;section:'exhibitions'|'institutions'|'people'|'concepts';strength:number;recency:number;related:number;x:number;y:number;seed:number};
+export type GroveMark = {key:string;section:'exhibitions'|'institutions'|'people'|'concepts';title:string;url:string;strength:number;recency:number;related:number;x:number;y:number;seed:number};
 
 export const hashUnit = (value:string):number=>{
   let h=2166136261;
@@ -53,7 +53,7 @@ export function createMurmurgrove(input:GroveInput){
   }
   const counts={exhibitions:records.length,institutions:institutions.length,people:people.length,concepts:concepts.length};
   const marks:GroveMark[]=[];
-  const add=(key:string,section:GroveMark['section'],strength:number,related:number,recency:number)=>{
+  const add=(key:string,section:GroveMark['section'],title:string,strength:number,related:number,recency:number)=>{
     // Independent stable position seeded by permanent record ID, not array order.
     const seed=hashUnit(`${section}:${key}`);
     const a=hashUnit(`angle:${section}:${key}`)*Math.PI*2;
@@ -61,24 +61,23 @@ export function createMurmurgrove(input:GroveInput){
     // One organism. Types affect material behaviour, not four disconnected territories.
     const x=.5 + Math.cos(a)*(.06+.37*radius);
     const y=.5 + Math.sin(a)*(.05+.34*radius);
-    marks.push({key,section,strength,related,recency,x:clamp(x,.08,.92),y:clamp(y,.1,.9),seed});
+    marks.push({key,section,title,url:`/${section}/${encodeURIComponent(key)}/`,strength,related,recency,x:clamp(x,.08,.92),y:clamp(y,.1,.9),seed});
   };
   for(const e of records){
     const days=latestDate?(latestDate-toDate(e.data.visitedOn))/86400000:999;
     const recency=clamp(1-days/110,0,1);
     const n=(e.data.artists?.length||0)+(e.data.concepts?.length||0)+(e.data.relatedInstitutions?.length||0)+(e.data.institution?1:0);
-    add(e.id,'exhibitions',.36+Math.min(1,n/7)*.64,n,recency);
+    add(e.id,'exhibitions',String(e.data.title||e.id),.36+Math.min(1,n/7)*.64,n,recency);
   }
   for(const [section,collection] of [['institutions',institutions],['people',people],['concepts',concepts]] as const){
     for(const item of collection){
       const count=mentions[section].get(item.id)||0;
-      add(item.id,section,.2+Math.min(1,Math.log1p(count)/2.6)*.8,count,Math.min(1,(recent.get(`${section}:${item.id}`)||0)/2));
+      add(item.id,section,String(item.data.title||item.data.name||item.id),.2+Math.min(1,Math.log1p(count)/2.6)*.8,count,Math.min(1,(recent.get(`${section}:${item.id}`)||0)/2));
     }
   }
-  // Caps only rendered detail, never the underlying relationship statistics.
-  const displayed=marks
-    .sort((a,b)=>(b.strength+b.recency*.55)-(a.strength+a.recency*.55))
-    .slice(0,Math.min(230,Math.max(48,Math.ceil(Math.sqrt(marks.length)*17))));
+  // Keep the full archive in data. Rendering uses detail levels and viewport culling,
+  // rather than discarding records once a fixed cap has been reached.
+  const displayed=marks.sort((a,b)=>a.key.localeCompare(b.key));
   const active=(section:'institutions'|'people'|'concepts',collection:CollectionItem[])=>collection
     .map(item=>({id:item.id,name:section==='concepts'?item.data.title:item.data.name,score:(mentions[section].get(item.id)||0)+(recent.get(`${section}:${item.id}`)||0)*.65}))
     .filter(item=>item.score>0)

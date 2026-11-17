@@ -1,0 +1,34 @@
+name: Preserve Murmurgrove archive history
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'src/data/exhibitions/**'
+      - 'src/data/people/**'
+      - 'src/data/institutions/**'
+      - 'src/data/concepts/**'
+      - 'scripts/record-murmurgrove-snapshot.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install PyYAML==6.0.2
+      - run: python scripts/record-murmurgrove-snapshot.py
+      - name: Commit snapshot only if new
+        run: |
+          git add src/data/murmurgrove-history/
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "archive: preserve Murmurgrove daily state"
+            git push
+          fi
