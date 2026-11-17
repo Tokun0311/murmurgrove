@@ -239,7 +239,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   @media(max-width:650px){
     .institutions-page .map-heading{display:none;}
     .institutions-page .globe-index-layout{display:block;min-height:0;}
-    .institutions-page .map-shell{display:block !important;position:relative;left:auto;top:auto;width:100%;height:clamp(275px,77vw,350px);margin:0 0 4px;border:0;border-radius:0;overflow:hidden;background:transparent;pointer-events:auto;}
+    .institutions-page .map-shell{display:block !important;position:relative;left:auto;top:auto;width:100%;height:clamp(315px,92vw,425px);margin:0 0 2px;border:0;border-radius:0;overflow:hidden;background:transparent;pointer-events:auto;}
     .institutions-page .world-map{position:relative;inset:0;height:100%;cursor:grab;touch-action:pan-y;}
     .institutions-page .world-map:active{cursor:grabbing;}
     .institutions-page .globe-canvas,.institutions-page .globe-dots{position:absolute;inset:0;width:100%;height:100%;}
@@ -267,6 +267,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     .institutions-page .geo-all-button.is-active,
     .institutions-page .geo-country-button.is-active,
     .institutions-page .geo-country-button[aria-pressed="true"]{background:#0d8e61;border-color:#0d8e61;color:#fff;font-weight:400;}
+    .institutions-page .geo-country-button.is-active span,
+    .institutions-page .geo-country-button[aria-pressed="true"] span{color:#fff;text-decoration:none;font-weight:400;}
     .institutions-page .geo-all-button:focus-visible,
     .institutions-page .geo-country-button:focus-visible{outline:2px solid #0d8e61;outline-offset:2px;}
 
@@ -383,6 +385,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         uniform float lonRotation;
         uniform float latRotation;
         uniform sampler2D landMask;
+        uniform float mobileLandOnly;
         void main(){
           vec2 p=(gl_FragCoord.xy-center)/sphereRadius;
           float rr=dot(p,p);
@@ -406,6 +409,14 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           // Sample a merged land mask. Countries share the same fill and have NO internal borders.
           vec2 uv=vec2(fract(lng/6.28318530718+.5),clamp(lat/3.14159265359+.5,0.001,.999));
           float land=texture2D(landMask,uv).a;
+          // On small screens the ocean, graticule and globe rim vanish completely.
+          // The original desktop shader is preserved in the other branch.
+          if(mobileLandOnly>0.5){
+            float silhouette=smoothstep(.025,.82,land);
+            float edgeFade=1.0-smoothstep(.975,1.0,rr);
+            gl_FragColor=vec4(.863,.925,.909,silhouette*.79*edgeFade);
+            return;
+          }
           vec3 color=mix(vec3(1.0),vec3(.927,.955,.969),land*.62);
           color=mix(color,vec3(.70,.80,.83),grid*.32);
           float edge=1.0-smoothstep(.65/max(sphereRadius,1.0),2.2/max(sphereRadius,1.0),1.0-sqrt(rr));
@@ -432,7 +443,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         size:gl.getUniformLocation(program,'viewSize'),center:gl.getUniformLocation(program,'center'),
         radius:gl.getUniformLocation(program,'sphereRadius'),lon:gl.getUniformLocation(program,'lonRotation'),
         lat:gl.getUniformLocation(program,'latRotation'),
-        land:gl.getUniformLocation(program,'landMask')
+        land:gl.getUniformLocation(program,'landMask'),
+        mobile:gl.getUniformLocation(program,'mobileLandOnly')
       };
       const landTexture=gl.createTexture()!;
       gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,landTexture);
@@ -457,8 +469,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       function getFocusTarget(country:string){
         const pts=focusCities.filter(p=>p.country===country);
         const preset=countryViewOverrides[country];
-        if(preset)return {lon:preset.lon*PI/180,lat:preset.lat*PI/180,zoom:preset.zoom};
-        return getCountryFocus(country);
+        if(preset)return {lon:preset.lon*PI/180,lat:preset.lat*PI/180,zoom:compactMobile.matches?1.42:preset.zoom};
+        const focus=getCountryFocus(country);
+        return compactMobile.matches?{...focus,zoom:1.42}:focus;
       }
       function animateCamera(target:{lon:number,lat:number,zoom:number},duration=1050){
         if(turnAnimation){cancelAnimationFrame(turnAnimation);turnAnimation=0;}
@@ -497,6 +510,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         gl.uniform1f(uniforms.radius,radius);
         gl.uniform1f(uniforms.lon,longitude);
         gl.uniform1f(uniforms.lat,latitude);
+        gl.uniform1f(uniforms.mobile,compactMobile.matches?1:0);
         gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
         drawDots();
       }
@@ -530,20 +544,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           if(x<0||x>width||y<0||y>height)continue;
           visiblePoints.push({x,y,point});
           if(compactMobile.matches){
-            // Mobile spatial field: diffuse geographical presence, not map pins.
-            // Keep the real projected positions and hit testing, without dot clusters.
-            const density=Math.min(1,Math.log1p('count' in point?point.count:1)/Math.log(41));
-            const spread=(selectedGlobeCountry?28:45)*dpr+(selectedGlobeCountry?12:34)*density*dpr;
-            const haze=dotCtx.createRadialGradient(x,y,0,x,y,spread);
-            haze.addColorStop(0,`rgba(72,163,119,${(.12+.10*density).toFixed(3)})`);
-            haze.addColorStop(.46,`rgba(100,186,146,${(.065+.06*density).toFixed(3)})`);
-            haze.addColorStop(1,'rgba(100,186,146,0)');
-            dotCtx.fillStyle=haze;
-            dotCtx.beginPath();dotCtx.arc(x,y,spread,0,PI*2);dotCtx.fill();
-            // An archival tick rather than a circular map marker.
-            dotCtx.strokeStyle='rgba(30,111,78,.42)';
-            dotCtx.lineWidth=.8*dpr;
-            dotCtx.beginPath();dotCtx.moveTo(x-3.8*dpr,y);dotCtx.lineTo(x+3.8*dpr,y);dotCtx.stroke();
+            // Keep hit targets at their geographic positions, but don't paint
+            // mobile ticks or dots over the land silhouettes.
             continue;
           }
           const selected=!!selectedGlobeCountry;
@@ -584,7 +586,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         // On mobile, recentre the globe so it acts like a compact exploratory card
         // rather than a cropped background element.
         if(compactMobile.matches){
-          const baseRadius=Math.min(width*.355,height*.43);
+          const baseRadius=Math.min(width*.47,height*.49);
           radius=baseRadius*zoom;
           cx=width*.5;
           cy=height*.51;

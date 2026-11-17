@@ -78,25 +78,14 @@ const mobileOrder = [
 const nodeById = new Map(nodes.map(node => [node.id,node]));
 const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   ...nodes.filter(node=>!mobileOrder.includes(node.id))];
-// A calmer two-column composition on narrow screens. Each row has room for
-// longer Chinese, Japanese and English translations without collisions.
-const mobileFieldLayout:Record<string,[number,number]>= {
-  'collective-practices':[25,10],
-  'institutional-studies':[75,10],
-  'curatorial-practices':[25,30],
-  'transcultural-studies':[75,30],
-  'site-specificity':[25,50],
-  'care-and-design':[75,50],
-  'memory-and-place':[25,70],
-  'politics-of-representation':[75,70],
-  'ecology':[25,90],
-  'moving-image':[75,90],
-};
-const mobileFieldNodes = Object.entries(mobileFieldLayout)
-  .flatMap(([id,[mx,my]]) => {
-    const node = nodeById.get(id);
-    return node ? [{...node,mx,my}] : [];
-  });
+// Every concept in the archive is represented in the mobile field.
+// Two generously spaced streams give each translation a reliable text area.
+const mobileFieldNodes = mobileSorted.map((node, index) => ({
+  ...node,
+  mx: index % 2 === 0 ? 25 : 75,
+  my: 5.0 + Math.floor(index / 2) * 10.0,
+  drift: (index * 7) % 7,
+}));
 const mobileFieldDefault = mobileFieldNodes[0];
 const conceptCountLabel = (count:number) => count === 1
   ? 'Appears in 1 exhibition record.'
@@ -140,31 +129,27 @@ const conceptCountLabel = (count:number) => count === 1
                 data-count={node.count}
                 data-href={`/concepts/${node.id}/`}
                 aria-pressed={i===0 ? 'true' : 'false'}
-                style={`--x:${node.mx}%;--y:${node.my}%;--float:${i % 6};--weight:${node.count >= 5 ? 1 : 0};`}
+                style={`--x:${node.mx}%;--y:${node.my}%;--float:${node.drift};--weight:${node.count >= 5 ? 1 : 0};`}
               >{node.title}</button>
             ))}
           </div>
           {mobileFieldDefault && (
             <div class="concept-mobile-focus-panel" id="concept-mobile-focus-panel">
-              <div class="concept-mobile-focus-kicker">Selected concept</div>
-              <a class="concept-mobile-focus-link" id="concept-mobile-focus-link" href={`/concepts/${mobileFieldDefault.id}/`}>
-                <span class="concept-mobile-focus-main" id="concept-mobile-focus-main">{mobileFieldDefault.title}</span>
-                <span class="concept-mobile-focus-arrow" aria-hidden="true">↗</span>
-              </a>
+              <div class="concept-mobile-focus-kicker">SELECTED CONCEPT · {mobileFieldNodes.length} IN THE FIELD</div>
+              <div class="concept-mobile-focus-main" id="concept-mobile-focus-main">{mobileFieldDefault.title}</div>
+              <div class="concept-mobile-focus-translations" id="concept-mobile-focus-translations">
+                <span id="concept-mobile-focus-en" lang="en">{mobileFieldDefault.en}</span>
+                <span id="concept-mobile-focus-ja" lang="ja">{mobileFieldDefault.ja}</span>
+              </div>
               <p class="concept-mobile-focus-meta" id="concept-mobile-focus-meta">{conceptCountLabel(mobileFieldDefault.count)}</p>
+              <a class="concept-mobile-focus-link" id="concept-mobile-focus-link" href={`/concepts/${mobileFieldDefault.id}/`}>
+                <span>Open concept page</span><span class="concept-mobile-focus-arrow" aria-hidden="true">↗</span>
+              </a>
             </div>
           )}
         </div>
       </div>
 
-      <div class="concept-mobile-network" aria-label="Vertical concept index">
-        {mobileSorted.map((node, i) => (
-          <a class="mobile-concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} style={`--index:${i};--weight:${node.count>=5?1:0};`}>
-            <span class="mobile-concept-dot" aria-hidden="true"></span>
-            <span class="mobile-concept-labels"><span class="mobile-concept-term concept-cycle" data-zh={node.title} data-en={node.en} data-ja={node.ja}>{node.title}</span></span>
-          </a>
-        ))}
-      </div>
     </div>
     <p class="concept-note">Lines connect concepts tagged in the same exhibition. Larger words appear more frequently in the archive. Select a term to open its page.</p>
   </section>
@@ -201,16 +186,18 @@ const conceptCountLabel = (count:number) => count === 1
   .concept-mobile-stage-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:0 0 12px;}
   .concept-mobile-stage-head p{margin:0;font-size:10px;letter-spacing:.12em;color:#7b9788;}
   .concept-mobile-stage-head span{display:block;max-width:22ch;color:var(--quiet);font-size:11px;line-height:1.5;text-align:right;}
-  .concept-mobile-stage{position:relative;height:430px;border:0;border-radius:0;background:radial-gradient(ellipse 54% 34% at 31% 30%,rgba(173,215,188,.12),transparent 100%),radial-gradient(ellipse 50% 40% at 76% 69%,rgba(150,211,174,.11),transparent 100%);overflow:hidden;}
+  .concept-mobile-stage{position:relative;height:820px;border:0;border-radius:0;background:radial-gradient(ellipse 54% 34% at 31% 30%,rgba(173,215,188,.12),transparent 100%),radial-gradient(ellipse 50% 40% at 76% 69%,rgba(150,211,174,.11),transparent 100%);overflow:hidden;}
   .concept-mobile-stage::before{content:"";position:absolute;inset:8px;background:radial-gradient(ellipse at 50% 50%,rgba(154,207,169,.035),transparent 70%);pointer-events:none;}
-  .concept-mobile-orbit{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);border:0;background:none;color:var(--ink);font-family:inherit;font-weight:400;font-size:13px;line-height:1.42;letter-spacing:-.02em;padding:7px 5px;border-radius:14px;cursor:pointer;width:47%;max-width:47%;text-align:center;overflow-wrap:anywhere;opacity:.92;}
+  .concept-mobile-orbit{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);border:0;background:none;color:var(--ink);font-family:inherit;font-weight:400;font-size:clamp(11px,3.3vw,14px);line-height:1.38;letter-spacing:-.02em;padding:9px 5px;border-radius:14px;cursor:pointer;width:42%;max-width:42%;text-align:center;overflow-wrap:anywhere;opacity:.92;z-index:1;touch-action:manipulation;}
   .concept-mobile-orbit[style*="--weight:1"]{font-weight:500;}
   .concept-mobile-orbit.is-active{background:radial-gradient(ellipse at center,rgba(174,227,188,.28),rgba(225,245,230,.12) 63%,transparent 85%);box-shadow:none;opacity:1;}
   .concept-mobile-orbit:focus-visible{outline:2px solid #0d8e61;outline-offset:2px;}
-  .concept-mobile-focus-panel{display:grid;gap:5px;padding-top:12px;}
+  .concept-mobile-focus-panel{display:grid;gap:8px;padding:18px 15px 17px;margin-top:10px;background:linear-gradient(135deg,rgba(233,245,236,.74),rgba(255,255,255,.95));border-left:3px solid #18865e;box-shadow:0 0 0 1px rgba(116,171,140,.12);border-radius:2px;}
   .concept-mobile-focus-kicker{font-size:10px;letter-spacing:.12em;color:#7b9788;}
-  .concept-mobile-focus-link{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;color:var(--ink);text-decoration:none;font-size:18px;line-height:1.28;letter-spacing:-.03em;}
-  .concept-mobile-focus-link:hover,.concept-mobile-focus-link:focus-visible{text-decoration:underline;text-underline-offset:4px;}
+  .concept-mobile-focus-main{font-size:clamp(20px,5.6vw,25px);line-height:1.3;letter-spacing:-.03em;color:#087b55;font-weight:500;}
+  .concept-mobile-focus-translations{display:flex;gap:8px 14px;flex-wrap:wrap;color:#587d69;font-size:12px;line-height:1.45;}
+  .concept-mobile-focus-link{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:6px;padding:11px 12px;color:#fff;background:#087b55;border-radius:4px;text-decoration:none;font-size:13px;line-height:1.4;letter-spacing:0;font-weight:500;min-height:44px;box-sizing:border-box;}
+  .concept-mobile-focus-link:hover,.concept-mobile-focus-link:focus-visible{background:#066b4a;text-decoration:underline;text-underline-offset:4px;}
   .concept-mobile-focus-arrow{font-size:18px;line-height:1;flex:0 0 auto;margin-top:2px;}
   .concept-mobile-focus-meta{margin:0;color:var(--quiet);font-size:11px;line-height:1.6;}
   @media(min-width:901px){
@@ -221,11 +208,11 @@ const conceptCountLabel = (count:number) => count === 1
     .concept-archive{min-height:0}
     .concept-map-scroll{overflow:visible}
     .concept-mobile-explorer{display:block}
-    .concept-mobile-network{display:grid}
+    .concept-mobile-network{display:none}
   }
   @media(max-width:650px){
-    .concept-mobile-stage{height:430px;}
-    .concept-mobile-orbit{font-size:13px;width:47%;max-width:47%;}
+    .concept-mobile-stage{height:820px;}
+    .concept-mobile-orbit{width:42%;max-width:42%;}
     .concept-mobile-network{padding-top:2px;}
     .concept-archive .concept-note{display:none;}
 
@@ -236,8 +223,8 @@ const conceptCountLabel = (count:number) => count === 1
 
   }
   @media(max-width:380px){
-    .concept-mobile-stage{height:415px;}
-    .concept-mobile-orbit{font-size:12px;width:47%;max-width:47%;padding:5px 3px;}
+    .concept-mobile-stage{height:850px;}
+    .concept-mobile-orbit{font-size:11px;width:43%;max-width:43%;padding:7px 3px;}
     .concept-mobile-focus-link{font-size:16px;}
   }
   @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } .concept-mobile-orbit{animation:none!important;} }
@@ -246,12 +233,16 @@ const conceptCountLabel = (count:number) => count === 1
   /* Each node displays exactly one language. Transitions happen independently. */
   .concept-cycle{opacity:1;transition:opacity .32s ease;}
   .concept-cycle.is-changing{opacity:.08;}
-  .concept-mobile-orbit{animation:mobile-orbit-float 23s ease-in-out infinite;animation-delay:calc(var(--float,0) * -1.4s);}
+  @media(max-width:900px){
+    .concept-mobile-orbit{animation:mobile-orbit-float 13s ease-in-out infinite;animation-delay:calc(var(--float,0) * -2.7s);}
+    .concept-mobile-orbit:nth-child(3n){animation-duration:17s;animation-direction:reverse;}
+    .concept-mobile-orbit:nth-child(4n){animation-duration:21s;}
+  }
   @keyframes mobile-orbit-float{
-    0%,100%{transform:translate(-50%,-50%) translate3d(0,0,0)}
-    25%{transform:translate(-50%,-50%) translate3d(3px,-4px,0)}
-    50%{transform:translate(-50%,-50%) translate3d(-3px,4px,0)}
-    75%{transform:translate(-50%,-50%) translate3d(4px,2px,0)}
+    0%,100%{transform:translate(-50%,-50%) translate3d(-10px,7px,0)}
+    22%{transform:translate(-50%,-50%) translate3d(12px,-9px,0)}
+    48%{transform:translate(-50%,-50%) translate3d(-3px,-14px,0)}
+    75%{transform:translate(-50%,-50%) translate3d(11px,10px,0)}
   }
   @media(prefers-reduced-motion:reduce){.concept-cycle{transition:none!important;}}
 
@@ -317,6 +308,8 @@ const conceptCountLabel = (count:number) => count === 1
   const mobileFocusLink=document.getElementById('concept-mobile-focus-link') as HTMLAnchorElement | null;
   const mobileFocusMain=document.getElementById('concept-mobile-focus-main');
   const mobileFocusMeta=document.getElementById('concept-mobile-focus-meta');
+  const mobileFocusEn=document.getElementById('concept-mobile-focus-en');
+  const mobileFocusJa=document.getElementById('concept-mobile-focus-ja');
   const updateMobileFocus=(button:HTMLButtonElement)=>{
     mobileOrbitButtons.forEach(item=>{
       const active=item===button;
@@ -329,6 +322,8 @@ const conceptCountLabel = (count:number) => count === 1
     if(mobileFocusMain){
       mobileFocusMain.textContent=button.dataset.title||button.textContent||'';
     }
+    if(mobileFocusEn)mobileFocusEn.textContent=button.dataset.english||'';
+    if(mobileFocusJa)mobileFocusJa.textContent=button.dataset.japanese||'';
     if(mobileFocusMeta){
       const count=Number(button.dataset.count||'0');
       mobileFocusMeta.textContent=count===1
