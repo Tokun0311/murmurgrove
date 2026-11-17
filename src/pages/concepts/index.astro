@@ -31,9 +31,30 @@ const locations = {
 // Any new concept also receives an automatic place without changing the saved layout.
 const known = new Set(Object.keys(locations));
 let extra = 0;
+const translations:Record<string,{en:string,ja:string}> = {
+  'institutional-studies': {en:'Institutional Studies',ja:'制度・機関研究'},
+  'curatorial-practices': {en:'Curatorial Practices',ja:'キュレーション実践'},
+  'site-specificity': {en:'Site-Specificity',ja:'サイト・スペシフィシティ'},
+  'transcultural-studies': {en:'Transcultural Studies',ja:'トランスカルチュラル研究'},
+  'politics-of-representation': {en:'Politics of Representation',ja:'表象の政治'},
+  'artist-residency': {en:'Artist Residency',ja:'アーティスト・イン・レジデンス'},
+  'collective-practices': {en:'Collective Practices',ja:'コレクティブの実践'},
+  'performance': {en:'Performance & Theatre',ja:'パフォーマンスと演劇'},
+  'photography': {en:'Photography',ja:'写真'},
+  'identity-and-representation': {en:'Identity & Representation',ja:'アイデンティティと表象'},
+  'memory-and-place': {en:'Memory & Place',ja:'記憶と場所'},
+  'material-and-memory': {en:'Material & Memory',ja:'素材と記憶'},
+  'sound-and-technology': {en:'Sound & Technology',ja:'音とテクノロジー'},
+  'technology-and-body': {en:'Technology & Body',ja:'テクノロジーと身体'},
+  'ecology': {en:'Ecology & Resources',ja:'エコロジーと資源'},
+  'care-and-design': {en:'Care & Design',ja:'ケアとデザイン'},
+  'postwar-art': {en:'Postwar Art',ja:'戦後美術'},
+  'printmaking': {en:'Printmaking',ja:'版画'},
+  'moving-image': {en:'Moving Image',ja:'映像表現'},
+};
 const nodes = items.map(item => {
  const position = locations[item.id] ?? [130 + (extra % 5)*205, 620 + Math.floor(extra++/5)*105];
- return {id:item.id, title:item.data.title, x:position[0], y:position[1], count:frequency.get(item.id) ?? 0};
+ return {id:item.id, title:item.data.title, en:translations[item.id]?.en ?? item.id.replaceAll('-',' '), ja:translations[item.id]?.ja ?? item.data.title, x:position[0], y:position[1], count:frequency.get(item.id) ?? 0};
 });
 const positionById = new Map(nodes.map(node=>[node.id,node]));
 const edges = [...connections].map(([key,count])=>{
@@ -68,9 +89,9 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
           {edges.map(edge=><line class="concept-link" data-a={edge.a} data-b={edge.b} x1={edge.from.x} y1={edge.from.y} x2={edge.to.x} y2={edge.to.y} stroke-width={Math.min(2.2, .65 + .55*edge.count)}/>) }
         </g>
         <g class="concept-nodes">
-          {nodes.map(node=><a class="concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} aria-label={node.title}>
-            <circle cx={node.x} cy={node.y} r="3.5" />
-            <text x={node.x+10} y={node.y+5} class={node.count>=5?'concept-term concept-term-major':'concept-term'}>{node.title}</text>
+          {nodes.map(node=><a class="concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} data-x={node.x} data-y={node.y} aria-label={`${node.title} / ${node.en} / ${node.ja}`}>
+            <circle cx={node.x} cy={node.y} r="3.2" />
+            <text x={node.x>=900?node.x-10:node.x+10} y={node.y+5} text-anchor={node.x>=900?'end':'start'} class={node.count>=5?'concept-term concept-term-major concept-cycle':'concept-term concept-cycle'} data-zh={node.title} data-en={node.en} data-ja={node.ja}>{node.title}</text>
           </a>)}
         </g>
       </svg>
@@ -79,7 +100,7 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
         {mobileSorted.map((node, i) => (
           <a class="mobile-concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} style={`--index:${i};--weight:${node.count>=5?1:0};`}>
             <span class="mobile-concept-dot" aria-hidden="true"></span>
-            <span class="mobile-concept-term">{node.title}</span>
+            <span class="mobile-concept-labels"><span class="mobile-concept-term concept-cycle" data-zh={node.title} data-en={node.en} data-ja={node.ja}>{node.title}</span></span>
           </a>
         ))}
       </div>
@@ -96,8 +117,10 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   .concept-link { stroke:var(--ink); opacity:.18; vector-effect:non-scaling-stroke; transition:opacity .16s ease; }
   .concept-node { color:var(--ink); text-decoration:none; outline:none; }
   .concept-node circle { fill:var(--ink); opacity:.55; }
-  .concept-term { fill:var(--ink); font-family:inherit; font-weight:400; font-size:20px; letter-spacing:-.025em; }
-  .concept-term-major { font-size:26px; }
+  .concept-term { fill:var(--ink); font-family:inherit; font-weight:400; font-size:15px; letter-spacing:-.025em; }
+  .concept-translation{fill:#75998a;font-family:inherit;font-size:9.5px;letter-spacing:0;font-weight:400;pointer-events:none;}
+  .concept-translation-ja{font-size:9.5px;fill:#91a69b;}
+  .concept-term-major { font-size:17px; }
   .concept-node:hover .concept-term, .concept-node:focus-visible .concept-term { fill:#005b3b; text-decoration:underline; stroke:none; paint-order:normal; }
   .concept-node:focus-visible .concept-term { text-decoration:underline; }
   .concept-node:hover circle, .concept-node:focus-visible circle { opacity:1; r:5; }
@@ -108,7 +131,9 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   .mobile-concept-node:nth-child(even){padding-left:30px}
   .mobile-concept-node:hover,.mobile-concept-node:focus-visible{text-decoration:underline;text-underline-offset:4px;background:transparent}
   .mobile-concept-dot{flex:0 0 6px;width:6px;height:6px;background:var(--ink);border-radius:50%}
-  .mobile-concept-term{min-width:0;font-size:clamp(16px,4.2vw,19px);font-weight:400;line-height:1.5}
+  .mobile-concept-labels{display:flex;flex-direction:column;min-width:0;gap:3px;}
+  .mobile-concept-term{min-width:0;font-size:clamp(15px,4vw,18px);font-weight:400;line-height:1.35}
+  .mobile-concept-translation{display:none;}
   .mobile-concept-node[style*="--weight:1"] .mobile-concept-term{font-weight:500}
   @media(min-width:901px){
     .concept-map-desktop{display:block}
@@ -116,23 +141,126 @@ const mobileSorted = [...mobileOrder.map(id=>nodeById.get(id)).filter(Boolean),
   }
   @media(max-width:900px){.concept-archive{min-height:0}.concept-map-scroll{overflow:visible}}
   @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } }
+  .concept-node{will-change:transform;transition:opacity .2s ease}
+  .concept-map-desktop{user-select:none}
+  /* Each node displays exactly one language. Transitions happen independently. */
+  .concept-cycle{opacity:1;transition:opacity .32s ease;}
+  .concept-cycle.is-changing{opacity:.08;}
+  @media(prefers-reduced-motion:reduce){.concept-cycle{transition:none!important;}}
+
 </style>
 <script>
-  for (const map of document.querySelectorAll('.concept-map')) {
-    const links = Array.from(map.querySelectorAll('.concept-link'));
-    const focus = (id: string | null) => {
-      for (const link of links) {
-        const connected = id && (link.getAttribute('data-a') === id || link.getAttribute('data-b') === id);
-        link.classList.toggle('is-related', Boolean(connected));
-        link.classList.toggle('is-muted', Boolean(id && !connected));
+  // Mixed-language network: each concept shows ONE translation at a time.
+  // Independent schedules prevent the full diagram from changing language together.
+  const reducedLanguages=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const languageNodes=Array.from(document.querySelectorAll<SVGTextElement|HTMLElement>('.concept-cycle'));
+  type CyclingLabel={el:SVGTextElement|HTMLElement; words:string[];current:number;next:number;changing:boolean;switchAt:number};
+  const seededRandom=(seed:number)=>{
+    let n=seed>>>0;
+    return ()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};
+  };
+  const rng=seededRandom(1172026);
+  const labels:CyclingLabel[]=languageNodes.map((el,i)=>{
+    const words=[el.dataset.zh||'',el.dataset.en||'',el.dataset.ja||''];
+    const current=(i*7+Math.floor(i/3))%3;
+    const next=performance.now()+1300+rng()*4700+i*95;
+    el.textContent=words[current];
+    el.setAttribute('lang',['zh','en','ja'][current]);
+    return {el,words,current,next,changing:false,switchAt:0};
+  });
+  let labelTimer=0;
+  const cycleLabels=()=>{
+    if(document.hidden||reducedLanguages.matches)return;
+    const now=performance.now();
+    for(const label of labels){
+      // Start a per-node crossfade only at its own scheduled moment.
+      if(!label.changing&&now>=label.next){
+        label.changing=true;
+        label.switchAt=now+320;
+        label.el.classList.add('is-changing');
+      }else if(label.changing&&now>=label.switchAt){
+        const shift=1+Math.floor(rng()*2);
+        label.current=(label.current+shift)%3;
+        label.el.textContent=label.words[label.current];
+        label.el.setAttribute('lang',['zh','en','ja'][label.current]);
+        label.el.classList.remove('is-changing');
+        label.changing=false;
+        label.next=now+3300+rng()*5800;
+      }
+    }
+  };
+  const syncLanguageMotion=()=>{
+    window.clearInterval(labelTimer);
+    labelTimer=0;
+    if(!document.hidden&&!reducedLanguages.matches){
+      // Avoid synchronized changes when returning to a background tab.
+      const now=performance.now();
+      for(const label of labels){
+        if(label.changing){label.changing=false;label.el.classList.remove('is-changing');}
+        if(label.next<now)label.next=now+800+rng()*5300;
+      }
+      labelTimer=window.setInterval(cycleLabels,80);
+    }
+  };
+  document.addEventListener('visibilitychange',syncLanguageMotion);
+  reducedLanguages.addEventListener('change',syncLanguageMotion);
+  syncLanguageMotion();
+
+  const desktopMap=document.querySelector<SVGSVGElement>('.concept-map-desktop');
+  if(desktopMap){
+    const nodeEls=Array.from(desktopMap.querySelectorAll<SVGAElement>('.concept-node'));
+    const edgeEls=Array.from(desktopMap.querySelectorAll<SVGLineElement>('.concept-link'));
+    const nodes=nodeEls.map((el,i)=>({
+      el,id:el.dataset.concept||'',x:Number(el.dataset.x),y:Number(el.dataset.y),
+      speed:0.00020+(i%5)*0.000025,phase:i*2.39996,
+      dx:0,dy:0,held:false
+    }));
+    const byId=new Map(nodes.map(n=>[n.id,n]));
+    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+    let activeId:string|null=null, visible=false, raf=0, start=0;
+    const updateFocus=(id:string|null)=>{
+      activeId=id;
+      for(const edge of edgeEls){
+        const related=Boolean(id&&(edge.dataset.a===id||edge.dataset.b===id));
+        edge.classList.toggle('is-related',related);
+        edge.classList.toggle('is-muted',Boolean(id&&!related));
       }
     };
-    for (const node of map.querySelectorAll('.concept-node')) {
-      const id = node.getAttribute('data-concept');
-      node.addEventListener('pointerenter',()=>focus(id));
-      node.addEventListener('pointerleave',()=>focus(null));
-      node.addEventListener('focus',()=>focus(id));
-      node.addEventListener('blur',()=>focus(null));
+    for(const n of nodes){
+      n.el.addEventListener('pointerenter',()=>{n.held=true;updateFocus(n.id)});
+      n.el.addEventListener('pointerleave',()=>{n.held=false;updateFocus(null)});
+      n.el.addEventListener('focus',()=>{n.held=true;updateFocus(n.id)});
+      n.el.addEventListener('blur',()=>{n.held=false;updateFocus(null)});
     }
+    const tick=(time:number)=>{
+      raf=0;
+      if(!visible||document.hidden||reduced.matches)return;
+      if(!start)start=time;
+      const t=time-start;
+      for(const node of nodes){
+        if(!node.held){
+          const targetX=5.5*Math.sin(t*node.speed+node.phase);
+          const targetY=4.5*Math.cos(t*node.speed*.83+node.phase*1.27);
+          node.dx+=(targetX-node.dx)*.085;
+          node.dy+=(targetY-node.dy)*.085;
+        }
+        node.el.setAttribute('transform',`translate(${node.dx.toFixed(2)} ${node.dy.toFixed(2)})`);
+      }
+      for(const edge of edgeEls){
+        const a=byId.get(edge.dataset.a||'');const b=byId.get(edge.dataset.b||'');
+        if(!a||!b)continue;
+        edge.setAttribute('x1',String(a.x+a.dx));edge.setAttribute('y1',String(a.y+a.dy));
+        edge.setAttribute('x2',String(b.x+b.dx));edge.setAttribute('y2',String(b.y+b.dy));
+      }
+      raf=requestAnimationFrame(tick);
+    };
+    const sync=()=>{
+      if(visible&&!document.hidden&&!reduced.matches&&!raf)raf=requestAnimationFrame(tick);
+      else if((!visible||document.hidden||reduced.matches)&&raf){cancelAnimationFrame(raf);raf=0;}
+    };
+    const observer=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??false;sync()},{threshold:0.05});
+    observer.observe(desktopMap);
+    document.addEventListener('visibilitychange',sync);
+    reduced.addEventListener('change',sync);
   }
 </script>
