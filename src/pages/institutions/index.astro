@@ -238,7 +238,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .geo-index button,.geo-index p,.geo-index h2{position:relative;z-index:2}
   .geo-index .geo-country-button span{color:#264b3d}
   .map-location-precision{font-size:.69rem;line-height:1.45;color:#748d80;margin:-.2rem 0 .8rem}
-  .map-tooltip{background:rgba(255,255,255,.97);backdrop-filter:blur(6px)}
+  .map-tooltip{background:rgba(255,255,255,.76);-webkit-backdrop-filter:blur(14px) saturate(115%);backdrop-filter:blur(14px) saturate(115%);border-color:rgba(127,168,147,.45);box-shadow:0 10px 28px rgba(42,81,62,.10);color:#234534}
+  .map-tooltip a{color:#205d43}
+  @supports not (backdrop-filter:blur(1px)){.map-tooltip{background:rgba(255,255,255,.9)}}
   @media(max-width:700px){.globe-index-layout .geo-index{padding-left:0!important}}
 
   /* Global view: restore the restrained left-hand globe, with the index alongside. */
@@ -247,17 +249,20 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .world-map-section .world-map{width:100%!important;height:100%!important;background:transparent!important;overflow:visible!important}
   .world-map-section .geo-index{position:relative!important;inset:auto!important;z-index:4!important;width:100%!important;min-height:auto!important;padding:20px 0!important;margin:0!important;background:none!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.45rem 1.15rem!important;align-content:center!important}
   .world-map-section .map-tooltip{right:0!important;top:16px!important;max-width:310px!important;z-index:30!important}
-  /* Country view: same WebGL globe is drawn on the whole viewport, behind header and index. */
+  /* Country view: only the map becomes a full-page background; the text layout stays unchanged. */
   body.globe-country-focused .world-map-section .globe-index-layout{isolation:auto!important}
-  body.globe-country-focused .world-map-section .map-shell{position:fixed!important;inset:0!important;left:0!important;top:0!important;width:100vw!important;height:100dvh!important;z-index:1!important;pointer-events:none!important}
-  body.globe-country-focused .world-map-section .world-map{height:100%!important;pointer-events:auto!important}
+  body.globe-country-focused .world-map-section .map-shell{position:relative!important;z-index:0!important;pointer-events:none!important}
+  body.globe-country-focused .world-map-section .world-map{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;z-index:1!important;pointer-events:auto!important;background:transparent!important}
   body.globe-country-focused .world-map-section .geo-index{z-index:5!important}
-  body.globe-country-focused .mast{position:relative;z-index:7;background:transparent!important}
+  body.globe-country-focused .mast,
+  body.globe-country-focused .world-map-section .map-heading,
+  body.globe-country-focused .world-map-section .map-meta,
+  body.globe-country-focused .world-map-section .geo-index{position:relative!important;z-index:6!important;background:transparent!important}
   body.globe-country-focused .world-map-section .map-tooltip{position:fixed!important;right:calc(37% + 25px)!important;top:14vh!important;z-index:8!important}
-  body.globe-country-focused .world-map-section .map-reset-minimal{position:fixed!important;left:clamp(14px,5vw,78px)!important;top:clamp(105px,15vh,160px)!important;z-index:6!important;pointer-events:auto!important}
+  body.globe-country-focused .world-map-section .map-reset-minimal{position:fixed!important;left:clamp(14px,5vw,78px)!important;top:clamp(105px,15vh,160px)!important;z-index:7!important;pointer-events:auto!important}
   .world-map-section .map-reset-minimal{background:rgba(255,255,255,.84)!important}
   @media(max-width:960px){.world-map-section .globe-index-layout{grid-template-columns:minmax(0,1fr) minmax(0,.93fr)!important;column-gap:20px!important}.world-map-section .geo-index{padding:10px 0!important}}
-  @media(max-width:700px){.world-map-section .globe-index-layout{display:flex!important;flex-direction:column!important;gap:10px!important}.world-map-section .map-shell{position:relative!important;left:auto!important;width:100%!important;height:clamp(320px,85vw,490px)!important}.world-map-section .geo-index{width:100%!important;padding:10px 0!important}.world-map-section .map-tooltip{position:static!important;max-width:100%!important}body.globe-country-focused .world-map-section .map-shell{position:relative!important;width:100%!important;height:clamp(340px,85vw,490px)!important;pointer-events:auto!important}body.globe-country-focused .world-map-section .map-reset-minimal{position:absolute!important;top:10px!important;left:12px!important}body.globe-country-focused .world-map-section .map-tooltip{position:static!important;max-width:100%!important}}
+  @media(max-width:700px){.world-map-section .globe-index-layout{display:flex!important;flex-direction:column!important;gap:10px!important}.world-map-section .map-shell{position:relative!important;left:auto!important;width:100%!important;height:clamp(320px,85vw,490px)!important}.world-map-section .geo-index{width:100%!important;padding:10px 0!important}.world-map-section .map-tooltip{position:static!important;max-width:100%!important}body.globe-country-focused .world-map-section .map-shell{position:relative!important;width:100%!important;height:clamp(340px,85vw,490px)!important;pointer-events:auto!important}body.globe-country-focused .world-map-section .world-map{position:relative!important;inset:auto!important;width:100%!important;height:100%!important}body.globe-country-focused .world-map-section .map-reset-minimal{position:absolute!important;top:10px!important;left:12px!important}body.globe-country-focused .world-map-section .map-tooltip{position:static!important;max-width:100%!important}}
 </style>
 <script>
   const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
