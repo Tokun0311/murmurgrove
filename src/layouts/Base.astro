@@ -26,8 +26,8 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
         )}
         <nav aria-label="Main navigation">
           <a href="/exhibitions/" aria-current={activeSection === 'exhibitions' ? 'page' : undefined}>Exhibitions</a>
-          <a href="/people/" aria-current={activeSection === 'people' ? 'page' : undefined}>People</a>
           <a href="/institutions/" aria-current={activeSection === 'institutions' ? 'page' : undefined}>Institutions</a>
+          <a href="/people/" aria-current={activeSection === 'people' ? 'page' : undefined}>People</a>
           <a href="/concepts/" aria-current={activeSection === 'concepts' ? 'page' : undefined}>Concepts</a>
           <a href="/about/" aria-current={activeSection === 'about' ? 'page' : undefined}>About</a>
         </nav>
@@ -35,8 +35,8 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
           <summary aria-label="Open site sections"><span>Explore</span><span class="mobile-nav-symbol" aria-hidden="true"></span></summary>
           <nav aria-label="Mobile navigation">
             <a href="/exhibitions/" aria-current={activeSection === 'exhibitions' ? 'page' : undefined}>Exhibitions</a>
-            <a href="/people/" aria-current={activeSection === 'people' ? 'page' : undefined}>People</a>
             <a href="/institutions/" aria-current={activeSection === 'institutions' ? 'page' : undefined}>Institutions</a>
+            <a href="/people/" aria-current={activeSection === 'people' ? 'page' : undefined}>People</a>
             <a href="/concepts/" aria-current={activeSection === 'concepts' ? 'page' : undefined}>Concepts</a>
             <a href="/about/" aria-current={activeSection === 'about' ? 'page' : undefined}>About</a>
           </nav>

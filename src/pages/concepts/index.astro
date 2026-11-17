@@ -97,9 +97,21 @@ const mobileFieldNodes = mobileSorted.map((node, index) => {
   const fallbackX = index % 3 === 0 ? 18 : index % 3 === 1 ? 50 : 82;
   const fallbackY = 12 + Math.floor(index / 3) * 12.5;
   const [mx,my,ampX,ampY] = mobileFieldLayout[node.id] ?? [fallbackX, fallbackY, 13, 10];
-  return {...node, mx, my, ampX, ampY, drift:index % 7};
+  return {...node, mx:Math.max(24,Math.min(76,mx)), my:Math.min(91,my), ampX, ampY, drift:index % 7};
 });
-const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
+const mobileLocationById = new Map(mobileFieldNodes.map(node => [node.id,node]));
+// Keep the strongest legible relationships on a phone, rather than drawing
+// the entire desktop web of intersecting lines at reduced scale.
+const mobileEdgeCounts=new Map<string,number>();
+const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
+  const n1=mobileEdgeCounts.get(edge.a)||0,n2=mobileEdgeCounts.get(edge.b)||0;
+  if(n1>=3||n2>=3)return false;
+  mobileEdgeCounts.set(edge.a,n1+1);mobileEdgeCounts.set(edge.b,n2+1);
+  return true;
+}).map(edge=>({
+  a:edge.a,b:edge.b,count:edge.count,
+  from:mobileLocationById.get(edge.a),to:mobileLocationById.get(edge.b)
+})).filter(edge=>edge.from&&edge.to);
 ---
 <Base title="Themes & Concepts | TOW ARCHIVE">
   <section class="archive concept-archive">
@@ -123,13 +135,19 @@ const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
             <p>CONCEPT FIELD</p>
             <span>Tap any moving term to open its page</span>
           </div>
-          <script type="application/json" id="concept-mobile-edge-data">{JSON.stringify(mobileEdges)}</script>
           <div class="concept-mobile-stage" id="concept-mobile-stage">
-            <svg class="concept-mobile-links" id="concept-mobile-links" aria-hidden="true"></svg>
+            <svg class="concept-mobile-links" id="concept-mobile-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              {mobileEdges.map(edge => <line
+                data-a={edge.a} data-b={edge.b}
+                x1={edge.from.mx} y1={edge.from.my}
+                x2={edge.to.mx} y2={edge.to.my}
+                opacity={Math.min(.65,.36 + edge.count*.04)}
+              />)}
+            </svg>
             {mobileFieldNodes.map((node) => (
               <a
                 href={`/concepts/${node.id}/`}
-                class="concept-mobile-orbit concept-cycle"
+                class={`concept-mobile-orbit concept-cycle ${node.mx<=32?'drift-from-left':node.mx>=68?'drift-from-right':'drift-from-middle'}`}
                 data-concept={node.id}
                 data-zh={node.title}
                 data-en={node.en}
@@ -139,7 +157,7 @@ const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
                 data-amp-x={node.ampX}
                 data-amp-y={node.ampY}
                 data-drift={node.drift}
-                style={`--x:${node.mx}%;--y:${node.my}%;--weight:${node.count >= 5 ? 1 : 0};`}
+                style={`--x:${node.mx}%;--y:${node.my}%;--drift:${node.drift};--weight:${node.count >= 5 ? 1 : 0};`}
               >{node.title}</a>
             ))}
           </div>
@@ -158,6 +176,8 @@ const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
   .concept-node { color:var(--ink); text-decoration:none; outline:none; }
   .concept-node circle { fill:var(--ink); opacity:.55; }
   .concept-term { fill:var(--ink); font-family:inherit; font-weight:400; font-size:15px; letter-spacing:-.025em; }
+  .concept-translation{fill:#75998a;font-family:inherit;font-size:9.5px;letter-spacing:0;font-weight:400;pointer-events:none;}
+  .concept-translation-ja{font-size:9.5px;fill:#91a69b;}
   .concept-term-major { font-size:17px; }
   .concept-node:hover .concept-term, .concept-node:focus-visible .concept-term { fill:#005b3b; text-decoration:underline; stroke:none; paint-order:normal; }
   .concept-node:focus-visible .concept-term { text-decoration:underline; }
@@ -174,8 +194,8 @@ const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
   .concept-mobile-stage{position:relative;height:1180px;border:0;border-radius:0;background:radial-gradient(ellipse 55% 35% at 26% 24%,rgba(173,215,188,.11),transparent 100%),radial-gradient(ellipse 47% 39% at 76% 62%,rgba(150,211,174,.1),transparent 100%);overflow:hidden;}
   .concept-mobile-stage::before{content:"";position:absolute;inset:8px;background:radial-gradient(ellipse at 50% 50%,rgba(154,207,169,.03),transparent 72%);pointer-events:none;}
   .concept-mobile-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;}
-  .concept-mobile-links line{stroke:rgba(41,117,79,.14);stroke-width:1.1;vector-effect:non-scaling-stroke;}
-  .concept-mobile-orbit{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);display:block;border:0;background:none;color:var(--ink);font-family:inherit;font-weight:400;font-size:clamp(19px,5.6vw,24px);line-height:1.28;letter-spacing:-.022em;padding:8px 5px;border-radius:10px;cursor:pointer;width:40%;max-width:40%;text-align:center;text-decoration:none;overflow-wrap:anywhere;opacity:.96;z-index:1;touch-action:manipulation;will-change:transform,left,top;}
+  .concept-mobile-links line{stroke:rgba(41,117,79,.25);stroke-width:1.1;vector-effect:non-scaling-stroke;}
+  .concept-mobile-orbit{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);display:block;border:0;background:none;color:var(--ink);font-family:inherit;font-weight:400;font-size:clamp(16px,4.5vw,19px);line-height:1.28;letter-spacing:-.022em;padding:8px 5px;border-radius:10px;cursor:pointer;width:40%;max-width:40%;text-align:center;text-decoration:none;overflow-wrap:anywhere;opacity:.96;z-index:1;touch-action:manipulation;will-change:transform;}
   .concept-mobile-orbit[style*="--weight:1"]{font-weight:500;}
   .concept-mobile-orbit:hover,.concept-mobile-orbit:focus-visible{text-decoration:underline;text-underline-offset:4px;}
   .concept-mobile-orbit:focus-visible{outline:2px solid #0d8e61;outline-offset:2px;}
@@ -195,7 +215,34 @@ const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
   }
   @media(max-width:380px){
     .concept-mobile-stage{height:1260px;}
-    .concept-mobile-orbit{font-size:clamp(18px,5.2vw,21px);width:40%;max-width:40%;padding:7px 4px;}
+    .concept-mobile-orbit{font-size:clamp(16px,4.5vw,18px);width:40%;max-width:40%;padding:7px 4px;}
+  }
+
+
+  /* Mobile-only autonomous motion: survives JavaScript initialization failures. */
+  @media(max-width:900px) and (prefers-reduced-motion:no-preference){
+    .concept-mobile-orbit{animation:concept-drift-one 17s ease-in-out infinite;animation-delay:calc(var(--drift,0) * -2.3s);}
+    .concept-mobile-orbit:nth-of-type(3n){animation-name:concept-drift-two;animation-duration:22s;animation-delay:-7s;}
+    .concept-mobile-orbit:nth-of-type(3n + 1){animation-name:concept-drift-three;animation-duration:19s;animation-delay:-12s;}
+    .concept-mobile-orbit:nth-of-type(4n){animation-duration:24s;animation-direction:reverse;}
+  }
+  @keyframes concept-drift-one{
+    0%,100%{transform:translate(calc(-50% - 36px),calc(-50% + 23px))}
+    25%{transform:translate(calc(-50% + 52px),calc(-50% - 44px))}
+    55%{transform:translate(calc(-50% + 12px),calc(-50% + 50px))}
+    80%{transform:translate(calc(-50% - 54px),calc(-50% - 24px))}
+  }
+  @keyframes concept-drift-two{
+    0%,100%{transform:translate(calc(-50% + 42px),calc(-50% - 32px))}
+    30%{transform:translate(calc(-50% - 54px),calc(-50% + 48px))}
+    57%{transform:translate(calc(-50% + 46px),calc(-50% + 57px))}
+    82%{transform:translate(calc(-50% - 20px),calc(-50% - 52px))}
+  }
+  @keyframes concept-drift-three{
+    0%,100%{transform:translate(calc(-50% - 28px),calc(-50% - 34px))}
+    25%{transform:translate(calc(-50% + 56px),calc(-50% + 36px))}
+    60%{transform:translate(calc(-50% - 48px),calc(-50% + 38px))}
+    83%{transform:translate(calc(-50% + 26px),calc(-50% - 50px))}
   }
 
   .concept-node{will-change:transform;transition:opacity .2s ease}
@@ -203,6 +250,31 @@ const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
   .concept-cycle{opacity:1;transition:opacity .32s ease;}
   .concept-cycle.is-changing{opacity:.08;}
   @media(prefers-reduced-motion:reduce){ .concept-link { transition:none; } .concept-cycle{transition:none!important;} }
+
+  /* Edge-aware trajectories: words can pass each other without vanishing offscreen. */
+  @media(max-width:900px) and (prefers-reduced-motion:no-preference){
+    .concept-mobile-orbit.drift-from-left{animation-name:concept-left-cross;animation-duration:19s;}
+    .concept-mobile-orbit.drift-from-right{animation-name:concept-right-cross;animation-duration:21s;}
+    .concept-mobile-orbit.drift-from-middle{animation-name:concept-middle-cross;animation-duration:17s;}
+  }
+  @keyframes concept-left-cross{
+    0%,100%{transform:translate(calc(-50% + 21px),calc(-50% - 29px))}
+    28%{transform:translate(calc(-50% + 82px),calc(-50% + 22px))}
+    60%{transform:translate(calc(-50% + 48px),calc(-50% - 41px))}
+    84%{transform:translate(calc(-50% + 93px),calc(-50% + 33px))}
+  }
+  @keyframes concept-right-cross{
+    0%,100%{transform:translate(calc(-50% - 18px),calc(-50% + 27px))}
+    30%{transform:translate(calc(-50% - 91px),calc(-50% - 37px))}
+    57%{transform:translate(calc(-50% - 44px),calc(-50% + 46px))}
+    83%{transform:translate(calc(-50% - 80px),calc(-50% - 24px))}
+  }
+  @keyframes concept-middle-cross{
+    0%,100%{transform:translate(calc(-50% - 33px),calc(-50% + 27px))}
+    26%{transform:translate(calc(-50% + 44px),calc(-50% - 46px))}
+    55%{transform:translate(calc(-50% - 49px),calc(-50% - 12px))}
+    81%{transform:translate(calc(-50% + 36px),calc(-50% + 45px))}
+  }
 </style>
 <script>
   const reducedLanguages=window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -257,95 +329,49 @@ const mobileEdges = edges.map(edge => ({a:edge.a,b:edge.b,count:edge.count}));
   reducedLanguages.addEventListener('change',syncLanguageMotion);
   syncLanguageMotion();
 
+  // Mobile paths follow the actual positions of CSS-animated links.
+  // The initial lines are already rendered in the HTML, so a failed script
+  // cannot hide the relationships or stop the word motion.
   const mobileStage=document.getElementById('concept-mobile-stage') as HTMLElement | null;
-  const mobileLinksSvg=document.getElementById('concept-mobile-links') as SVGSVGElement | null;
+  const mobileLinksSvg=document.querySelector<SVGSVGElement>('#concept-mobile-links');
   const mobileLinks=Array.from(document.querySelectorAll<HTMLAnchorElement>('.concept-mobile-orbit'));
-  const mobileEdgeDataElement=document.getElementById('concept-mobile-edge-data');
-  if(mobileStage && mobileLinksSvg && mobileLinks.length && mobileEdgeDataElement){
-    const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-    const edges: {a:string,b:string,count:number}[] = JSON.parse(mobileEdgeDataElement.textContent || '[]');
-    const nodeMap=new Map(mobileLinks.map((link,index)=>{
-      const baseX=Number(link.dataset.baseX||'50');
-      const baseY=Number(link.dataset.baseY||'50');
-      const ampX=Number(link.dataset.ampX||'12');
-      const ampY=Number(link.dataset.ampY||'10');
-      const drift=Number(link.dataset.drift||String(index));
-      const phase=index*0.91 + drift*0.47;
-      const phase2=index*1.31 + drift*0.62;
-      const periodX=12200 + (index%5)*1700;
-      const periodY=15300 + (index%6)*1500;
-      const periodX2=9600 + (index%4)*1200;
-      const periodY2=11800 + (index%3)*900;
-      return [link.dataset.concept||'', {link, baseX, baseY, ampX, ampY, phase, phase2, periodX, periodY, periodX2, periodY2, x:0, y:0}];
-    }));
-    const ns='http://www.w3.org/2000/svg';
-    const lineEntries=edges.map(edge=>{
-      const a=nodeMap.get(edge.a), b=nodeMap.get(edge.b);
-      if(!a || !b) return null;
-      const line=document.createElementNS(ns,'line');
-      line.setAttribute('stroke-width', String(Math.min(1.8, 0.55 + edge.count*0.18)));
-      line.setAttribute('opacity', String(Math.min(0.26, 0.08 + edge.count*0.02)));
-      mobileLinksSvg.appendChild(line);
-      return {a,b,line};
-    }).filter(Boolean) as {a:any,b:any,line:SVGLineElement}[];
-
-    const layout=()=>{
-      const rect=mobileStage.getBoundingClientRect();
-      mobileLinksSvg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
-      mobileLinksSvg.setAttribute('width', String(rect.width));
-      mobileLinksSvg.setAttribute('height', String(rect.height));
-    };
-    layout();
-    let raf=0;
-    let start=0;
-    const tick=(time:number)=>{
-      raf=0;
-      if(document.hidden) return;
-      if(!start) start=time;
-      const t=time-start;
-      const rect=mobileStage.getBoundingClientRect();
-      const w=rect.width, h=rect.height;
-      for(const node of nodeMap.values()){
-        const x = (node.baseX/100)*w + Math.sin(t/node.periodX*2*Math.PI + node.phase) * (node.ampX/100*w)
-          + Math.sin(t/node.periodX2*2*Math.PI + node.phase2) * (node.ampX/100*w*0.55);
-        const y = (node.baseY/100)*h + Math.cos(t/node.periodY*2*Math.PI + node.phase*1.12) * (node.ampY/100*h)
-          + Math.sin(t/node.periodY2*2*Math.PI + node.phase2*1.07) * (node.ampY/100*h*0.45);
-        node.x=x; node.y=y;
-        node.link.style.left=`${x}px`;
-        node.link.style.top=`${y}px`;
+  if(mobileStage && mobileLinksSvg && mobileLinks.length){
+    const nodeMap=new Map(mobileLinks.map(el => [el.dataset.concept || '',el]));
+    const lineEls=Array.from(mobileLinksSvg.querySelectorAll<SVGLineElement>('line[data-a][data-b]'));
+    const connections=lineEls.map(line=>({
+      line, a:nodeMap.get(line.dataset.a||''), b:nodeMap.get(line.dataset.b||'')
+    })).filter(item => item.a && item.b);
+    const reduced=window.matchMedia('(prefers-reduced-motion:reduce)');
+    let mobileRaf=0;
+    let mobileVisible=false;
+    const renderMobileLines=()=>{
+      mobileRaf=0;
+      if(document.hidden || !mobileVisible) return;
+      const r=mobileStage.getBoundingClientRect();
+      if(!r.width || !r.height)return;
+      mobileLinksSvg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);
+      for(const item of connections){
+        const a=item.a!.getBoundingClientRect();
+        const b=item.b!.getBoundingClientRect();
+        item.line.setAttribute('x1',String(a.left+a.width/2-r.left));
+        item.line.setAttribute('y1',String(a.top+a.height/2-r.top));
+        item.line.setAttribute('x2',String(b.left+b.width/2-r.left));
+        item.line.setAttribute('y2',String(b.top+b.height/2-r.top));
       }
-      for(const entry of lineEntries){
-        entry.line.setAttribute('x1', String(entry.a.x));
-        entry.line.setAttribute('y1', String(entry.a.y));
-        entry.line.setAttribute('x2', String(entry.b.x));
-        entry.line.setAttribute('y2', String(entry.b.y));
-      }
-      if(!reducedMotion.matches) raf=requestAnimationFrame(tick);
+      if(!reduced.matches)mobileRaf=requestAnimationFrame(renderMobileLines);
     };
-    const sync=()=>{
-      layout();
-      if(reducedMotion.matches){
-        for(const node of nodeMap.values()){
-          const rect=mobileStage.getBoundingClientRect();
-          node.x = (node.baseX/100)*rect.width;
-          node.y = (node.baseY/100)*rect.height;
-          node.link.style.left=`${node.x}px`;
-          node.link.style.top=`${node.y}px`;
-        }
-        for(const entry of lineEntries){
-          entry.line.setAttribute('x1', String(entry.a.x));
-          entry.line.setAttribute('y1', String(entry.a.y));
-          entry.line.setAttribute('x2', String(entry.b.x));
-          entry.line.setAttribute('y2', String(entry.b.y));
-        }
-        if(raf){cancelAnimationFrame(raf);raf=0;}
-      }else if(!raf){
-        raf=requestAnimationFrame(tick);
-      }
+    const syncMobile=()=>{
+      if(mobileVisible && !mobileRaf)mobileRaf=requestAnimationFrame(renderMobileLines);
+      if(!mobileVisible && mobileRaf){cancelAnimationFrame(mobileRaf);mobileRaf=0;}
     };
-    window.addEventListener('resize', sync, {passive:true});
-    reducedMotion.addEventListener('change', sync);
-    sync();
+    const mobileObserver=new IntersectionObserver(entries=>{
+      mobileVisible=entries[0]?.isIntersecting ?? false;
+      syncMobile();
+    },{threshold:0});
+    mobileObserver.observe(mobileStage);
+    document.addEventListener('visibilitychange',syncMobile);
+    reduced.addEventListener('change',syncMobile);
+    window.addEventListener('resize',syncMobile,{passive:true});
   }
 
   const desktopMap=document.querySelector<SVGSVGElement>('.concept-map-desktop');

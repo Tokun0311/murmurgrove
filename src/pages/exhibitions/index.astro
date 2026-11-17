@@ -235,7 +235,7 @@ const lastDate = calendarDates[0] || '2026-01-01';
     const [year,month]=currentMonth.split('-').map(Number);
     const firstWeekday=(new Date(Date.UTC(year,month-1,1)).getUTCDay()+6)%7;
     const numberOfDays=new Date(Date.UTC(year,month,0)).getUTCDate();
-    const cells=Math.ceil((firstWeekday+numberOfDays)/7)*7;
+    const cells=42;
     for(let index=0;index<cells;index++){
       const day=index-firstWeekday+1;
       if(day<1||day>numberOfDays){

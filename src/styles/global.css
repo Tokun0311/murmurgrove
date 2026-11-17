@@ -554,3 +554,82 @@ body:has(.institutions-page) main{position:relative;z-index:1;}
   .exhibition-index #archive-list {order:5;}
   .exhibition-index #empty-message {order:6;}
 }
+
+/* Desktop Exhibitions date explorer: compact, clearly actionable toolbar.
+   All overrides deliberately scoped to desktop, leaving the mobile layout unchanged. */
+@media (min-width:901px) {
+  .exhibition-index { padding-top:24px; }
+  .exhibition-index .mobile-calendar-toggle {
+    min-height:58px;
+    margin:0 0 23px;
+    padding:10px 16px 10px 19px;
+    border:1px solid #d7e7dc;
+    border-left:3px solid #19835d;
+    border-radius:5px;
+    background:linear-gradient(90deg,#f5faf6 0%,#fff 62%);
+    font-size:17px;
+    letter-spacing:-.012em;
+    transition:background .18s ease,border-color .18s ease;
+  }
+  .exhibition-index .mobile-calendar-toggle:hover,
+  .exhibition-index .mobile-calendar-toggle:focus-visible {
+    background:#eef7f0;
+    border-color:#a9d0b8;
+  }
+  .exhibition-index .mobile-calendar-toggle span {
+    display:grid;
+    place-items:center;
+    flex:0 0 32px;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    background:#e9f4ed;
+    font-size:22px;
+    color:#147b55;
+  }
+  .exhibition-index .mobile-calendar-toggle[aria-expanded="true"] {
+    margin-bottom:16px;
+    background:#f1f8f3;
+    border-color:#b6d9c3;
+  }
+  .exhibition-index .exhibition-date-explorer.mobile-calendar-open {
+    grid-template-columns:minmax(0,470px) minmax(0,1fr);
+    gap:clamp(32px,4.5vw,70px);
+    align-items:start;
+    margin:0 0 25px;
+    padding:10px 0 20px;
+    border-bottom:1px solid var(--rule);
+  }
+  .exhibition-index .exhibition-date-explorer .exhibition-calendar {
+    max-width:470px;
+    padding:0;
+  }
+  .exhibition-index .exhibition-calendar-heading {
+    min-height:59px;
+    margin-bottom:9px;
+    align-items:end;
+  }
+  .exhibition-index .exhibition-weekdays span { padding:4px 0 7px; }
+  .exhibition-index .exhibition-date-explorer .exhibition-calendar-day {
+    aspect-ratio:auto;
+    height:clamp(37px,5.3vh,48px);
+    min-height:0;
+    padding:5px 7px!important;
+  }
+  .exhibition-index .exhibition-calendar-footer {
+    min-height:22px;
+    padding-top:8px;
+  }
+  .exhibition-index .exhibition-day-preview {
+    padding:0;
+    min-height:0;
+    border:0;
+    max-height:min(53vh,455px);
+    overflow-y:auto;
+    scrollbar-width:thin;
+    scrollbar-color:#c6dece transparent;
+  }
+  .exhibition-index .exhibition-preview-heading{min-height:0;}
+  .exhibition-index .exhibition-preview-count { margin:9px 0 13px; }
+  .exhibition-index .exhibition-preview-entry { padding:12px 0;gap:4px; }
+}

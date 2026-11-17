@@ -126,7 +126,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       </div>
       <aside class="geo-index" aria-label="Browse institutions by location">
         <p class="geo-index-kicker">EXPLORE BY LOCATION</p>
-        <p class="mobile-geo-hint">Explore places · Select a country to browse</p>
+        <p class="mobile-geo-hint">Drag to rotate · Dots show archived cities</p>
         <button type="button" class="geo-all-button is-active" data-jump-country="all" aria-pressed="true">All institutions <span>{items.length}</span></button>
         <div class="geo-index-group"><h2>Asia</h2>
           {countryEntries.filter(g=>['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand'].includes(g.country)).map(({country,cities,entries})=>(
@@ -321,6 +321,20 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     .institutions-page .geo-country-button span{font-size:11px;}
   }
 
+
+  /* Mobile-only fully framed globe; desktop is not affected. */
+  @media(max-width:650px){
+    .institutions-page .mobile-land-atlas{display:none!important;}
+    .institutions-page .map-shell{
+      display:block!important;position:relative;left:auto;top:auto;
+      width:100%;height:clamp(315px,96vw,420px);margin:0 auto 5px;
+      border:0;border-radius:0;overflow:visible;background:transparent;pointer-events:auto;
+    }
+    .institutions-page .world-map{display:block;position:relative;inset:auto;width:100%;height:100%;overflow:hidden;background:transparent;touch-action:none;cursor:grab;}
+    .institutions-page .globe-canvas{display:none!important;}
+    .institutions-page .globe-dots{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;}
+    .institutions-page .globe-zoom-controls,.institutions-page .map-tooltip{display:none!important;}
+  }
 </style>
 <script>
   const institutionGroups=[...document.querySelectorAll<HTMLElement>('[data-institution-group]')];
@@ -373,10 +387,12 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     if(scroll)document.querySelector('.institution-geography-index')?.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'start'});
   }
   let focusGlobeCountry:(country:string)=>void=()=>{};
+  let focusMobileCountry:(country:string)=>void=()=>{};
   geoButtons.forEach(button=>button.addEventListener('click',()=>{
     const country=button.dataset.jumpCountry||'all';
     filterCountry(country);
     focusGlobeCountry(country);
+    focusMobileCountry(country);
   }));
   const shell = document.getElementById('institution-map-shell') as HTMLElement | null;
   const map = document.getElementById('institution-world-map') as HTMLElement | null;
@@ -385,6 +401,172 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   const tooltip = document.getElementById('institution-map-tooltip') as HTMLElement | null;
   const details = document.getElementById('institution-map-details') as HTMLElement | null;
   const loading = document.getElementById('globe-loading');
+  // Independent 2D mobile globe. It does not rely on WebGL, alpha shaders,
+  // CSS masks or a static map projection, all of which failed in mobile Safari.
+  // The desktop WebGL code below is deliberately unchanged.
+  if (window.matchMedia('(max-width:650px)').matches && map && dotsCanvas instanceof HTMLCanvasElement){
+    const mobileCtx=dotsCanvas.getContext('2d',{alpha:true});
+    const latData=JSON.parse(document.getElementById('globe-focus-city-data')?.textContent||'[]') as Array<{country:string;city:string;lon:number;lat:number;count:number}>;
+    const maskImage=new Image();
+    const mask=document.createElement('canvas');
+    const maskCtx=mask.getContext('2d',{willReadFrequently:true});
+    let pixels:Uint8ClampedArray|null=null, maskWidth=0, maskHeight=0;
+    let longitude=75*Math.PI/180, latitude=19*Math.PI/180;
+    let selectedCountry:string|null=null;
+    let drag:{id:number,x:number,y:number,lon:number,lat:number}|null=null;
+    let moved=false,frame=0,turnFrame=0;
+    let renderedPoints:Array<{x:number;y:number;country:string}>=[];
+    const PI=Math.PI;
+    const clamp=(n:number,min:number,max:number)=>Math.min(max,Math.max(min,n));
+    const getDims=()=>{
+      const rect=map.getBoundingClientRect();
+      const w=Math.max(1,Math.round(rect.width));
+      const h=Math.max(1,Math.round(rect.height));
+      const r=Math.min(w*.425,h*.425);
+      return {w,h,r,cx:w/2,cy:h/2};
+    };
+    const project=(lonDeg:number,latDeg:number,d:{w:number,h:number,r:number,cx:number,cy:number})=>{
+      const lon=lonDeg*PI/180,lat=latDeg*PI/180;
+      const wx=Math.sin(lon)*Math.cos(lat),wy=Math.sin(lat),wz=Math.cos(lon)*Math.cos(lat);
+      const cl=Math.cos(longitude),sl=Math.sin(longitude),ct=Math.cos(latitude),st=Math.sin(latitude);
+      const x=wx*cl-wz*sl;
+      const t=wx*sl+wz*cl;
+      const y=wy*ct-t*st;
+      const depth=wy*st+t*ct;
+      return depth>.02?{x:d.cx+x*d.r,y:d.cy-y*d.r}:null;
+    };
+    const draw=()=>{
+      frame=0;
+      if(!mobileCtx)return;
+      const d=getDims();
+      if(dotsCanvas.width!==d.w||dotsCanvas.height!==d.h){dotsCanvas.width=d.w;dotsCanvas.height=d.h;}
+      mobileCtx.clearRect(0,0,d.w,d.h);
+      // At most ~95k sampled pixels; rendering runs only when camera changes.
+      const img=mobileCtx.createImageData(d.w,d.h);
+      const out=img.data;
+      const cl=Math.cos(longitude),sl=Math.sin(longitude),ct=Math.cos(latitude),st=Math.sin(latitude);
+      for(let y=Math.max(0,Math.floor(d.cy-d.r));y<Math.min(d.h,Math.ceil(d.cy+d.r));y++){
+        const py=(d.cy-y)/d.r;
+        for(let x=Math.max(0,Math.floor(d.cx-d.r));x<Math.min(d.w,Math.ceil(d.cx+d.r));x++){
+          const px=(x-d.cx)/d.r;
+          const rr=px*px+py*py;
+          if(rr>=1)continue;
+          const z=Math.sqrt(1-rr);
+          const wx=px*cl+z*ct*sl-py*st*sl;
+          const wy=py*ct+z*st;
+          const wz=-px*sl+z*ct*cl-py*st*cl;
+          const lng=Math.atan2(wx,wz),lat=Math.asin(clamp(wy,-1,1));
+          const ix=Math.min(maskWidth-1,Math.max(0,Math.floor((lng/(2*PI)+.5)*maskWidth)));
+          const iy=Math.min(maskHeight-1,Math.max(0,Math.floor((.5-lat/PI)*maskHeight)));
+          const land=pixels&&maskWidth?pixels[(iy*maskWidth+ix)*4+3]/255:0;
+          const edge=Math.min(1,(1-Math.sqrt(rr))*d.r/2.3);
+          const k=Math.max(0,Math.min(1,land));
+          const shade=.95+.05*z;
+          const idx=(y*d.w+x)*4;
+          out[idx]=Math.round((249*(1-k)+211*k)*shade);
+          out[idx+1]=Math.round((252*(1-k)+232*k)*shade);
+          out[idx+2]=Math.round((250*(1-k)+221*k)*shade);
+          out[idx+3]=Math.round(255*edge);
+        }
+      }
+      mobileCtx.putImageData(img,0,0);
+      // Discreet outline clarifies that the drawing is a rotating sphere.
+      mobileCtx.beginPath();mobileCtx.arc(d.cx,d.cy,d.r,0,PI*2);
+      mobileCtx.lineWidth=1;mobileCtx.strokeStyle='rgba(104,165,134,.16)';mobileCtx.stroke();
+      renderedPoints=[];
+      for(const point of latData){
+        const projected=project(point.lon,point.lat,d);if(!projected)continue;
+        const active=!selectedCountry||selectedCountry===point.country;
+        renderedPoints.push({...projected,country:point.country});
+        if(active){
+          const glow=mobileCtx.createRadialGradient(projected.x,projected.y,0,projected.x,projected.y,15);
+          glow.addColorStop(0,'rgba(21,125,92,.26)');glow.addColorStop(1,'rgba(21,125,92,0)');
+          mobileCtx.fillStyle=glow;mobileCtx.beginPath();mobileCtx.arc(projected.x,projected.y,15,0,2*PI);mobileCtx.fill();
+        }
+        mobileCtx.beginPath();mobileCtx.arc(projected.x,projected.y,active?3.2:2,0,PI*2);
+        mobileCtx.fillStyle=active?'#167b53':'rgba(91,148,117,.40)';mobileCtx.fill();
+        mobileCtx.lineWidth=1.6;mobileCtx.strokeStyle='rgba(255,255,255,.92)';mobileCtx.stroke();
+      }
+    };
+    const requestDraw=()=>{if(!frame)frame=requestAnimationFrame(draw)};
+    const animateTo=(lon:number,lat:number)=>{
+      if(turnFrame)cancelAnimationFrame(turnFrame);
+      const fromLon=longitude,fromLat=latitude;
+      const delta=Math.atan2(Math.sin(lon-longitude),Math.cos(lon-longitude));
+      if(reducedMotion.matches){longitude=fromLon+delta;latitude=lat;requestDraw();return;}
+      const start=performance.now();
+      const tick=(t:number)=>{
+        const p=clamp((t-start)/650,0,1),e=p*p*(3-2*p);
+        longitude=fromLon+delta*e;latitude=fromLat+(lat-fromLat)*e;
+        requestDraw();
+        if(p<1)turnFrame=requestAnimationFrame(tick);else turnFrame=0;
+      };
+      turnFrame=requestAnimationFrame(tick);
+    };
+    focusMobileCountry=(country:string)=>{
+      selectedCountry=country==='all'?null:country;
+      if(!selectedCountry){animateTo(75*PI/180,19*PI/180);return;}
+      const points=latData.filter(pt=>pt.country===selectedCountry);
+      if(!points.length){requestDraw();return;}
+      const lon=points.reduce((s,pt)=>s+pt.lon,0)/points.length;
+      const lat=points.reduce((s,pt)=>s+pt.lat,0)/points.length;
+      animateTo(lon*PI/180,clamp(lat*PI/180,-PI*.43,PI*.43));
+    };
+    const closest=(clientX:number,clientY:number)=>{
+      const box=map.getBoundingClientRect();
+      const x=(clientX-box.left)*dotsCanvas.width/box.width;
+      const y=(clientY-box.top)*dotsCanvas.height/box.height;
+      return renderedPoints.map(pt=>({...pt,d:Math.hypot(pt.x-x,pt.y-y)})).sort((a,b)=>a.d-b.d)[0];
+    };
+    map.addEventListener('pointerdown',e=>{
+      if(e.button!==0)return;
+      if(turnFrame)cancelAnimationFrame(turnFrame);
+      drag={id:e.pointerId,x:e.clientX,y:e.clientY,lon:longitude,lat:latitude};moved=false;
+      map.setPointerCapture(e.pointerId);
+    });
+    map.addEventListener('pointermove',e=>{
+      if(!drag||e.pointerId!==drag.id)return;
+      if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>5)moved=true;
+      if(moved){
+        const rect=map.getBoundingClientRect();
+        longitude=drag.lon-(e.clientX-drag.x)/rect.width*PI*1.9;
+        latitude=clamp(drag.lat+(e.clientY-drag.y)/rect.height*PI*1.1,-PI*.43,PI*.43);
+        requestDraw();
+      }
+    });
+    map.addEventListener('pointerup',e=>{
+      if(!drag||e.pointerId!==drag.id)return;
+      if(!moved){
+        const pt=closest(e.clientX,e.clientY);
+        if(pt&&pt.d<23){filterCountry(pt.country);focusMobileCountry(pt.country);}
+      }
+      drag=null;moved=false;
+    });
+    map.addEventListener('pointercancel',()=>{drag=null;moved=false});
+    map.addEventListener('keydown',e=>{
+      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){
+        e.preventDefault();
+        longitude+=(e.key==='ArrowLeft'?.15:e.key==='ArrowRight'?-.15:0);
+        latitude=clamp(latitude+(e.key==='ArrowUp'?-.12:e.key==='ArrowDown'?.12:0),-PI*.43,PI*.43);
+        requestDraw();
+      }
+    });
+    maskImage.onload=()=>{
+      if(!maskCtx)return;
+      mask.width=maskImage.naturalWidth;mask.height=maskImage.naturalHeight;
+      maskCtx.drawImage(maskImage,0,0);
+      maskWidth=mask.width;maskHeight=mask.height;
+      pixels=maskCtx.getImageData(0,0,maskWidth,maskHeight).data;
+      requestDraw();
+    };
+    maskImage.onerror=()=>{requestDraw()};
+    maskImage.src='/land-mask.png';
+    const mobileLoader=document.getElementById('globe-loading');
+    mobileLoader?.setAttribute('hidden','');
+    const ro=new ResizeObserver(requestDraw);ro.observe(map);
+    requestDraw();
+  }
+
   if (shell && map && canvas instanceof HTMLCanvasElement && dotsCanvas instanceof HTMLCanvasElement && tooltip && details && !window.matchMedia('(max-width: 650px)').matches) {
     // One representative location per country. No political borders or cluster counts.
     type CityMarker={country:string,lon:number,lat:number,count:number};
