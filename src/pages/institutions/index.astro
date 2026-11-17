@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
 import geoPaths from '../../data/world-country-paths.json';
-const items=(await getCollection('institutions')).sort((a,b)=>a.data.name.localeCompare(b.data.name));
+const items=await getCollection('institutions');
 
 const cityMeta = {
   Tokyo: { country: 'Japan' },
@@ -26,6 +26,8 @@ const cityMeta = {
   Arles: { country: 'France' },
 };
 
+const countryOrder = ['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand','Germany','Denmark','United Kingdom','France'];
+const cityOrder = Object.keys(cityMeta);
 const countryEntries = Object.entries(
   Object.groupBy(
     items.filter((item) => item.data.city && cityMeta[item.data.city]?.country),
@@ -36,8 +38,8 @@ const countryEntries = Object.entries(
   entries: entries.sort((a,b)=>a.data.name.localeCompare(b.data.name)),
   cities: Object.entries(Object.groupBy(entries, item => item.data.city))
     .map(([city, cityEntries]) => ({city, entries: cityEntries.sort((a,b)=>a.data.name.localeCompare(b.data.name))}))
-    .sort((a,b)=>a.city.localeCompare(b.city)),
-})).sort((a,b)=>a.country.localeCompare(b.country));
+    .sort((a,b)=>cityOrder.indexOf(a.city)-cityOrder.indexOf(b.city)),
+})).sort((a,b)=>countryOrder.indexOf(a.country)-countryOrder.indexOf(b.country));
 const featuredCountries = new Map(countryEntries.map(group => [group.country,group]));
 const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.city]?.country);
 ---
@@ -55,7 +57,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         </div>
         <div class="world-map" id="institution-world-map" role="group" aria-label="World map. Hover, focus, or tap a shaded country or region to see its institutions." tabindex="0">
           <div class="map-stage" id="institution-map-stage">
-            <svg class="map-svg" viewBox="0 0 1200 520" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-label="Map showing institutional locations by country and region">
+            <svg class="map-svg" id="institution-map-svg" viewBox="0 0 1200 520" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-label="Map showing institutional locations by country and region">
               <g class="map-land" aria-hidden="true">
                 {geoPaths.base.map(region => <path d={region.d} />)}
               </g>
@@ -89,9 +91,33 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       <p class="map-note">Hover or tap a shaded place to explore institutions by city. Scroll or use + / − to zoom; drag to explore.</p>
     </section>
 
-    <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries</span></div>
-    <ol class="archive-list">{items.map(item=><li class="archive-entry"><span class="eyebrow">{item.data.city ?? 'INDEX'}</span><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}</ol>
-    {unmapped.length>0 && <p class="map-note">Some entries have no city marker yet; all are included in the index below.</p>}
+    <div class="map-heading archive-list-heading"><span>ALL INSTITUTIONS</span><span>{items.length} entries · grouped by country and city</span></div>
+    <div class="institution-geography-index">
+      {countryEntries.map(({country,cities,entries}) => (
+        <section class="institution-country-group" aria-label={`${country} institutions`}>
+          <header class="institution-country-header">
+            <h2>{country}</h2>
+            <span>{entries.length} {entries.length === 1 ? 'entry' : 'entries'}</span>
+          </header>
+          {cities.map(({city,entries:cityEntries}) => (
+            <section class="institution-city-group" aria-label={`${city} institutions`}>
+              <h3>{city}</h3>
+              <ul class="institution-city-list">
+                {cityEntries.map(item => <li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}
+              </ul>
+            </section>
+          ))}
+        </section>
+      ))}
+      {unmapped.length > 0 && (
+        <section class="institution-country-group" aria-label="Unclassified institutions">
+          <header class="institution-country-header"><h2>Location not yet specified</h2><span>{unmapped.length} entries</span></header>
+          <ul class="institution-city-list institution-ungrouped-list">
+            {unmapped.map(item => <li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}
+          </ul>
+        </section>
+      )}
+    </div>
   </section>
 </Base>
 
@@ -101,7 +127,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-shell{position:relative;border:1px solid #dbe7df;border-radius:3px;background:#f4f7f5;isolation:isolate}
   .world-map{position:relative;width:100%;aspect-ratio:1200/520;overflow:hidden;cursor:grab;touch-action:none;outline-offset:3px;user-select:none;-webkit-user-select:none}
   .world-map.is-dragging{cursor:grabbing}
-  .map-stage{position:absolute;inset:0;transform-origin:0 0;will-change:transform}
+  .map-stage{position:absolute;inset:0}
   .map-svg{display:block;width:100%;height:100%;pointer-events:none;user-select:none}
   .map-land path{fill:#dae5dd;stroke:#b2c7b9;stroke-width:.36;vector-effect:non-scaling-stroke;fill-rule:evenodd}
   .map-country-shape{fill:rgba(11,120,82,.34);stroke:#338469;stroke-width:1.15;vector-effect:non-scaling-stroke;fill-rule:evenodd;pointer-events:visiblePainted;cursor:pointer;outline:none;transition:fill .12s ease}
@@ -122,25 +148,42 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-popup-group li a:hover,.map-popup-group li a:focus-visible{color:#087d55;text-decoration:underline;text-underline-offset:3px}
   .map-note{font-size:.78rem;color:#738479;margin-top:.65rem;line-height:1.6}
   .archive-list-heading{margin-bottom:0}
-  @media(max-width:680px){.world-map{aspect-ratio:1.4}.world-map-section{margin:1.5rem 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
+  .institution-country-group{border-top:1px solid #c6dfd2;padding:1.65rem 0 1.3rem}
+  .institution-country-group:last-child{border-bottom:1px solid #c6dfd2}
+  .institution-country-header{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.1rem}
+  .institution-country-header h2{font-size:clamp(22px,2.3vw,29px);font-weight:400;line-height:1.3;letter-spacing:-.02em;margin:0}
+  .institution-country-header span{font-size:.73rem;letter-spacing:.05em;color:#738479;white-space:nowrap}
+  .institution-city-group{display:grid;grid-template-columns:minmax(110px,19%) minmax(0,1fr);gap:1.2rem;padding:.4rem 0 1.2rem}
+  .institution-city-group+.institution-city-group{border-top:1px solid #e4ede7;padding-top:1.1rem}
+  .institution-city-group h3{font-size:.83rem;color:#668075;font-weight:500;line-height:1.5;margin:.35rem 0 0}
+  .institution-city-list{list-style:none;padding:0;margin:0}
+  .institution-city-list li{padding:.45rem 0}
+  .institution-city-list li+li{border-top:1px solid #e4ede7}
+  .institution-city-list a{font-size:clamp(16px,1.65vw,21px);line-height:1.5;letter-spacing:-.02em;overflow-wrap:anywhere}
+  .institution-city-list a:hover,.institution-city-list a:focus-visible{color:#056848;text-decoration:underline;text-underline-offset:4px}
+  .institution-ungrouped-list{margin-left:calc(19% + 1.2rem)}
+  @media(max-width:680px){.institution-city-group{grid-template-columns:1fr;gap:.25rem}.institution-city-group h3{margin:0;font-size:.8rem}.institution-country-group{padding:1.35rem 0}.institution-ungrouped-list{margin-left:0}.world-map{aspect-ratio:1.4}.world-map-section{margin:1.5rem 0 2rem}.map-heading{font-size:.64rem}.map-tooltip{position:static;width:auto;max-height:none;border-top:1px solid #e4ece7;border-left:0;border-right:0;border-bottom:0;box-shadow:none;margin:0;padding:12px 14px}}
   @media(prefers-reduced-motion:reduce){.map-country-shape{transition:none}}
 </style>
 <script>
   const shell = document.getElementById('institution-map-shell');
   const map = document.getElementById('institution-world-map');
   const stage = document.getElementById('institution-map-stage');
+  const svg = document.getElementById('institution-map-svg');
   const tooltip = document.getElementById('institution-map-tooltip');
   const details = document.getElementById('institution-map-details');
-  if (shell && map && stage && tooltip && details) {
-    let zoom=1,tx=0,ty=0;
+  if (shell && map && stage && svg && tooltip && details) {
+    // Pan and zoom by changing the SVG viewBox: no rasterized CSS transform layer.
+    const W = 1200, H = 520;
+    let zoom = 1, vx = 0, vy = 0;
     let active=null,locked=false,closeTimer,drag=null,moved=false;
     const shapes=[...map.querySelectorAll('.map-country-shape')];
     const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
     function render(){
-      const {width:w,height:h}=map.getBoundingClientRect();
-      if(zoom<=1.001){zoom=1;tx=0;ty=0}
-      else{tx=clamp(tx,w-w*zoom,0);ty=clamp(ty,h-h*zoom,0)}
-      stage.style.transform=`translate(${tx}px,${ty}px) scale(${zoom})`;
+      const vw = W / zoom, vh = H / zoom;
+      vx = clamp(vx, 0, W - vw);
+      vy = clamp(vy, 0, H - vh);
+      svg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
     }
     function hideTip(){
       clearTimeout(closeTimer);
@@ -162,16 +205,22 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       tooltip.replaceChildren(...[...section.children].map(child=>child.cloneNode(true)));
       tooltip.hidden=false;
     }
-    function zoomAt(next,x,y){
+    function zoomAt(next,px,py){
       next=clamp(next,1,10);
-      const ratio=next/zoom;tx=x-(x-tx)*ratio;ty=y-(y-ty)*ratio;zoom=next;
+      const xFraction=clamp(px/map.clientWidth,0,1);
+      const yFraction=clamp(py/map.clientHeight,0,1);
+      const anchoredX=vx+xFraction*(W/zoom);
+      const anchoredY=vy+yFraction*(H/zoom);
+      zoom=next;
+      vx=anchoredX-xFraction*(W/zoom);
+      vy=anchoredY-yFraction*(H/zoom);
       hideTip();render();
     }
     shell.querySelectorAll('[data-map-action]').forEach(button=>button.addEventListener('click',()=>{
       const action=button.dataset.mapAction;
       if(action==='in')zoomAt(zoom*1.55,map.clientWidth/2,map.clientHeight/2);
       if(action==='out')zoomAt(zoom/1.55,map.clientWidth/2,map.clientHeight/2);
-      if(action==='reset'){zoom=1;tx=0;ty=0;hideTip();render()}
+      if(action==='reset'){zoom=1;vx=0;vy=0;hideTip();render()}
     }));
     map.addEventListener('wheel',e=>{
       e.preventDefault();const r=map.getBoundingClientRect();
@@ -179,13 +228,18 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     },{passive:false});
     map.addEventListener('pointerdown',e=>{
       if(e.button!==0)return;
-      drag={id:e.pointerId,x:e.clientX,y:e.clientY,tx,ty};moved=false;
+      drag={id:e.pointerId,x:e.clientX,y:e.clientY,vx,vy,zoom};moved=false;
       map.setPointerCapture(e.pointerId);
     });
     map.addEventListener('pointermove',e=>{
       if(!drag||drag.id!==e.pointerId)return;
       if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>5)moved=true;
-      if(moved){map.classList.add('is-dragging');tx=drag.tx+e.clientX-drag.x;ty=drag.ty+e.clientY-drag.y;render()}
+      if(moved){
+        map.classList.add('is-dragging');
+        vx=drag.vx-(e.clientX-drag.x)*(W/drag.zoom)/map.clientWidth;
+        vy=drag.vy-(e.clientY-drag.y)*(H/drag.zoom)/map.clientHeight;
+        render();
+      }
     });
     function endDrag(e){if(drag?.id===e.pointerId){drag=null;map.classList.remove('is-dragging')}}
     map.addEventListener('pointerup',endDrag);map.addEventListener('pointercancel',endDrag);
@@ -213,8 +267,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       if(e.key==='-'){e.preventDefault();zoomAt(zoom/1.4,map.clientWidth/2,map.clientHeight/2)}
       if(['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key)){
         e.preventDefault();const d=48;
-        tx+=e.key==='ArrowRight'?-d:e.key==='ArrowLeft'?d:0;
-        ty+=e.key==='ArrowDown'?-d:e.key==='ArrowUp'?d:0;render()
+        vx+=(e.key==='ArrowRight'?d:e.key==='ArrowLeft'?-d:0)/zoom;
+        vy+=(e.key==='ArrowDown'?d:e.key==='ArrowUp'?-d:0)/zoom;render()
       }
     });
     window.addEventListener('resize',render);render();
