@@ -126,7 +126,6 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
             <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
           ))}
         </div>
-        <p class="geo-index-help">Select a country to focus the map. Use + / − to zoom further; select All institutions to return.</p>
       </aside>
       </div>
     </section>
@@ -137,7 +136,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         <section class="institution-country-group" data-institution-group={country} aria-label={`${country} institutions`}>
           <header class="institution-country-header">
             <h2>{country}</h2>
-            <span>{entries.length} {entries.length === 1 ? 'entry' : 'entries'}</span>
+            
           </header>
           {cities.map(({city,entries:cityEntries}) => (
             <section class="institution-city-group" aria-label={`${city} institutions`}>
@@ -151,7 +150,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       ))}
       {unmapped.length > 0 && (
         <section class="institution-country-group" data-institution-group="unmapped" aria-label="Unclassified institutions">
-          <header class="institution-country-header"><h2>Location not yet specified</h2><span>{unmapped.length} entries</span></header>
+          <header class="institution-country-header"><h2>Location not yet specified</h2></header>
           <ul class="institution-city-list institution-ungrouped-list">
             {unmapped.map(item => <li><a href={`/institutions/${item.id}/`}>{item.data.name}</a></li>)}
           </ul>
@@ -220,11 +219,11 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .geo-country-button:focus-visible,.geo-all-button:focus-visible{outline:2px solid #67b58e;outline-offset:3px}
   .institution-filter-count{font-size:.77rem;color:var(--quiet);margin:0 0 1rem}
   .institution-country-group[hidden]{display:none!important}
-  .institution-country-group{border-top:1px solid #c6dfd2;padding:1.65rem 0 1.3rem}
-  .institution-country-group:last-child{border-bottom:1px solid #c6dfd2}
+  .institution-country-group{border-top:0;padding:1.3rem 0 1.1rem}
+  .institution-country-group:last-child{border-bottom:0}
   .institution-country-header{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.1rem}
   .institution-country-header h2{font-size:clamp(22px,2.3vw,29px);font-weight:400;line-height:1.3;letter-spacing:-.02em;margin:0}
-  .institution-country-header span{font-size:.73rem;letter-spacing:.05em;color:#738479;white-space:nowrap}
+  
   .institution-city-group{display:grid;grid-template-columns:minmax(110px,19%) minmax(0,1fr);gap:1.2rem;padding:.4rem 0 1.2rem}
   .institution-city-group+.institution-city-group{border-top:1px solid #e4ede7;padding-top:1.1rem}
   .institution-city-group h3{font-size:.83rem;color:#668075;font-weight:500;line-height:1.5;margin:.35rem 0 0}
@@ -249,15 +248,20 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .world-map-section .world-map{position:relative!important;inset:auto!important;width:100%!important;height:100%!important;background:transparent!important;overflow:visible!important}
   .world-map-section .geo-index{position:relative!important;inset:auto!important;width:100%!important;min-height:auto!important;padding:20px 0!important;margin:0!important;background:transparent!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.45rem 1.15rem!important;align-content:center!important;z-index:6!important}
   .world-map-section .map-tooltip{position:absolute!important;left:14px!important;right:auto!important;top:48px!important;width:min(330px,calc(100% - 28px))!important;max-width:330px!important;max-height:340px!important;z-index:10!important}
-  /* FOCUS: viewport map is the ONLY element that expands. Layout boxes stay unchanged. */
-  body.globe-country-focused .world-map-section .globe-index-layout{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr)!important;isolation:auto!important}
-  body.globe-country-focused .world-map-section .map-shell{position:relative!important;inset:auto!important;left:auto!important;width:100%!important;height:clamp(460px,45vw,610px)!important;pointer-events:none!important}
-  body.globe-country-focused .world-map-section .world-map{position:fixed!important;inset:0!important;left:0!important;top:0!important;width:100vw!important;height:100dvh!important;z-index:1!important;pointer-events:auto!important}
-  body.globe-country-focused .mast{position:relative!important;z-index:20!important;background:transparent!important}
-  body.globe-country-focused .world-map-section .map-heading{position:relative!important;z-index:12!important;background:transparent!important}
-  body.globe-country-focused .world-map-section .geo-index{position:relative!important;z-index:12!important;background:transparent!important}
-  /* Put popup in map's upper-left empty space, away from the country index. */
-  body.globe-country-focused .world-map-section .map-tooltip{position:fixed!important;left:clamp(24px,5vw,100px)!important;right:auto!important;top:clamp(160px,19vh,220px)!important;width:min(335px,32vw)!important;max-width:335px!important;max-height:min(380px,48vh)!important;z-index:16!important;pointer-events:auto!important}
+  /* COUNTRY FOCUS: enlarge the projection only within the geographic section.
+     The geographic index keeps its layout, and the map ends before the archive list. */
+  .world-map-section{position:relative!important;isolation:isolate!important;overflow:hidden!important;margin-bottom:18px!important}
+  .world-map-section .globe-index-layout{position:relative!important;isolation:isolate!important;overflow:visible!important}
+  body.globe-country-focused .world-map-section .globe-index-layout{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr)!important}
+  body.globe-country-focused .world-map-section .map-shell{position:relative!important;inset:auto!important;left:auto!important;top:auto!important;width:100%!important;height:clamp(460px,45vw,610px)!important;pointer-events:none!important;z-index:0!important}
+  body.globe-country-focused .world-map-section .world-map{position:absolute!important;left:0!important;top:0!important;inset:auto!important;width:calc(100vw - 2 * clamp(18px,5vw,90px))!important;height:100%!important;z-index:0!important;pointer-events:auto!important;background:transparent!important}
+  body.globe-country-focused .world-map-section .geo-index{position:relative!important;z-index:5!important;background:transparent!important}
+  body.globe-country-focused .world-map-section .map-heading{position:relative!important;z-index:5!important;background:transparent!important}
+  body.globe-country-focused .world-map-section .map-tooltip{position:absolute!important;left:clamp(12px,2vw,28px)!important;right:auto!important;top:clamp(55px,12vh,95px)!important;width:min(335px,38vw)!important;max-width:335px!important;max-height:min(380px,48vh)!important;z-index:12!important;pointer-events:auto!important}
+  body.globe-country-focused .world-map-section .globe-zoom-controls{position:absolute!important;top:12px!important;left:14px!important;z-index:14!important;pointer-events:auto!important}
+  /* The institutions list is its own clean white reading surface below the globe. */
+  .institutions-page>.institution-geography-index{position:relative;z-index:2;background:#fff!important;isolation:isolate}
+  .institutions-page>.institution-filter-count{position:relative;z-index:2;background:#fff}
   .world-map-section .map-tooltip{background:rgba(255,255,255,.47)!important;-webkit-backdrop-filter:blur(2px)!important;backdrop-filter:blur(2px)!important;border:1px solid rgba(83,149,121,.30)!important;box-shadow:0 10px 36px rgba(32,81,58,.055)!important;color:#174833!important;scrollbar-width:none}
   .world-map-section .map-tooltip::-webkit-scrollbar{display:none}
   .world-map-section .map-tooltip a{color:#194b37!important}
@@ -267,7 +271,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .globe-zoom-controls[hidden]{display:none!important}
   .globe-zoom-controls button{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid rgba(83,149,121,.35);background:rgba(255,255,255,.59);color:#216347;font:400 20px/1 system-ui,sans-serif;cursor:pointer}
   .globe-zoom-controls button:hover,.globe-zoom-controls button:focus-visible{background:rgba(231,247,237,.85)}
-  body.globe-country-focused .globe-zoom-controls{position:fixed!important;top:clamp(115px,16vh,160px)!important;left:clamp(24px,5vw,100px)!important;z-index:18!important}
+  body.globe-country-focused .globe-zoom-controls{position:absolute!important;top:12px!important;left:14px!important;z-index:18!important}
   @media(max-width:960px){.world-map-section .globe-index-layout{grid-template-columns:minmax(0,1fr) minmax(0,.93fr)!important;column-gap:20px!important}.world-map-section .geo-index{padding:10px 0!important}}
   @media(max-width:700px){.world-map-section .globe-index-layout,body.globe-country-focused .world-map-section .globe-index-layout{display:flex!important;flex-direction:column!important;gap:10px!important}.world-map-section .map-shell,body.globe-country-focused .world-map-section .map-shell{position:relative!important;left:auto!important;width:100%!important;height:clamp(320px,85vw,490px)!important;pointer-events:auto!important}.world-map-section .geo-index{width:100%!important;padding:10px 0!important}.world-map-section .map-tooltip,body.globe-country-focused .world-map-section .map-tooltip{position:static!important;max-width:100%!important;width:100%!important;max-height:320px!important}.world-map-section .world-map,body.globe-country-focused .world-map-section .world-map{position:relative!important;inset:auto!important;width:100%!important;height:100%!important;pointer-events:auto!important}body.globe-country-focused .globe-zoom-controls{position:absolute!important;top:10px!important;left:12px!important}}
 </style>
@@ -552,10 +556,30 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
         if(dotsCanvas.width!==width||dotsCanvas.height!==height){dotsCanvas.width=width;dotsCanvas.height=height;}
         const focused=!!selectedGlobeCountry;
-        cx=width*(focused?.305:.49);
-        cy=height*(focused?.52:.51);
         const baseRadius=focused?Math.min(width*.31,height*.48):Math.min(width*.46,height*.47);
         radius=baseRadius*zoom;
+        // Place the recorded cities as a group in the middle of the *left* map area.
+        // The same projection is used by the WebGL globe and all city dots.
+        cx=width*.49;cy=height*.51;
+        if(focused){
+          const pts=focusCities.filter(p=>p.country===selectedGlobeCountry);
+          const cl=Math.cos(longitude),sl=Math.sin(longitude),ct=Math.cos(latitude),st=Math.sin(latitude);
+          const projected=pts.map(p=>{
+            const lon=p.lon*PI/180,lat=p.lat*PI/180;
+            const wx=Math.sin(lon)*Math.cos(lat),wy=Math.sin(lat),wz=Math.cos(lon)*Math.cos(lat);
+            const ux=wx*cl-wz*sl;
+            const t=wx*sl+wz*cl;
+            const uy=wy*ct-t*st;
+            const depth=wy*st+t*ct;
+            return {x:ux,y:uy,depth};
+          }).filter(p=>p.depth>0);
+          if(projected.length){
+            const minX=Math.min(...projected.map(p=>p.x)),maxX=Math.max(...projected.map(p=>p.x));
+            const minY=Math.min(...projected.map(p=>p.y)),maxY=Math.max(...projected.map(p=>p.y));
+            cx=width*.285-(minX+maxX)*.5*radius;
+            cy=height*.55+(minY+maxY)*.5*radius;
+          } else {cx=width*.285;cy=height*.55;}
+        }
         requestDraw();
       }
       function hideTip(){clearTimeout(closeTimer);activeCountry=null;pinned=false;tooltip.hidden=true;tooltip.replaceChildren()}

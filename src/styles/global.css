@@ -266,3 +266,7 @@ button.exhibition-calendar-day.has-records.selected{background:var(--ink);color:
 .exhibition-date-explorer .exhibition-calendar-day{padding:7px 8px!important}
 @media(max-width:900px){.exhibition-date-explorer{grid-template-columns:1fr;gap:28px}.exhibition-date-explorer .exhibition-calendar{max-width:510px}.exhibition-day-preview{max-width:640px}}
 @media(max-width:650px){.exhibition-calendar-heading{flex-wrap:wrap;align-items:start}.calendar-picker-trigger{font-size:18px}.exhibition-date-explorer .exhibition-calendar-day{padding:6px!important}}
+
+/* The archive title is the active navigation item on the home page. */
+body:has(.mast h1.brand) .mast .brand{position:relative;isolation:isolate}
+body:has(.mast h1.brand) .mast .brand::before{content:"";position:absolute;inset:-15px -27px;z-index:-1;pointer-events:none;border-radius:50%;background:radial-gradient(ellipse at center,rgba(102,235,113,.42),rgba(118,237,128,.20) 47%,transparent 78%);filter:blur(10px)}
