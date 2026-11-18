@@ -9,6 +9,6 @@ addressSource: https://www.vam.ac.uk/south-kensington/visit
 
 伦敦维多利亚与阿尔伯特博物馆（V&A）以装饰艺术、设计、时尚与视觉文化收藏著称。
 
-### 档案补充记录
+### 相关记录
 
 伦敦设计与艺术文化博物馆，在有关知识展示设计的笔记中被作为比较对象。

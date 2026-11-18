@@ -7,4 +7,4 @@ address: Waseda University Central Library (Building 18), 1-6-1 Nishiwaseda, Shi
 addressSource: https://www.waseda.jp/library/access/
 ---
 
-早稻田大学是东京的研究与教育机构。本档案所记项目尚未对应到校内的具体展览／活动场所。
+早稻田大学是东京的研究与教育机构。这里收录的项目尚未对应到校内的具体展览／活动场所。

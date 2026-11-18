@@ -640,6 +640,6 @@ body:has(.institutions-page) main{position:relative;z-index:1;}
 /* Homepage only: allow Murmurgrove to fill the viewport behind the title. */
 body:has(.grove-home){min-height:100svh;overflow-x:hidden}
 body:has(.grove-home) .frame{max-width:none;min-height:100svh;padding-bottom:0;position:relative;isolation:isolate}
-body:has(.grove-home) .mast{position:relative;z-index:10;max-width:1280px;margin-left:auto;margin-right:auto;background:transparent}
+body:has(.grove-home) .mast{position:relative;z-index:10;max-width:1196px;margin-left:auto;margin-right:auto;background:transparent}
 body:has(.grove-home) main{position:static}
 body:has(.grove-home) .mobile-nav{z-index:15}

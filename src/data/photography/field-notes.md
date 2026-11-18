@@ -1,10 +1,10 @@
 ---
-title: "Field Notes / Untitled Series"
+title: "Field Notes"
 date: 2026-10-11
-location: "Location to be added"
-description: "A demonstration photo-series page. Add photographs, dates and your own accompanying text."
+location: "Location not specified"
+description: "A field-notes entry in the photography archive; no images have been published for this record."
 tags: ["Field notes", "Photography"]
 images: []
-draft: false
+draft: true
 ---
-**DEMONSTRATION CONTENT.** Add your own images to `public/images/`, then list their paths under `images:` in this file.
+This record currently has no published photographs.
