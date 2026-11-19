@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Persist the archive's actual content state on a date. Run automatically via GitHub Actions.
-Needs PyYAML (installed in workflow); only archive source files, never manual homepage edits.
+"""Preserve archive content AND morphology/motion design revisions.
+Run on content or renderer changes via GitHub Actions. Requires PyYAML.
 """
 import datetime, hashlib, json, math, os
 from pathlib import Path
@@ -9,6 +9,13 @@ ROOT=Path(__file__).resolve().parents[1]
 DATA=ROOT/'src'/'data'
 OUT=DATA/'murmurgrove-history'
 OUT.mkdir(parents=True,exist_ok=True)
+MODEL=DATA/'murmurgrove-model.json'
+model=json.loads(MODEL.read_text(encoding='utf-8'))
+# The renderer and appearance are part of the archived state: edits to the
+# morphology algorithm must create a snapshot even when content is unchanged.
+RENDER_FILES=[ROOT/'src/pages/index.astro', ROOT/'src/lib/murmurgrove.ts', ROOT/'src/styles/global.css', ROOT/'scripts/record-murmurgrove-snapshot.py']
+render_hash=hashlib.sha256(b''.join(f.read_bytes() for f in RENDER_FILES)).hexdigest()[:16]
+
 
 def items(section):
     result=[]
@@ -79,14 +86,14 @@ marks.sort(key=lambda v:v['key'])
 now=datetime.datetime.now(datetime.timezone.utc)
 today=os.getenv('GROVE_SNAPSHOT_DATE') or now.date().isoformat()
 captured_at=now.strftime('%Y-%m-%dT%H:%M:%SZ')
-output={'capturedOn':today,'capturedAt':captured_at,'kind':'observed-build-snapshot','morphologyVersion':'relational-ecology-v2','counts':{'exhibitions':len(exhibitions),'institutions':len(institutions),'people':len(people),'concepts':len(concepts)},'relationCount':relations,'relationDensity':round(relations/max(1,len(exhibitions)),5),'marks':marks,'roots':roots}
-content_signature=hashlib.sha256(json.dumps({'counts':output['counts'],'relationCount':relations,'marks':marks,'roots':roots},ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:12]
+output={'capturedOn':today,'capturedAt':captured_at,'kind':'observed-build-snapshot','morphologyVersion':model['version'],'modelVersion':model['version'],'motionSpeed':model['motionSpeed'],'motionTimebase':model['motionTimebase'],'releaseDate':model.get('releaseDate'),'releaseNote':model.get('releaseNote'),'renderSignature':render_hash,'historySchema':model['historySchema'],'counts':{'exhibitions':len(exhibitions),'institutions':len(institutions),'people':len(people),'concepts':len(concepts)},'relationCount':relations,'relationDensity':round(relations/max(1,len(exhibitions)),5),'marks':marks,'roots':roots}
+content_signature=hashlib.sha256(json.dumps({'counts':output['counts'],'relationCount':relations,'marks':marks,'roots':roots,'model':model,'renderSignature':render_hash},ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:12]
 output['signature']=content_signature
 for existing in OUT.glob('*.json'):
     try:
         previous=json.loads(existing.read_text(encoding='utf-8'))
         if previous.get('signature')==content_signature:
-            print(f'Unchanged archive, existing snapshot preserved: {existing.relative_to(ROOT)}')
+            print(f'Unchanged archive and design, existing snapshot preserved: {existing.relative_to(ROOT)}')
             raise SystemExit(0)
     except (ValueError,OSError):pass
 filename=f"{captured_at.replace(':','-')}-{content_signature}.json"

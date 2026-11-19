@@ -8,6 +8,10 @@ on:
       - 'src/data/institutions/**'
       - 'src/data/concepts/**'
       - 'scripts/record-murmurgrove-snapshot.py'
+      - 'src/pages/index.astro'
+      - 'src/lib/murmurgrove.ts'
+      - 'src/styles/global.css'
+      - 'src/data/murmurgrove-model.json'
   workflow_dispatch:
 permissions:
   contents: write
@@ -29,6 +33,6 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "archive: preserve Murmurgrove daily state"
+            git commit -m "archive: preserve Murmurgrove content and design state"
             git push
           fi

@@ -1,0 +1,9 @@
+{
+  "version": "relational-ecology-v3-motion-history",
+  "releaseDate": "2026-11-19",
+  "releaseNote": "Whole and Growth now move at 3×; Movement moves at 10×. Morphology and motion design revisions are preserved in History.",
+  "motionSpeed": {"whole": 3, "growth": 3, "movement": 10},
+  "motionTimebase": 0.00025,
+  "defaultMode": "whole",
+  "historySchema": 2
+}
