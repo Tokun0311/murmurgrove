@@ -409,7 +409,7 @@ const pageData={marks:organism.marks,roots:organism.roots,counts:organism.counts
      const radius=clamp((zoom>1.2?2.0:1.22)*v.scale*zoom**.19+.48*m.strength+growthWeight*structuralBoost,.78,m.section==='concepts'?11.4:m.section==='institutions'?9.8:m.section==='people'?8.8:4.7);
      const glowRadius=radius*(m.section==='concepts'?3.9:zoom>1.25?3:5);
      if(!fast && (!coarse || (hash(m.key+':glow')>.91)) && glowRadius>5){const glow=ctx.createRadialGradient(v.x,v.y,0,v.x,v.y,glowRadius);glow.addColorStop(0,`rgba(38,164,93,${recent*(m.section==='concepts'?.11:.085)*depthAlpha})`);glow.addColorStop(1,'rgba(38,164,93,0)');ctx.fillStyle=glow;ctx.beginPath();ctx.arc(v.x,v.y,glowRadius,0,TAU);ctx.fill()}
-     drawOrganicNode(m,v.x,v.y,radius,depthAlpha,phase);
+     drawOrganicNode(m,v.x,v.y,radius,depthAlpha,(reduce.matches?0:motionClock*timebase)+hash('phase'+nodeKey(m))*TAU);
      pointCache.push({m,x:v.x,y:v.y,r:radius,depth:v.z});
     }
     if(focus){const dot=pointCache.find(p=>p.m.key===focus?.key&&p.m.section===focus?.section);if(dot){ctx.strokeStyle='rgba(26,142,85,.77)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(dot.x,dot.y,Math.max(7,dot.r+5),0,TAU);ctx.stroke()}}
