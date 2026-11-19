@@ -643,3 +643,17 @@ body:has(.grove-home) .frame{max-width:none;min-height:100svh;padding-bottom:0;p
 body:has(.grove-home) .mast{position:relative;z-index:10;max-width:1196px;margin-left:auto;margin-right:auto;background:transparent}
 body:has(.grove-home) main{position:static}
 body:has(.grove-home) .mobile-nav{z-index:15}
+
+/* 2026-11-19 V6.1: On mobile a tapped title must not acquire a broken
+   text-decoration underline; keep the masthead's full-width rule intact. */
+.mast .brand a, .mast a.brand,
+.mast .brand a:hover, .mast a.brand:hover,
+.mast .brand a:active, .mast a.brand:active,
+.mast .brand a:focus, .mast a.brand:focus {
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.mast .brand a:focus-visible, .mast a.brand:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 5px;
+}

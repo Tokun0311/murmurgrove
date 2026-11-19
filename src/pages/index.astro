@@ -20,7 +20,7 @@ const pageData={marks:organism.marks,roots:organism.roots,counts:organism.counts
   <section class="grove-home" aria-label="Murmurgrove, a living archive">
     <div class="grove-figure" id="murmurgrove" data-fingerprint={organism.fingerprint}>
       <div class="grove-canvas-area" id="grove-canvas-area">
-        <canvas id="grove-canvas" role="img" aria-label="Interactive research morphology. Drag to rotate, zoom up to 1000%, and pan while zoomed in. Each point is an archive record."></canvas>
+        <canvas id="grove-canvas" role="img" aria-label="Interactive research morphology. Drag to rotate and zoom toward the pointer up to 1000%. Zooming back to 100% recentres the organism. Each point is an archive record."></canvas>
         <div id="grove-record-tooltip" class="grove-record-tooltip" hidden>
           <span id="grove-record-type"></span><a id="grove-record-link" href="#"></a>
         </div>
@@ -376,31 +376,52 @@ const pageData={marks:organism.marks,roots:organism.roots,counts:organism.counts
     tooltip.style.left=`${clamp(p.x,8,width-Math.min(290,width*.78)-25)}px`;
     tooltip.style.top=`${clamp(p.y,135,height-150)}px`;
    };
-   const setZoom=(n:number,atX=width/2,atY=height*.525)=>{const old=zoom;zoom=clamp(n,.65,10);const factor=zoom/old;panX=(atX-width*.5)+(panX-(atX-width*.5))*factor;panY=(atY-height*.525)+(panY-(atY-height*.525))*factor;if(zoomLabel)zoomLabel.textContent=`${Math.round(zoom*100)}%`;closeTip();interactionEnd=performance.now()+240;requestDraw()};
+   // V6.1: Point-anchored zoom, with NO free panning. At 100% always return
+   // to the original centred composition, regardless of prior focal points.
+   const setZoom=(n:number,atX=width/2,atY=height*.525)=>{
+    const old=zoom;
+    zoom=clamp(n,1,10);
+    if(zoom<=1.000001){
+      zoom=1;panX=0;panY=0;
+    }else{
+      const factor=zoom/old;
+      panX=(atX-width*.5)+(panX-(atX-width*.5))*factor;
+      panY=(atY-height*.525)+(panY-(atY-height*.525))*factor;
+      // If a pointer is in an empty edge of the canvas, prevent the body
+      // centre from being thrown completely beyond the viewport.
+      const safeX=(zoom-1)*width*.51;
+      const safeY=(zoom-1)*height*.51;
+      panX=clamp(panX,-safeX,safeX);
+      panY=clamp(panY,-safeY,safeY);
+    }
+    if(zoomLabel)zoomLabel.textContent=`${Math.round(zoom*100)}%`;
+    closeTip();interactionEnd=performance.now()+240;requestDraw();
+   };
    document.querySelectorAll<HTMLButtonElement>('.grove-zoom').forEach(b=>b.addEventListener('click',()=>setZoom(zoom*(b.dataset.zoom==='in'?1.4:1/1.4))));
    document.getElementById('grove-reset')?.addEventListener('click',()=>{yaw=-.26;pitch=-.18;panX=0;panY=0;setZoom(1)});
    modeButtons.forEach(b=>b.addEventListener('click',()=>{const m=b.dataset.mode;if(m!=='whole'&&m!=='growth'&&m!=='movement')return;mode=m;modeButtons.forEach(btn=>{btn.classList.toggle('is-selected',btn===b);btn.setAttribute('aria-pressed',String(btn===b))});requestDraw()}));
-   // Drag = rotate 3D organism. Tap = open archive record. Pinch = zoom.
+   // Single pointer drag = 3D rotation at ALL zoom levels, never translation.
+   // Wheel and pinch zoom around the pointer/fixed pinch centre. Tap = record.
    const held=new Map<number,{x:number;y:number}>();
    let lastPointer:{x:number;y:number}|null=null;
-   let pinch:{distance:number;zoom:number}|null=null;
-   let dragged=false,downPoint:{x:number;y:number}|null=null;let startPan=false;
+   let pinch:{distance:number;zoom:number;x:number;y:number}|null=null;
+   let dragged=false,downPoint:{x:number;y:number}|null=null;
    area.addEventListener('pointerdown',e=>{
     if((e.target as HTMLElement).closest('a,button,summary'))return;
     held.set(e.pointerId,{x:e.clientX,y:e.clientY});
     interacting=true;
-    if(held.size===1){lastPointer={x:e.clientX,y:e.clientY};downPoint={x:e.clientX,y:e.clientY};dragged=false;startPan=e.shiftKey||zoom>=2&&!e.altKey}
-    if(held.size===2){const [a,b]=[...held.values()];pinch={distance:Math.hypot(a.x-b.x,a.y-b.y),zoom};dragged=true}
+    if(held.size===1){lastPointer={x:e.clientX,y:e.clientY};downPoint={x:e.clientX,y:e.clientY};dragged=false}
+    if(held.size===2){const [a,b]=[...held.values()];pinch={distance:Math.hypot(a.x-b.x,a.y-b.y),zoom,x:(a.x+b.x)/2,y:(a.y+b.y)/2};lastPointer=null;dragged=true}
     area.setPointerCapture(e.pointerId);
    });
    area.addEventListener('pointermove',e=>{
     if(held.has(e.pointerId)){
      held.set(e.pointerId,{x:e.clientX,y:e.clientY});
     interacting=true;
-     if(held.size===2&&pinch){const [a,b]=[...held.values()];setZoom(pinch.zoom*Math.hypot(a.x-b.x,a.y-b.y)/Math.max(1,pinch.distance),(a.x+b.x)/2,(a.y+b.y)/2);dragged=true;return}
+     if(held.size===2&&pinch){const [a,b]=[...held.values()];setZoom(pinch.zoom*Math.hypot(a.x-b.x,a.y-b.y)/Math.max(1,pinch.distance),pinch.x,pinch.y);dragged=true;return}
      if(lastPointer){const dx=e.clientX-lastPointer.x,dy=e.clientY-lastPointer.y;
       if(Math.hypot(e.clientX-(downPoint?.x||0),e.clientY-(downPoint?.y||0))>5)dragged=true;
-      if(dragged){if(startPan){panX+=dx;panY+=dy}else{yaw+=dx*.0065;pitch=clamp(pitch+dy*.0055,-1.48,1.48)}closeTip();requestDraw()}
+      if(dragged){yaw+=dx*.0065;pitch=clamp(pitch+dy*.0055,-1.48,1.48);closeTip();requestDraw()}
       lastPointer={x:e.clientX,y:e.clientY};return}
     }
     if(fine.matches){
@@ -418,7 +439,7 @@ const pageData={marks:organism.marks,roots:organism.roots,counts:organism.counts
    const end=(e:PointerEvent)=>{if((e.target as HTMLElement).closest('#grove-record-tooltip'))return;
     const hit=!historyActive&&!dragged&&held.size===1?nearest(e.clientX,e.clientY):null;
     if(area.hasPointerCapture(e.pointerId))area.releasePointerCapture(e.pointerId);
-    held.delete(e.pointerId);if(held.size<2)pinch=null;if(!held.size){lastPointer=null;downPoint=null;interacting=false;interactionEnd=performance.now()+260;requestDraw()}
+    held.delete(e.pointerId);if(held.size<2){pinch=null;lastPointer=null}if(!held.size){lastPointer=null;downPoint=null;interacting=false;interactionEnd=performance.now()+260;requestDraw()}
     if(hit){if(fine.matches)window.location.assign(hit.m.url);else tip(hit)}else if(!dragged)closeTip();
    };
    area.addEventListener('pointerup',end,{passive:true});
