@@ -92,7 +92,7 @@ const pageData={marks:organism.marks,roots:organism.roots,counts:organism.counts
 @media(prefers-reduced-motion:reduce){.grove-mode,.grove-tiny{transition:none}}
 </style>
 <script>
- type Mark={key:string;section:string;title:string;url:string;strength:number;recency:number;related:number;x:number;y:number;seed:number;directionStrength?:number;focus?:string;activity?:number};
+ type Mark={key:string;section:string;title:string;url:string;strength:number;recency:number;related:number;x:number;y:number;seed:number;directionStrength?:number;focus?:string;activity?:number;growth?:number};
  type Vec=[number,number,number];
  type Root={from:string;to:string;weight:number;kind:'direct'|'shared'};
  const dataEl=document.getElementById('grove-data');
@@ -164,6 +164,68 @@ const pageData={marks:organism.marks,roots:organism.roots,counts:organism.counts
     const perspective=3.9/(3.9-z*.29);
     const scale=(width<650?Math.max(width*.51,height*.30):Math.min(width*.34,height*.53))*zoom;
     return {x:width*.5+panX+x*scale*perspective,y:height*.525+panY+y*scale*perspective,z,scale:perspective};
+   };
+   const fillCircle=(x:number,y:number,r:number)=>{ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill()};
+   const drawOrganicNode=(m:Mark,x:number,y:number,r:number,alpha:number,phase:number)=>{
+    const growth=clamp(m.growth??m.directionStrength??0,0,1.65);
+    const accent=clamp((m.activity??.4)*.55+(m.directionStrength??0)*.24+.15,.18,.95)*alpha;
+    const seedRot=hash('shape:'+m.section+':'+m.key)*TAU+phase*.22;
+    if(m.section==='concepts'){
+      const buds=1+Math.min(4,Math.floor(growth*2.6));
+      const outer=r*(1.36+growth*.26);
+      ctx.fillStyle=`rgba(20,121,84,${clamp(accent*.26,.08,.28)})`;
+      fillCircle(x,y,outer*1.18);
+      for(let i=0;i<buds;i++){
+        const t=seedRot+i*(TAU/buds);
+        const bx=x+Math.cos(t)*outer*.58,by=y+Math.sin(t)*outer*.48;
+        ctx.fillStyle=`rgba(17,112,77,${clamp(accent*.52,.16,.46)})`;
+        fillCircle(bx,by,r*(.42+.12*growth));
+      }
+      ctx.fillStyle=`rgba(14,101,70,${clamp(accent*.95,.24,.82)})`;
+      fillCircle(x,y,r*(1.1+growth*.22));
+      ctx.fillStyle=`rgba(242,250,245,${clamp(.55*alpha,.14,.40)})`;
+      fillCircle(x,y,r*(.34+.06*growth));
+      return;
+    }
+    if(m.section==='institutions'){
+      const angle=seedRot*.7;
+      const rx=r*(1.18+growth*.24), ry=r*(.86+growth*.08);
+      ctx.save();
+      ctx.translate(x,y); ctx.rotate(angle);
+      ctx.fillStyle=`rgba(19,113,78,${clamp(accent*.9,.22,.78)})`;
+      ctx.beginPath(); ctx.ellipse(0,0,rx,ry,0,0,TAU); ctx.fill();
+      if(growth>.28){
+        ctx.fillStyle=`rgba(22,132,86,${clamp(accent*.46,.14,.38)})`;
+        ctx.beginPath(); ctx.ellipse(-rx*.44,0,r*.42,r*.34,0,0,TAU); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(rx*.44,0,r*.42,r*.34,0,0,TAU); ctx.fill();
+      }
+      if(growth>.72){
+        ctx.strokeStyle=`rgba(30,123,84,${clamp(accent*.34,.1,.26)})`; ctx.lineWidth=Math.max(.6,r*.13);
+        ctx.beginPath(); ctx.ellipse(0,0,rx*1.18,ry*1.18,0,0,TAU); ctx.stroke();
+      }
+      ctx.restore();
+      return;
+    }
+    if(m.section==='people'){
+      const angle=seedRot;
+      const spread=r*(.42+growth*.14);
+      const rr=r*(.68+growth*.16);
+      const x1=x+Math.cos(angle)*spread,y1=y+Math.sin(angle)*spread;
+      const x2=x-Math.cos(angle)*spread,y2=y-Math.sin(angle)*spread;
+      ctx.fillStyle=`rgba(18,112,78,${clamp(accent*.88,.22,.76)})`;
+      fillCircle(x1,y1,rr); fillCircle(x2,y2,rr*.94);
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.lineWidth=Math.max(1.1,r*.55); ctx.strokeStyle=`rgba(18,112,78,${clamp(accent*.44,.12,.34)})`; ctx.stroke();
+      if(growth>.82){ctx.fillStyle=`rgba(24,140,92,${clamp(accent*.42,.12,.34)})`; fillCircle(x,y,r*.44);}
+      return;
+    }
+    if(m.section==='writing'){
+      ctx.save(); ctx.translate(x,y); ctx.rotate(seedRot*.5); ctx.fillStyle=`rgba(18,112,78,${clamp(accent*.68,.18,.56)})`; ctx.beginPath(); ctx.ellipse(0,0,r*1.08,r*.72,0,0,TAU); ctx.fill(); ctx.restore(); return;
+    }
+    if(m.section==='photography'){
+      ctx.save(); ctx.translate(x,y); ctx.rotate(seedRot*.5); ctx.fillStyle=`rgba(18,112,78,${clamp(accent*.62,.16,.5)})`; ctx.beginPath(); ctx.moveTo(0,-r); ctx.lineTo(r*.85,0); ctx.lineTo(0,r); ctx.lineTo(-r*.85,0); ctx.closePath(); ctx.fill(); ctx.restore(); return;
+    }
+    ctx.fillStyle=`rgba(17,112,77,${clamp(accent*.82,.16,.68)})`;
+    fillCircle(x,y,r);
    };
    // RELATIONAL ECOLOGY v2: deterministic spatial organisation driven by real links.
    // There are no visual category icons: roles are encoded by how records move.
@@ -342,26 +404,13 @@ const pageData={marks:organism.marks,roots:organism.roots,counts:organism.counts
      if(v.x< -45||v.x>width+45||v.y< -45||v.y>height+45)continue;
      const recent=growth?(.13+m.recency*.8):(.25+Math.min(.35,m.strength*.3));
      const depthAlpha=clamp(.65+v.z*.25,.20,1);
-     const radius=clamp((zoom>1.2?2.15:1.30)*v.scale*zoom**.21+.60*m.strength,.8,4.5);
-     const glowRadius=radius*(zoom>1.25?3:5);
-     if(!fast && (!coarse || (hash(m.key+':glow')>.91)) && glowRadius>5){const glow=ctx.createRadialGradient(v.x,v.y,0,v.x,v.y,glowRadius);glow.addColorStop(0,`rgba(38,164,93,${recent*.085*depthAlpha})`);glow.addColorStop(1,'rgba(38,164,93,0)');ctx.fillStyle=glow;ctx.beginPath();ctx.arc(v.x,v.y,glowRadius,0,TAU);ctx.fill()}
-     // Record anatomy is typographic at close range, never leaf-shaped.
-     ctx.fillStyle=`rgba(17,112,77,${clamp((.19+(m.activity??.4)*.48+(m.directionStrength??0)*.14)*depthAlpha*(growth?.5+m.recency*.5:1),.14,.82)})`;ctx.beginPath();ctx.arc(v.x,v.y,radius,0,TAU);ctx.fill();
+     const growthWeight=clamp(m.growth??m.directionStrength??0,0,1.65);
+     const structuralBoost=m.section==='concepts'?1.22:m.section==='institutions'?1.04:m.section==='people'?.98:m.section==='writing'?.58:.2;
+     const radius=clamp((zoom>1.2?2.0:1.22)*v.scale*zoom**.19+.48*m.strength+growthWeight*structuralBoost,.78,m.section==='concepts'?11.4:m.section==='institutions'?9.8:m.section==='people'?8.8:4.7);
+     const glowRadius=radius*(m.section==='concepts'?3.9:zoom>1.25?3:5);
+     if(!fast && (!coarse || (hash(m.key+':glow')>.91)) && glowRadius>5){const glow=ctx.createRadialGradient(v.x,v.y,0,v.x,v.y,glowRadius);glow.addColorStop(0,`rgba(38,164,93,${recent*(m.section==='concepts'?.11:.085)*depthAlpha})`);glow.addColorStop(1,'rgba(38,164,93,0)');ctx.fillStyle=glow;ctx.beginPath();ctx.arc(v.x,v.y,glowRadius,0,TAU);ctx.fill()}
+     drawOrganicNode(m,v.x,v.y,radius,depthAlpha,phase);
      pointCache.push({m,x:v.x,y:v.y,r:radius,depth:v.z});
-    }
-    if(zoom>=3.6&&!fast&&!historyActive){
-      const labelCells=new Set<string>();
-      ctx.save();ctx.font='11px system-ui,sans-serif';ctx.textBaseline='middle';
-      for(const p of pointCache){
-        if(p.x<12||p.x>width-90||p.y<90||p.y>height-55)continue;
-        const cell=`${Math.floor(p.x/112)}:${Math.floor(p.y/30)}`;
-        if(labelCells.has(cell))continue;
-        labelCells.add(cell);
-        const label=(p.m.title||p.m.key).slice(0,46);
-        ctx.fillStyle='rgba(29,89,68,.82)';ctx.fillText(label,p.x+10,p.y,Math.min(190,Math.max(70,width-p.x-24)));
-        if(labelCells.size>90)break;
-      }
-      ctx.restore();
     }
     if(focus){const dot=pointCache.find(p=>p.m.key===focus?.key&&p.m.section===focus?.section);if(dot){ctx.strokeStyle='rgba(26,142,85,.77)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(dot.x,dot.y,Math.max(7,dot.r+5),0,TAU);ctx.stroke()}}
    };

@@ -6,7 +6,7 @@ export type CollectionItem = {id:string;data:Record<string,any>};
 export type GroveInput = {exhibitions:CollectionItem[]; people:CollectionItem[]; institutions:CollectionItem[]; concepts:CollectionItem[]; writing?:CollectionItem[]; photography?:CollectionItem[]};
 export type GroveSection='exhibitions'|'institutions'|'people'|'concepts'|'writing'|'photography';
 export type GroveRoot={from:string;to:string;weight:number;kind:'direct'|'shared'};
-export type GroveMark={key:string;section:GroveSection;title:string;url:string;strength:number;recency:number;related:number;x:number;y:number;seed:number;directionStrength:number;focus:string;activity:number};
+export type GroveMark={key:string;section:GroveSection;title:string;url:string;strength:number;recency:number;related:number;x:number;y:number;seed:number;directionStrength:number;focus:string;activity:number;growth:number};
 export const hashUnit=(value:string):number=>{
   let h=2166136261; for(let i=0;i<value.length;i++){h^=value.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)/4294967295;
 };
@@ -113,9 +113,20 @@ export function createMurmurgrove(input:GroveInput){
  const marks:GroveMark[]=[];
  const add=(item:CollectionItem,section:GroveSection,position:[number,number,number],recency:number,related:number,focus:string,activity:number)=>{
    const key=item.id,id=`${section}:${key}`,seed=hashUnit(id);
-   const strength=.28+Math.min(.72,Math.log1p(related)*.23);
-   const directionStrength=Math.min(1,Math.log1p(related)*.22);
-   marks.push({key,section,title:String(item.data.title||item.data.name||key),url:`/${section}/${encodeURIComponent(key)}/`,strength,related,recency:clamp(recency,0,1),x:clamp(.5+position[0]/3.36,.03,.97),y:clamp(.5+position[1]/2.52,.03,.97),seed,directionStrength,focus,activity:clamp(activity,0,1)});
+   const logRelated=Math.log1p(related);
+   const structural=section==='concepts'||section==='institutions'||section==='people';
+   const growth=clamp(
+    structural
+      ? (section==='concepts'?logRelated*.44+activity*.48:section==='institutions'?logRelated*.36+activity*.28:logRelated*.34+activity*.26)
+      : (section==='writing'?logRelated*.18+activity*.18:section==='photography'?logRelated*.14+activity*.12:logRelated*.15+activity*.15),
+    0,1.65);
+   const strength=clamp(
+    (section==='concepts'?0.34:section==='institutions'?0.32:section==='people'?0.30:0.24)
+     +(structural?Math.min(.98,logRelated*(section==='concepts'?.23:section==='institutions'?.20:.18)):Math.min(.64,logRelated*.14))
+     +(structural?growth*.12:0),
+    .18,1.75);
+   const directionStrength=clamp(structural?Math.min(1.35,logRelated*.28+activity*.18):Math.min(1,logRelated*.16+activity*.12),0,1.35);
+   marks.push({key,section,title:String(item.data.title||item.data.name||key),url:`/${section}/${encodeURIComponent(key)}/`,strength,related,recency:clamp(recency,0,1),x:clamp(.5+position[0]/3.36,.03,.97),y:clamp(.5+position[1]/2.52,.03,.97),seed,directionStrength,focus,activity:clamp(activity,0,1),growth});
  };
  for(const r of recordData){
   const activity=dateActivity(r.date,reference);const recency=reference&&r.date?Math.exp(-Math.max(0,reference-r.date)/(DAY*120)):0;
