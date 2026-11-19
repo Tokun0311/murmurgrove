@@ -1,7 +1,7 @@
 {
-  "version": "continuous-existence-foundation-v1",
+  "version": "directional-morphology-v6",
   "releaseDate": "2026-11-19",
-  "releaseNote": "History is morphology-only and loaded on demand; zoom reveals differentiated organs; optional Cloudflare shared-state service supports one persistent body. Service requires deployment.",
+  "releaseNote": "Live archive concept associations and published writing drive directional growth. No membranes, 1000% zoom with pan, minimal homepage.",
   "motionSpeed": {
     "whole": 3,
     "growth": 3,
@@ -9,5 +9,5 @@
   },
   "motionTimebase": 0.00025,
   "defaultMode": "whole",
-  "historySchema": 3
+  "historySchema": 4
 }

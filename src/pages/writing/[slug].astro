@@ -1,7 +1,20 @@
 ---
 import Base from '../../layouts/Base.astro';
-import {getCollection,render} from 'astro:content';
-export async function getStaticPaths(){return (await getCollection('entries',({data})=>!data.draft)).map(post=>({params:{slug:post.id},props:{post}}));}
-const {post}=Astro.props;const {Content}=await render(post);
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths(){
+  const posts=await getCollection('entries',({data})=>!data.draft);
+  return posts.map(post=>({params:{slug:post.id},props:{post}}));
+}
+const {post}=Astro.props;
+const {Content}=await render(post);
 ---
-<Base title={`${post.data.title} — TOW ARCHIVE`} description={post.data.description}><article class="article"><a class="eyebrow" href="/writing/">← Writing</a><h1>{post.data.title}</h1><div class="eyebrow">{post.data.date.toISOString().slice(0,10)} / {post.data.language}</div><p class="lead">{post.data.description}</p><div class="tags">{post.data.tags.map(t=><span class="tag">{t}</span>)}</div><div class="prose"><Content/></div><a href="/writing/" class="eyebrow">← Back to Writing</a></article></Base>
+<Base title={`${post.data.title} | TOW ARCHIVE`} description={post.data.description}>
+  <article class="article">
+    <a class="eyebrow" href="/">← TOW ARCHIVE</a>
+    <h1>{post.data.title}</h1>
+    <p class="eyebrow">{post.data.date.toISOString().slice(0,10)} / {post.data.type} / {post.data.language}</p>
+    <p class="lead">{post.data.description}</p>
+    {post.data.tags.length>0&&<div class="tags">{post.data.tags.map(t=><span class="tag">{t}</span>)}</div>}
+    <div class="prose"><Content/></div>
+  </article>
+</Base>

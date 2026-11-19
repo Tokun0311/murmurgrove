@@ -1,125 +1,87 @@
 #!/usr/bin/env python3
-"""Preserve archive content AND morphology/motion design revisions.
-Run on content or renderer changes via GitHub Actions. Requires PyYAML.
+"""Snapshot the SAME morphology as the live page, not a second Python layout.
+
+Requires PyYAML and Node >=22.19 (type stripping). Preserves content revisions
+and a versioned history. Writes no simulated/future records.
 """
-import datetime, hashlib, json, math, os
+import datetime
+import hashlib
+import json
+import os
 from pathlib import Path
+import subprocess
 import yaml
+
 ROOT=Path(__file__).resolve().parents[1]
 DATA=ROOT/'src'/'data'
 OUT=DATA/'murmurgrove-history'
 OUT.mkdir(parents=True,exist_ok=True)
-MODEL=DATA/'murmurgrove-model.json'
-model=json.loads(MODEL.read_text(encoding='utf-8'))
-# The renderer and appearance are part of the archived state: edits to the
-# morphology algorithm must create a snapshot even when content is unchanged.
-RENDER_FILES=[ROOT/'src/pages/index.astro', ROOT/'src/lib/murmurgrove.ts', ROOT/'src/styles/global.css', ROOT/'scripts/record-murmurgrove-snapshot.py', ROOT/'scripts/export-murmurgrove-history.mjs']
+model=json.loads((DATA/'murmurgrove-model.json').read_text(encoding='utf8'))
+RENDER_FILES=[ROOT/'src/pages/index.astro', ROOT/'src/lib/murmurgrove.ts',ROOT/'src/content.config.ts',
+  ROOT/'src/styles/global.css',ROOT/'scripts/record-murmurgrove-snapshot.py',
+  ROOT/'scripts/murmurgrove-model-stdin.mjs',ROOT/'scripts/export-murmurgrove-history.mjs']
 render_hash=hashlib.sha256(b''.join(f.read_bytes() for f in RENDER_FILES)).hexdigest()[:16]
 
 
 def items(section):
-    result=[]
-    for f in sorted((DATA/section).glob('*.md')):
-        raw=f.read_text(encoding='utf-8-sig')
-        if not raw.startswith('---'):continue
-        try: meta=yaml.safe_load(raw.split('---',2)[1]) or {}
-        except Exception:continue
-        result.append((f.stem,meta))
-    return result
+    out=[]
+    for path in sorted((DATA/section).glob('*.md')):
+        content=path.read_text(encoding='utf-8-sig')
+        if not content.startswith('---'):
+            continue
+        try:
+            meta=yaml.safe_load(content.split('---',2)[1]) or {}
+        except yaml.YAMLError:
+            continue
+        out.append({'id':path.stem,'data':meta})
+    return out
 
-def hashunit(text):
-    h=2166136261
-    for ch in text:
-        for _ in [ch]:
-            h ^= ord(ch)
-            h=(h*16777619)&0xffffffff
-    return h/4294967295
+names=('exhibitions','people','institutions','concepts','writing','photography')
+input_data={k:items(k) for k in names}
+# Archive uses "entries" while model input calls the same collection "writing".
+result=subprocess.run(['node','--experimental-strip-types',str(ROOT/'scripts/murmurgrove-model-stdin.mjs')],
+     input=json.dumps(input_data,ensure_ascii=False,default=str),capture_output=True,text=True,check=True)
+organism=json.loads(result.stdout)
 
-def mark(section,key,title,strength,related,recency):
-    import urllib.parse
-    seed=hashunit(f'{section}:{key}')
-    angle=hashunit(f'angle:{section}:{key}')*2*math.pi
-    radius=math.sqrt(hashunit(f'radius:{section}:{key}'))
-    x=min(.92,max(.08,.5+math.cos(angle)*(.06+.37*radius)))
-    y=min(.9,max(.1,.5+math.sin(angle)*(.05+.34*radius)))
-    return {'key':key,'section':section,'title':str(title),'url':f'/{section}/{urllib.parse.quote(key)}/','strength':round(strength,5),'recency':round(recency,5),'related':related,'x':round(x,7),'y':round(y,7),'seed':round(seed,7)}
+content_revisions={}
+for section in names:
+    for path in sorted((DATA/section).glob('*.md')):
+        content_revisions[f'{section}:{path.stem}']=hashlib.sha256(path.read_bytes()).hexdigest()[:20]
 
-exhibitions=[(id,d) for id,d in items('exhibitions') if d.get('verification')!='draft']
-people=items('people');institutions=items('institutions');concepts=items('concepts')
-indexes={k:{i for i,_ in v} for k,v in [('people',people),('institutions',institutions),('concepts',concepts)]}
-mentions={k:{} for k in indexes};recent={k:{} for k in indexes}
-def timestamp(value):
-    if isinstance(value,(datetime.date,datetime.datetime)):return value.toordinal()
-    try:return datetime.date.fromisoformat(str(value)[:10]).toordinal()
-    except:return 0
-latest=max((timestamp(d.get('visitedOn')) for _,d in exhibitions),default=0)
-relations=0
-roots=[]
-shared={}
-for id,d in exhibitions:
-    linked={'institutions':[d.get('institution'),*(d.get('relatedInstitutions') or [])], 'people':d.get('artists') or [],'concepts':d.get('concepts') or []}
-    matched={k:sorted(set(x for x in values if x in indexes[k])) for k,values in linked.items()}
-    for k,values in matched.items():
-        for v in values:
-            roots.append({'from':f'exhibitions:{id}','to':f'{k}:{v}','weight':1,'kind':'direct'})
-            mentions[k][v]=mentions[k].get(v,0)+1
-            relations+=1
-            if latest-timestamp(d.get('visitedOn'))<=75:recent[k][v]=recent[k].get(v,0)+1
-    all_nodes=[(kind,f'{kind}:{v}') for kind,values in matched.items() for v in values]
-    for i,(kind_a,a) in enumerate(all_nodes):
-        for kind_b,b in all_nodes[i+1:]:
-            if kind_a==kind_b:continue
-            pair=tuple(sorted((a,b)))
-            shared[pair]=shared.get(pair,0)+1
-roots.extend({'from':a,'to':b,'weight':w,'kind':'shared'} for (a,b),w in shared.items() if w>=2)
-roots.sort(key=lambda r:(-r['weight'],r['from'],r['to']))
-marks=[]
-for key,d in exhibitions:
-    days=latest-timestamp(d.get('visitedOn'))
-    n=len(d.get('artists') or [])+len(d.get('concepts') or [])+len(d.get('relatedInstitutions') or [])+(1 if d.get('institution') else 0)
-    marks.append(mark('exhibitions',key,d.get('title',key),.36+min(1,n/7)*.64,n,max(0,min(1,1-days/110))))
-for section,collection in [('institutions',institutions),('people',people),('concepts',concepts)]:
-    for key,d in collection:
-        n=mentions[section].get(key,0)
-        marks.append(mark(section,key,d.get('title') or d.get('name') or key,.2+min(1,math.log1p(n)/2.6)*.8,n,min(1,recent[section].get(key,0)/2)))
-marks.sort(key=lambda v:v['key'])
+previous_snapshots=[]
+for file in OUT.glob('*.json'):
+    try:previous_snapshots.append(json.loads(file.read_text(encoding='utf8')))
+    except (OSError,ValueError):pass
+previous_snapshots.sort(key=lambda d:d.get('capturedAt',d.get('capturedOn','')))
+previous=previous_snapshots[-1] if previous_snapshots else None
+before=(previous or {}).get('contentRevisions') or {}
+changes={'new':sorted(set(content_revisions)-set(before)) if before else [],
+ 'edited':sorted(k for k in set(before)&set(content_revisions) if before[k]!=content_revisions[k]),
+ 'deleted':sorted(set(before)-set(content_revisions)) if before else [],
+ 'baselineUnavailable':bool(previous and not before)}
 now=datetime.datetime.now(datetime.timezone.utc)
 today=os.getenv('GROVE_SNAPSHOT_DATE') or now.date().isoformat()
 captured_at=now.strftime('%Y-%m-%dT%H:%M:%SZ')
-# Track edits, new records, and deletions independently of morphology strength.
-# Keep only content digests in the change ledger, not duplicated article text.
-content_revisions={}
-for section in ('exhibitions','people','institutions','concepts'):
-    for f in sorted((DATA/section).glob('*.md')):
-        content_revisions[f'{section}:{f.stem}']=hashlib.sha256(f.read_bytes()).hexdigest()[:20]
-previous_snapshots=[]
+output={
+ 'capturedOn':today,'capturedAt':captured_at,'kind':'observed-build-snapshot',
+ 'morphologyVersion':model['version'],'modelVersion':model['version'],
+ 'motionSpeed':model['motionSpeed'],'motionTimebase':model['motionTimebase'],
+ 'releaseDate':model.get('releaseDate'),'renderSignature':render_hash,
+ 'historySchema':model['historySchema'],'contentRevisions':content_revisions,
+ 'changes':changes,'counts':organism['counts'],'relationCount':organism['relationCount'],
+ 'relationDensity':organism['relationDensity'],'fingerprint':organism['fingerprint'],
+ 'directionStates':organism['directionStates'],'marks':organism['marks'],'roots':organism['roots']}
+signature=hashlib.sha256(json.dumps({'counts':output['counts'],'marks':output['marks'],
+ 'roots':output['roots'],'model':model,'renderSignature':render_hash,
+ 'contentRevisions':content_revisions},ensure_ascii=False,sort_keys=True).encode('utf8')).hexdigest()[:12]
+output['signature']=signature
 for file in OUT.glob('*.json'):
-    try: previous_snapshots.append(json.loads(file.read_text(encoding='utf-8')))
-    except (ValueError,OSError): pass
-previous_snapshots.sort(key=lambda d:d.get('capturedAt',d.get('capturedOn','')))
-previous=previous_snapshots[-1] if previous_snapshots else None
-previous_revisions=(previous or {}).get('contentRevisions') or {}
-old_keys=set(previous_revisions)
-new_keys=set(content_revisions)
-# The original 2026 snapshots predate content-digest tracking.  A change event
-# cannot be reconstructed reliably from those snapshots, so mark it explicitly.
-changes={
- 'new':sorted(new_keys-old_keys) if previous_revisions else [],
- 'edited':sorted(k for k in new_keys&old_keys if previous_revisions[k]!=content_revisions[k]),
- 'deleted':sorted(old_keys-new_keys) if previous_revisions else [],
- 'baselineUnavailable':bool(previous and not previous_revisions)
-}
-output={'capturedOn':today,'capturedAt':captured_at,'kind':'observed-build-snapshot','morphologyVersion':model['version'],'modelVersion':model['version'],'motionSpeed':model['motionSpeed'],'motionTimebase':model['motionTimebase'],'releaseDate':model.get('releaseDate'),'releaseNote':model.get('releaseNote'),'renderSignature':render_hash,'historySchema':model['historySchema'],'contentRevisions':content_revisions,'changes':changes,'counts':{'exhibitions':len(exhibitions),'institutions':len(institutions),'people':len(people),'concepts':len(concepts)},'relationCount':relations,'relationDensity':round(relations/max(1,len(exhibitions)),5),'marks':marks,'roots':roots}
-content_signature=hashlib.sha256(json.dumps({'counts':output['counts'],'relationCount':relations,'marks':marks,'roots':roots,'model':model,'renderSignature':render_hash,'contentRevisions':content_revisions},ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:12]
-output['signature']=content_signature
-for existing in OUT.glob('*.json'):
     try:
-        previous=json.loads(existing.read_text(encoding='utf-8'))
-        if previous.get('signature')==content_signature:
-            print(f'Unchanged archive and design, existing snapshot preserved: {existing.relative_to(ROOT)}')
+        old=json.loads(file.read_text(encoding='utf8'))
+        if old.get('signature')==signature:
+            print(f'No change: {file.name}')
             raise SystemExit(0)
-    except (ValueError,OSError):pass
-filename=f"{captured_at.replace(':','-')}-{content_signature}.json"
-target=OUT/filename
-target.write_text(json.dumps(output,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
-print(f'Saved {len(marks)} marks: {target.relative_to(ROOT)}')
+    except (OSError,ValueError):pass
+filename=f"{captured_at.replace(':','-')}-{signature}.json"
+(OUT/filename).write_text(json.dumps(output,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf8')
+print(f'Saved V6 snapshot: {len(organism["marks"])} records, {len(organism["roots"])} relations')

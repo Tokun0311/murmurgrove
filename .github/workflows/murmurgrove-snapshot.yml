@@ -7,10 +7,14 @@ on:
       - 'src/data/people/**'
       - 'src/data/institutions/**'
       - 'src/data/concepts/**'
+      - 'src/data/writing/**'
+      - 'src/data/photography/**'
+      - 'src/content.config.ts'
       - 'scripts/record-murmurgrove-snapshot.py'
       - 'scripts/export-murmurgrove-history.mjs'
       - 'src/pages/index.astro'
       - 'src/lib/murmurgrove.ts'
+      - 'scripts/murmurgrove-model-stdin.mjs'
       - 'src/styles/global.css'
       - 'src/data/murmurgrove-model.json'
   workflow_dispatch:
@@ -26,6 +30,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.19.0'
       - run: python -m pip install PyYAML==6.0.2
       - run: python scripts/record-murmurgrove-snapshot.py
       - run: node scripts/export-murmurgrove-history.mjs
