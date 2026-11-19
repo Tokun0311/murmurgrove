@@ -1,33 +1,54 @@
-ZiCang cursor update for Tow Archive
+# Murmurgrove · Phase 1B — Morphology Dynamics Engine
 
-Files included:
-- public/cursors/zicang-default.png
-- public/cursors/zicang-pointer.png
-- src/styles/cursor-snippet.css
+**Status:** Independently runnable numerical prototype (MVO), **not** a website patch.  
+**Date:** 2026-11-19  
+**Environment:** Node.js 22 or later, standard library only. **No WebGL, browser, external packages or randomness.**
 
-How to apply:
-1. Copy the folder public/cursors into your local tow-archive project at public/cursors.
-2. Open src/styles/cursor-snippet.css and copy the whole contents.
-3. Paste that CSS at the END of your existing src/styles/global.css.
-4. Save.
-5. In GitHub Desktop, commit and push.
+> We design the conditions of life, not the appearance of its outcome.
 
-What it does:
-- Default cursor becomes ZiCang (front-facing).
-- Hover / clickable cursor becomes ZiCang raising a paw.
-- Keeps the green brand color and adds more spacing to TOW ARCHIVE.
+## Run
 
-Notes:
-- Custom cursors may not display on touch devices such as iPhone/iPad.
-- If the cursor feels too large or too small, change the PNG size or hotspot values.
+From this unzipped folder:
 
+```sh
+node --test tests/*.test.mjs
+node scripts/dynamics-demo.mjs
+```
 
-## Public research archive (2026)
+On Windows CMD, the glob may not expand: run `node --test` (auto-discovers test files) or `node --test tests/dynamics.test.mjs tests/protocol.test.mjs`.
 
-All uploaded 2026 visit records are publicly included. They are located in `src/data/exhibitions/`. Related people, institutions and concepts are in neighboring data directories. The list and detail pages are generated at build time.
+The fixture (`fixtures/synthetic-events.json`) is **synthetic**. No user archive was read, modified, or migrated. No actual website file is changed.
 
-`verification: recorded` means the entry was transcribed from the owner's diary, not that dates or exhibition titles are independently verified. `needs-review` marks incomplete or conflicting entries. `exhibitionEnd` is a provisional end date and must be fact-checked with primary sources.
+## Files
 
-To add one record, create a Markdown file with valid frontmatter in `src/data/exhibitions/` and run `npm run build`. The existing Writing / Photography routes and hamster cursor are preserved.
+| Path | Purpose |
+| --- | --- |
+| `src/protocol.mjs` | **Unmodified copy** of Phase 1A validator/replay engine. |
+| `src/dynamics.mjs` | Pure deterministic state evolution, fields, springs, fossils, microcycles, measurable observables. |
+| `fixtures/synthetic-events.json` | Same Phase 1A synthetic 2027→2037 sequence. |
+| `tests/protocol.test.mjs` | Phase 1A tests preserved. |
+| `tests/dynamics.test.mjs` | Phase 1B numerical, determinism and event semantics tests. |
+| `scripts/dynamics-demo.mjs` | Prints observed coordinates, activity, lignification, branches, and state hashes. |
+| `SPEC.md` | Model equations, contract, assumptions, test outcomes and open engineering issues. |
 
-**Publishing note:** No private notebook or work documents are included in this archive. Do not put confidential materials under `src/` or `public/`.
+## Contract
+
+```js
+import {simulateMorphology, metrics, seedPoint, directionField, microSignal}
+  from './src/dynamics.mjs';
+
+const snapshot = simulateMorphology(events, {asOf:'2036-07-21T00:00:00Z'});
+console.log(snapshot.morphologyHash, metrics(snapshot));
+```
+
+**Phase 1A `archive.*` events are not automatically promoted to `life.*`.** An explicit link assertion only becomes an active fiber after a life event names that link in `payload.linkRefs`. This is intentional.
+
+`simulateMorphology` returns a JSON-serializable, deterministic model state, including coordinate anchors and 5-point fiber centerlines. **These are computational data, not a prescribed particle-and-line rendering aesthetic**; the future renderer must respect the morphological ontology in the charter. `microSignal` computes a reversible clock-linked local oscillator without mutating the model.
+
+### Key safety boundary
+
+This package has **no delete-from-Git, backup purge, or public History update**. Removing a record in the test protocol affects the current projection, but is **not an ethical erasure mechanism**. See `SPEC.md`.
+
+### Mathematical status
+
+The constants (half-life, spring stiffness, field strengths, activation amplitudes, etc.) are **hypotheses used to validate causal behavior**, not learned or calibrated parameters. Do not present these numerical curves as a faithful quantification of the user's real intellectual work.
