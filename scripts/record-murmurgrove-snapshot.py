@@ -13,7 +13,7 @@ MODEL=DATA/'murmurgrove-model.json'
 model=json.loads(MODEL.read_text(encoding='utf-8'))
 # The renderer and appearance are part of the archived state: edits to the
 # morphology algorithm must create a snapshot even when content is unchanged.
-RENDER_FILES=[ROOT/'src/pages/index.astro', ROOT/'src/lib/murmurgrove.ts', ROOT/'src/styles/global.css', ROOT/'scripts/record-murmurgrove-snapshot.py']
+RENDER_FILES=[ROOT/'src/pages/index.astro', ROOT/'src/lib/murmurgrove.ts', ROOT/'src/styles/global.css', ROOT/'scripts/record-murmurgrove-snapshot.py', ROOT/'scripts/export-murmurgrove-history.mjs']
 render_hash=hashlib.sha256(b''.join(f.read_bytes() for f in RENDER_FILES)).hexdigest()[:16]
 
 
@@ -86,8 +86,31 @@ marks.sort(key=lambda v:v['key'])
 now=datetime.datetime.now(datetime.timezone.utc)
 today=os.getenv('GROVE_SNAPSHOT_DATE') or now.date().isoformat()
 captured_at=now.strftime('%Y-%m-%dT%H:%M:%SZ')
-output={'capturedOn':today,'capturedAt':captured_at,'kind':'observed-build-snapshot','morphologyVersion':model['version'],'modelVersion':model['version'],'motionSpeed':model['motionSpeed'],'motionTimebase':model['motionTimebase'],'releaseDate':model.get('releaseDate'),'releaseNote':model.get('releaseNote'),'renderSignature':render_hash,'historySchema':model['historySchema'],'counts':{'exhibitions':len(exhibitions),'institutions':len(institutions),'people':len(people),'concepts':len(concepts)},'relationCount':relations,'relationDensity':round(relations/max(1,len(exhibitions)),5),'marks':marks,'roots':roots}
-content_signature=hashlib.sha256(json.dumps({'counts':output['counts'],'relationCount':relations,'marks':marks,'roots':roots,'model':model,'renderSignature':render_hash},ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:12]
+# Track edits, new records, and deletions independently of morphology strength.
+# Keep only content digests in the change ledger, not duplicated article text.
+content_revisions={}
+for section in ('exhibitions','people','institutions','concepts'):
+    for f in sorted((DATA/section).glob('*.md')):
+        content_revisions[f'{section}:{f.stem}']=hashlib.sha256(f.read_bytes()).hexdigest()[:20]
+previous_snapshots=[]
+for file in OUT.glob('*.json'):
+    try: previous_snapshots.append(json.loads(file.read_text(encoding='utf-8')))
+    except (ValueError,OSError): pass
+previous_snapshots.sort(key=lambda d:d.get('capturedAt',d.get('capturedOn','')))
+previous=previous_snapshots[-1] if previous_snapshots else None
+previous_revisions=(previous or {}).get('contentRevisions') or {}
+old_keys=set(previous_revisions)
+new_keys=set(content_revisions)
+# The original 2026 snapshots predate content-digest tracking.  A change event
+# cannot be reconstructed reliably from those snapshots, so mark it explicitly.
+changes={
+ 'new':sorted(new_keys-old_keys) if previous_revisions else [],
+ 'edited':sorted(k for k in new_keys&old_keys if previous_revisions[k]!=content_revisions[k]),
+ 'deleted':sorted(old_keys-new_keys) if previous_revisions else [],
+ 'baselineUnavailable':bool(previous and not previous_revisions)
+}
+output={'capturedOn':today,'capturedAt':captured_at,'kind':'observed-build-snapshot','morphologyVersion':model['version'],'modelVersion':model['version'],'motionSpeed':model['motionSpeed'],'motionTimebase':model['motionTimebase'],'releaseDate':model.get('releaseDate'),'releaseNote':model.get('releaseNote'),'renderSignature':render_hash,'historySchema':model['historySchema'],'contentRevisions':content_revisions,'changes':changes,'counts':{'exhibitions':len(exhibitions),'institutions':len(institutions),'people':len(people),'concepts':len(concepts)},'relationCount':relations,'relationDensity':round(relations/max(1,len(exhibitions)),5),'marks':marks,'roots':roots}
+content_signature=hashlib.sha256(json.dumps({'counts':output['counts'],'relationCount':relations,'marks':marks,'roots':roots,'model':model,'renderSignature':render_hash,'contentRevisions':content_revisions},ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:12]
 output['signature']=content_signature
 for existing in OUT.glob('*.json'):
     try:

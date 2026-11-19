@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/generate-sitemap.mjs",
+    "build": "node scripts/export-murmurgrove-history.mjs && astro build && node scripts/generate-sitemap.mjs",
     "preview": "astro preview",
     "test:sonic": "node --experimental-strip-types tests/sonic-topology.test.mjs"
   },

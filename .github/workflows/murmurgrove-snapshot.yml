@@ -8,6 +8,7 @@ on:
       - 'src/data/institutions/**'
       - 'src/data/concepts/**'
       - 'scripts/record-murmurgrove-snapshot.py'
+      - 'scripts/export-murmurgrove-history.mjs'
       - 'src/pages/index.astro'
       - 'src/lib/murmurgrove.ts'
       - 'src/styles/global.css'
@@ -27,12 +28,28 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install PyYAML==6.0.2
       - run: python scripts/record-murmurgrove-snapshot.py
+      - run: node scripts/export-murmurgrove-history.mjs
       - name: Commit snapshot only if new
         run: |
-          git add src/data/murmurgrove-history/
+          git add src/data/murmurgrove-history/ public/murmurgrove/
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "archive: preserve Murmurgrove content and design state"
             git push
+          fi
+      - name: Update optional shared organism service
+        if: ${{ success() }}
+        env:
+          GROVE_ENDPOINT: ${{ secrets.GROVE_STATE_ENDPOINT }}
+          GROVE_INGEST_SECRET: ${{ secrets.GROVE_INGEST_SECRET }}
+        run: |
+          if [ -n "$GROVE_ENDPOINT" ] && [ -n "$GROVE_INGEST_SECRET" ]; then
+            curl --fail --show-error --silent --retry 3 \
+              -H "Authorization: Bearer $GROVE_INGEST_SECRET" \
+              -H "Content-Type: application/json" \
+              --data-binary @public/murmurgrove/current-graph.json \
+              "${GROVE_ENDPOINT%/}/ingest"
+          else
+            echo 'Shared state not configured; static archive history updated.'
           fi

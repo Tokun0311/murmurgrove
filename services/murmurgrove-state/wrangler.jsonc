@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tow-murmurgrove-state",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-01",
+  "durable_objects": {"bindings": [{"name": "GROVE", "class_name": "MurmurgroveState"}]},
+  "migrations": [{"tag": "v1", "new_sqlite_classes": ["MurmurgroveState"]}],
+  "vars": {"ALLOWED_ORIGIN": "https://tow-archive.pages.dev"}
+}
