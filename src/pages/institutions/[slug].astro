@@ -6,7 +6,7 @@ const {item}=Astro.props;
 const {Content}=await render(item);
 const exhibitions=(await getCollection('exhibitions')).filter(e=>e.data.institution===item.id || e.data.relatedInstitutions.includes(item.id)).sort((a,b)=>b.data.visitedOn.valueOf()-a.data.visitedOn.valueOf());
 ---
-<Base title={`${item.data.name} | TOW ARCHIVE`}><article class="article"><a class="eyebrow" href="/institutions/">← Institutions & Spaces</a><h1>{item.data.name}</h1>
+<Base title={`${item.data.name} | murmurgrove`}><article class="article"><a class="eyebrow" href="/institutions/">← Institutions & Spaces</a><h1>{item.data.name}</h1>
   <div class="institution-location-info">
     {item.data.associatedProject && <p><strong>Related programme</strong> · {item.data.associatedProject}</p>}
     {item.data.venueName && item.data.venueName!==item.data.name && <p><strong>Venue</strong> · {item.data.venueName}</p>}

@@ -1,28 +1,71 @@
 ---
 import '../styles/global.css';
-const { title = 'TOW ARCHIVE', description = 'A personal archive of exhibitions, art institutions, people and research concepts.' } = Astro.props;
+const { title = 'murmurgrove', description = 'An evolving research archive of exhibitions, people, institutions and concepts. A living organism made visible through their relationships.' } = Astro.props;
 const isHome = Astro.url.pathname === '/';
 const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
 ---
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ffffff" />
+    <script is:inline>
+      // Put the white stage in place before painting any page; no JS means no hiding.
+      document.documentElement.classList.add('murmur-preparing');
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="tow-archive-release" content="soft-glow-trail-only-v2-20261117" />
+    <meta name="murmurgrove-release" content="white-stage-page-reveal-20261124" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="murmurgrove" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
   </head>
   <body>
+    <script is:inline>
+      (() => {
+        let revealed = false;
+        const reveal = () => {
+          if (revealed) return;
+          revealed = true;
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            document.documentElement.classList.remove('murmur-preparing');
+          }));
+        };
+        const afterDOM = () => {
+          // Fonts can swap after first paint and make headings jump. Wait briefly,
+          // but always reveal even with a blocked remote font request.
+          const fallback = window.setTimeout(reveal, 900);
+          Promise.resolve(document.fonts?.ready).then(() => {
+            window.clearTimeout(fallback);
+            reveal();
+          }, reveal);
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', afterDOM, {once: true});
+        } else afterDOM();
+        // BFCache restoration should not replay the entrance animation.
+        window.addEventListener('pageshow', e => {
+          if (e.persisted) document.documentElement.classList.remove('murmur-preparing');
+        });
+      })();
+    </script>
     <div class="frame">
       <header class="mast">
         {isHome ? (
-          <h1 class="brand"><a href="/">TOW ARCHIVE</a></h1>
+          <h1 class="brand"><a href="/">murmurgrove</a></h1>
         ) : (
-          <a class="brand" href="/">TOW ARCHIVE</a>
+          <a class="brand" href="/">murmurgrove</a>
         )}
         <nav aria-label="Main navigation">
           <a href="/exhibitions/" aria-current={activeSection === 'exhibitions' ? 'page' : undefined}>Exhibitions</a>

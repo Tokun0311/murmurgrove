@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
-const base = 'https://tow-archive.pages.dev';
+const base = (process.env.SITE_URL?.trim() || 'https://murmurgrove.pages.dev').replace(/\/+$/, '');
 const urls = new Set();
 
 async function crawl(folder) {
@@ -43,4 +43,5 @@ const index = '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '</sitemapindex>\n';
 await writeFile(path.join(dist, 'sitemap-0.xml'), urlset, 'utf8');
 await writeFile(path.join(dist, 'sitemap-index.xml'), index, 'utf8');
+await writeFile(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${base}/sitemap-index.xml\n`, 'utf8');
 console.log(`Sitemap generated: ${sorted.length} public pages`);

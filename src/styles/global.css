@@ -1,4 +1,4 @@
-/* Tow Archive: white background, vivid emerald-green ink and soft green rules. */
+/* murmurgrove: white background, vivid emerald-green ink and soft green rules. */
 :root { --paper:#fff; --ink:#087f5b; --quiet:#568471; --rule:#c6dfd2; --page-heading-size:clamp(30px,3.8vw,44px); font-family:'Noto Sans SC','Microsoft YaHei','PingFang SC','Source Han Sans SC',sans-serif; color:var(--ink); background:var(--paper); font-synthesis:none }
 * { box-sizing:border-box }
 body { margin:0; background:var(--paper) }
@@ -50,7 +50,7 @@ button, select, input, textarea { font:inherit }
 .filter-languages button:hover { color:var(--ink) }
 
 
-/* TOW ARCHIVE: richer green and spacious brand lettering */
+/* murmurgrove: richer green and spacious brand lettering */
 .brand { color:#087f5b; font-weight:700; text-transform:uppercase; letter-spacing:.075em; word-spacing:.16em; }
 
 /* Archive tag controls, restrained outlines and active selection */
@@ -790,3 +790,16 @@ html body .mobile-nav[open] .mobile-nav-symbol::after {
 }
 html body .mobile-nav[open] .mobile-nav-symbol::after { transform:rotate(-45deg); }
 /* Keep the navigation rule, intentional dividers, the globe and organism intact. */
+
+/* 2026-11-24 · WHITE FIRST / STABLE REVEAL
+   Page transitions share a consistent white initial surface. Once the DOM and
+   fonts settle, the existing page geometry gently fades in together.
+   This is not an SPA router and never alters routes, records or interactions.
+*/
+html { background:#fff; color-scheme:light; }
+body { background:#fff; }
+body .frame { opacity:1; transition:opacity 440ms cubic-bezier(.22,.61,.36,1); }
+html.murmur-preparing body .frame { opacity:0; }
+@media(prefers-reduced-motion:reduce) {
+  body .frame { transition:none; }
+}

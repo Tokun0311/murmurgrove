@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fbfcfa"><meta name="color-scheme" content="light"><title>TOW ARCHIVE | Murmurgrove</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fbfcfa"><meta name="color-scheme" content="light"><title>murmurgrove</title>
 <style>
 :root{color-scheme:light;font-family:"Noto Sans SC",Inter,"Helvetica Neue",Arial,sans-serif;color:#275d50;background:#fafbf8;--green:#006748;--muted:#799388;--line:#cbdcd1}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{overflow:hidden;background:#fafbf8}canvas{display:block;width:100%;height:100%;background:#fafbf8;touch-action:none}button{font:inherit;cursor:pointer;color:inherit}button:focus-visible,a:focus-visible{outline:2px solid #247e6d;outline-offset:3px}
 header{position:fixed;z-index:5;top:0;left:0;right:0;height:106px;background:linear-gradient(180deg,rgba(250,251,248,.94),rgba(250,251,248,.60));pointer-events:none}header .inner{position:absolute;left:26px;right:26px;top:45px;display:flex;justify-content:space-between;align-items:center;pointer-events:auto}header .name{letter-spacing:.10em;font-size:15px;font-weight:650;color:#006e4d;text-decoration:none}header .menu{border:0;background:none;color:var(--green);width:30px;height:30px;padding:5px;display:grid;place-content:center;gap:5px}header .menu span{display:block;width:17px;height:1px;background:currentColor}header .rule{position:absolute;bottom:0;left:26px;right:26px;height:1px;background:#16845c}
@@ -92,7 +92,7 @@ body.history-open #historyPanel{display:flex;flex-direction:column}#historyPanel
 #lifeModelExit{border:0;background:transparent;color:#37805e;font-size:18px;cursor:pointer}
 @media(max-width:600px){#lifeModelBadge{right:12px;left:12px;top:94px;max-width:none}}
 
-/* Site integration, not an imitation of the existing TOW ARCHIVE masthead. */
+/* Site integration follows the shared murmurgrove masthead. */
 html.embedded header{display:none!important}
 html.embedded body{background:#fafbf8}
 html.embedded #sourceReadingBadge,html.embedded #lifeModelBadge{top:122px}
@@ -239,7 +239,7 @@ html body.debug #status{display:none!important}
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>
-<header><div class="inner"><a class="name" href="/">TOW ARCHIVE</a><button id="menu" class="menu" aria-label="Viewer information" title="Viewer information"><span></span><span></span><span></span></button></div><div class="rule"></div></header>
+<header><div class="inner"><a class="name" href="/">murmurgrove</a><button id="menu" class="menu" aria-label="Viewer information" title="Viewer information"><span></span><span></span><span></span></button></div><div class="rule"></div></header>
 <div id="loading">Verifying archive integrity…</div>
 <div id="card"><div class="top"><span id="category">CONCEPTS</span><button class="close" id="closeCard" aria-label="Close card">×</button></div><div class="detail"><div><a id="cardLink" class="card-link" href="#"><div class="card-title" id="cardTitle"></div></a><div class="role" id="cardRole"></div></div><button id="locator" class="locator" aria-label="Return to the full organism" title="Return to full view"></button></div><div class="connected" id="cardConnected"></div></div>
 <div class="glass" id="mode" role="group" aria-label="Choose a viewing lens"><button aria-pressed="true" data-mode="Whole" aria-label="Viewing lens one" title="Lens one">◌</button><button aria-pressed="false" data-mode="Growth" aria-label="Viewing lens two" title="Lens two">⋰</button><button aria-pressed="false" data-mode="Movement" aria-label="Viewing lens three" title="Lens three">∿</button></div>
@@ -295,7 +295,7 @@ html body.debug #status{display:none!important}
 </div><div id="status"></div><div id="loadingError" style="display:none;position:fixed;inset:35% 12%;background:#fff;border:1px solid #ddbdb1;border-radius:9px;padding:20px;z-index:10;color:#95594a;font-size:12px;white-space:pre-wrap"></div>
 <script type="module" src="./viewer.mjs"></script>
 <script>
-// Same-origin event bridge: the TOW ARCHIVE masthead keeps its single original
+// Same-origin event bridge: the murmurgrove masthead keeps its single original
 // cursor trail, even while pointer events are delivered to this iframe.
 (() => {
   if (window.parent === window || !new URLSearchParams(location.search).has('embedded')) return;

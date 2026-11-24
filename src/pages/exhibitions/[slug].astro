@@ -12,7 +12,7 @@ const inst = institutions.find(x=>x.id===item.data.institution);
 const relatedInst = item.data.relatedInstitutions.map(id=>institutions.find(x=>x.id===id)).filter(Boolean);
 const conceptById = new Map(concepts.map(x=>[x.id,x]));
 ---
-<Base title={`${item.data.title} | TOW ARCHIVE`}>
+<Base title={`${item.data.title} | murmurgrove`}>
   <article class="article">
     <a class="eyebrow" href="/exhibitions/">← Exhibitions</a>
     <h1>{item.data.title}</h1>

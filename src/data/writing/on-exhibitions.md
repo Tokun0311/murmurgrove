@@ -7,7 +7,7 @@ description: "A sample entry demonstrating how research questions can become a p
 tags: ["Exhibition histories", "Curatorial studies"]
 draft: true
 ---
-**DEMONSTRATION CONTENT — not an actual essay by Tow Deng.**
+**DEMONSTRATION CONTENT — not an original essay from this archive.**
 
 This page is a placeholder for your first research note. You might begin with a question such as: how does an exhibition change the history through which artworks are understood?
 
