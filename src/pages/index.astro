@@ -17,6 +17,24 @@ import Base from '../layouts/Base.astro';
 <script is:inline>
   // The shared layout retains its original language on other archive pages.
   document.documentElement.lang = "en";
+  // The archive's luminous cursor belongs to Base.astro (outside the iframe).
+  // Relaying pointer coordinates lets that SAME cursor follow the mouse across
+  // the organism without changing the global header or cursor implementation.
+  const organismFrame = document.getElementById('murmurgrove-view');
+  window.addEventListener('message', (event) => {
+    if (event.origin !== window.location.origin ||
+        event.source !== organismFrame?.contentWindow ||
+        event.data?.type !== 'murmurgrove:pointer-position' ||
+        !window.matchMedia('(pointer:fine)').matches) return;
+    const {x,y} = event.data;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    const box = organismFrame.getBoundingClientRect();
+    if (x < 0 || y < 0 || x > box.width || y > box.height) return;
+    window.dispatchEvent(new PointerEvent('pointermove', {
+      clientX: box.left + x, clientY: box.top + y,
+      pointerType: 'mouse', bubbles: false
+    }));
+  });
 </script>
 <style>
   /* Only the immersive HOME is full-viewport; Base.astro remains identical

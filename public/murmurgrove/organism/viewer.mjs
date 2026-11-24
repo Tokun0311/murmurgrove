@@ -8,7 +8,7 @@ import {EMERALD} from './emerald-palette.mjs';
 import {cubicBezierAt,flowSamplesForRelation} from './relation-flow.mjs';
 import {deriveInteriorQuietPositions,quietParticlePosition} from './quiet-particles.mjs';
 import {viewDrag,calmMagnifiedMotion} from './camera-gestures.mjs';
-import {wheelFactor,easeAmount,momentumStep,gestureKind,pinchState,boundedVelocity} from './camera-easing.mjs';
+import {wheelFactor,easeAmount,momentumStep,gestureKind,pinchState,boundedVelocity,classifyTouchPair} from './camera-easing.mjs';
 import {MOVEMENT_RATE,BREATH_RATE,opticalTime,breathingTime,visibleOverviewMotion} from './movement-pacing.mjs';
 import {datedExhibitionLedger,observationMonthGroups,monthObservationContext} from './observation-history.mjs';
 import {verifyChronicle,verifySelectedSources,readVerifiedSourceState} from './version-chronicle.mjs';
@@ -41,6 +41,9 @@ let zoomGoal=null,zoomAnchor=null;
 let velocityPan=[0,0],velocityAngle=0,velocityElevation=0;
 let activeGesture=null,pinchGesture=null;
 const activePointers=new Map();
+let touchPair=null,userFramedPan=false,touchOrbitTarget=null;
+const smallTouchViewport=matchMedia('(pointer:coarse)').matches;
+const reducedMotionMedia=matchMedia('(prefers-reduced-motion: reduce)');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function loadJSON(file){const r=await fetch('./data/'+file+'.json',{cache:'no-store'});if(!r.ok)throw Error(`${file}: HTTP ${r.status}`);return r.json();}
 const canonical=x=>Array.isArray(x)?x.map(canonical):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,canonical(x[k])])):x;
@@ -64,11 +67,12 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
   if(typeof s.historyMonth==='string'&&observationGroups.some(g=>g.key===s.historyMonth))historyMonth=s.historyMonth;
  if(['visits','versions','frames','acts','life'].includes(s.historyTab))historyTab=s.historyTab;
  followSelected=Boolean(selected&&s.followSelected&&zoom>1);
+ userFramedPan=Boolean(s.userFramedPan);
  if(Array.isArray(s.panNorm)&&s.panNorm.length===2&&s.panNorm.every(x=>Number.isFinite(x)&&Math.abs(x)<20)){
   pendingPanNorm=s.panNorm; if(W>1&&H>1){pan=[s.panNorm[0]*W,s.panNorm[1]*H];pendingPanNorm=null;}
  }
 }catch{}}
-function saveMemory(){try{sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected,followSelected,historyMonth,historyTab,panNorm:[pan[0]/Math.max(W,1),pan[1]/Math.max(H,1)]}));}catch{}}
+function saveMemory(){try{sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected,followSelected,userFramedPan,historyMonth,historyTab,panNorm:[pan[0]/Math.max(W,1),pan[1]/Math.max(H,1)]}));}catch{}}
 function preprocess(){
  records=nav.records.filter(r=>!r.quarantined);
  nodes=snapshot.nodes.map(n=>({...n,record:records.find(r=>r.id===n.id)}));nodeMap=new Map(nodes.map(n=>[n.id,n]));nodeIndex=new Map(nodes.map((n,i)=>[n.id,i]));
@@ -186,7 +190,7 @@ function drawLinks(pos,time){
   const sourceAlpha=(mode==='Growth'?.34:mode==='Movement'?.14:.21)*quietLens*historyAlpha;
   const ebb=.91+.09*Math.sin(breathClock*.27+index*.14);
   // Only visual thickness changes, NEVER mechanical tension. Writing is silent.
-  for(let k=0;k<3;k++){
+  for(let k=0;k<(smallTouchViewport?2:3);k++){
    const [p1,p2]=mangroveControls(p,q,fieldScreen[ai],fieldScreen[bi],k,mode,time);
    const alpha=sourceAlpha*(k===1?.52:.20)*ebb;
    ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.bezierCurveTo(p1[0],p1[1],p2[0],p2[1],q[0],q[1]);
@@ -329,17 +333,25 @@ function drawLivedEvidenceMarks(pos,time){
    // This halo is a rule-driven *interpretation* of sealed author evidence.
    glowAt(x,y,cl(14*Math.sqrt(zoom/ZOOM_MIN),13,65),Math.min(.14,physiological.attention*.16),EMERALD.glows.observationCore);
   }
-  const pulse=matchMedia('(prefers-reduced-motion: reduce)').matches?0:.5+.5*Math.sin(time*.8+i);
+  const pulse=reducedMotionMedia.matches?0:.5+.5*Math.sin(time*.8+i);
   ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
   ctx.strokeStyle=trace.reinterpretation?`rgba(${EMERALD.nodes.selected},${.22+.16*pulse})`:`rgba(${EMERALD.nodes.concept},${.12+.09*pulse})`;
   ctx.lineWidth=.7;ctx.stroke();
  }
 }
-function render(now){const time=(lifePreviewEvent||matchMedia('(prefers-reduced-motion: reduce)').matches)?0:Date.now()/1000;
+function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0:Date.now()/1000;
  if(ready){
   const dt=lastFrameAt?cl(now-lastFrameAt,0,80):16;lastFrameAt=now;
   stepCamera(dt);
-  if(zoom<=1){followSelected=false;pan=easePanHome(pan,dt);}
+  // Touch orbit samples arrive at uneven intervals. Smooth orientation at
+  // the actual rendering cadence instead of snapping on every pointer event.
+  if(touchOrbitTarget){
+   const k=easeAmount(dt,70);
+   angle+=(touchOrbitTarget.angle-angle)*k;
+   elevation+=(touchOrbitTarget.elevation-elevation)*k;
+   if(Math.abs(touchOrbitTarget.angle-angle)<.00015&&Math.abs(touchOrbitTarget.elevation-elevation)<.00015)touchOrbitTarget=null;
+  }
+  if(zoom<=1){followSelected=false;if(!activeGesture&&!touchPair&&!userFramedPan)pan=easePanHome(pan,dt);}
   reframe();
   if(followSelected&&selected&&zoom>1){
    const focusIndex=nodeIndex.get(selected);
@@ -407,20 +419,21 @@ function controlAnchor(){
  const index=selected?nodeIndex.get(selected):undefined;
  return index===undefined?[W*.5,H*.48]:coords(viewPositions[index]);
 }
-function setZoom(value,anchor=anchorPoint()){
+function setZoom(value,anchor=anchorPoint(),{persist=true}={}){
  zoomGoal=null;zoomAnchor=null;
  const old=zoom,next=cl(value,ZOOM_MIN,ZOOM_MAX);
  // The inverse projection of this exact pointer is unchanged after zoom.
  if(next!==old)pan=panForCursorZoom(pan,old,next,anchor,[W*.5,H*.48]);
  zoom=next;if(zoom<=1)followSelected=false; // Manual zoom never restarts automatic follow.
  $('zoomLabel').textContent=Math.round(zoom*100)+'%';
- document.body.classList.toggle('deep',zoom>=2);saveMemory();
+ document.body.classList.toggle('deep',zoom>=2);if(persist)saveMemory();
 }
 /** A wheel or zoom-button changes a target, not the camera instantaneously. */
 function requestZoom(value,anchor=anchorPoint(),{keepFollow=false}={}){
  zoomGoal=cl(value,ZOOM_MIN,ZOOM_MAX);zoomAnchor=[...anchor];
  velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
  if(!keepFollow)followSelected=false;
+ if(zoomGoal<=1)userFramedPan=false;
 }
 function syncZoomDisplay(){
  $('zoomLabel').textContent=Math.round(zoom*100)+'%';
@@ -807,10 +820,10 @@ function renderLifeReadings(){
 }
 function updateDebug(){
  $('status').textContent=`${fps} FPS · ${links.length} verified metadata links`;
- $('debugText').innerHTML=`Archive baseline: <strong>181</strong> records<br>Visible records: <strong>174</strong><br>Documented links: <strong>${links.length}</strong><br>Independent records: <strong>${isolated.size}</strong><br>Attested lived acts: <strong>${livedEvidence.length}</strong><br>Activated Writing fibers: <strong>0</strong><br>Mature cores: <strong>0</strong><br><br><strong>Explore</strong><br>Drag to orbit at overview scale.<br>Zoom toward the pointer with the wheel or trackpad.<br>Drag to pan when magnified.<br>Shift + drag or right drag to orbit at any scale.<br>On touch, pinch and move with two fingers.<br>Select a particle to focus, then follow its card title to read its archive source.`;
+ $('debugText').innerHTML=`Archive baseline: <strong>181</strong> records<br>Visible records: <strong>174</strong><br>Documented links: <strong>${links.length}</strong><br>Independent records: <strong>${isolated.size}</strong><br>Attested lived acts: <strong>${livedEvidence.length}</strong><br>Activated Writing fibers: <strong>0</strong><br>Mature cores: <strong>0</strong><br><br><strong>Explore</strong><br>Drag to orbit at overview scale.<br>Zoom toward the pointer with the wheel or trackpad.<br>Drag to pan when magnified.<br>Shift + drag or right drag to orbit at any scale.<br>On touch, drag with one finger to pan. Spread or close two fingers together to zoom. Hold one finger still and move the other to orbit.<br>Select a particle to focus, then follow its card title to read its archive source.`;
 }
 
-function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,1.5);
+function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
  if(pendingPanNorm){pan=[pendingPanNorm[0]*W,pendingPanNorm[1]*H];pendingPanNorm=null;}
  else if(oldW>1&&oldH>1)pan=[pan[0]*W/oldW,pan[1]*H/oldH];
@@ -819,7 +832,7 @@ function initUI(){
  document.querySelectorAll('#mode button').forEach(b=>b.addEventListener('click',()=>chooseMode(b.dataset.mode)));
  $('minus').addEventListener('click',()=>requestZoom((zoomGoal??zoom)/1.35,controlAnchor()));
  $('plus').addEventListener('click',()=>requestZoom((zoomGoal??zoom)*1.35,controlAnchor()));
- $('closeCard').addEventListener('click',()=>showCard(null));$('locator').addEventListener('click',()=>{followSelected=false;requestZoom(.65,[W*.5,H*.48]);});
+ $('closeCard').addEventListener('click',()=>showCard(null));$('locator').addEventListener('click',()=>{userFramedPan=false;followSelected=false;requestZoom(.65,[W*.5,H*.48]);});
  $('history').addEventListener('click',()=>setHistoryOpen(!historyOpen));
  $('historyVisitsTab').addEventListener('click',()=>setHistoryTab('visits'));
  $('historyVersionsTab').addEventListener('click',()=>setHistoryTab('versions'));
@@ -841,7 +854,7 @@ function initUI(){
  function pointerPoints(){return [...activePointers.values()].map(p=>p.local);}
  function finishGesture(){
   if(!activeGesture)return;
-  if(activeGesture.moved&&!pinchGesture){
+  if(activeGesture.moved&&!touchPair&&pointerType!=='touch'){
    const h=activeGesture.history.filter(p=>performance.now()-p.t<100);
    if(h.length>=2){const a=h[0],b=h.at(-1),dt=Math.max(12,b.t-a.t),dx=b.x-a.x,dy=b.y-a.y;
     if(activeGesture.kind==='pan'&&zoom>1.06){velocityPan=[boundedVelocity(dx,dt,1.1),boundedVelocity(dy,dt,1.1)];}
@@ -858,11 +871,13 @@ function initUI(){
   if(e.pointerType==='mouse'&&e.button!==0&&e.button!==2)return;
   if(e.pointerType==='touch'&&activePointers.size>=2)return;
   const local=pointerHere(e);lastPointer=local;pointerType=e.pointerType;
-  gestureHintDismiss();cancelMomentum();zoomGoal=null;zoomAnchor=null;
+  gestureHintDismiss();cancelMomentum();touchOrbitTarget=null;zoomGoal=null;zoomAnchor=null;
   activePointers.set(e.pointerId,{local,client:[e.clientX,e.clientY]});
   canvas.setPointerCapture(e.pointerId);
   if(activePointers.size>=2){
-   pinchGesture=pinchState(pointerPoints());activeGesture=null;followSelected=false;
+   const pair=pointerPoints();
+   touchPair={start:pair.map(p=>[...p]),prev:pair.map(p=>[...p]),kind:'undecided',startedAt:performance.now()};
+   pinchGesture=pinchState(pair);activeGesture=null;followSelected=false;
   }else{
    const kind=gestureKind(zoom,{shift:e.shiftKey,button:e.button,pointerType:e.pointerType});
    activeGesture={pointerId:e.pointerId,position:[e.clientX,e.clientY],pan:[...pan],angle,elevation,
@@ -872,16 +887,38 @@ function initUI(){
  });
  canvas.addEventListener('pointermove',e=>{
   const local=pointerHere(e);lastPointer=local;
-  if(!activePointers.has(e.pointerId))return; // hover never changes the camera
+  if(!activePointers.has(e.pointerId))return; // mouse hover never changes camera
   activePointers.set(e.pointerId,{local,client:[e.clientX,e.clientY]});
   if(activePointers.size>=2){
-   const now=pinchState(pointerPoints());
-   if(!pinchGesture){pinchGesture=now;activeGesture=null;return;}
+   const current=pointerPoints(),now=pinchState(current);
+   if(!touchPair){touchPair={start:current.map(p=>[...p]),prev:current.map(p=>[...p]),kind:'undecided',startedAt:performance.now()};pinchGesture=now;return;}
+   const g=touchPair;
+   g.kind=classifyTouchPair(g.start,current,{elapsedMs:performance.now()-g.startedAt,lock:g.kind});
+   if(g.kind==='undecided')return;
    followSelected=false;
-   const deltaMid=[now.mid[0]-pinchGesture.mid[0],now.mid[1]-pinchGesture.mid[1]];
-   pan=[pan[0]+deltaMid[0],pan[1]+deltaMid[1]];
-   if(pinchGesture.distance>0.5&&now.distance>0.5)setZoom(zoom*now.distance/pinchGesture.distance,now.mid);
-   pinchGesture=now;
+   if(g.kind==='pinch'){
+    const prev=pinchState(g.prev);
+    const deltaMid=[now.mid[0]-prev.mid[0],now.mid[1]-prev.mid[1]];
+    pan=[pan[0]+deltaMid[0],pan[1]+deltaMid[1]];
+    if(prev.distance>.5&&now.distance>.5){
+     // Do not write sessionStorage on every touchmove; save once at gesture end.
+     setZoom(zoom*now.distance/prev.distance,now.mid,{persist:false});
+     userFramedPan=true;
+    }
+   }else if(g.kind==='orbit'){
+    const travel=current.map((p,i)=>Math.hypot(p[0]-g.start[i][0],p[1]-g.start[i][1]));
+    const moving=travel[0]>travel[1]?0:1;
+    const dx=current[moving][0]-g.prev[moving][0];
+    const dy=current[moving][1]-g.prev[moving][1];
+    if(!touchOrbitTarget)touchOrbitTarget={angle,elevation};
+    touchOrbitTarget.angle+=cl(dx,-32,32)*.0036;
+    touchOrbitTarget.elevation=cl(touchOrbitTarget.elevation+cl(dy,-32,32)*.0026,-1.17,1.17);
+   }else if(g.kind==='pan'){
+    const prev=pinchState(g.prev);
+    pan=[pan[0]+now.mid[0]-prev.mid[0],pan[1]+now.mid[1]-prev.mid[1]];
+    userFramedPan=true;
+   }
+   g.prev=current.map(p=>[...p]);pinchGesture=now;
    return;
   }
   if(!activeGesture||e.pointerId!==activeGesture.pointerId)return;
@@ -889,27 +926,33 @@ function initUI(){
   if(!activeGesture.moved&&Math.hypot(dx,dy)>5){activeGesture.moved=true;followSelected=false;}
   if(activeGesture.moved){
    const next=viewDrag(activeGesture,[e.clientX,e.clientY],{zoom:activeGesture.zoomAtStart,shift:activeGesture.shift,rightButton:activeGesture.rightButton});
-   if(next.kind==='pan')pan=next.pan;else {angle=next.angle;elevation=next.elevation;}
-   canvas.style.cursor='grabbing';
+   if(e.pointerType==='touch'){
+    pan=[activeGesture.pan[0]+dx,activeGesture.pan[1]+dy];
+    userFramedPan=true;
+   }else if(next.kind==='pan')pan=next.pan;else {angle=next.angle;elevation=next.elevation;}
+   if(e.pointerType!=='touch')canvas.style.cursor='grabbing';
    const h=activeGesture.history;h.push({x:e.clientX,y:e.clientY,t:performance.now()});
    if(h.length>14)h.shift();
   }
  });
  function pointerEnd(e,cancelled=false){
-  const wasMulti=Boolean(pinchGesture)||activePointers.size>=2;
+  const wasMulti=Boolean(touchPair)||activePointers.size>=2;
   activePointers.delete(e.pointerId);
   if(!wasMulti&&activeGesture&&activeGesture.pointerId===e.pointerId){
    const tapped=!activeGesture.moved&&!cancelled&&e.button!==2;
    if(tapped){const [x,y]=pointerHere(e),hit=nearest(x,y);selectAndFollow(hit?.id??null);}
    finishGesture();
   }else {activeGesture=null;cancelMomentum();}
-  if(activePointers.size>=2){pinchGesture=pinchState(pointerPoints());activeGesture=null;}
-  else if(activePointers.size===1){
-   pinchGesture=null;const [id,p]=[...activePointers.entries()][0];
+  if(activePointers.size>=2){
+   const pair=pointerPoints();touchPair={start:pair.map(p=>[...p]),prev:pair.map(p=>[...p]),kind:'undecided',startedAt:performance.now()};
+   pinchGesture=pinchState(pair);
+  }else if(activePointers.size===1){
+   touchPair=null;pinchGesture=null;
+   const [id,p]=[...activePointers.entries()][0];
    activeGesture={pointerId:id,position:[...p.client],pan:[...pan],angle,elevation,zoomAtStart:zoom,
-     shift:false,rightButton:false,kind:gestureKind(zoom,{pointerType:'touch'}),moved:true,
+     shift:false,rightButton:false,kind:'pan',moved:true,
      history:[{x:p.client[0],y:p.client[1],t:performance.now()}]};
-  }else pinchGesture=null;
+  }else {touchPair=null;pinchGesture=null;}
   canvas.style.cursor='grab';saveMemory();
  }
  canvas.addEventListener('pointerup',e=>pointerEnd(e));
@@ -922,7 +965,7 @@ function initUI(){
  window.addEventListener('keydown',e=>{
   if(e.key==='Escape'){setHistoryOpen(false);showCard(null);document.body.classList.remove('debug');}
   if(e.key.toLowerCase()==='r'&&!e.target.closest('input,textarea,select')){
-   angle=.63;elevation=.20;followSelected=false;cancelMomentum();showCard(null);setZoom(.65,[W*.5,H*.48]);
+   angle=.63;elevation=.20;userFramedPan=false;followSelected=false;cancelMomentum();showCard(null);setZoom(.65,[W*.5,H*.48]);
   }
  });
  window.addEventListener('resize',resize);window.addEventListener('pagehide',saveMemory);
@@ -945,7 +988,7 @@ async function init(){
   if(selected)showCard(selected);
   const select=$('recordSelect'),livedSelect=$('livedRecord');for(const r of records){const option=document.createElement('option');option.value=r.id;option.textContent=`${r.kind} · ${r.title}`;select.append(option);livedSelect.append(option.cloneNode(true));}
   $('loading').style.display='none';lastFpsAt=performance.now();requestAnimationFrame(render);
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
+  if(!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
   window.__MURMUR_REAL__={baselineHash:BASELINE_HASH,nodes:174,metadataLinks:158,isolatedRecords:20,interiorQuietDisplayPositions:20,zoomMaximum:ZOOM_MAX,
     get camera(){return {angle,elevation,zoom,pan:[...pan],selected,followSelected};},
     get screenNodes(){return lastFrameScreenNodes?.map(x=>[x[0],x[1],x[2]])||[];},
