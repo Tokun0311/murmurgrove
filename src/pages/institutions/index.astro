@@ -98,7 +98,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
           <button type="button" data-map-action="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
           <button type="button" data-map-action="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
         </div>
-        <div class="world-map" id="institution-world-map" role="group" aria-label="Rotatable geographic globe. Choose a country from the geographic index to enlarge its region and reveal recorded cities." tabindex="0">
+        <div class="world-map" id="institution-world-map" role="group" aria-label="Rotatable geographic globe. Click a glowing country point or choose a country from the index to enlarge its region and reveal recorded cities." tabindex="0">
           <canvas class="globe-canvas" id="institution-globe" aria-hidden="true"></canvas>
           <canvas class="globe-dots" id="institution-dots" aria-hidden="true"></canvas>
           <script id="globe-city-data" type="application/json" set:html={JSON.stringify(countryMarkers).replaceAll("<", "\\u003c")} />
@@ -185,6 +185,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   .map-shell { position:absolute; inset:auto; top:calc(-1 * var(--globe-page-overlap, 145px)); left:calc(50% - 50vw); width:100vw; height:calc(100% + var(--globe-page-overlap, 145px)); z-index:0; background:transparent; pointer-events:none; }
   .world-map { position:absolute; inset:0; width:100%; height:100%; overflow:hidden; background:transparent; cursor:grab; touch-action:none; outline-offset:-6px; user-select:none; -webkit-user-select:none; pointer-events:auto; }
   .world-map.is-dragging { cursor:grabbing; }
+  .world-map.is-country-target:not(.is-dragging) {cursor:pointer;}
   .globe-canvas,.globe-dots { position:absolute; inset:0; width:100%; height:100%; display:block; pointer-events:none; }
   .globe-loading { position:absolute; inset:0; display:flex; justify-content:center; align-items:center; color:#789084; font-size:.75rem; pointer-events:none; }
   .globe-loading[hidden] {display:none}
@@ -373,7 +374,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       const dy=(y-pt.y/100);
       return {country:item.country,dist:Math.hypot(dx,dy)};
     }).sort((a,b)=>a.dist-b.dist)[0];
-    if(nearest && nearest.dist<.115) filterCountry(nearest.country);
+    if(nearest && nearest.dist<.115) selectCountry(nearest.country);
   });
   function filterCountry(country:string,scroll=false){
     updateMobileAtlas(country);
@@ -388,11 +389,14 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   }
   let focusGlobeCountry:(country:string)=>void=()=>{};
   let focusMobileCountry:(country:string)=>void=()=>{};
-  geoButtons.forEach(button=>button.addEventListener('click',()=>{
-    const country=button.dataset.jumpCountry||'all';
+  // Country dots and country names deliberately share exactly the same selection path.
+  function selectCountry(country:string){
     filterCountry(country);
     focusGlobeCountry(country);
     focusMobileCountry(country);
+  }
+  geoButtons.forEach(button=>button.addEventListener('click',()=>{
+    selectCountry(button.dataset.jumpCountry||'all');
   }));
   const shell = document.getElementById('institution-map-shell') as HTMLElement | null;
   const map = document.getElementById('institution-world-map') as HTMLElement | null;
@@ -744,6 +748,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       focusGlobeCountry=(country:string)=>{
         hideTip();
         selectedGlobeCountry=country==='all'?null:country;
+        map.classList.remove('is-country-target');
         document.body.classList.toggle('globe-country-focused',!!selectedGlobeCountry);
         zoomControls?.toggleAttribute('hidden',!selectedGlobeCountry);
         const target=selectedGlobeCountry?getFocusTarget(selectedGlobeCountry):defaultGlobe;
@@ -886,7 +891,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       });
       map.addEventListener('pointermove',e=>{
         if(!dragging||dragging.id!==e.pointerId){
-          if(!pinned){const point=pointAt(e.clientX,e.clientY);if(point)showPointTip(point);else if(activeCountry)hideTip()}
+          const point=pointAt(e.clientX,e.clientY);
+          // Hover preview remains unchanged. Only an overview COUNTRY dot is a navigation target.
+          map.classList.toggle('is-country-target',!selectedGlobeCountry&&!!point);
+          if(!pinned){if(point)showPointTip(point);else if(activeCountry)hideTip()}
           return;
         }
         if(Math.abs(e.clientX-dragging.x)+Math.abs(e.clientY-dragging.y)>4)moved=true;
@@ -900,11 +908,22 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       });
       map.addEventListener('pointerup',e=>{
         if(dragging?.id!==e.pointerId)return;
-        if(!moved){const point=pointAt(e.clientX,e.clientY);if(point){showPointTip(point,true)}else hideTip()}
+        if(!moved){
+          const point=pointAt(e.clientX,e.clientY);
+          if(point){
+            if(!selectedGlobeCountry && !isCity(point) && !isSite(point)) {
+              // Equivalent to pressing the country name on the geographic index.
+              selectCountry(point.country);
+            } else {
+              // Focused city/institution previews keep their existing pinned-card behavior.
+              showPointTip(point,true);
+            }
+          } else hideTip();
+        }
         dragging=null;map.classList.remove('is-dragging');
       });
-      map.addEventListener('pointercancel',()=>{dragging=null;map.classList.remove('is-dragging')});
-      map.addEventListener('pointerleave',()=>{if(!pinned)hideTip()});
+      map.addEventListener('pointercancel',()=>{dragging=null;map.classList.remove('is-dragging','is-country-target')});
+      map.addEventListener('pointerleave',()=>{map.classList.remove('is-country-target');if(!pinned)hideTip()});
       map.addEventListener('keydown',e=>{
         if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();longitude+=(e.key==='ArrowLeft'?1:-1)*.17;requestDraw()}
         else if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();latitude=clamp(latitude+(e.key==='ArrowUp'?-1:1)*.15,-1.44,1.44);requestDraw()}

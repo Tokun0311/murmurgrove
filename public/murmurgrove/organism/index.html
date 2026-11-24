@@ -118,6 +118,23 @@ body.hint #hint{opacity:.78}body.history-open #hint{opacity:0}
   html.embedded #sourceReadingBadge,html.embedded #lifeModelBadge{top:100px}
 }
 @media(prefers-reduced-motion:reduce){#mode button{transition:none}#hint{transition:none}}
+
+/* Shared translucent material for every Murmurgrove floating panel.
+   Keep typography crisp; soften only the surface behind it. */
+:root{--grove-panel-glass:rgba(251,253,250,.64);--grove-panel-border:rgba(111,162,131,.30)}
+.glass{background:var(--grove-panel-glass);-webkit-backdrop-filter:blur(15px) saturate(112%);backdrop-filter:blur(15px) saturate(112%);border-color:var(--grove-panel-border)}
+#card,#historyPanel,#debugPanel,#sourceReadingBadge,#lifeModelBadge,#frameFull{
+  background:var(--grove-panel-glass);
+  border-color:var(--grove-panel-border);
+  -webkit-backdrop-filter:blur(16px) saturate(112%);
+  backdrop-filter:blur(16px) saturate(112%);
+}
+/* The sticky history notes otherwise draw an opaque rectangle inside the glass panel. */
+#historyVersionView .hp-note,#historyFrameView .hp-note{background:rgba(251,253,250,.73);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#historyPanel .hp-tabs button[aria-selected=true],#historyVersions .version-entry[aria-pressed=true],#historyFrames .version-entry[aria-pressed=true]{background:rgba(217,237,221,.64)}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .glass,#card,#historyPanel,#debugPanel,#sourceReadingBadge,#lifeModelBadge,#frameFull{background:rgba(251,253,250,.87)}
+}
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>
