@@ -657,3 +657,136 @@ body:has(.grove-home) .mobile-nav{z-index:15}
   outline: 2px solid var(--ink);
   outline-offset: 5px;
 }
+
+
+/* 2026-11-24 | SITE-WIDE OPEN-FORM DESIGN
+   No four-sided closed frames, even on hover, focus, mobile, calendar cells,
+   cards, inputs or generated controls. Genuine one-direction separators remain.
+   This rule also overrides older Astro scoped selectors and inline style borders.
+*/
+html body *, html body *::before, html body *::after {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+/* Continuous horizontal lines carry hierarchy, but never close a rectangle. */
+html body .mast { border-bottom: 1px solid var(--ink) !important; }
+html body .archive-entry:not([hidden]),
+html body .home-sections > a,
+html body .exhibition-preview-entry,
+html body .calendar-day-entries li,
+html body .mobile-nav nav a:not(:last-child),
+html body .record-meta,
+html body .exhibition-index .mobile-calendar-toggle,
+html body .exhibition-index .exhibition-date-explorer.mobile-calendar-open {
+  border-bottom: 1px solid var(--rule) !important;
+}
+/* No surrounding frames for the month grid, controls or country atlas. */
+html body .calendar-grid,
+html body .exhibition-calendar-grid {
+  border: 0 !important;
+  gap: clamp(2px, .45vw, 6px);
+}
+html body :is(.calendar-cell, .exhibition-calendar-day) {
+  border: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  color: var(--quiet) !important;
+}
+html body :is(button.calendar-cell.has-entries,button.exhibition-calendar-day.has-records) {
+  color: var(--ink) !important;
+  background: radial-gradient(ellipse at center,rgba(87,174,118,.11),transparent 76%) !important;
+}
+html body :is(button.calendar-cell.has-entries.is-selected,button.exhibition-calendar-day.has-records.selected) {
+  color: #086b4a !important;
+  background: radial-gradient(ellipse at center,rgba(53,158,94,.24),transparent 81%) !important;
+  border-bottom: 2px solid #087f5b !important;
+}
+/* Open, breathable controls replace rectangular pills and boxes. */
+html body :is(.filter-languages button,.calendar-nav-buttons button,
+  .exhibition-calendar-controls button,.institutions-page .geo-country-button,
+  .institutions-page .geo-all-button,.exhibition-index .mobile-calendar-toggle,
+  .tag,.calendar-month button,.exhibition-month-pickers select,
+  .sort-label select,.mast .mobile-nav summary) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+html body :is(.filter-languages button[aria-pressed="true"],
+  .institutions-page .geo-country-button[aria-pressed="true"],
+  .institutions-page .geo-country-button.is-active) {
+  background: transparent !important;
+  color: #087f5b !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 6px !important;
+}
+html body .institutions-page .geo-country-button small,
+html body .institutions-page .geo-country-button[aria-pressed="true"] small {
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+html body .exhibition-index .mobile-calendar-toggle:hover {
+  background: transparent !important;
+  color: #087f5b !important;
+}
+html body :is(input:not([type="checkbox"]),textarea,select,
+  #people-search,.institutions-page input) {
+  border: 0 !important;
+  border-bottom: 1px solid var(--rule) !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+html body :is(input:not([type="checkbox"]),textarea,select):focus-visible {
+  border-bottom: 2px solid #087f5b !important;
+}
+/* Floating content is not packaged into a four-edged card. Its translucent
+   background gently dissolves into the page instead of forming a panel edge. */
+html body :is(.map-tooltip,.mobile-nav nav,.photo-box,
+  .institution-map-popup,.cluster-popup,.concept-tooltip,.tooltip,.popover) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: radial-gradient(ellipse at center,
+    rgba(251,253,250,.89) 0%,rgba(251,253,250,.73) 63%,
+    rgba(251,253,250,0) 100%) !important;
+}
+/* A focus indication must be visible without drawing a four-sided outline. */
+html body :is(a,button,summary,[tabindex],input,textarea,select):focus-visible {
+  outline: none !important;
+  text-decoration: underline !important;
+  text-underline-offset: 5px !important;
+  text-decoration-thickness: 2px !important;
+}
+html body .mast .brand a:focus-visible,
+html body .mast a.brand:focus-visible { text-decoration: underline !important; }
+/* The existing hamburger uses borders to draw its three horizontal strokes.
+   Redraw them with backgrounds so the menu survives the no-frame rule. */
+html body .mobile-nav-symbol {
+  border: 0 !important;
+  background:
+    linear-gradient(currentColor,currentColor) center top / 100% 1px no-repeat,
+    linear-gradient(currentColor,currentColor) center center / 100% 1px no-repeat,
+    linear-gradient(currentColor,currentColor) center bottom / 100% 1px no-repeat !important;
+}
+html body .mobile-nav-symbol::after { border:0 !important; background:transparent !important; }
+html body .mobile-nav[open] .mobile-nav-symbol {
+  height:15px !important;
+  transform:none !important;
+  background:none !important;
+}
+html body .mobile-nav[open] .mobile-nav-symbol::before,
+html body .mobile-nav[open] .mobile-nav-symbol::after {
+  content:"";
+  position:absolute;
+  display:block;
+  left:0;
+  right:0;
+  top:50%;
+  height:1px;
+  background:currentColor !important;
+  transform:rotate(45deg);
+}
+html body .mobile-nav[open] .mobile-nav-symbol::after { transform:rotate(-45deg); }
+/* Keep the navigation rule, intentional dividers, the globe and organism intact. */
