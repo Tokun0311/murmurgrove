@@ -1,0 +1,3338 @@
+{
+  "schema": "murmurgrove.render-snapshot.2.0.v1",
+  "mode": "SIMULATED_SANDBOX",
+  "phase": "T0",
+  "asOf": "2026-11-20T00:00:00Z",
+  "provenance": {
+    "baselineProjectionHash": "62372e469ead425dd43fc16e737ea40cd48ce5a0188a87b868d1bee62c8ba9d3",
+    "auditProjectionHash": "2b88073d4333e42ce100a85b31bebfc1e1a8108e2df5ba6217d61182adb26fbb",
+    "morphologyHash": "509e73e1f6c2ab0eb822a9beb506fd6d9bc8e7abbf5f082e1b25bee826bc1fe0",
+    "physiologyHash": "83f5cba6c49f0ab464cd65e049c8956e262721ad12a4d5105606e0aeca64f371",
+    "simulationTimeline": "ONE_COUNTERFACTUAL_EVENT_STREAM_NOT_AUTHOR_HISTORY",
+    "engine": "Phase1B.4",
+    "archivalAgeReference": "2026-11-19",
+    "noRealLifeEventsImported": true
+  },
+  "nodes": [
+    {
+      "id": "concept:artist-residency",
+      "kind": "concept",
+      "position": [
+        0.250289514,
+        0.032055845,
+        -0.495092848
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.250289514,
+        0.032055845,
+        -0.495092848
+      ]
+    },
+    {
+      "id": "concept:care-and-design",
+      "kind": "concept",
+      "position": [
+        0.8117516399,
+        -0.6088389198,
+        0.4162002177
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.8117516399,
+        -0.6088389198,
+        0.4162002177
+      ]
+    },
+    {
+      "id": "concept:collective-practices",
+      "kind": "concept",
+      "position": [
+        0.4382446858,
+        0.7667780715,
+        0.4498715367
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.4382446858,
+        0.7667780715,
+        0.4498715367
+      ]
+    },
+    {
+      "id": "concept:curatorial-practices",
+      "kind": "concept",
+      "position": [
+        -0.2374430312,
+        0.9647090523,
+        -0.8182202633
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.2374430312,
+        0.9647090523,
+        -0.8182202633
+      ]
+    },
+    {
+      "id": "concept:ecology",
+      "kind": "concept",
+      "position": [
+        -0.5105427473,
+        -0.4180313096,
+        0.1703148897
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5105427473,
+        -0.4180313096,
+        0.1703148897
+      ]
+    },
+    {
+      "id": "concept:identity-and-representation",
+      "kind": "concept",
+      "position": [
+        -0.5917899118,
+        0.5867386802,
+        0.8103063777
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5917899118,
+        0.5867386802,
+        0.8103063777
+      ]
+    },
+    {
+      "id": "concept:institutional-studies",
+      "kind": "concept",
+      "position": [
+        -0.1543997419,
+        0.7192162533,
+        -0.4932691793
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1543997419,
+        0.7192162533,
+        -0.4932691793
+      ]
+    },
+    {
+      "id": "concept:material-and-memory",
+      "kind": "concept",
+      "position": [
+        0.688964958,
+        -0.4184166523,
+        0.0373394585
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.688964958,
+        -0.4184166523,
+        0.0373394585
+      ]
+    },
+    {
+      "id": "concept:memory-and-place",
+      "kind": "concept",
+      "position": [
+        -0.9731906554,
+        -0.4526641033,
+        0.1725101205
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.9731906554,
+        -0.4526641033,
+        0.1725101205
+      ]
+    },
+    {
+      "id": "concept:moving-image",
+      "kind": "concept",
+      "position": [
+        -0.4908710959,
+        -0.0539818959,
+        0.5947909741
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.4908710959,
+        -0.0539818959,
+        0.5947909741
+      ]
+    },
+    {
+      "id": "concept:performance",
+      "kind": "concept",
+      "position": [
+        -0.8371292062,
+        -0.5060754557,
+        -0.7978407575
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.8371292062,
+        -0.5060754557,
+        -0.7978407575
+      ]
+    },
+    {
+      "id": "concept:photography",
+      "kind": "concept",
+      "position": [
+        -0.0961320095,
+        -0.7274400645,
+        0.995298705
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.0961320095,
+        -0.7274400645,
+        0.995298705
+      ]
+    },
+    {
+      "id": "concept:politics-of-representation",
+      "kind": "concept",
+      "position": [
+        0.7220493869,
+        0.3038681447,
+        0.9820078112
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.7220493869,
+        0.3038681447,
+        0.9820078112
+      ]
+    },
+    {
+      "id": "concept:postwar-art",
+      "kind": "concept",
+      "position": [
+        -0.5641673672,
+        0.1510803343,
+        0.5136301419
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5641673672,
+        0.1510803343,
+        0.5136301419
+      ]
+    },
+    {
+      "id": "concept:printmaking",
+      "kind": "concept",
+      "position": [
+        -0.6983156562,
+        -0.1449729248,
+        0.5993251172
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -1.655978048,
+        -1.517011542,
+        0.545579842
+      ]
+    },
+    {
+      "id": "concept:site-specificity",
+      "kind": "concept",
+      "position": [
+        -0.644789303,
+        -0.1037578717,
+        0.0379307641
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.644789303,
+        -0.1037578717,
+        0.0379307641
+      ]
+    },
+    {
+      "id": "concept:sound-and-technology",
+      "kind": "concept",
+      "position": [
+        0.7566681159,
+        -0.1010308247,
+        0.5731125738
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.7566681159,
+        -0.1010308247,
+        0.5731125738
+      ]
+    },
+    {
+      "id": "concept:technology-and-body",
+      "kind": "concept",
+      "position": [
+        -0.1261346889,
+        0.0884463102,
+        -0.740445008
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1261346889,
+        0.0884463102,
+        -0.740445008
+      ]
+    },
+    {
+      "id": "concept:transcultural-studies",
+      "kind": "concept",
+      "position": [
+        -0.1235426795,
+        0.7202025506,
+        -0.1369993606
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1235426795,
+        0.7202025506,
+        -0.1369993606
+      ]
+    },
+    {
+      "id": "exhibition:2026-01-02-01",
+      "kind": "exhibition",
+      "position": [
+        0.3759065456,
+        0.3370584496,
+        0.846819154
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 321,
+      "quarantined": false,
+      "displayPosition": [
+        0.171607542,
+        1.955379428,
+        -1.219953614
+      ]
+    },
+    {
+      "id": "exhibition:2026-01-07-02",
+      "kind": "exhibition",
+      "position": [
+        0.5419871892,
+        0.9214164809,
+        -0.6113679034
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 316,
+      "quarantined": false,
+      "displayPosition": [
+        0.5419871892,
+        0.9214164809,
+        -0.6113679034
+      ]
+    },
+    {
+      "id": "exhibition:2026-01-08-03",
+      "kind": "exhibition",
+      "position": [
+        -0.9401327075,
+        0.5071344634,
+        0.2993357911
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 315,
+      "quarantined": false,
+      "displayPosition": [
+        -0.9401327075,
+        0.5071344634,
+        0.2993357911
+      ]
+    },
+    {
+      "id": "exhibition:2026-01-11-04",
+      "kind": "exhibition",
+      "position": [
+        -0.0964174688,
+        -0.4708864969,
+        0.8180215632
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 312,
+      "quarantined": false,
+      "displayPosition": [
+        -0.0964174688,
+        -0.4708864969,
+        0.8180215632
+      ]
+    },
+    {
+      "id": "exhibition:2026-01-24-05",
+      "kind": "exhibition",
+      "position": [
+        0.9767852384,
+        -0.0799762603,
+        0.8134393162
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 299,
+      "quarantined": false,
+      "displayPosition": [
+        0.9767852384,
+        -0.0799762603,
+        0.8134393162
+      ]
+    },
+    {
+      "id": "exhibition:2026-01-24-06",
+      "kind": "exhibition",
+      "position": [
+        0.9036129272,
+        -0.5874874123,
+        0.4306777947
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 299,
+      "quarantined": false,
+      "displayPosition": [
+        0.9036129272,
+        -0.5874874123,
+        0.4306777947
+      ]
+    },
+    {
+      "id": "exhibition:2026-02-01-07",
+      "kind": "exhibition",
+      "position": [
+        -0.2558036612,
+        0.0740361062,
+        -0.9210198338
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 291,
+      "quarantined": false,
+      "displayPosition": [
+        -0.2558036612,
+        0.0740361062,
+        -0.9210198338
+      ]
+    },
+    {
+      "id": "exhibition:2026-02-08-08",
+      "kind": "exhibition",
+      "position": [
+        -0.9576309532,
+        -0.4150202638,
+        -0.6459957626
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 284,
+      "quarantined": false,
+      "displayPosition": [
+        -0.9576309532,
+        -0.4150202638,
+        -0.6459957626
+      ]
+    },
+    {
+      "id": "exhibition:2026-02-13-09",
+      "kind": "exhibition",
+      "position": [
+        0.814373215,
+        -0.5081956459,
+        0.4080859725
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 279,
+      "quarantined": false,
+      "displayPosition": [
+        0.814373215,
+        -0.5081956459,
+        0.4080859725
+      ]
+    },
+    {
+      "id": "exhibition:2026-02-14-10",
+      "kind": "exhibition",
+      "position": [
+        0.4071836108,
+        0.4819240339,
+        0.0218393657
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 278,
+      "quarantined": false,
+      "displayPosition": [
+        0.4071836108,
+        0.4819240339,
+        0.0218393657
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-04-11",
+      "kind": "exhibition",
+      "position": [
+        0.6905913029,
+        0.3046996653,
+        -0.0804631607
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 260,
+      "quarantined": false,
+      "displayPosition": [
+        0.6905913029,
+        0.3046996653,
+        -0.0804631607
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-04-12",
+      "kind": "exhibition",
+      "position": [
+        -0.6134972595,
+        0.2610955746,
+        -0.9381778575
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 260,
+      "quarantined": false,
+      "displayPosition": [
+        -0.6134972595,
+        0.2610955746,
+        -0.9381778575
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-14-13",
+      "kind": "exhibition",
+      "position": [
+        -0.0367448973,
+        0.5010248169,
+        -0.858584071
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 250,
+      "quarantined": false,
+      "displayPosition": [
+        -0.0367448973,
+        0.5010248169,
+        -0.858584071
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-14-14",
+      "kind": "exhibition",
+      "position": [
+        -0.7264186571,
+        0.2135866771,
+        -0.6983965711
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 250,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7264186571,
+        0.2135866771,
+        -0.6983965711
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-14-15",
+      "kind": "exhibition",
+      "position": [
+        -0.1871332356,
+        0.1131037778,
+        0.107582235
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 250,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1871332356,
+        0.1131037778,
+        0.107582235
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-24-16",
+      "kind": "exhibition",
+      "position": [
+        -0.0394852605,
+        0.9242714241,
+        0.2875960258
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 240,
+      "quarantined": false,
+      "displayPosition": [
+        -0.0394852605,
+        0.9242714241,
+        0.2875960258
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-25-17",
+      "kind": "exhibition",
+      "position": [
+        -0.0848618403,
+        -0.5661778622,
+        -0.7384137189
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 239,
+      "quarantined": false,
+      "displayPosition": [
+        -0.0848618403,
+        -0.5661778622,
+        -0.7384137189
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-25-18",
+      "kind": "exhibition",
+      "position": [
+        -0.9190749148,
+        0.6128905663,
+        -0.997137399
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 239,
+      "quarantined": false,
+      "displayPosition": [
+        -0.9190749148,
+        0.6128905663,
+        -0.997137399
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-26-19",
+      "kind": "exhibition",
+      "position": [
+        -0.3611510683,
+        -0.4241140442,
+        -0.1564796
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 238,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3611510683,
+        -0.4241140442,
+        -0.1564796
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-27-20",
+      "kind": "exhibition",
+      "position": [
+        -0.343159375,
+        -0.0356939056,
+        0.8798783182
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 237,
+      "quarantined": false,
+      "displayPosition": [
+        -0.343159375,
+        -0.0356939056,
+        0.8798783182
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-27-21",
+      "kind": "exhibition",
+      "position": [
+        0.1528281388,
+        -0.9996633675,
+        -0.5829942511
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 237,
+      "quarantined": false,
+      "displayPosition": [
+        0.1528281388,
+        -0.9996633675,
+        -0.5829942511
+      ]
+    },
+    {
+      "id": "exhibition:2026-03-27-22",
+      "kind": "exhibition",
+      "position": [
+        -0.5166146815,
+        -0.2003314121,
+        -0.9330954652
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 237,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5166146815,
+        -0.2003314121,
+        -0.9330954652
+      ]
+    },
+    {
+      "id": "exhibition:2026-04-19-23",
+      "kind": "exhibition",
+      "position": [
+        0.8368939652,
+        0.7184095554,
+        0.6891924966
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 214,
+      "quarantined": false,
+      "displayPosition": [
+        0.8368939652,
+        0.7184095554,
+        0.6891924966
+      ]
+    },
+    {
+      "id": "exhibition:2026-04-24-24",
+      "kind": "exhibition",
+      "position": [
+        0.9594221664,
+        0.9728033293,
+        -0.3366422952
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 209,
+      "quarantined": false,
+      "displayPosition": [
+        0.9594221664,
+        0.9728033293,
+        -0.3366422952
+      ]
+    },
+    {
+      "id": "exhibition:2026-04-26-25",
+      "kind": "exhibition",
+      "position": [
+        -0.4728461748,
+        0.6855729786,
+        0.9712159303
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 207,
+      "quarantined": false,
+      "displayPosition": [
+        -0.4728461748,
+        0.6855729786,
+        0.9712159303
+      ]
+    },
+    {
+      "id": "exhibition:2026-04-26-26",
+      "kind": "exhibition",
+      "position": [
+        0.0844498977,
+        -0.8325466369,
+        -0.4915195138
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 207,
+      "quarantined": false,
+      "displayPosition": [
+        0.0844498977,
+        -0.8325466369,
+        -0.4915195138
+      ]
+    },
+    {
+      "id": "exhibition:2026-05-06-27",
+      "kind": "exhibition",
+      "position": [
+        -0.3251407913,
+        0.5416175365,
+        -0.2981705711
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 197,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3251407913,
+        0.5416175365,
+        -0.2981705711
+      ]
+    },
+    {
+      "id": "exhibition:2026-05-16-28",
+      "kind": "exhibition",
+      "position": [
+        0.9597217023,
+        -0.2738922123,
+        0.0753869392
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 187,
+      "quarantined": false,
+      "displayPosition": [
+        0.9597217023,
+        -0.2738922123,
+        0.0753869392
+      ]
+    },
+    {
+      "id": "exhibition:2026-05-23-29",
+      "kind": "exhibition",
+      "position": [
+        -0.2511272645,
+        0.1518746911,
+        0.0869947479
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 180,
+      "quarantined": false,
+      "displayPosition": [
+        -0.2511272645,
+        0.1518746911,
+        0.0869947479
+      ]
+    },
+    {
+      "id": "exhibition:2026-05-23-30",
+      "kind": "exhibition",
+      "position": [
+        0.5234055249,
+        0.1280113278,
+        0.3092885773
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 180,
+      "quarantined": false,
+      "displayPosition": [
+        0.5234055249,
+        0.1280113278,
+        0.3092885773
+      ]
+    },
+    {
+      "id": "exhibition:2026-05-29-31",
+      "kind": "exhibition",
+      "position": [
+        0.8957781319,
+        -0.515279965,
+        0.0016117001
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 174,
+      "quarantined": false,
+      "displayPosition": [
+        0.8957781319,
+        -0.515279965,
+        0.0016117001
+      ]
+    },
+    {
+      "id": "exhibition:2026-06-07-32",
+      "kind": "exhibition",
+      "position": [
+        -0.7705418989,
+        -0.8452136385,
+        0.2486300455
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 165,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7705418989,
+        -0.8452136385,
+        0.2486300455
+      ]
+    },
+    {
+      "id": "exhibition:2026-06-13-33",
+      "kind": "exhibition",
+      "position": [
+        0.9843123832,
+        0.0912846726,
+        0.1693908018
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 159,
+      "quarantined": false,
+      "displayPosition": [
+        0.9843123832,
+        0.0912846726,
+        0.1693908018
+      ]
+    },
+    {
+      "id": "exhibition:2026-06-27-34",
+      "kind": "exhibition",
+      "position": [
+        0.3076666201,
+        0.5479310374,
+        0.1705317156
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 145,
+      "quarantined": false,
+      "displayPosition": [
+        0.3076666201,
+        0.5479310374,
+        0.1705317156
+      ]
+    },
+    {
+      "id": "exhibition:2026-07-05-35",
+      "kind": "exhibition",
+      "position": [
+        0.8082684575,
+        -0.6030891493,
+        -0.15355344
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 137,
+      "quarantined": false,
+      "displayPosition": [
+        0.8082684575,
+        -0.6030891493,
+        -0.15355344
+      ]
+    },
+    {
+      "id": "exhibition:2026-07-12-36",
+      "kind": "exhibition",
+      "position": [
+        0.6858559088,
+        0.9777097139,
+        0.536258292
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 130,
+      "quarantined": false,
+      "displayPosition": [
+        0.6858559088,
+        0.9777097139,
+        0.536258292
+      ]
+    },
+    {
+      "id": "exhibition:2026-07-12-37",
+      "kind": "exhibition",
+      "position": [
+        -0.1168546634,
+        0.8447390478,
+        -0.0047899899
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 130,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1168546634,
+        0.8447390478,
+        -0.0047899899
+      ]
+    },
+    {
+      "id": "exhibition:2026-07-31-37",
+      "kind": "exhibition",
+      "position": [
+        -0.7161035734,
+        0.4686891687,
+        -0.5742163747
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 111,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7161035734,
+        0.4686891687,
+        -0.5742163747
+      ]
+    },
+    {
+      "id": "exhibition:2026-08-02-38",
+      "kind": "exhibition",
+      "position": [
+        0.9012511673,
+        -0.8653999871,
+        0.2217125657
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 109,
+      "quarantined": false,
+      "displayPosition": [
+        0.9012511673,
+        -0.8653999871,
+        0.2217125657
+      ]
+    },
+    {
+      "id": "exhibition:2026-08-12-39",
+      "kind": "exhibition",
+      "position": [
+        0.3504690255,
+        0.5157980776,
+        0.0004637623
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 99,
+      "quarantined": false,
+      "displayPosition": [
+        0.3504690255,
+        0.5157980776,
+        0.0004637623
+      ]
+    },
+    {
+      "id": "exhibition:2026-09-10-42",
+      "kind": "exhibition",
+      "position": [
+        -0.8805188245,
+        0.653860515,
+        -0.1577900672
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 70,
+      "quarantined": false,
+      "displayPosition": [
+        -0.8805188245,
+        0.653860515,
+        -0.1577900672
+      ]
+    },
+    {
+      "id": "exhibition:2026-09-12-43",
+      "kind": "exhibition",
+      "position": [
+        0.8918763209,
+        -0.067468091,
+        -0.5939096822
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 68,
+      "quarantined": false,
+      "displayPosition": [
+        0.8918763209,
+        -0.067468091,
+        -0.5939096822
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-04-44",
+      "kind": "exhibition",
+      "position": [
+        -0.3796923732,
+        -0.8674437037,
+        -0.9793420523
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 46,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3796923732,
+        -0.8674437037,
+        -0.9793420523
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-09-46",
+      "kind": "exhibition",
+      "position": [
+        -0.8779458192,
+        -0.1606467411,
+        0.9424501568
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 41,
+      "quarantined": false,
+      "displayPosition": [
+        -0.8779458192,
+        -0.1606467411,
+        0.9424501568
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-12-48",
+      "kind": "exhibition",
+      "position": [
+        0.8105760456,
+        0.3624361073,
+        -0.2362304022
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 38,
+      "quarantined": false,
+      "displayPosition": [
+        0.8105760456,
+        0.3624361073,
+        -0.2362304022
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-17-49",
+      "kind": "exhibition",
+      "position": [
+        0.7868284542,
+        0.1433561068,
+        -0.7489168247
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 33,
+      "quarantined": false,
+      "displayPosition": [
+        0.7868284542,
+        0.1433561068,
+        -0.7489168247
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-18-50",
+      "kind": "exhibition",
+      "position": [
+        -0.6435892985,
+        0.170559664,
+        -0.2187932008
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 32,
+      "quarantined": false,
+      "displayPosition": [
+        -0.6435892985,
+        0.170559664,
+        -0.2187932008
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-24-52",
+      "kind": "exhibition",
+      "position": [
+        -0.4376376834,
+        0.950803207,
+        0.1944298246
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 26,
+      "quarantined": false,
+      "displayPosition": [
+        -0.4376376834,
+        0.950803207,
+        0.1944298246
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-25-54",
+      "kind": "exhibition",
+      "position": [
+        0.0312531599,
+        0.5017808488,
+        0.2464082722
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 25,
+      "quarantined": false,
+      "displayPosition": [
+        0.0312531599,
+        0.5017808488,
+        0.2464082722
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-25-55",
+      "kind": "exhibition",
+      "position": [
+        0.7249591768,
+        -0.8574349479,
+        0.6749572771
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 25,
+      "quarantined": false,
+      "displayPosition": [
+        0.7249591768,
+        -0.8574349479,
+        0.6749572771
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-26-56",
+      "kind": "exhibition",
+      "position": [
+        0.2690068965,
+        0.9754241674,
+        0.0062100143
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 24,
+      "quarantined": false,
+      "displayPosition": [
+        0.2690068965,
+        0.9754241674,
+        0.0062100143
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-27-57",
+      "kind": "exhibition",
+      "position": [
+        0.5961236514,
+        -0.7809533695,
+        -0.7213075597
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 23,
+      "quarantined": false,
+      "displayPosition": [
+        0.5961236514,
+        -0.7809533695,
+        -0.7213075597
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-28-58",
+      "kind": "exhibition",
+      "position": [
+        -0.2032249475,
+        0.2034872749,
+        0.2280416223
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 22,
+      "quarantined": false,
+      "displayPosition": [
+        -0.2032249475,
+        0.2034872749,
+        0.2280416223
+      ]
+    },
+    {
+      "id": "exhibition:2026-10-30-59",
+      "kind": "exhibition",
+      "position": [
+        -0.7204304241,
+        -0.9931693603,
+        -0.3013215211
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 20,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7204304241,
+        -0.9931693603,
+        -0.3013215211
+      ]
+    },
+    {
+      "id": "exhibition:2026-11-06-60",
+      "kind": "exhibition",
+      "position": [
+        0.9205745322,
+        0.19840281,
+        -0.5855542434
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 13,
+      "quarantined": false,
+      "displayPosition": [
+        0.9205745322,
+        0.19840281,
+        -0.5855542434
+      ]
+    },
+    {
+      "id": "exhibition:2026-11-06-61",
+      "kind": "exhibition",
+      "position": [
+        -0.8007843603,
+        0.7870442831,
+        0.7765444157
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 13,
+      "quarantined": false,
+      "displayPosition": [
+        -0.8007843603,
+        0.7870442831,
+        0.7765444157
+      ]
+    },
+    {
+      "id": "exhibition:2026-11-08-62",
+      "kind": "exhibition",
+      "position": [
+        -0.4382602804,
+        0.5633905587,
+        -0.3328939707
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": 11,
+      "quarantined": false,
+      "displayPosition": [
+        -0.4382602804,
+        0.5633905587,
+        -0.3328939707
+      ]
+    },
+    {
+      "id": "institution:2121-design-sight",
+      "kind": "institution",
+      "position": [
+        -0.3310083455,
+        0.3936358547,
+        -0.6582568593
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3310083455,
+        0.3936358547,
+        -0.6582568593
+      ]
+    },
+    {
+      "id": "institution:acc",
+      "kind": "institution",
+      "position": [
+        -0.6318267275,
+        0.9614658015,
+        0.0556201669
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.6318267275,
+        0.9614658015,
+        0.0556201669
+      ]
+    },
+    {
+      "id": "institution:art-fair-tokyo",
+      "kind": "institution",
+      "position": [
+        0.0105654506,
+        -0.7534262348,
+        0.4089249747
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.0105654506,
+        -0.7534262348,
+        0.4089249747
+      ]
+    },
+    {
+      "id": "institution:art-week-tokyo",
+      "kind": "institution",
+      "position": [
+        0.3522650897,
+        0.1753387913,
+        0.8234855223
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.992767971,
+        -1.294890018,
+        1.636739526
+      ]
+    },
+    {
+      "id": "institution:artizon-museum",
+      "kind": "institution",
+      "position": [
+        -0.4421360942,
+        -0.387071482,
+        0.3219820641
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.4421360942,
+        -0.387071482,
+        0.3219820641
+      ]
+    },
+    {
+      "id": "institution:biennale-jatim",
+      "kind": "institution",
+      "position": [
+        0.3406309738,
+        0.9797311692,
+        0.6125468907
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -2.272247822,
+        0.401928646,
+        -0.12879393
+      ]
+    },
+    {
+      "id": "institution:bug",
+      "kind": "institution",
+      "position": [
+        0.6697979414,
+        0.4010305487,
+        0.3592195764
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.6697979414,
+        0.4010305487,
+        0.3592195764
+      ]
+    },
+    {
+      "id": "institution:busan-biennale",
+      "kind": "institution",
+      "position": [
+        0.0294551901,
+        0.4459191798,
+        -0.7199296191
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.0294551901,
+        0.4459191798,
+        -0.7199296191
+      ]
+    },
+    {
+      "id": "institution:cisternerne",
+      "kind": "institution",
+      "position": [
+        -0.1938235207,
+        0.6920210642,
+        -0.0496611418
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1938235207,
+        0.6920210642,
+        -0.0496611418
+      ]
+    },
+    {
+      "id": "institution:co-berlin",
+      "kind": "institution",
+      "position": [
+        0.5891390905,
+        -0.6541392894,
+        -0.003412386
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.5891390905,
+        -0.6541392894,
+        -0.003412386
+      ]
+    },
+    {
+      "id": "institution:culture-station-seoul-284",
+      "kind": "institution",
+      "position": [
+        -0.5040900209,
+        0.7785885127,
+        -0.0509373936
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5040900209,
+        0.7785885127,
+        -0.0509373936
+      ]
+    },
+    {
+      "id": "institution:curation-fair",
+      "kind": "institution",
+      "position": [
+        -0.7389763793,
+        -0.9191172947,
+        0.3480095871
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7389763793,
+        -0.9191172947,
+        0.3480095871
+      ]
+    },
+    {
+      "id": "institution:design-museum-london",
+      "kind": "institution",
+      "position": [
+        -0.4618012279,
+        0.6858262398,
+        0.7101017353
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        1.117065869,
+        0.710585868,
+        -1.894327386
+      ]
+    },
+    {
+      "id": "institution:echigo-tsumari",
+      "kind": "institution",
+      "position": [
+        0.766435191,
+        -0.8186261366,
+        0.0405951479
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.545483987,
+        -2.029173244,
+        0.962365754
+      ]
+    },
+    {
+      "id": "institution:fukuoka-asian-art-museum",
+      "kind": "institution",
+      "position": [
+        -0.7927306725,
+        0.5153350741,
+        -0.803625329
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7927306725,
+        0.5153350741,
+        -0.803625329
+      ]
+    },
+    {
+      "id": "institution:gallery-soap",
+      "kind": "institution",
+      "position": [
+        0.360837014,
+        -0.1205490265,
+        0.6594487308
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.998815014,
+        1.923157531,
+        -0.803167702
+      ]
+    },
+    {
+      "id": "institution:gero-art-discovery",
+      "kind": "institution",
+      "position": [
+        -0.6650782686,
+        0.7008385354,
+        0.2492856577
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.6650782686,
+        0.7008385354,
+        0.2492856577
+      ]
+    },
+    {
+      "id": "institution:gwangju-biennale",
+      "kind": "institution",
+      "position": [
+        0.1455382553,
+        0.0618801633,
+        0.9622223591
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.1455382553,
+        0.0618801633,
+        0.9622223591
+      ]
+    },
+    {
+      "id": "institution:gyre-gallery",
+      "kind": "institution",
+      "position": [
+        -0.5358823438,
+        -0.9546659623,
+        0.1520631565
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5358823438,
+        -0.9546659623,
+        0.1520631565
+      ]
+    },
+    {
+      "id": "institution:hamburger-bahnhof",
+      "kind": "institution",
+      "position": [
+        -0.039373153,
+        0.7019154178,
+        0.1430953956
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.039373153,
+        0.7019154178,
+        0.1430953956
+      ]
+    },
+    {
+      "id": "institution:hinodecho-waikiki-studio",
+      "kind": "institution",
+      "position": [
+        0.4191883445,
+        -0.0017047663,
+        -0.3157287938
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.4191883445,
+        -0.0017047663,
+        -0.3157287938
+      ]
+    },
+    {
+      "id": "institution:hiroshima-art-prize",
+      "kind": "institution",
+      "position": [
+        -0.9578632709,
+        -0.1943887141,
+        -0.2050572082
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.995980913,
+        -0.363730632,
+        2.053525439
+      ]
+    },
+    {
+      "id": "institution:hiroshima-moca",
+      "kind": "institution",
+      "position": [
+        0.1749454721,
+        0.4142339032,
+        -0.9567884847
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.1749454721,
+        0.4142339032,
+        -0.9567884847
+      ]
+    },
+    {
+      "id": "institution:hosoo-gallery",
+      "kind": "institution",
+      "position": [
+        -0.3553247872,
+        0.2900414375,
+        0.5510117064
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3553247872,
+        0.2900414375,
+        0.5510117064
+      ]
+    },
+    {
+      "id": "institution:iaf-shop",
+      "kind": "institution",
+      "position": [
+        0.8987304181,
+        -0.6117099991,
+        -0.5364089586
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.8987304181,
+        -0.6117099991,
+        -0.5364089586
+      ]
+    },
+    {
+      "id": "institution:icc",
+      "kind": "institution",
+      "position": [
+        -0.7469176845,
+        0.4747914526,
+        0.8966478528
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7469176845,
+        0.4747914526,
+        0.8966478528
+      ]
+    },
+    {
+      "id": "institution:international-house-of-japan",
+      "kind": "institution",
+      "position": [
+        0.6301263968,
+        0.4135119725,
+        -0.6109927665
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.6301263968,
+        0.4135119725,
+        -0.6109927665
+      ]
+    },
+    {
+      "id": "institution:jewish-museum-berlin",
+      "kind": "institution",
+      "position": [
+        0.8484499676,
+        0.016377783,
+        0.7449926636
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.8484499676,
+        0.016377783,
+        0.7449926636
+      ]
+    },
+    {
+      "id": "institution:kitakyushu-international-biennial",
+      "kind": "institution",
+      "position": [
+        0.4115790693,
+        0.6400374943,
+        0.5366984564
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -2.119616329,
+        -0.874946808,
+        0.287991982
+      ]
+    },
+    {
+      "id": "institution:kw",
+      "kind": "institution",
+      "position": [
+        -0.5466862612,
+        0.9867438512,
+        0.9008899119
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5466862612,
+        0.9867438512,
+        0.9008899119
+      ]
+    },
+    {
+      "id": "institution:leeum",
+      "kind": "institution",
+      "position": [
+        -0.4108725782,
+        -0.4910821272,
+        0.0360693345
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.75322047,
+        1.609588393,
+        -1.477541474
+      ]
+    },
+    {
+      "id": "institution:m-plus",
+      "kind": "institution",
+      "position": [
+        -0.2921613542,
+        -0.979747298,
+        0.9636215799
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.555023146,
+        -1.769501248,
+        1.379151667
+      ]
+    },
+    {
+      "id": "institution:meet-your-art",
+      "kind": "institution",
+      "position": [
+        -0.3438853328,
+        -0.1904293183,
+        -0.739204813
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3438853328,
+        -0.1904293183,
+        -0.739204813
+      ]
+    },
+    {
+      "id": "institution:midori-so",
+      "kind": "institution",
+      "position": [
+        0.334226322,
+        0.7470446524,
+        0.3363731484
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.334226322,
+        0.7470446524,
+        0.3363731484
+      ]
+    },
+    {
+      "id": "institution:mmca",
+      "kind": "institution",
+      "position": [
+        0.8475501904,
+        0.1015789583,
+        -0.8731017803
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.8475501904,
+        0.1015789583,
+        -0.8731017803
+      ]
+    },
+    {
+      "id": "institution:mori-art-museum",
+      "kind": "institution",
+      "position": [
+        -0.2920175926,
+        0.6698960893,
+        -0.0298090188
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -1.97145808,
+        1.142500254,
+        -0.38638179
+      ]
+    },
+    {
+      "id": "institution:mot",
+      "kind": "institution",
+      "position": [
+        -0.193479163,
+        0.7306567254,
+        0.6055114857
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.193479163,
+        0.7306567254,
+        0.6055114857
+      ]
+    },
+    {
+      "id": "institution:national-art-center-tokyo",
+      "kind": "institution",
+      "position": [
+        -0.2898843531,
+        -0.9291808759,
+        -0.1917118565
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.2898843531,
+        -0.9291808759,
+        -0.1917118565
+      ]
+    },
+    {
+      "id": "institution:ota-fine-arts",
+      "kind": "institution",
+      "position": [
+        0.2118302672,
+        0.8535243816,
+        0.8974841166
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.2118302672,
+        0.8535243816,
+        0.8974841166
+      ]
+    },
+    {
+      "id": "institution:rencontres-arles",
+      "kind": "institution",
+      "position": [
+        -0.4562153198,
+        0.9656080299,
+        0.457352149
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.823254518,
+        0.180990196,
+        -2.151915246
+      ]
+    },
+    {
+      "id": "institution:schaubuehne",
+      "kind": "institution",
+      "position": [
+        0.6070525925,
+        -0.345738879,
+        -0.0010110093
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.6070525925,
+        -0.345738879,
+        -0.0010110093
+      ]
+    },
+    {
+      "id": "institution:seeen",
+      "kind": "institution",
+      "position": [
+        0.0754876441,
+        0.1063201106,
+        -0.2374684045
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.0754876441,
+        0.1063201106,
+        -0.2374684045
+      ]
+    },
+    {
+      "id": "institution:sema",
+      "kind": "institution",
+      "position": [
+        -0.1227917276,
+        -0.3259953539,
+        0.3377468203
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1227917276,
+        -0.3259953539,
+        0.3377468203
+      ]
+    },
+    {
+      "id": "institution:setagaya-art-museum",
+      "kind": "institution",
+      "position": [
+        -0.2167053971,
+        0.0625436858,
+        -0.8258376818
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.2167053971,
+        0.0625436858,
+        -0.8258376818
+      ]
+    },
+    {
+      "id": "institution:shibuya-hikarie",
+      "kind": "institution",
+      "position": [
+        0.1326855174,
+        -0.2771912696,
+        -0.4549322257
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.1326855174,
+        -0.2771912696,
+        -0.4549322257
+      ]
+    },
+    {
+      "id": "institution:singapore-art-museum",
+      "kind": "institution",
+      "position": [
+        -0.9027235708,
+        -0.4863175475,
+        -0.7339966273
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.9027235708,
+        -0.4863175475,
+        -0.7339966273
+      ]
+    },
+    {
+      "id": "institution:skwat",
+      "kind": "institution",
+      "position": [
+        -0.0657051705,
+        -0.0166156454,
+        -0.9546467722
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.0657051705,
+        -0.0166156454,
+        -0.9546467722
+      ]
+    },
+    {
+      "id": "institution:space-un",
+      "kind": "institution",
+      "position": [
+        0.1204796011,
+        -0.8910597808,
+        0.8394315243
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.1204796011,
+        -0.8910597808,
+        0.8394315243
+      ]
+    },
+    {
+      "id": "institution:syndicate-fukuoka",
+      "kind": "institution",
+      "position": [
+        0.4371833913,
+        0.3005220043,
+        -0.6334590679
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.385224018,
+        -0.016974429,
+        2.27871872
+      ]
+    },
+    {
+      "id": "institution:syndicate-takamatsu",
+      "kind": "institution",
+      "position": [
+        -0.5092007473,
+        -0.6630026541,
+        0.2651688835
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -1.617003675,
+        1.552361677,
+        -0.562776171
+      ]
+    },
+    {
+      "id": "institution:thailand-biennale",
+      "kind": "institution",
+      "position": [
+        0.4121258976,
+        0.3153440649,
+        0.9583689204
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.4121258976,
+        0.3153440649,
+        0.9583689204
+      ]
+    },
+    {
+      "id": "institution:tokas",
+      "kind": "institution",
+      "position": [
+        0.7991335579,
+        0.0517741308,
+        0.9556516091
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.7991335579,
+        0.0517741308,
+        0.9556516091
+      ]
+    },
+    {
+      "id": "institution:tokyo-bunka-kaikan",
+      "kind": "institution",
+      "position": [
+        -0.0453148431,
+        0.0009778307,
+        0.7731223806
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -1.225661903,
+        -1.822260116,
+        0.719976145
+      ]
+    },
+    {
+      "id": "institution:tokyo-gendai",
+      "kind": "institution",
+      "position": [
+        0.3926804625,
+        -0.9702122573,
+        0.9489990441
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.3926804625,
+        -0.9702122573,
+        0.9489990441
+      ]
+    },
+    {
+      "id": "institution:tokyo-metropolitan-theatre",
+      "kind": "institution",
+      "position": [
+        0.1891610424,
+        -0.6806475214,
+        -0.0003732435
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.1891610424,
+        -0.6806475214,
+        -0.0003732435
+      ]
+    },
+    {
+      "id": "institution:tokyo-opera-city",
+      "kind": "institution",
+      "position": [
+        0.6395474362,
+        -0.2331821627,
+        -0.7802541448
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.6395474362,
+        -0.2331821627,
+        -0.7802541448
+      ]
+    },
+    {
+      "id": "institution:tokyo-photographic-art-museum",
+      "kind": "institution",
+      "position": [
+        0.6452429053,
+        0.3398649647,
+        0.197027563
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.6452429053,
+        0.3398649647,
+        0.197027563
+      ]
+    },
+    {
+      "id": "institution:victoria-and-albert-museum",
+      "kind": "institution",
+      "position": [
+        0.1124564108,
+        0.1768281337,
+        0.9240531523
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.343959053,
+        2.153202921,
+        -1.097471407
+      ]
+    },
+    {
+      "id": "institution:waseda-library",
+      "kind": "institution",
+      "position": [
+        -0.0930401748,
+        0.6674797021,
+        0.63378201
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.0930401748,
+        0.6674797021,
+        0.63378201
+      ]
+    },
+    {
+      "id": "institution:what-museum",
+      "kind": "institution",
+      "position": [
+        -0.9381348532,
+        0.4253551171,
+        -0.0427921802
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -2.306451406,
+        -0.1397973,
+        0.044534323
+      ]
+    },
+    {
+      "id": "institution:yokohama-museum",
+      "kind": "institution",
+      "position": [
+        -0.6978309195,
+        -0.0707574344,
+        -0.6728956538
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.6978309195,
+        -0.0707574344,
+        -0.6728956538
+      ]
+    },
+    {
+      "id": "person:alfredo-jaar",
+      "kind": "person",
+      "position": [
+        -0.8639905446,
+        -0.1257629388,
+        -0.9317695922
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.8639905446,
+        -0.1257629388,
+        -0.9317695922
+      ]
+    },
+    {
+      "id": "person:bagus-pandega",
+      "kind": "person",
+      "position": [
+        -0.460843,
+        0.0063353317,
+        -0.9987890645
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.460843,
+        0.0063353317,
+        -0.9987890645
+      ]
+    },
+    {
+      "id": "person:carsten-nicolai",
+      "kind": "person",
+      "position": [
+        0.934060633,
+        -0.9441623416,
+        -0.1288816397
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.934060633,
+        -0.9441623416,
+        -0.1288816397
+      ]
+    },
+    {
+      "id": "person:christopher-rueping",
+      "kind": "person",
+      "position": [
+        0.5154415791,
+        -0.5286001818,
+        0.7938415501
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.5154415791,
+        -0.5286001818,
+        0.7938415501
+      ]
+    },
+    {
+      "id": "person:do-ho-suh",
+      "kind": "person",
+      "position": [
+        0.8973420775,
+        0.8074627492,
+        0.9580246883
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.8973420775,
+        0.8074627492,
+        0.9580246883
+      ]
+    },
+    {
+      "id": "person:elia-nurvista",
+      "kind": "person",
+      "position": [
+        0.3120838408,
+        -0.9506428069,
+        -0.1405080522
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.3120838408,
+        -0.9506428069,
+        -0.1405080522
+      ]
+    },
+    {
+      "id": "person:fuse-rintaro",
+      "kind": "person",
+      "position": [
+        0.2009190726,
+        -0.3316532919,
+        0.560854997
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.2009190726,
+        -0.3316532919,
+        0.560854997
+      ]
+    },
+    {
+      "id": "person:henry-moore",
+      "kind": "person",
+      "position": [
+        -0.1501032537,
+        0.2550611379,
+        -0.3742351648
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1501032537,
+        0.2550611379,
+        -0.3742351648
+      ]
+    },
+    {
+      "id": "person:julianknxx",
+      "kind": "person",
+      "position": [
+        -0.3559654769,
+        0.5821918537,
+        -0.40644827
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3559654769,
+        0.5821918537,
+        -0.40644827
+      ]
+    },
+    {
+      "id": "person:kataoka-mami",
+      "kind": "person",
+      "position": [
+        0.6746564061,
+        -0.1169808769,
+        -0.5323153429
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.6746564061,
+        -0.1169808769,
+        -0.5323153429
+      ]
+    },
+    {
+      "id": "person:keiichi-sato",
+      "kind": "person",
+      "position": [
+        -0.1021637635,
+        0.8537842452,
+        -0.147518015
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.1021637635,
+        0.8537842452,
+        -0.147518015
+      ]
+    },
+    {
+      "id": "person:keiichiro-terae",
+      "kind": "person",
+      "position": [
+        -0.2954751865,
+        0.0591973349,
+        0.2072556362
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.2954751865,
+        0.0591973349,
+        0.2072556362
+      ]
+    },
+    {
+      "id": "person:lynn-hershman-leeson",
+      "kind": "person",
+      "position": [
+        -0.5826804628,
+        -0.0310244185,
+        0.8771299798
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5826804628,
+        -0.0310244185,
+        0.8771299798
+      ]
+    },
+    {
+      "id": "person:marina-abramovic",
+      "kind": "person",
+      "position": [
+        -0.9711717818,
+        0.8254960827,
+        -0.3542495291
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.9711717818,
+        0.8254960827,
+        -0.3542495291
+      ]
+    },
+    {
+      "id": "person:mel-chin",
+      "kind": "person",
+      "position": [
+        -0.6977624735,
+        -0.8892160686,
+        -0.6660502882
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.6977624735,
+        -0.8892160686,
+        -0.6660502882
+      ]
+    },
+    {
+      "id": "person:miet-warlop",
+      "kind": "person",
+      "position": [
+        -0.7626205571,
+        0.7470375197,
+        -0.1942777765
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7626205571,
+        0.7470375197,
+        -0.1942777765
+      ]
+    },
+    {
+      "id": "person:mikami-seiko",
+      "kind": "person",
+      "position": [
+        0.4298643104,
+        -0.1712775105,
+        -0.5521535412
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.4298643104,
+        -0.1712775105,
+        -0.5521535412
+      ]
+    },
+    {
+      "id": "person:nawa-kohei",
+      "kind": "person",
+      "position": [
+        0.7025513175,
+        -0.6550205165,
+        0.4852841166
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.7025513175,
+        -0.6550205165,
+        0.4852841166
+      ]
+    },
+    {
+      "id": "person:noe-aoki",
+      "kind": "person",
+      "position": [
+        0.4032866132,
+        0.7665445836,
+        0.2492136289
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.4032866132,
+        0.7665445836,
+        0.2492136289
+      ]
+    },
+    {
+      "id": "person:orm-project",
+      "kind": "person",
+      "position": [
+        0.6713133971,
+        0.0611798827,
+        0.2135986126
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.6713133971,
+        0.0611798827,
+        0.2135986126
+      ]
+    },
+    {
+      "id": "person:ruangrupa",
+      "kind": "person",
+      "position": [
+        -0.5798216204,
+        0.9963712358,
+        0.7016091871
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.5798216204,
+        0.9963712358,
+        0.7016091871
+      ]
+    },
+    {
+      "id": "person:saeborg",
+      "kind": "person",
+      "position": [
+        -0.7623243147,
+        -0.0948766609,
+        -0.2354120949
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.7623243147,
+        -0.0948766609,
+        -0.2354120949
+      ]
+    },
+    {
+      "id": "person:shiga-lieko",
+      "kind": "person",
+      "position": [
+        0.7365222063,
+        -0.631757218,
+        0.0217932135
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.7365222063,
+        -0.631757218,
+        0.0217932135
+      ]
+    },
+    {
+      "id": "person:takagi-yuriko",
+      "kind": "person",
+      "position": [
+        -0.9565300339,
+        0.5774282261,
+        -0.3323133477
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.9565300339,
+        0.5774282261,
+        -0.3323133477
+      ]
+    },
+    {
+      "id": "person:tanaka-shintaro",
+      "kind": "person",
+      "position": [
+        0.0017231861,
+        -0.2460483691,
+        0.8509432895
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.0017231861,
+        -0.2460483691,
+        0.8509432895
+      ]
+    },
+    {
+      "id": "person:theaster-gates",
+      "kind": "person",
+      "position": [
+        0.5344643633,
+        0.836882388,
+        -0.9497180951
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.5344643633,
+        0.836882388,
+        -0.9497180951
+      ]
+    },
+    {
+      "id": "person:ueda-kana",
+      "kind": "person",
+      "position": [
+        0.4045018521,
+        -0.3175630317,
+        -0.675078877
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.169844325,
+        0.001293175,
+        -2.435197193
+      ]
+    },
+    {
+      "id": "person:umeda-tetsuya",
+      "kind": "person",
+      "position": [
+        -0.3553821289,
+        -0.9827546073,
+        0.2265918248
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3553821289,
+        -0.9827546073,
+        0.2265918248
+      ]
+    },
+    {
+      "id": "person:wolfgang-tillmans",
+      "kind": "person",
+      "position": [
+        -0.378098099,
+        0.9937938116,
+        0.0199747625
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.378098099,
+        0.9937938116,
+        0.0199747625
+      ]
+    },
+    {
+      "id": "person:wu-xiazhi",
+      "kind": "person",
+      "position": [
+        -0.2997090701,
+        -0.1288338478,
+        -0.1906826799
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.2997090701,
+        -0.1288338478,
+        -0.1906826799
+      ]
+    },
+    {
+      "id": "person:yamashiro-chikako",
+      "kind": "person",
+      "position": [
+        0.1324123829,
+        0.2601476137,
+        -0.100984781
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.1324123829,
+        0.2601476137,
+        -0.100984781
+      ]
+    },
+    {
+      "id": "person:yang02",
+      "kind": "person",
+      "position": [
+        -0.3574146481,
+        0.2508428624,
+        0.1551148777
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3574146481,
+        0.2508428624,
+        0.1551148777
+      ]
+    },
+    {
+      "id": "person:young-boy-dance-group",
+      "kind": "person",
+      "position": [
+        0.6833666224,
+        -0.6833581165,
+        -0.5846609349
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        0.6833666224,
+        -0.6833581165,
+        -0.5846609349
+      ]
+    },
+    {
+      "id": "person:yuan-fangzhou",
+      "kind": "person",
+      "position": [
+        0.6985022811,
+        0.5822171218,
+        0.5955749932
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.03845553,
+        -2.121785319,
+        1.206475183
+      ]
+    },
+    {
+      "id": "person:yukinori-yanagi",
+      "kind": "person",
+      "position": [
+        -0.0220362817,
+        -0.6330868381,
+        -0.5037617114
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.0220362817,
+        -0.6330868381,
+        -0.5037617114
+      ]
+    },
+    {
+      "id": "person:yurie-nagashima",
+      "kind": "person",
+      "position": [
+        -0.3431072145,
+        -0.4723596421,
+        0.2794392699
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3431072145,
+        -0.4723596421,
+        0.2794392699
+      ]
+    },
+    {
+      "id": "person:zadok-ben-david",
+      "kind": "person",
+      "position": [
+        -0.3847178608,
+        0.8064974513,
+        0.9108019848
+      ],
+      "activity": 0,
+      "lignification": 0,
+      "activeEver": false,
+      "archivalAgeDays": null,
+      "quarantined": false,
+      "displayPosition": [
+        -0.3847178608,
+        0.8064974513,
+        0.9108019848
+      ]
+    }
+  ],
+  "fibers": [],
+  "branches": [],
+  "pulseChambers": [],
+  "propulsionCores": [],
+  "thresholds": {
+    "transitionCount": 0
+  },
+  "counts": {
+    "ordinaryRecords": 174,
+    "quarantinedRecords": 7,
+    "metadataEvidenceOnly": 158,
+    "simulatedLifeEvents": 0
+  },
+  "snapshotHash": "2e7e806197f069d21e768208ee73f51e207afc1f5e4a8f6aa6167d7c6beba40f"
+}

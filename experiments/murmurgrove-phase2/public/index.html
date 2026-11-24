@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Murmurgrove | Phase 2.4 Organic Reframe</title>
+<style>
+:root{font-family:Inter,"Noto Sans",system-ui,sans-serif;color:#56615c;background:#f2f3ef;--panel-bg:rgba(248,249,245,.74);--panel-line:rgba(139,151,145,.24);--panel-shadow:0 14px 38px rgba(90,103,99,.10)}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;overflow:hidden;background:radial-gradient(circle at 52% 46%,#f6f7f3 0%,#eff1ec 46%,#eaede7 100%)}canvas{display:block;width:100vw;height:100vh;touch-action:none}
+button,input,select{font:inherit}button{border:0;background:transparent;color:#4c5754;cursor:pointer}
+#cornerDock{position:fixed;top:18px;left:18px;display:flex;gap:8px;z-index:5;pointer-events:none}
+.miniBtn,.miniGlyph{pointer-events:auto;width:34px;height:34px;border-radius:999px;border:1px solid var(--panel-line);background:rgba(249,250,246,.52);backdrop-filter:blur(12px);box-shadow:0 4px 18px rgba(70,84,80,.07);display:grid;place-items:center;color:#5d6964}
+.miniBtn:hover,.miniGlyph:hover{background:rgba(250,251,248,.82)}
+#badge{position:fixed;left:62px;top:23px;font-size:10px;letter-spacing:.18em;color:#7f8a86;user-select:none;z-index:4;pointer-events:none}
+#badge strong{font-weight:600;color:#536360}
+.hiddenPanel{position:fixed;z-index:4;background:var(--panel-bg);border:1px solid var(--panel-line);border-radius:16px;backdrop-filter:blur(16px);box-shadow:var(--panel-shadow);display:none}
+body.nav-open #archiveNav,body.settings-open #settingsPanel{display:block}
+#archiveNav{left:18px;top:62px;width:min(270px,calc(100vw - 36px));padding:10px}
+#archiveNav input,#archiveNav select{width:100%;padding:10px 11px;margin:4px 0;border:1px solid rgba(160,170,165,.22);border-radius:10px;background:rgba(255,255,255,.68);font-size:12px;color:#50605a}
+#archiveNav select{max-height:42vh}
+#archiveNav .microLabel,#settingsPanel .microLabel{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8e9793;margin:0 0 8px 2px}
+#settingsPanel{right:18px;top:18px;width:min(330px,calc(100vw - 36px));padding:12px 12px 14px}
+#settingsPanel .group{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px solid rgba(147,157,152,.16)}
+#settingsPanel .group:first-of-type{border-top:0;padding-top:0}
+#settingsPanel button{border-radius:10px;padding:8px 10px;background:rgba(255,255,255,.44);font-size:12px;letter-spacing:.03em}
+#settingsPanel button.active{background:#d7e0db;color:#21443d}
+#settingsPanel button:hover{background:rgba(255,255,255,.8)}
+#settingsPanel input[type=range]{accent-color:#708c82;width:132px}
+#settingsPanel .timelineStops{font-size:11px;letter-spacing:.08em;color:#6f807a}
+#settingsPanel .settingsRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#settingsPanel .settingsTiny{font-size:10px;line-height:1.55;color:#808d87;white-space:pre-line}
+#status{font-size:10px;color:#73817b;line-height:1.55;white-space:pre-line;margin-top:6px}
+#stats{font:11px/1.45 ui-monospace,monospace;white-space:pre-line;display:none;margin-top:6px;padding-top:8px;border-top:1px solid rgba(147,157,152,.16);color:#72807b}
+#detail{position:fixed;top:74px;right:18px;bottom:22px;width:min(330px,calc(100vw - 36px));overflow:auto;padding:18px 18px 16px;background:rgba(249,250,246,.78);border:1px solid rgba(137,147,142,.20);border-radius:18px;box-shadow:0 16px 44px rgba(77,90,86,.12);backdrop-filter:blur(18px)}
+#detail[hidden]{display:none}#detail .detailHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}#detail h2{font-size:22px;font-weight:500;line-height:1.25;margin:0;color:#3f4f4a}#detail h3{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#92a09b;margin:18px 0 8px}#detail .state{font-size:12px;line-height:1.65;color:#75817d}#detail .role{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#596e68;margin-bottom:10px}#detail .related{display:flex;flex-wrap:wrap;gap:6px}#detail .related button{border:1px solid rgba(147,157,152,.22);border-radius:999px;padding:8px 10px;background:rgba(255,255,255,.58);font-size:12px;text-align:left}#detail small{font-size:10px;color:#85918d}#detail .openPage{background:#dde3e0;color:#27453f;border-radius:999px;padding:9px 12px}.detailMeta{font-size:11px;color:#8c9792;letter-spacing:.08em;text-transform:uppercase}.closeDetail{width:30px;height:30px;border-radius:999px;background:rgba(255,255,255,.6)}
+#locator{width:100%;height:142px;border:1px solid rgba(154,164,159,.14);border-radius:14px;background:linear-gradient(180deg,rgba(243,245,241,.82),rgba(236,239,233,.72));cursor:pointer;display:block;margin:10px 0 8px}
+#locatorLegend{font-size:11px;color:#85928d;line-height:1.55;margin:2px 0 0}
+body.detail-open #settingsPanel{right:362px}
+body.blind #detail,body.blind #settingsPanel,body.blind #archiveNav,body.blind #cornerDock,body.blind #badge{display:none!important}
+#fatal{display:none;position:fixed;inset:30% 15%;padding:24px;background:#fff8f3;border:1px solid #e7c7b8;border-radius:10px;color:#815243;z-index:8;white-space:pre-wrap}
+@media(max-width:980px){body.detail-open #settingsPanel{right:18px;top:auto;bottom:22px}#detail{top:auto;bottom:22px;max-height:52vh}}
+@media(max-width:700px){#badge{display:none}#cornerDock{top:12px;left:12px}.miniBtn,.miniGlyph{width:32px;height:32px}#archiveNav{left:10px;top:56px;width:min(250px,calc(100vw - 20px))}#settingsPanel{right:10px;top:10px;width:min(300px,calc(100vw - 20px))}#detail{right:10px;left:10px;width:auto;bottom:14px;max-height:48vh;padding:15px}body.detail-open #settingsPanel{right:10px;bottom:calc(48vh + 24px)}}
+</style></head><body>
+<canvas id="body" aria-label="Murmurgrove Phase 2.4 organic sandbox"></canvas>
+<div id="cornerDock"><button class="miniBtn" id="archiveToggle" aria-label="打开检索">⌕</button><button class="miniBtn" id="settingsToggle" aria-label="打开设置">⚙</button></div>
+<div id="badge"><strong>MURMURGROVE</strong> / PHASE 2.4 / ORGANIC REFRACTION</div>
+<div id="archiveNav" class="hiddenPanel"><div class="microLabel">Archive lookup</div><input id="archiveSearch" aria-label="搜索档案" placeholder="Search archive"><select id="archivePicker" aria-label="选择档案"></select></div>
+<div id="settingsPanel" class="hiddenPanel"><div class="microLabel">Studio settings</div><div class="group" id="variants" role="group" aria-label="材料实验"><button data-variant="A" class="active">A · COLLAGEN</button><button data-variant="B">B · FLOW</button><button data-variant="C">C · STRATA</button></div><div class="group settingsRow"><span class="timelineStops">T₀ — T₁ — T₂</span><div style="display:flex;align-items:center;gap:8px"><input id="time" type="range" min="0" max="2" step="1" value="0" aria-label="时间状态 T₀ T₁ T₂"><span id="timeLabel">T₀</span></div></div><div class="group"><button id="reset">RESET</button><button id="blind">BLIND</button><button id="perf">FPS</button></div><div id="status" aria-live="polite">VERIFYING SNAPSHOT HASHES…</div><div id="stats"></div><div class="settingsTiny">日常界面默认收起工程控件。<br>按 1/2/3 切换 T₀/T₁/T₂ · A/B/C 切换材料实验 · H 盲测 · R 重置</div></div>
+<aside id="detail" hidden aria-live="polite"></aside>
+<div id="fatal"></div>
+<script type="module" src="./app.mjs"></script></body></html>

@@ -1,0 +1,3206 @@
+{
+  "schema": "murmurgrove.navigation.2.1.v1",
+  "mode": "SIMULATED_SANDBOX",
+  "baselineProjectionHash": "62372e469ead425dd43fc16e737ea40cd48ce5a0188a87b868d1bee62c8ba9d3",
+  "records": [
+    {
+      "id": "concept:artist-residency",
+      "kind": "concept",
+      "title": "艺术驻留",
+      "source": "src/data/concepts/artist-residency.md",
+      "path": "/concepts/artist-residency/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:care-and-design",
+      "kind": "concept",
+      "title": "照护与设计",
+      "source": "src/data/concepts/care-and-design.md",
+      "path": "/concepts/care-and-design/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:collective-practices",
+      "kind": "concept",
+      "title": "集体实践",
+      "source": "src/data/concepts/collective-practices.md",
+      "path": "/concepts/collective-practices/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:curatorial-practices",
+      "kind": "concept",
+      "title": "策展实践",
+      "source": "src/data/concepts/curatorial-practices.md",
+      "path": "/concepts/curatorial-practices/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:ecology",
+      "kind": "concept",
+      "title": "生态与资源",
+      "source": "src/data/concepts/ecology.md",
+      "path": "/concepts/ecology/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:identity-and-representation",
+      "kind": "concept",
+      "title": "身份与再现",
+      "source": "src/data/concepts/identity-and-representation.md",
+      "path": "/concepts/identity-and-representation/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:institutional-studies",
+      "kind": "concept",
+      "title": "机构研究",
+      "source": "src/data/concepts/institutional-studies.md",
+      "path": "/concepts/institutional-studies/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:material-and-memory",
+      "kind": "concept",
+      "title": "材料与记忆",
+      "source": "src/data/concepts/material-and-memory.md",
+      "path": "/concepts/material-and-memory/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:memory-and-place",
+      "kind": "concept",
+      "title": "记忆与场所",
+      "source": "src/data/concepts/memory-and-place.md",
+      "path": "/concepts/memory-and-place/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:moving-image",
+      "kind": "concept",
+      "title": "动态影像",
+      "source": "src/data/concepts/moving-image.md",
+      "path": "/concepts/moving-image/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:performance",
+      "kind": "concept",
+      "title": "表演与剧场",
+      "source": "src/data/concepts/performance.md",
+      "path": "/concepts/performance/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:photography",
+      "kind": "concept",
+      "title": "摄影",
+      "source": "src/data/concepts/photography.md",
+      "path": "/concepts/photography/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:politics-of-representation",
+      "kind": "concept",
+      "title": "再现政治",
+      "source": "src/data/concepts/politics-of-representation.md",
+      "path": "/concepts/politics-of-representation/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:postwar-art",
+      "kind": "concept",
+      "title": "战后艺术",
+      "source": "src/data/concepts/postwar-art.md",
+      "path": "/concepts/postwar-art/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:printmaking",
+      "kind": "concept",
+      "title": "版画",
+      "source": "src/data/concepts/printmaking.md",
+      "path": "/concepts/printmaking/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:site-specificity",
+      "kind": "concept",
+      "title": "场域特定性",
+      "source": "src/data/concepts/site-specificity.md",
+      "path": "/concepts/site-specificity/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:sound-and-technology",
+      "kind": "concept",
+      "title": "声音与技术",
+      "source": "src/data/concepts/sound-and-technology.md",
+      "path": "/concepts/sound-and-technology/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:technology-and-body",
+      "kind": "concept",
+      "title": "技术与身体",
+      "source": "src/data/concepts/technology-and-body.md",
+      "path": "/concepts/technology-and-body/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "concept:transcultural-studies",
+      "kind": "concept",
+      "title": "跨文化研究",
+      "source": "src/data/concepts/transcultural-studies.md",
+      "path": "/concepts/transcultural-studies/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-01-02-01",
+      "kind": "exhibition",
+      "title": "六本木クロッシング2025展：時間は過ぎ去る わたしたちは永遠",
+      "source": "src/data/exhibitions/2026-01-02-01.md",
+      "path": "/exhibitions/2026-01-02-01/",
+      "verification": "recorded",
+      "occurredOn": "2026-01-02",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-01-07-02",
+      "kind": "exhibition",
+      "title": "Carsten Nicolai: WAVE WEAVE — Fusion of Sound and Textile",
+      "source": "src/data/exhibitions/2026-01-07-02.md",
+      "path": "/exhibitions/2026-01-07-02/",
+      "verification": "recorded",
+      "occurredOn": "2026-01-07",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-01-08-03",
+      "kind": "exhibition",
+      "title": "山城知佳子 × 志賀理江子《漂着》",
+      "source": "src/data/exhibitions/2026-01-08-03.md",
+      "path": "/exhibitions/2026-01-08-03/",
+      "verification": "recorded",
+      "occurredOn": "2026-01-08",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-01-11-04",
+      "kind": "exhibition",
+      "title": "三上晴子《知覚の大霊廟をめざして》",
+      "source": "src/data/exhibitions/2026-01-11-04.md",
+      "path": "/exhibitions/2026-01-11-04/",
+      "verification": "recorded",
+      "occurredOn": "2026-01-11",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-01-24-05",
+      "kind": "exhibition",
+      "title": "CURATION⇄FAIR Tokyo 2026《美しさ、あいまいさ、時と場合に依る》",
+      "source": "src/data/exhibitions/2026-01-24-05.md",
+      "path": "/exhibitions/2026-01-24-05/",
+      "verification": "recorded",
+      "occurredOn": "2026-01-24",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-01-24-06",
+      "kind": "exhibition",
+      "title": "OTA FINE ARTS《Pink》",
+      "source": "src/data/exhibitions/2026-01-24-06.md",
+      "path": "/exhibitions/2026-01-24-06/",
+      "verification": "recorded",
+      "occurredOn": "2026-01-24",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-02-01-07",
+      "kind": "exhibition",
+      "title": "INVENTORY: WOLFGANG TILLMANS BOOKS 1995–2025",
+      "source": "src/data/exhibitions/2026-02-01-07.md",
+      "path": "/exhibitions/2026-02-01-07/",
+      "verification": "recorded",
+      "occurredOn": "2026-02-01",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-02-08-08",
+      "kind": "exhibition",
+      "title": "恵比寿映像祭2026《あなたの音に｜日花聲音》",
+      "source": "src/data/exhibitions/2026-02-08-08.md",
+      "path": "/exhibitions/2026-02-08-08/",
+      "verification": "recorded",
+      "occurredOn": "2026-02-08",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-02-13-09",
+      "kind": "exhibition",
+      "title": "橋本ロマンス × サエボーグ《パワーチキン》",
+      "source": "src/data/exhibitions/2026-02-13-09.md",
+      "path": "/exhibitions/2026-02-13-09/",
+      "verification": "recorded",
+      "occurredOn": "2026-02-13",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-02-14-10",
+      "kind": "exhibition",
+      "title": "いつもとなりにいるから 日本と韓国、アートの80年",
+      "source": "src/data/exhibitions/2026-02-14-10.md",
+      "path": "/exhibitions/2026-02-14-10/",
+      "verification": "recorded",
+      "occurredOn": "2026-02-14",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-04-11",
+      "kind": "exhibition",
+      "title": "テート美術館 YBA&BEYOND 世界を変えた90s英国アート",
+      "source": "src/data/exhibitions/2026-03-04-11.md",
+      "path": "/exhibitions/2026-03-04-11/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-04",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-04-12",
+      "kind": "exhibition",
+      "title": "TCAA 2024–2026 受賞記念展《湿地》",
+      "source": "src/data/exhibitions/2026-03-04-12.md",
+      "path": "/exhibitions/2026-03-04-12/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-04",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-14-13",
+      "kind": "exhibition",
+      "title": "やんツー《浮遊する器官》",
+      "source": "src/data/exhibitions/2026-03-14-13.md",
+      "path": "/exhibitions/2026-03-14-13/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-14",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-14-14",
+      "kind": "exhibition",
+      "title": "ART FAIR TOKYO 20",
+      "source": "src/data/exhibitions/2026-03-14-14.md",
+      "path": "/exhibitions/2026-03-14-14/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-14",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-14-15",
+      "kind": "exhibition",
+      "title": "Alfredo Jaar《あなたと私、そして世界のすべての人たち》",
+      "source": "src/data/exhibitions/2026-03-14-15.md",
+      "path": "/exhibitions/2026-03-14-15/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-14",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-24-16",
+      "kind": "exhibition",
+      "title": "Marina Abramović《Seven Deaths》",
+      "source": "src/data/exhibitions/2026-03-24-16.md",
+      "path": "/exhibitions/2026-03-24-16/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-24",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-25-17",
+      "kind": "exhibition",
+      "title": "C/O Berlin｜Eyes to Fly With / Archipelago / (Inter)faces of Predictions",
+      "source": "src/data/exhibitions/2026-03-25-17.md",
+      "path": "/exhibitions/2026-03-25-17/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-25",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-25-18",
+      "kind": "exhibition",
+      "title": "Yael Ronen《Sabotage》｜Schaubühne Berlin",
+      "source": "src/data/exhibitions/2026-03-25-18.md",
+      "path": "/exhibitions/2026-03-25-18/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-25",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-26-19",
+      "kind": "exhibition",
+      "title": "Klara Lidén《Kunstwerke》｜KW Berlin",
+      "source": "src/data/exhibitions/2026-03-26-19.md",
+      "path": "/exhibitions/2026-03-26-19/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-26",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-27-20",
+      "kind": "exhibition",
+      "title": "Jewish Museum Berlin｜建筑、常设展与DRUMMERRSSS",
+      "source": "src/data/exhibitions/2026-03-27-20.md",
+      "path": "/exhibitions/2026-03-27-20/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-27",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-27-21",
+      "kind": "exhibition",
+      "title": "Hamburger Bahnhof｜当代艺术展览与馆藏参访",
+      "source": "src/data/exhibitions/2026-03-27-21.md",
+      "path": "/exhibitions/2026-03-27-21/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-27",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-03-27-22",
+      "kind": "exhibition",
+      "title": "Miet Warlop《ONE SONG: Histoire(s) du Théâtre IV》",
+      "source": "src/data/exhibitions/2026-03-27-22.md",
+      "path": "/exhibitions/2026-03-27-22/",
+      "verification": "recorded",
+      "occurredOn": "2026-03-27",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-04-19-23",
+      "kind": "exhibition",
+      "title": "Zadok Ben-David《Second Nature》",
+      "source": "src/data/exhibitions/2026-04-19-23.md",
+      "path": "/exhibitions/2026-04-19-23/",
+      "verification": "recorded",
+      "occurredOn": "2026-04-19",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-04-24-24",
+      "kind": "exhibition",
+      "title": "Thailand Biennale, Phuket 2025《Eternal [Kalpa]》",
+      "source": "src/data/exhibitions/2026-04-24-24.md",
+      "path": "/exhibitions/2026-04-24-24/",
+      "verification": "recorded",
+      "occurredOn": "2026-04-24",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-04-26-25",
+      "kind": "exhibition",
+      "title": "Singapore Art Museum｜Talking Objects / The Living Room",
+      "source": "src/data/exhibitions/2026-04-26-25.md",
+      "path": "/exhibitions/2026-04-26-25/",
+      "verification": "recorded",
+      "occurredOn": "2026-04-26",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-04-26-26",
+      "kind": "exhibition",
+      "title": "Elia Nurvista × Bagus Pandega《Nafasan Bumi ~ An Endless Harvest》",
+      "source": "src/data/exhibitions/2026-04-26-26.md",
+      "path": "/exhibitions/2026-04-26-26/",
+      "verification": "recorded",
+      "occurredOn": "2026-04-26",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-05-06-27",
+      "kind": "exhibition",
+      "title": "ミッション∞インフィニティ｜宇宙＋量子＋芸術 / MOTコレクション",
+      "source": "src/data/exhibitions/2026-05-06-27.md",
+      "path": "/exhibitions/2026-05-06-27/",
+      "verification": "recorded",
+      "occurredOn": "2026-05-06",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-05-16-28",
+      "kind": "exhibition",
+      "title": "ruangrupa《Shared Living Room》｜DEFOAMAT 2026",
+      "source": "src/data/exhibitions/2026-05-16-28.md",
+      "path": "/exhibitions/2026-05-16-28/",
+      "verification": "recorded",
+      "occurredOn": "2026-05-16",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-05-23-29",
+      "kind": "exhibition",
+      "title": "TOKAS-Emerging 2026 第2期｜袁鑠涵、岸本望",
+      "source": "src/data/exhibitions/2026-05-23-29.md",
+      "path": "/exhibitions/2026-05-23-29/",
+      "verification": "recorded",
+      "occurredOn": "2026-05-23",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-05-23-30",
+      "kind": "exhibition",
+      "title": "BUG｜《The World as Seen from Kibera the Slum》",
+      "source": "src/data/exhibitions/2026-05-23-30.md",
+      "path": "/exhibitions/2026-05-23-30/",
+      "verification": "recorded",
+      "occurredOn": "2026-05-23",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-05-29-31",
+      "kind": "exhibition",
+      "title": "国際文化会館｜国際シンポジウム《How to Curate a Good Biennale?》",
+      "source": "src/data/exhibitions/2026-05-29-31.md",
+      "path": "/exhibitions/2026-05-29-31/",
+      "verification": "recorded",
+      "occurredOn": "2026-05-29",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-06-07-32",
+      "kind": "exhibition",
+      "title": "《パーフェクト・ビーチ》",
+      "source": "src/data/exhibitions/2026-06-07-32.md",
+      "path": "/exhibitions/2026-06-07-32/",
+      "verification": "recorded",
+      "occurredOn": "2026-06-07",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-06-13-33",
+      "kind": "exhibition",
+      "title": "Theaster Gates《Glorious Robe》",
+      "source": "src/data/exhibitions/2026-06-13-33.md",
+      "path": "/exhibitions/2026-06-13-33/",
+      "verification": "recorded",
+      "occurredOn": "2026-06-13",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-06-27-34",
+      "kind": "exhibition",
+      "title": "田中信太郎《意味から遠く離れて》",
+      "source": "src/data/exhibitions/2026-06-27-34.md",
+      "path": "/exhibitions/2026-06-27-34/",
+      "verification": "recorded",
+      "occurredOn": "2026-06-27",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-07-05-35",
+      "kind": "exhibition",
+      "title": "《スープはいのち》",
+      "source": "src/data/exhibitions/2026-07-05-35.md",
+      "path": "/exhibitions/2026-07-05-35/",
+      "verification": "recorded",
+      "occurredOn": "2026-07-05",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-07-12-36",
+      "kind": "exhibition",
+      "title": "《アジア美術の歩き方 東アジア編：近さと違いをめぐる旅》",
+      "source": "src/data/exhibitions/2026-07-12-36.md",
+      "path": "/exhibitions/2026-07-12-36/",
+      "verification": "recorded",
+      "occurredOn": "2026-07-12",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-07-12-37",
+      "kind": "exhibition",
+      "title": "《Biennale Jatim 2025》報告展",
+      "source": "src/data/exhibitions/2026-07-12-37.md",
+      "path": "/exhibitions/2026-07-12-37/",
+      "verification": "recorded",
+      "occurredOn": "2026-07-12",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-07-31-37",
+      "kind": "exhibition",
+      "title": "Mel Chin《第12回ヒロシマ賞受賞記念 メル・チン展》",
+      "source": "src/data/exhibitions/2026-07-31-37.md",
+      "path": "/exhibitions/2026-07-31-37/",
+      "verification": "recorded",
+      "occurredOn": "2026-07-31",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-08-02-38",
+      "kind": "exhibition",
+      "title": "《はだしであるく》",
+      "source": "src/data/exhibitions/2026-08-02-38.md",
+      "path": "/exhibitions/2026-08-02-38/",
+      "verification": "recorded",
+      "occurredOn": "2026-08-02",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-08-12-39",
+      "kind": "exhibition",
+      "title": "《まなざしの奇跡 日本女性写真家の冒険》",
+      "source": "src/data/exhibitions/2026-08-12-39.md",
+      "path": "/exhibitions/2026-08-12-39/",
+      "verification": "recorded",
+      "occurredOn": "2026-08-12",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-08-13-40",
+      "kind": "exhibition",
+      "title": "東京都写真美術館｜出口真子相关展览",
+      "source": "src/data/exhibitions/2026-08-13-40.md",
+      "path": "/exhibitions/2026-08-13-40/",
+      "verification": "needs-review",
+      "occurredOn": "2026-08-13",
+      "quarantined": true,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-09-10-41",
+      "kind": "exhibition",
+      "title": "大地の芸術祭｜奴奈川キャンパス常设展与活动",
+      "source": "src/data/exhibitions/2026-09-10-41.md",
+      "path": "/exhibitions/2026-09-10-41/",
+      "verification": "needs-review",
+      "occurredOn": "2026-09-10",
+      "quarantined": true,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-09-10-42",
+      "kind": "exhibition",
+      "title": "Tokyo Gendai 2026（横滨）",
+      "source": "src/data/exhibitions/2026-09-10-42.md",
+      "path": "/exhibitions/2026-09-10-42/",
+      "verification": "recorded",
+      "occurredOn": "2026-09-10",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-09-12-43",
+      "kind": "exhibition",
+      "title": "早稲田大学｜村上春樹ライブラリー",
+      "source": "src/data/exhibitions/2026-09-12-43.md",
+      "path": "/exhibitions/2026-09-12-43/",
+      "verification": "recorded",
+      "occurredOn": "2026-09-12",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-04-44",
+      "kind": "exhibition",
+      "title": "ICC｜ICC Annual 2026",
+      "source": "src/data/exhibitions/2026-10-04-44.md",
+      "path": "/exhibitions/2026-10-04-44/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-04",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-05-45",
+      "kind": "exhibition",
+      "title": "YUAN FANGZHOU｜东京画廊巡访",
+      "source": "src/data/exhibitions/2026-10-05-45.md",
+      "path": "/exhibitions/2026-10-05-45/",
+      "verification": "needs-review",
+      "occurredOn": "2026-10-05",
+      "quarantined": true,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-09-46",
+      "kind": "exhibition",
+      "title": "MEET YOUR ART FESTIVAL 2026",
+      "source": "src/data/exhibitions/2026-10-09-46.md",
+      "path": "/exhibitions/2026-10-09-46/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-09",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-09-47",
+      "kind": "exhibition",
+      "title": "TOKYO ATLAS｜《座標》",
+      "source": "src/data/exhibitions/2026-10-09-47.md",
+      "path": "/exhibitions/2026-10-09-47/",
+      "verification": "needs-review",
+      "occurredOn": "2026-10-09",
+      "quarantined": true,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-12-48",
+      "kind": "exhibition",
+      "title": "東京都写真美術館｜《DUET》",
+      "source": "src/data/exhibitions/2026-10-12-48.md",
+      "path": "/exhibitions/2026-10-12-48/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-12",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-17-49",
+      "kind": "exhibition",
+      "title": "東京芸術劇場｜Christopher Rüping《渇望》",
+      "source": "src/data/exhibitions/2026-10-17-49.md",
+      "path": "/exhibitions/2026-10-17-49/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-17",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-18-50",
+      "kind": "exhibition",
+      "title": "下呂 Art Discovery 2026",
+      "source": "src/data/exhibitions/2026-10-18-50.md",
+      "path": "/exhibitions/2026-10-18-50/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-18",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-23-51",
+      "kind": "exhibition",
+      "title": "上田佳奈｜版画群展",
+      "source": "src/data/exhibitions/2026-10-23-51.md",
+      "path": "/exhibitions/2026-10-23-51/",
+      "verification": "needs-review",
+      "occurredOn": "2026-10-23",
+      "quarantined": true,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-24-52",
+      "kind": "exhibition",
+      "title": "YOUNG BOY DANCE GROUP｜表演",
+      "source": "src/data/exhibitions/2026-10-24-52.md",
+      "path": "/exhibitions/2026-10-24-52/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-24",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-25-53",
+      "kind": "exhibition",
+      "title": "Leeum Museum of Art｜参访",
+      "source": "src/data/exhibitions/2026-10-25-53.md",
+      "path": "/exhibitions/2026-10-25-53/",
+      "verification": "needs-review",
+      "occurredOn": "2026-10-25",
+      "quarantined": true,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-25-54",
+      "kind": "exhibition",
+      "title": "SeMA｜Lynn Hershman Leeson《First Person Plural》",
+      "source": "src/data/exhibitions/2026-10-25-54.md",
+      "path": "/exhibitions/2026-10-25-54/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-25",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-25-55",
+      "kind": "exhibition",
+      "title": "文化駅ソウル284｜《Caring by Design》",
+      "source": "src/data/exhibitions/2026-10-25-55.md",
+      "path": "/exhibitions/2026-10-25-55/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-25",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-26-56",
+      "kind": "exhibition",
+      "title": "MMCA Seoul｜Do Ho Suh 展",
+      "source": "src/data/exhibitions/2026-10-26-56.md",
+      "path": "/exhibitions/2026-10-26-56/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-26",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-27-57",
+      "kind": "exhibition",
+      "title": "Gwangju Biennale 2026《You Must Change Your Life》",
+      "source": "src/data/exhibitions/2026-10-27-57.md",
+      "path": "/exhibitions/2026-10-27-57/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-27",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-28-58",
+      "kind": "exhibition",
+      "title": "ACC｜Media Art / Sound Art",
+      "source": "src/data/exhibitions/2026-10-28-58.md",
+      "path": "/exhibitions/2026-10-28-58/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-28",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-10-30-59",
+      "kind": "exhibition",
+      "title": "Busan Biennale 2026《Dissident Chorus》",
+      "source": "src/data/exhibitions/2026-10-30-59.md",
+      "path": "/exhibitions/2026-10-30-59/",
+      "verification": "recorded",
+      "occurredOn": "2026-10-30",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-11-06-60",
+      "kind": "exhibition",
+      "title": "GYRE｜高木由利子《chaoscosmos vol.3》",
+      "source": "src/data/exhibitions/2026-11-06-60.md",
+      "path": "/exhibitions/2026-11-06-60/",
+      "verification": "recorded",
+      "occurredOn": "2026-11-06",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-11-06-61",
+      "kind": "exhibition",
+      "title": "SEEEN｜名和晃平《At Random》",
+      "source": "src/data/exhibitions/2026-11-06-61.md",
+      "path": "/exhibitions/2026-11-06-61/",
+      "verification": "recorded",
+      "occurredOn": "2026-11-06",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-11-08-62",
+      "kind": "exhibition",
+      "title": "SPACE UN｜Julian Knxx《How Much Light Must I Consume?》",
+      "source": "src/data/exhibitions/2026-11-08-62.md",
+      "path": "/exhibitions/2026-11-08-62/",
+      "verification": "recorded",
+      "occurredOn": "2026-11-08",
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "exhibition:2026-11-08-63",
+      "kind": "exhibition",
+      "title": "大手町｜Art Week Tokyo・Rockbund相关项目",
+      "source": "src/data/exhibitions/2026-11-08-63.md",
+      "path": "/exhibitions/2026-11-08-63/",
+      "verification": "needs-review",
+      "occurredOn": "2026-11-08",
+      "quarantined": true,
+      "summary": null
+    },
+    {
+      "id": "institution:2121-design-sight",
+      "kind": "institution",
+      "title": "21_21 DESIGN SIGHT",
+      "source": "src/data/institutions/2121-design-sight.md",
+      "path": "/institutions/2121-design-sight/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:acc",
+      "kind": "institution",
+      "title": "ACC",
+      "source": "src/data/institutions/acc.md",
+      "path": "/institutions/acc/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:art-fair-tokyo",
+      "kind": "institution",
+      "title": "東京国際フォーラム",
+      "source": "src/data/institutions/art-fair-tokyo.md",
+      "path": "/institutions/art-fair-tokyo/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:art-week-tokyo",
+      "kind": "institution",
+      "title": "Art Week Tokyo · Otemachi",
+      "source": "src/data/institutions/art-week-tokyo.md",
+      "path": "/institutions/art-week-tokyo/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:artizon-museum",
+      "kind": "institution",
+      "title": "ARTIZON MUSEUM",
+      "source": "src/data/institutions/artizon-museum.md",
+      "path": "/institutions/artizon-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:biennale-jatim",
+      "kind": "institution",
+      "title": "Biennale Jatim / 東ジャワビエンナーレ",
+      "source": "src/data/institutions/biennale-jatim.md",
+      "path": "/institutions/biennale-jatim/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:bug",
+      "kind": "institution",
+      "title": "BUG",
+      "source": "src/data/institutions/bug.md",
+      "path": "/institutions/bug/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:busan-biennale",
+      "kind": "institution",
+      "title": "Busan Museum of Contemporary Art",
+      "source": "src/data/institutions/busan-biennale.md",
+      "path": "/institutions/busan-biennale/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:cisternerne",
+      "kind": "institution",
+      "title": "Cisternerne",
+      "source": "src/data/institutions/cisternerne.md",
+      "path": "/institutions/cisternerne/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:co-berlin",
+      "kind": "institution",
+      "title": "C/O Berlin",
+      "source": "src/data/institutions/co-berlin.md",
+      "path": "/institutions/co-berlin/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:culture-station-seoul-284",
+      "kind": "institution",
+      "title": "文化駅ソウル284",
+      "source": "src/data/institutions/culture-station-seoul-284.md",
+      "path": "/institutions/culture-station-seoul-284/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:curation-fair",
+      "kind": "institution",
+      "title": "kudan house",
+      "source": "src/data/institutions/curation-fair.md",
+      "path": "/institutions/curation-fair/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:design-museum-london",
+      "kind": "institution",
+      "title": "Design Museum (London)",
+      "source": "src/data/institutions/design-museum-london.md",
+      "path": "/institutions/design-museum-london/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:echigo-tsumari",
+      "kind": "institution",
+      "title": "奴奈川キャンパス",
+      "source": "src/data/institutions/echigo-tsumari.md",
+      "path": "/institutions/echigo-tsumari/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:fukuoka-asian-art-museum",
+      "kind": "institution",
+      "title": "福岡アジア美術館",
+      "source": "src/data/institutions/fukuoka-asian-art-museum.md",
+      "path": "/institutions/fukuoka-asian-art-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:gallery-soap",
+      "kind": "institution",
+      "title": "GALLERY SOAP",
+      "source": "src/data/institutions/gallery-soap.md",
+      "path": "/institutions/gallery-soap/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:gero-art-discovery",
+      "kind": "institution",
+      "title": "Gero Art Discovery 2026",
+      "source": "src/data/institutions/gero-art-discovery.md",
+      "path": "/institutions/gero-art-discovery/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:gwangju-biennale",
+      "kind": "institution",
+      "title": "Gwangju Biennale",
+      "source": "src/data/institutions/gwangju-biennale.md",
+      "path": "/institutions/gwangju-biennale/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:gyre-gallery",
+      "kind": "institution",
+      "title": "GYRE GALLERY",
+      "source": "src/data/institutions/gyre-gallery.md",
+      "path": "/institutions/gyre-gallery/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:hamburger-bahnhof",
+      "kind": "institution",
+      "title": "Hamburger Bahnhof",
+      "source": "src/data/institutions/hamburger-bahnhof.md",
+      "path": "/institutions/hamburger-bahnhof/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:hinodecho-waikiki-studio",
+      "kind": "institution",
+      "title": "日ノ出町ワイキキSTUDIO",
+      "source": "src/data/institutions/hinodecho-waikiki-studio.md",
+      "path": "/institutions/hinodecho-waikiki-studio/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:hiroshima-art-prize",
+      "kind": "institution",
+      "title": "ヒロシマ賞 / Hiroshima Art Prize",
+      "source": "src/data/institutions/hiroshima-art-prize.md",
+      "path": "/institutions/hiroshima-art-prize/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:hiroshima-moca",
+      "kind": "institution",
+      "title": "広島市現代美術館",
+      "source": "src/data/institutions/hiroshima-moca.md",
+      "path": "/institutions/hiroshima-moca/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:hosoo-gallery",
+      "kind": "institution",
+      "title": "HOSOO GALLERY",
+      "source": "src/data/institutions/hosoo-gallery.md",
+      "path": "/institutions/hosoo-gallery/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:iaf-shop",
+      "kind": "institution",
+      "title": "IAF SHOP*",
+      "source": "src/data/institutions/iaf-shop.md",
+      "path": "/institutions/iaf-shop/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:icc",
+      "kind": "institution",
+      "title": "NTT InterCommunication Center (ICC)",
+      "source": "src/data/institutions/icc.md",
+      "path": "/institutions/icc/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:international-house-of-japan",
+      "kind": "institution",
+      "title": "国際文化会館（International House of Japan）",
+      "source": "src/data/institutions/international-house-of-japan.md",
+      "path": "/institutions/international-house-of-japan/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:jewish-museum-berlin",
+      "kind": "institution",
+      "title": "Jewish Museum Berlin",
+      "source": "src/data/institutions/jewish-museum-berlin.md",
+      "path": "/institutions/jewish-museum-berlin/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:kitakyushu-international-biennial",
+      "kind": "institution",
+      "title": "北九州国際ビエンナーレ",
+      "source": "src/data/institutions/kitakyushu-international-biennial.md",
+      "path": "/institutions/kitakyushu-international-biennial/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:kw",
+      "kind": "institution",
+      "title": "KW",
+      "source": "src/data/institutions/kw.md",
+      "path": "/institutions/kw/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:leeum",
+      "kind": "institution",
+      "title": "Leeum Museum",
+      "source": "src/data/institutions/leeum.md",
+      "path": "/institutions/leeum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:m-plus",
+      "kind": "institution",
+      "title": "M+",
+      "source": "src/data/institutions/m-plus.md",
+      "path": "/institutions/m-plus/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:meet-your-art",
+      "kind": "institution",
+      "title": "寺田倉庫",
+      "source": "src/data/institutions/meet-your-art.md",
+      "path": "/institutions/meet-your-art/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:midori-so",
+      "kind": "institution",
+      "title": "MIDORI.so",
+      "source": "src/data/institutions/midori-so.md",
+      "path": "/institutions/midori-so/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:mmca",
+      "kind": "institution",
+      "title": "National Museum of Modern and Contemporary Art (MMCA)",
+      "source": "src/data/institutions/mmca.md",
+      "path": "/institutions/mmca/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:mori-art-museum",
+      "kind": "institution",
+      "title": "森美術館 / Mori Art Museum",
+      "source": "src/data/institutions/mori-art-museum.md",
+      "path": "/institutions/mori-art-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:mot",
+      "kind": "institution",
+      "title": "東京都現代美術館 (MOT)",
+      "source": "src/data/institutions/mot.md",
+      "path": "/institutions/mot/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:national-art-center-tokyo",
+      "kind": "institution",
+      "title": "国立新美術館",
+      "source": "src/data/institutions/national-art-center-tokyo.md",
+      "path": "/institutions/national-art-center-tokyo/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:ota-fine-arts",
+      "kind": "institution",
+      "title": "OTA FINE ARTS",
+      "source": "src/data/institutions/ota-fine-arts.md",
+      "path": "/institutions/ota-fine-arts/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:rencontres-arles",
+      "kind": "institution",
+      "title": "Rencontres d’Arles / 阿尔勒国际摄影节",
+      "source": "src/data/institutions/rencontres-arles.md",
+      "path": "/institutions/rencontres-arles/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:schaubuehne",
+      "kind": "institution",
+      "title": "Schaubühne",
+      "source": "src/data/institutions/schaubuehne.md",
+      "path": "/institutions/schaubuehne/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:seeen",
+      "kind": "institution",
+      "title": "SEEEN",
+      "source": "src/data/institutions/seeen.md",
+      "path": "/institutions/seeen/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:sema",
+      "kind": "institution",
+      "title": "Seoul Museum of Art (SeMA)",
+      "source": "src/data/institutions/sema.md",
+      "path": "/institutions/sema/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:setagaya-art-museum",
+      "kind": "institution",
+      "title": "世田谷美術館",
+      "source": "src/data/institutions/setagaya-art-museum.md",
+      "path": "/institutions/setagaya-art-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:shibuya-hikarie",
+      "kind": "institution",
+      "title": "渋谷ヒカリエ",
+      "source": "src/data/institutions/shibuya-hikarie.md",
+      "path": "/institutions/shibuya-hikarie/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:singapore-art-museum",
+      "kind": "institution",
+      "title": "Singapore Art Museum",
+      "source": "src/data/institutions/singapore-art-museum.md",
+      "path": "/institutions/singapore-art-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:skwat",
+      "kind": "institution",
+      "title": "SKWAT",
+      "source": "src/data/institutions/skwat.md",
+      "path": "/institutions/skwat/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:space-un",
+      "kind": "institution",
+      "title": "SPACE UN",
+      "source": "src/data/institutions/space-un.md",
+      "path": "/institutions/space-un/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:syndicate-fukuoka",
+      "kind": "institution",
+      "title": "SYNDICATE",
+      "source": "src/data/institutions/syndicate-fukuoka.md",
+      "path": "/institutions/syndicate-fukuoka/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:syndicate-takamatsu",
+      "kind": "institution",
+      "title": "SYNDICATE",
+      "source": "src/data/institutions/syndicate-takamatsu.md",
+      "path": "/institutions/syndicate-takamatsu/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:thailand-biennale",
+      "kind": "institution",
+      "title": "Pearl Bowl",
+      "source": "src/data/institutions/thailand-biennale.md",
+      "path": "/institutions/thailand-biennale/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:tokas",
+      "kind": "institution",
+      "title": "Tokyo Arts and Space",
+      "source": "src/data/institutions/tokas.md",
+      "path": "/institutions/tokas/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:tokyo-bunka-kaikan",
+      "kind": "institution",
+      "title": "東京文化会館",
+      "source": "src/data/institutions/tokyo-bunka-kaikan.md",
+      "path": "/institutions/tokyo-bunka-kaikan/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:tokyo-gendai",
+      "kind": "institution",
+      "title": "パシフィコ横浜",
+      "source": "src/data/institutions/tokyo-gendai.md",
+      "path": "/institutions/tokyo-gendai/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:tokyo-metropolitan-theatre",
+      "kind": "institution",
+      "title": "東京芸術劇場",
+      "source": "src/data/institutions/tokyo-metropolitan-theatre.md",
+      "path": "/institutions/tokyo-metropolitan-theatre/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:tokyo-opera-city",
+      "kind": "institution",
+      "title": "東京オペラシティ アートギャラリー",
+      "source": "src/data/institutions/tokyo-opera-city.md",
+      "path": "/institutions/tokyo-opera-city/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:tokyo-photographic-art-museum",
+      "kind": "institution",
+      "title": "東京都写真美術館",
+      "source": "src/data/institutions/tokyo-photographic-art-museum.md",
+      "path": "/institutions/tokyo-photographic-art-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:victoria-and-albert-museum",
+      "kind": "institution",
+      "title": "Victoria and Albert Museum (V&A)",
+      "source": "src/data/institutions/victoria-and-albert-museum.md",
+      "path": "/institutions/victoria-and-albert-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:waseda-library",
+      "kind": "institution",
+      "title": "早稲田大学",
+      "source": "src/data/institutions/waseda-library.md",
+      "path": "/institutions/waseda-library/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:what-museum",
+      "kind": "institution",
+      "title": "WHAT MUSEUM",
+      "source": "src/data/institutions/what-museum.md",
+      "path": "/institutions/what-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "institution:yokohama-museum",
+      "kind": "institution",
+      "title": "横浜美術館",
+      "source": "src/data/institutions/yokohama-museum.md",
+      "path": "/institutions/yokohama-museum/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:alfredo-jaar",
+      "kind": "person",
+      "title": "Alfredo Jaar",
+      "source": "src/data/people/alfredo-jaar.md",
+      "path": "/people/alfredo-jaar/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:bagus-pandega",
+      "kind": "person",
+      "title": "Bagus Pandega",
+      "source": "src/data/people/bagus-pandega.md",
+      "path": "/people/bagus-pandega/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:carsten-nicolai",
+      "kind": "person",
+      "title": "Carsten Nicolai",
+      "source": "src/data/people/carsten-nicolai.md",
+      "path": "/people/carsten-nicolai/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:christopher-rueping",
+      "kind": "person",
+      "title": "Christopher Rüping",
+      "source": "src/data/people/christopher-rueping.md",
+      "path": "/people/christopher-rueping/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:do-ho-suh",
+      "kind": "person",
+      "title": "Do Ho Suh",
+      "source": "src/data/people/do-ho-suh.md",
+      "path": "/people/do-ho-suh/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:elia-nurvista",
+      "kind": "person",
+      "title": "Elia Nurvista",
+      "source": "src/data/people/elia-nurvista.md",
+      "path": "/people/elia-nurvista/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:fuse-rintaro",
+      "kind": "person",
+      "title": "Fuse Rintaro / 布施琳太郎",
+      "source": "src/data/people/fuse-rintaro.md",
+      "path": "/people/fuse-rintaro/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:henry-moore",
+      "kind": "person",
+      "title": "Henry Moore",
+      "source": "src/data/people/henry-moore.md",
+      "path": "/people/henry-moore/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:julianknxx",
+      "kind": "person",
+      "title": "Julian Knxx",
+      "source": "src/data/people/julianknxx.md",
+      "path": "/people/julianknxx/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:kataoka-mami",
+      "kind": "person",
+      "title": "Kataoka Mami / 片岡真実",
+      "source": "src/data/people/kataoka-mami.md",
+      "path": "/people/kataoka-mami/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:keiichi-sato",
+      "kind": "person",
+      "title": "Sato Keiichi / 佐藤恵一",
+      "source": "src/data/people/keiichi-sato.md",
+      "path": "/people/keiichi-sato/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:keiichiro-terae",
+      "kind": "person",
+      "title": "Terae Keiichiro / 寺江圭一朗",
+      "source": "src/data/people/keiichiro-terae.md",
+      "path": "/people/keiichiro-terae/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:lynn-hershman-leeson",
+      "kind": "person",
+      "title": "Lynn Hershman Leeson",
+      "source": "src/data/people/lynn-hershman-leeson.md",
+      "path": "/people/lynn-hershman-leeson/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:marina-abramovic",
+      "kind": "person",
+      "title": "Marina Abramović",
+      "source": "src/data/people/marina-abramovic.md",
+      "path": "/people/marina-abramovic/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:mel-chin",
+      "kind": "person",
+      "title": "Mel Chin",
+      "source": "src/data/people/mel-chin.md",
+      "path": "/people/mel-chin/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:miet-warlop",
+      "kind": "person",
+      "title": "Miet Warlop",
+      "source": "src/data/people/miet-warlop.md",
+      "path": "/people/miet-warlop/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:mikami-seiko",
+      "kind": "person",
+      "title": "Mikami Seiko / 三上晴子",
+      "source": "src/data/people/mikami-seiko.md",
+      "path": "/people/mikami-seiko/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:nawa-kohei",
+      "kind": "person",
+      "title": "Nawa Kohei / 名和晃平",
+      "source": "src/data/people/nawa-kohei.md",
+      "path": "/people/nawa-kohei/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:noe-aoki",
+      "kind": "person",
+      "title": "Aoki Noe / 青木野枝",
+      "source": "src/data/people/noe-aoki.md",
+      "path": "/people/noe-aoki/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:orm-project",
+      "kind": "person",
+      "title": "orm project",
+      "source": "src/data/people/orm-project.md",
+      "path": "/people/orm-project/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:ruangrupa",
+      "kind": "person",
+      "title": "ruangrupa",
+      "source": "src/data/people/ruangrupa.md",
+      "path": "/people/ruangrupa/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:saeborg",
+      "kind": "person",
+      "title": "Saeborg",
+      "source": "src/data/people/saeborg.md",
+      "path": "/people/saeborg/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:shiga-lieko",
+      "kind": "person",
+      "title": "Shiga Lieko / 志賀理江子",
+      "source": "src/data/people/shiga-lieko.md",
+      "path": "/people/shiga-lieko/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:takagi-yuriko",
+      "kind": "person",
+      "title": "Takagi Yuriko / 高木由利子",
+      "source": "src/data/people/takagi-yuriko.md",
+      "path": "/people/takagi-yuriko/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:tanaka-shintaro",
+      "kind": "person",
+      "title": "Tanaka Shintaro / 田中信太郎",
+      "source": "src/data/people/tanaka-shintaro.md",
+      "path": "/people/tanaka-shintaro/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:theaster-gates",
+      "kind": "person",
+      "title": "Theaster Gates",
+      "source": "src/data/people/theaster-gates.md",
+      "path": "/people/theaster-gates/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:ueda-kana",
+      "kind": "person",
+      "title": "Ueda Kana / 上田佳奈",
+      "source": "src/data/people/ueda-kana.md",
+      "path": "/people/ueda-kana/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:umeda-tetsuya",
+      "kind": "person",
+      "title": "Umeda Tetsuya / 梅田哲也",
+      "source": "src/data/people/umeda-tetsuya.md",
+      "path": "/people/umeda-tetsuya/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:wolfgang-tillmans",
+      "kind": "person",
+      "title": "Wolfgang Tillmans",
+      "source": "src/data/people/wolfgang-tillmans.md",
+      "path": "/people/wolfgang-tillmans/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:wu-xiazhi",
+      "kind": "person",
+      "title": "OH Haji / 呉夏枝",
+      "source": "src/data/people/wu-xiazhi.md",
+      "path": "/people/wu-xiazhi/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:yamashiro-chikako",
+      "kind": "person",
+      "title": "Yamashiro Chikako / 山城知佳子",
+      "source": "src/data/people/yamashiro-chikako.md",
+      "path": "/people/yamashiro-chikako/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:yang02",
+      "kind": "person",
+      "title": "YANG02 / やんツー",
+      "source": "src/data/people/yang02.md",
+      "path": "/people/yang02/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:young-boy-dance-group",
+      "kind": "person",
+      "title": "YOUNG BOY DANCE GROUP",
+      "source": "src/data/people/young-boy-dance-group.md",
+      "path": "/people/young-boy-dance-group/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:yuan-fangzhou",
+      "kind": "person",
+      "title": "YUAN FANGZHOU",
+      "source": "src/data/people/yuan-fangzhou.md",
+      "path": "/people/yuan-fangzhou/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:yukinori-yanagi",
+      "kind": "person",
+      "title": "Yanagi Yukinori / 柳幸典",
+      "source": "src/data/people/yukinori-yanagi.md",
+      "path": "/people/yukinori-yanagi/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:yurie-nagashima",
+      "kind": "person",
+      "title": "Nagashima Yurie / 長島有里枝",
+      "source": "src/data/people/yurie-nagashima.md",
+      "path": "/people/yurie-nagashima/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    },
+    {
+      "id": "person:zadok-ben-david",
+      "kind": "person",
+      "title": "Zadok Ben-David",
+      "source": "src/data/people/zadok-ben-david.md",
+      "path": "/people/zadok-ben-david/",
+      "verification": null,
+      "occurredOn": null,
+      "quarantined": false,
+      "summary": null
+    }
+  ],
+  "metadataLinks": [
+    {
+      "from": "exhibition:2026-01-07-02",
+      "to": "concept:sound-and-technology",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-07-02",
+      "to": "institution:hosoo-gallery",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-07-02",
+      "to": "person:carsten-nicolai",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-08-03",
+      "to": "concept:memory-and-place",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-08-03",
+      "to": "institution:artizon-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-08-03",
+      "to": "person:shiga-lieko",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-08-03",
+      "to": "person:yamashiro-chikako",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-11-04",
+      "to": "concept:technology-and-body",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-11-04",
+      "to": "institution:icc",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-11-04",
+      "to": "person:mikami-seiko",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-24-05",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-24-05",
+      "to": "institution:curation-fair",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-24-06",
+      "to": "concept:identity-and-representation",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-01-24-06",
+      "to": "institution:ota-fine-arts",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-01-07",
+      "to": "concept:photography",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-01-07",
+      "to": "institution:skwat",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-01-07",
+      "to": "person:wolfgang-tillmans",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-08-08",
+      "to": "concept:moving-image",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-08-08",
+      "to": "institution:tokyo-photographic-art-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-13-09",
+      "to": "concept:performance",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-13-09",
+      "to": "institution:tokyo-metropolitan-theatre",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-13-09",
+      "to": "person:saeborg",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-14-10",
+      "to": "concept:transcultural-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-02-14-10",
+      "to": "institution:yokohama-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-04-11",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-04-11",
+      "to": "institution:national-art-center-tokyo",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-04-12",
+      "to": "concept:memory-and-place",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-04-12",
+      "to": "institution:mot",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-04-12",
+      "to": "person:umeda-tetsuya",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-04-12",
+      "to": "person:wu-xiazhi",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-14-13",
+      "to": "concept:sound-and-technology",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-14-13",
+      "to": "institution:bug",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-14-13",
+      "to": "person:yang02",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-14-14",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-14-14",
+      "to": "institution:art-fair-tokyo",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-14-15",
+      "to": "concept:politics-of-representation",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-14-15",
+      "to": "institution:tokyo-opera-city",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-14-15",
+      "to": "person:alfredo-jaar",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-24-16",
+      "to": "concept:performance",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-24-16",
+      "to": "institution:cisternerne",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-24-16",
+      "to": "person:marina-abramovic",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-25-17",
+      "to": "concept:photography",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-25-17",
+      "to": "institution:co-berlin",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-25-18",
+      "to": "concept:performance",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-25-18",
+      "to": "institution:schaubuehne",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-26-19",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-26-19",
+      "to": "institution:kw",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-27-20",
+      "to": "concept:memory-and-place",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-27-20",
+      "to": "institution:jewish-museum-berlin",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-27-21",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-27-21",
+      "to": "institution:hamburger-bahnhof",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-27-22",
+      "to": "concept:performance",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-03-27-22",
+      "to": "person:miet-warlop",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-19-23",
+      "to": "concept:ecology",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-19-23",
+      "to": "institution:gyre-gallery",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-19-23",
+      "to": "person:zadok-ben-david",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-24-24",
+      "to": "concept:site-specificity",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-24-24",
+      "to": "institution:thailand-biennale",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-26-25",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-26-25",
+      "to": "institution:singapore-art-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-26-26",
+      "to": "concept:ecology",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-26-26",
+      "to": "institution:singapore-art-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-26-26",
+      "to": "person:bagus-pandega",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-04-26-26",
+      "to": "person:elia-nurvista",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-06-27",
+      "to": "concept:sound-and-technology",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-06-27",
+      "to": "institution:mot",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-16-28",
+      "to": "concept:collective-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-16-28",
+      "to": "institution:midori-so",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-16-28",
+      "to": "person:ruangrupa",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-23-29",
+      "to": "concept:artist-residency",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-23-29",
+      "to": "institution:tokas",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-23-30",
+      "to": "concept:politics-of-representation",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-23-30",
+      "to": "institution:bug",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-29-31",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-29-31",
+      "to": "institution:international-house-of-japan",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-05-29-31",
+      "to": "person:kataoka-mami",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-07-32",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-07-32",
+      "to": "concept:performance",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-07-32",
+      "to": "institution:hinodecho-waikiki-studio",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-07-32",
+      "to": "person:fuse-rintaro",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-13-33",
+      "to": "concept:material-and-memory",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-13-33",
+      "to": "concept:site-specificity",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-13-33",
+      "to": "institution:hosoo-gallery",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-13-33",
+      "to": "person:theaster-gates",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-27-34",
+      "to": "concept:postwar-art",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-27-34",
+      "to": "institution:setagaya-art-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-06-27-34",
+      "to": "person:tanaka-shintaro",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-05-35",
+      "to": "concept:care-and-design",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-05-35",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-05-35",
+      "to": "institution:2121-design-sight",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-36",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-36",
+      "to": "concept:politics-of-representation",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-36",
+      "to": "concept:transcultural-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-36",
+      "to": "institution:fukuoka-asian-art-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-36",
+      "to": "person:yukinori-yanagi",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-37",
+      "to": "concept:artist-residency",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-37",
+      "to": "concept:collective-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-37",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-37",
+      "to": "institution:iaf-shop",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-37",
+      "to": "person:keiichi-sato",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-37",
+      "to": "person:keiichiro-terae",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-12-37",
+      "to": "person:orm-project",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-31-37",
+      "to": "concept:ecology",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-31-37",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-31-37",
+      "to": "concept:politics-of-representation",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-31-37",
+      "to": "institution:hiroshima-moca",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-31-37",
+      "to": "person:alfredo-jaar",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-31-37",
+      "to": "person:henry-moore",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-31-37",
+      "to": "person:mel-chin",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-07-31-37",
+      "to": "person:noe-aoki",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-02-38",
+      "to": "concept:artist-residency",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-02-38",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-02-38",
+      "to": "institution:tokas",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-12-39",
+      "to": "concept:identity-and-representation",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-12-39",
+      "to": "concept:photography",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-12-39",
+      "to": "concept:transcultural-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-12-39",
+      "to": "institution:shibuya-hikarie",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-12-39",
+      "to": "person:yurie-nagashima",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-13-40",
+      "to": "concept:photography",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-08-13-40",
+      "to": "institution:tokyo-photographic-art-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-09-10-41",
+      "to": "concept:site-specificity",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-09-10-41",
+      "to": "institution:echigo-tsumari",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-09-10-42",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-09-10-42",
+      "to": "institution:tokyo-gendai",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-09-12-43",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-09-12-43",
+      "to": "institution:waseda-library",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-04-44",
+      "to": "concept:technology-and-body",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-04-44",
+      "to": "institution:icc",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-05-45",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-05-45",
+      "to": "person:yuan-fangzhou",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-09-46",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-09-46",
+      "to": "institution:meet-your-art",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-09-47",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-09-47",
+      "to": "institution:what-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-12-48",
+      "to": "concept:transcultural-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-12-48",
+      "to": "institution:tokyo-photographic-art-museum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-17-49",
+      "to": "concept:performance",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-17-49",
+      "to": "institution:tokyo-metropolitan-theatre",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-17-49",
+      "to": "person:christopher-rueping",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-18-50",
+      "to": "concept:site-specificity",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-18-50",
+      "to": "institution:gero-art-discovery",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-23-51",
+      "to": "concept:printmaking",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-23-51",
+      "to": "person:ueda-kana",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-24-52",
+      "to": "concept:performance",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-24-52",
+      "to": "person:young-boy-dance-group",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-25-53",
+      "to": "concept:institutional-studies",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-25-53",
+      "to": "institution:leeum",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-25-54",
+      "to": "concept:technology-and-body",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-25-54",
+      "to": "institution:sema",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-25-54",
+      "to": "person:lynn-hershman-leeson",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-25-55",
+      "to": "concept:care-and-design",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-25-55",
+      "to": "institution:culture-station-seoul-284",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-26-56",
+      "to": "concept:memory-and-place",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-26-56",
+      "to": "institution:mmca",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-26-56",
+      "to": "person:do-ho-suh",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-27-57",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-27-57",
+      "to": "institution:gwangju-biennale",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-28-58",
+      "to": "concept:sound-and-technology",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-28-58",
+      "to": "institution:acc",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-30-59",
+      "to": "concept:politics-of-representation",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-10-30-59",
+      "to": "institution:busan-biennale",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-06-60",
+      "to": "concept:photography",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-06-60",
+      "to": "institution:gyre-gallery",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-06-60",
+      "to": "person:takagi-yuriko",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-06-61",
+      "to": "concept:material-and-memory",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-06-61",
+      "to": "institution:seeen",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-06-61",
+      "to": "person:nawa-kohei",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-08-62",
+      "to": "concept:politics-of-representation",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-08-62",
+      "to": "institution:space-un",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-08-62",
+      "to": "person:julianknxx",
+      "sourceField": "artists",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-08-63",
+      "to": "concept:curatorial-practices",
+      "sourceField": "concepts",
+      "status": "METADATA_ONLY",
+      "activated": false
+    },
+    {
+      "from": "exhibition:2026-11-08-63",
+      "to": "institution:art-week-tokyo",
+      "sourceField": "institution",
+      "status": "METADATA_ONLY",
+      "activated": false
+    }
+  ],
+  "routeEvidence": "Astro src/pages/[slug].astro getStaticPaths from collection item.id; local source presence; NOT deployed HTTP availability",
+  "navigationHash": "3cbe8dcea3da807ad6137b4598e664db462bdceebb61ac28c82243e8f5345f79"
+}

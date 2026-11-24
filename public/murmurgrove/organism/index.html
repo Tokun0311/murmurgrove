@@ -1,0 +1,162 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fbfcfa"><title>TOW ARCHIVE | Murmurgrove</title>
+<style>
+:root{font-family:"Noto Sans SC",Inter,"Helvetica Neue",Arial,sans-serif;color:#275d50;background:#fafbf8;--green:#006748;--muted:#799388;--line:#cbdcd1}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{overflow:hidden;background:#fafbf8}canvas{display:block;width:100%;height:100%;touch-action:none}button{font:inherit;cursor:pointer;color:inherit}button:focus-visible,a:focus-visible{outline:2px solid #247e6d;outline-offset:3px}
+header{position:fixed;z-index:5;top:0;left:0;right:0;height:106px;background:linear-gradient(180deg,rgba(250,251,248,.94),rgba(250,251,248,.60));pointer-events:none}header .inner{position:absolute;left:26px;right:26px;top:45px;display:flex;justify-content:space-between;align-items:center;pointer-events:auto}header .name{letter-spacing:.10em;font-size:15px;font-weight:650;color:#006e4d;text-decoration:none}header .menu{border:0;background:none;color:var(--green);width:30px;height:30px;padding:5px;display:grid;place-content:center;gap:5px}header .menu span{display:block;width:17px;height:1px;background:currentColor}header .rule{position:absolute;bottom:0;left:26px;right:26px;height:1px;background:#16845c}
+#stage{position:fixed;inset:0}#hint{position:fixed;bottom:97px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.10em;color:#9baa9f;opacity:0;transition:opacity .3s;pointer-events:none}body.hint #hint{opacity:1}
+#bottom{position:fixed;z-index:4;left:24px;right:24px;bottom:max(19px,env(safe-area-inset-bottom));height:48px;pointer-events:none;display:flex;align-items:center;justify-content:space-between;gap:10px}.glass{border:1px solid rgba(133,161,149,.26);background:rgba(251,252,249,.73);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:999px;box-shadow:0 4px 15px rgba(92,120,107,.028);pointer-events:auto}#bottom button{background:transparent;border:0;color:#728b7f;font-size:11px}#history{padding:9px 14px;white-space:nowrap}#zoomBox{display:flex;align-items:center;gap:2px;padding:3px 6px}#zoomBox button{width:25px;height:28px;font-size:15px;font-weight:300}#zoomLabel{font-size:11px;min-width:36px;text-align:center;color:#738b81}#zoomBox .divider{height:15px;width:1px;background:#d7e2da;margin:0 2px}
+#mode{position:fixed;z-index:4;left:50%;transform:translateX(-50%);bottom:calc(max(19px,env(safe-area-inset-bottom)) + 60px);padding:3px;display:flex;gap:2px;align-items:center}#mode button{border:0;background:transparent;min-width:43px;padding:9px 12px;border-radius:999px;font-size:17px;line-height:1;color:#84998d;letter-spacing:.02em;transition:background-color .2s,color .2s}#mode button[aria-pressed=true]{color:#006d4d;background:#e6f2e9}#mode button:hover{color:#006d4d}
+#card{position:fixed;z-index:3;min-width:130px;max-width:min(220px,68vw);background:rgba(251,253,250,.91);border:1px solid #d6e6d9;border-radius:13px;padding:10px 13px;box-shadow:0 8px 25px rgba(67,103,87,.07);color:#186348;display:none}#card .top{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:9px;letter-spacing:.12em;color:#8aa59a;text-transform:uppercase}#card .card-title{font-size:13px;font-weight:500;line-height:1.45;margin:5px 0 4px}#card .role{font-size:10px;color:#92a39a;line-height:1.45}#card .card-link{display:block;border:0;background:transparent;text-decoration:none;color:inherit;cursor:pointer;padding:0;text-align:left}#card .card-link:hover .card-title{text-decoration:underline;text-decoration-color:#a8cbb7;text-underline-offset:3px}#card .locator{width:26px;height:26px;flex:none;padding:0;border:0;background:transparent;display:none}body.deep #card .locator{display:block}#card .locator svg{width:26px;height:26px}#card .detail{display:flex;justify-content:space-between;gap:6px;align-items:center}#card .connected{font-size:10px;color:#9bab9f;margin-top:7px;line-height:1.5}#card .connected a{color:#5b8b75;text-decoration:none;border-bottom:1px solid #b9d6c4}#card .close{border:0;background:none;color:#a5b3a9;font-size:14px;padding:0 1px;margin-left:7px}#status{position:fixed;right:22px;top:115px;z-index:4;font-size:9px;line-height:1.65;color:#8fa59a;text-align:right;display:none}#debugPanel{position:fixed;z-index:6;right:18px;top:83px;max-width:270px;background:#fafcf8f5;border:1px solid #dbe8de;border-radius:12px;padding:14px;color:#617e6c;font-size:11px;line-height:1.7;box-shadow:0 6px 22px #53695e12;display:none}#debugPanel h3{font-size:11px;margin:0 0 8px}#debugPanel select{border:1px solid #d4e1d8;border-radius:6px;padding:6px;width:100%}body.debug #debugPanel,body.debug #status{display:block}
+#historyPanel{position:fixed;z-index:5;left:24px;bottom:calc(max(19px,env(safe-area-inset-bottom)) + 66px);width:min(386px,calc(100vw - 48px));max-height:min(73vh,570px);padding:16px 17px 14px;font-size:11px;line-height:1.5;color:#678476;display:none;overflow:hidden;border-radius:18px;background:rgba(251,253,250,.95);box-shadow:0 16px 50px #42675518}
+body.history-open #historyPanel{display:flex;flex-direction:column}#historyPanel button{border:0;background:transparent;font:inherit;cursor:pointer}#historyPanel .hp-top{display:flex;align-items:start;justify-content:space-between;gap:12px}#historyPanel .hp-kicker{font-size:9px;letter-spacing:.15em;color:#83a092}#historyPanel h2{font-size:17px;line-height:1.3;font-weight:500;margin:5px 0 2px;color:#276f50}#historyPanel .hp-year{display:flex;align-items:center;gap:8px}#historyPanel .hp-year button{color:#6b967e;font-size:15px;padding:0 1px}#historyPanel .hp-year button[hidden]{display:none}#historyPanel .hp-count{color:#91a79c;font-size:10px}#historyPanel #historyClose{color:#789686;font-size:19px;line-height:1;padding:0 2px}#historyMonths{display:flex;gap:3px;justify-content:space-between;align-items:end;border-bottom:1px solid #dce9de;margin:15px 0 11px;padding-bottom:10px;min-height:51px}#historyMonths .month{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:19px;flex:1;padding:0;border-radius:5px;color:#91a89b}#historyMonths .month-bar{display:block;width:4px;min-height:3px;border-radius:3px;background:#b0c8b8;transition:background-color .2s}#historyMonths .month-label{font-size:9px}#historyMonths .month[aria-pressed=true]{color:#166e4c}#historyMonths .month[aria-pressed=true] .month-bar{background:#168459;width:6px}#historyMonths .month:hover .month-bar{background:#548f70}#historyEntries{min-height:66px;max-height:min(37vh,260px);overflow-y:auto;overscroll-behavior:contain}#historyEntries .entry{display:flex;width:100%;align-items:baseline;gap:11px;padding:9px 2px;border-bottom:1px solid #e8efe9;text-align:left;color:#356c55;border-radius:0}#historyEntries .entry:hover,#historyEntries .entry:focus-visible{color:#086e49;background:#edf5ee}#historyEntries .entry-date{flex:none;min-width:36px;color:#99aa9f;font-size:10px;font-variant-numeric:tabular-nums}#historyEntries .entry-title{font-size:11px;line-height:1.5}#historyPanel .hp-note{font-size:9px;line-height:1.6;color:#8ba094;border-top:1px solid #e2eae4;margin:11px 0 0;padding-top:9px}
+#historyPanel [hidden]{display:none!important}
+#historyPanel .hp-tabs{display:flex;gap:6px;align-items:center;margin-top:13px;border-bottom:1px solid #dce9de;padding-bottom:8px}
+#historyPanel .hp-tabs button{font-size:10px;border-radius:999px;padding:6px 7px;color:#8aa297;white-space:nowrap;flex:0 1 auto}
+#historyPanel .hp-tabs button[aria-selected=true]{background:#e7f2e9;color:#176a4c}
+#historyVisitView,#historyVersionView,#historyFrameView,#historyActsView,#historyLifeView{display:flex;flex-direction:column;min-height:0}
+#historyVersionView,#historyFrameView,#historyActsView,#historyLifeView{max-height:min(48vh,355px);overflow-y:auto;overscroll-behavior:contain}
+#versionCount{margin:10px 0;font-size:10px;line-height:1.65;color:#819c8c}
+#historyVersions{display:flex;flex-direction:column;gap:4px}
+#historyVersions .version-entry{display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;padding:9px 8px;border-radius:8px;font-size:11px;color:#346b54}
+#historyVersions .version-entry[aria-pressed=true]{background:#e9f3eb;color:#086f4a}
+#historyVersions .version-date{font-size:10px;color:#8ca79a;flex:none;min-width:74px}
+#historyVersionDetail{padding:10px 3px 4px;font-size:10px;line-height:1.6;color:#728f7e}
+#historyVersionDetail h3{font-size:13px;color:#236d4e;font-weight:500;margin:0 0 7px}
+#historyVersionDetail p{margin:6px 0}
+#historyVersionDetail .version-numbers{color:#356f53}
+#historyVersionDetail .version-provenance{font-size:9px;overflow-wrap:anywhere;color:#91a799}
+#historyVersionDetail .version-verify{font-size:9px;color:#448260}
+#historyVersionView .hp-note,#historyFrameView .hp-note{position:sticky;bottom:0;background:rgba(251,253,250,.96);padding-bottom:3px}
+
+
+#historyVersionDetail .version-open-structure{display:block;border-radius:999px;border:1px solid #c8ded1;background:#e8f4eb;color:#1a6a4c;padding:9px 13px;margin:13px 0 5px;font-size:10px;letter-spacing:.02em;text-align:left}
+#historyVersionDetail .version-open-structure:hover{background:#d9ecde}
+#historyVersionDetail .version-open-structure:disabled{opacity:.55;cursor:wait}
+#sourceReadingBadge{position:fixed;z-index:4;top:120px;left:24px;max-width:min(385px,calc(100vw - 48px));border:1px solid #d5e5d9;background:rgba(251,253,250,.92);border-radius:10px;padding:9px 11px;display:flex;gap:11px;align-items:center;font-size:10px;line-height:1.45;color:#4c8468;box-shadow:0 5px 20px #35654909}
+#sourceReadingBadge[hidden]{display:none}
+#sourceReadingBadge .reading-meta{display:block;color:#93ab9a;font-size:9px;line-height:1.6}
+#sourceReadingBadge button{border:0;background:none;font-size:16px;color:#729281;line-height:1;padding:3px}
+@media(max-width:600px){#sourceReadingBadge{top:99px;left:12px;max-width:calc(100vw - 24px);padding:7px 9px;font-size:9px}}
+
+
+/* Phase 3.0: deliberately quiet present optical-frame archive */
+#historyFrameView{overflow-y:auto;overscroll-behavior:contain}
+#frameCount{font-size:10px;color:#819c8c;margin:9px 0}
+#historyFrames{display:flex;flex-direction:column;gap:4px}
+#historyFrames .version-entry{display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;padding:9px 8px;border-radius:8px;font-size:11px;color:#346b54}
+#historyFrames .version-entry[aria-pressed=true]{background:#e9f3eb;color:#086f4a}
+#historyFrames .version-date{font-size:10px;color:#8ca79a;min-width:74px;flex:none}
+#historyFrameDetail{padding:9px 3px;font-size:10px;color:#728f7e;line-height:1.65}
+#historyFrameDetail h3{font-size:13px;font-weight:500;color:#236d4e;margin:0 0 7px}
+#historyFrameDetail p{margin:5px 0}
+#historyFrameDetail .version-provenance{font-size:9px;overflow-wrap:anywhere}
+#historyFrameDetail .frame-thumb{display:block;max-width:100%;max-height:190px;object-fit:contain;border:1px solid #dbe7de;border-radius:7px;cursor:zoom-in;margin:9px 0}
+#historyPanel #frameCapture{border:1px solid #bbdbc8;background:#e3f1e7;border-radius:999px;color:#0d6548;padding:9px 13px;margin:10px 0 4px;font-size:10px;align-self:flex-start}
+#historyPanel #frameCapture:disabled{opacity:.5;cursor:wait}
+#frameCaptureStatus{font-size:9px;line-height:1.6;color:#57866e;overflow-wrap:anywhere;margin:5px 0}
+#frameFull{border:1px solid #c5ddcb;border-radius:13px;background:#fcfefb;padding:16px;color:#42755b;max-width:min(94vw,1140px);max-height:92dvh;box-shadow:0 18px 66px #244f3440}
+#frameFull::backdrop{background:#102b1e96}
+#frameFull img{max-width:100%;max-height:76dvh;object-fit:contain;display:block;margin:auto}
+#frameFull .full-top{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:12px;font-size:11px}
+#frameFullClose{border:0;background:transparent;color:#4f8064;font-size:24px;cursor:pointer}
+#frameFullCaption{font-size:10px;color:#839c8c;margin:9px 0 0}
+
+/* Phase 3.1: manual lived-action evidence, not an inferred activity stream */
+#livedCount{font-size:10px;color:#819c8c;margin:9px 0}
+#livedEntries{max-height:155px;overflow-y:auto}
+#livedEntries .lived-entry{width:100%;text-align:left;padding:8px 3px;border-bottom:1px solid #e5eee8;display:flex;gap:9px;color:#30684d;font-size:10px}
+#livedEntries .entry-date{font-size:9px;color:#91a698;min-width:70px}
+#historyActsView .hp-empty{font-size:10px;color:#9daf9e;line-height:1.6}
+#historyActsView .lived-form{display:flex;flex-direction:column;border-top:1px solid #dce9de;margin-top:10px;padding-top:8px;gap:5px}
+#historyActsView h3{font-size:12px;font-weight:500;color:#276b51;margin:4px 0 5px}
+#historyActsView label{font-size:9px;color:#7b9787;margin-top:4px}
+#historyActsView select,#historyActsView textarea,#historyActsView input[type=url]{width:100%;background:#fbfefb;border:1px solid #d9e8dd;border-radius:7px;padding:7px 8px;color:#28694e;font-size:11px;min-height:32px;outline-color:#76a990}
+#historyActsView textarea{resize:vertical;min-height:50px}
+#historyActsView .lived-check{display:flex;align-items:start;gap:7px;line-height:1.55;color:#54806a}
+#historyActsView .lived-check input{margin-top:2px;flex:none;accent-color:#16805b}
+#historyPanel #livedExport{border-radius:999px;border:1px solid #bddbc9;background:#e6f3e8;padding:9px 13px;margin:5px 0 0;align-self:flex-start;color:#146d4c;font-size:10px}
+#historyActsView #livedStatus{font-size:9px;line-height:1.55;margin:4px 0 8px;color:#83a08e}
+@media(max-width:600px){#historyPanel .hp-tabs{flex-wrap:wrap;gap:3px}#historyPanel .hp-tabs button{font-size:10px;padding:6px 9px}}
+#loading{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;color:#91a79a;letter-spacing:.04em;z-index:2}
+@media(max-width:600px){#historyPanel{left:12px;width:calc(100vw - 24px);bottom:calc(max(19px,env(safe-area-inset-bottom)) + 124px);padding:14px 14px 11px;max-height:calc(100dvh - 235px)}#historyEntries{max-height:min(27vh,220px)}header{height:90px}header .inner{left:17px;right:17px;top:33px}header .name{font-size:13px}header .rule{left:16px;right:16px}#bottom{left:10px;right:10px}#history{padding:8px 10px;font-size:10px}#zoomBox button{width:22px}#zoomLabel{min-width:34px}#mode button{padding:9px 11px;font-size:10px}#card{max-width:190px}#status{right:13px;top:98px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Phase 3.2: deterministic, clearly labelled rule-based reconstruction */
+#historyPanel .hp-tabs{flex-wrap:wrap;row-gap:3px}
+#lifeStateCount,#lifeRuleInfo{font-size:10px;line-height:1.65;color:#809f90;margin:8px 0}
+#lifeStateEntries{max-height:220px;overflow-y:auto;overscroll-behavior:contain}
+#lifeStateEntries .entry{display:flex;gap:10px;width:100%;padding:9px 2px;text-align:left;border-bottom:1px solid #e6eee7;color:#2d7051;font-size:10px;line-height:1.5}
+#lifeStateEntries .entry-date{color:#99aa9f;min-width:69px;flex:none;font-variant-numeric:tabular-nums}
+#lifeStateEntries .hp-empty{font-size:10px;line-height:1.75;color:#92a999}
+#lifeModelBadge{position:fixed;z-index:5;right:22px;top:118px;padding:10px 12px;border:1px solid #c8dfcc;border-radius:11px;background:rgba(251,253,249,.95);font-size:10px;color:#387757;display:flex;gap:10px;align-items:center;max-width:min(360px,90vw)}
+#lifeModelBadge[hidden]{display:none!important}
+#lifeModelExit{border:0;background:transparent;color:#37805e;font-size:18px;cursor:pointer}
+@media(max-width:600px){#lifeModelBadge{right:12px;left:12px;top:94px;max-width:none}}
+
+/* Site integration, not an imitation of the existing TOW ARCHIVE masthead. */
+html.embedded header{display:none!important}
+html.embedded body{background:#fafbf8}
+html.embedded #sourceReadingBadge,html.embedded #lifeModelBadge{top:122px}
+html.public-site .lived-form,html.public-site #frameCapture,html.public-site #frameCaptureStatus{display:none!important}
+#stage{cursor:grab;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
+#stage:active{cursor:grabbing}
+#hint{z-index:3;bottom:calc(max(19px,env(safe-area-inset-bottom)) + 113px);min-width:0;max-width:min(90vw,500px);text-align:center;white-space:normal;line-height:1.7;letter-spacing:.055em;color:#749588;font-size:10px;text-shadow:0 1px 8px #fff;opacity:0}
+body.hint #hint{opacity:.78}body.history-open #hint{opacity:0}
+#hint .touch-hint{display:none}
+@media(pointer:coarse){#hint .desktop-hint{display:none}#hint .touch-hint{display:inline}}
+#card .card-link{font-size:inherit}
+#mode button{transition:background-color .22s ease,color .22s ease,transform .2s ease}
+#mode button:active{transform:scale(.95)}
+@media(max-width:650px){
+  #hint{bottom:calc(max(19px,env(safe-area-inset-bottom)) + 115px);font-size:9px;padding:0 18px}
+  #card{max-width:min(258px,77vw)}
+  html.embedded #sourceReadingBadge,html.embedded #lifeModelBadge{top:100px}
+}
+@media(prefers-reduced-motion:reduce){#mode button{transition:none}#hint{transition:none}}
+</style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
+<canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
+<div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag to orbit · Pinch to explore · Two fingers to move</span></div>
+<header><div class="inner"><a class="name" href="/">TOW ARCHIVE</a><button id="menu" class="menu" aria-label="Viewer information" title="Viewer information"><span></span><span></span><span></span></button></div><div class="rule"></div></header>
+<div id="loading">Verifying archive integrity…</div>
+<div id="card"><div class="top"><span id="category">CONCEPTS</span><button class="close" id="closeCard" aria-label="Close card">×</button></div><div class="detail"><div><a id="cardLink" class="card-link" href="#"><div class="card-title" id="cardTitle"></div></a><div class="role" id="cardRole"></div></div><button id="locator" class="locator" aria-label="Return to the full organism" title="Return to full view"></button></div><div class="connected" id="cardConnected"></div></div>
+<div class="glass" id="mode" role="group" aria-label="Choose a viewing lens"><button aria-pressed="true" data-mode="Whole" aria-label="Viewing lens one" title="Lens one">◌</button><button aria-pressed="false" data-mode="Growth" aria-label="Viewing lens two" title="Lens two">⋰</button><button aria-pressed="false" data-mode="Movement" aria-label="Viewing lens three" title="Lens three">∿</button></div>
+<div id="sourceReadingBadge" hidden role="status" aria-label="Source structure reading"><div><span id="sourceReadingText">SOURCE</span><span class="reading-meta" id="sourceReadingUnplaced">Using T₀ reference coordinates · not a historical morphology</span></div><button id="sourceReadingExit" type="button" aria-label="Exit source structure and return to the organism">×</button></div>
+<div id="bottom"><button class="glass" id="history" aria-controls="historyPanel" aria-expanded="false">◴ History</button><div class="glass" id="zoomBox"><button id="minus" aria-label="Zoom out">−</button><span id="zoomLabel">65%</span><button id="plus" aria-label="Zoom in">+</button><span class="divider"></span><button id="about" aria-label="Viewer information">ⓘ</button></div></div>
+<section id="historyPanel" class="glass" role="region" aria-label="History and source evidence">
+<div class="hp-top"><div><div class="hp-kicker">HISTORY / EVIDENCE</div><div class="hp-count" id="historyCount"></div></div><button id="historyClose" aria-label="Close history" title="Close">×</button></div>
+<div class="hp-tabs" role="tablist" aria-label="Ways of reading history"><button id="historyVisitsTab" role="tab" aria-controls="historyVisitView" aria-selected="true" type="button">Visit traces</button><button id="historyVersionsTab" role="tab" aria-controls="historyVersionView" aria-selected="false" type="button">Archive versions</button><button id="historyFramesTab" role="tab" aria-controls="historyFrameView" aria-selected="false" type="button">Optical frames</button><button id="historyActsTab" role="tab" aria-controls="historyActsView" aria-selected="false" type="button">Lived acts</button><button id="historyLifeTab" role="tab" aria-controls="historyLifeView" aria-selected="false" type="button">Life states</button></div>
+<div id="historyVisitView" role="tabpanel" aria-labelledby="historyVisitsTab">
+<div class="hp-year"><button id="historyPrevYear" aria-label="Previous year" title="Previous year">‹</button><h2 id="historyHeading">2026 · Observation traces</h2><button id="historyNextYear" aria-label="Next year" title="Next year">›</button></div>
+<div id="historyMonths" role="group" aria-label="Select exhibition month"></div><div id="historyEntries" aria-label="Exhibitions visited this month"></div><p class="hp-note">Dates come from the archive’s occurredOn field. Highlights show exhibitions from that month and their <strong>currently documented</strong> relationships, not a body reconstructed from the past.</p></div>
+<div id="historyVersionView" role="tabpanel" aria-labelledby="historyVersionsTab" hidden><p id="versionCount"></p><div id="historyVersions" role="group" aria-label="Verified archive versions"></div><div id="historyVersionDetail" aria-live="polite"></div><p class="hp-note">Archive sources and version differences, not lived events. Verified nodes and relations can be read in the current T₀ coordinates. Records without certified positions remain listed rather than placed arbitrarily.</p></div>
+<div id="historyFrameView" role="tabpanel" aria-labelledby="historyFramesTab" hidden>
+<p id="frameCount"></p><div id="historyFrames" role="group" aria-label="Saved optical frames"></div>
+<div id="historyFrameDetail" aria-live="polite"></div>
+<button type="button" id="frameCapture">＋ Capture this frame</button>
+<p id="frameCaptureStatus" role="status">Author-only tool. The public version contains no captured private frames.</p>
+<p class="hp-note">Optical frames preserve actual pixels, viewpoints and evidence, not physiological history or motion recordings. Source versions are kept separately.</p>
+</div>
+<div id="historyActsView" role="tabpanel" aria-labelledby="historyActsTab" hidden>
+<p id="livedCount"></p><div id="livedEntries" aria-label="Confirmed research acts"></div>
+<div class="lived-form" role="group" aria-label="Record a research act">
+<h3>Record a lived act</h3>
+<label for="livedKind">An act actually undertaken</label><select id="livedKind"><option value="life.encounter">Encounter · Encounter</option><option value="life.reinterpretation">Reinterpretation · Reinterpretation</option></select>
+<label for="livedRecord">Verified archive record</label><select id="livedRecord"><option value="">Choose a verified record…</option></select>
+<label for="livedNote">What happened? (12–500 characters)</label><textarea id="livedNote" rows="3" minlength="12" maxlength="500" placeholder="Describe a research act that really happened, not a plan or assumption."></textarea>
+<label for="livedEvidenceUrl">Public evidence URL (optional, HTTPS)</label><input id="livedEvidenceUrl" type="url" inputmode="url" placeholder="https://…">
+<label class="lived-check"><input id="livedConfirm" type="checkbox"> I confirm I performed this research act and understand it may enter a public source repository.</label>
+<button id="livedExport" type="button">↓ Export a draft event</button>
+<p id="livedStatus" role="status">A draft must be explicitly confirmed and sealed in the private local workspace. No writing fiber or relation is activated automatically.</p>
+</div>
+<p class="hp-note">Author-attested acts are not independently verified historical morphology. No real Writing fibers or mature cores are inferred.</p>
+</div>
+<div id="historyLifeView" role="tabpanel" aria-labelledby="historyLifeTab" hidden>
+<p id="lifeStateCount"></p>
+<div id="lifeStateEntries" role="group" aria-label="Source-backed life rule readings"></div>
+<p id="lifeRuleInfo"></p>
+<p class="hp-note">Rule states are reconstructions based on attested events and the verified T₀ baseline. Neither a rule state nor a sealed calculation is a photograph of a historical body, an activated Writing fiber, or evidence of new relations.</p>
+</div>
+</section>
+<div id="lifeModelBadge" hidden role="status" aria-label="Reconstructed rule state, not a historical photograph"><span id="lifeModelText">RULE MODEL</span><button id="lifeModelExit" type="button" aria-label="Return to current state">×</button></div>
+<dialog id="frameFull" aria-label="View saved optical frame"><div class="full-top"><span>OBSERVED / OPTICAL FRAME</span><button id="frameFullClose" aria-label="Close frame preview" type="button">×</button></div><img id="frameFullImage" alt="Recorded optical frame"><p id="frameFullCaption"></p></dialog>
+<div id="debugPanel"><h3>ARCHIVE / VIEWER STATUS</h3><div id="debugText"></div><hr style="border:0;border-top:1px solid #dbe8de;margin:10px 0"><label for="recordSelect">Find verified archive records (174)</label><select id="recordSelect"><option value="">Select a record…</option></select><p style="margin:8px 0 0">Three viewing lenses read the same archive. Unattested events never activate Writing fibers or mature propulsion cores.</p></div><div id="status"></div><div id="loadingError" style="display:none;position:fixed;inset:35% 12%;background:#fff;border:1px solid #ddbdb1;border-radius:9px;padding:20px;z-index:10;color:#95594a;font-size:12px;white-space:pre-wrap"></div>
+<script type="module" src="./viewer.mjs"></script></body></html>
