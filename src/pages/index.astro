@@ -17,14 +17,28 @@ import Base from '../layouts/Base.astro';
 <script is:inline>
   // The shared layout retains its original language on other archive pages.
   document.documentElement.lang = "en";
+  // Parent stays on its original paper background until the organism reports
+  // that its real, source-verified Canvas2D frame has been drawn.
+  // This avoids exposing the browser's transient iframe/compositor surface.
   // The archive's luminous cursor belongs to Base.astro (outside the iframe).
   // Relaying pointer coordinates lets that SAME cursor follow the mouse across
   // the organism without changing the global header or cursor implementation.
   const organismFrame = document.getElementById('murmurgrove-view');
+  const organismHome = document.querySelector('.grove-home');
+  let revealTimeout;
+  organismFrame?.addEventListener('load', () => {
+    // If verification fails, reveal the iframe's own readable error panel.
+    revealTimeout = window.setTimeout(() => organismHome?.classList.add('is-ready'), 10000);
+  });
   window.addEventListener('message', (event) => {
     if (event.origin !== window.location.origin ||
-        event.source !== organismFrame?.contentWindow ||
-        event.data?.type !== 'murmurgrove:pointer-position' ||
+        event.source !== organismFrame?.contentWindow) return;
+    if (event.data?.type === 'murmurgrove:first-painted-frame') {
+      window.clearTimeout(revealTimeout);
+      organismHome?.classList.add('is-ready');
+      return;
+    }
+    if (event.data?.type !== 'murmurgrove:pointer-position' ||
         !window.matchMedia('(pointer:fine)').matches) return;
     const {x,y} = event.data;
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
@@ -39,7 +53,8 @@ import Base from '../layouts/Base.astro';
 <style>
   /* Only the immersive HOME is full-viewport; Base.astro remains identical
      to all TOW ARCHIVE pages, including its logo, rule and both nav systems. */
-  .grove-home{position:fixed;inset:0;z-index:0;overflow:hidden;background:#fafbf8}
-  .grove-embedded-view{display:block;width:100%;height:100%;height:100dvh;border:0;background:#fafbf8}
-  @media(prefers-reduced-motion:reduce){.grove-embedded-view{scroll-behavior:auto}}
+  .grove-home{position:fixed;inset:0;z-index:0;overflow:hidden;background:#fafbf8;color-scheme:light}
+  .grove-embedded-view{display:block;width:100%;height:100%;height:100dvh;border:0;background:#fafbf8;color-scheme:light;opacity:0;transition:opacity 180ms ease-out}
+  .grove-home.is-ready .grove-embedded-view{opacity:1}
+  @media(prefers-reduced-motion:reduce){.grove-embedded-view{scroll-behavior:auto;transition:none}}
 </style>

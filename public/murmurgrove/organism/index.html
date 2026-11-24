@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fbfcfa"><title>TOW ARCHIVE | Murmurgrove</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fbfcfa"><meta name="color-scheme" content="light"><title>TOW ARCHIVE | Murmurgrove</title>
 <style>
-:root{font-family:"Noto Sans SC",Inter,"Helvetica Neue",Arial,sans-serif;color:#275d50;background:#fafbf8;--green:#006748;--muted:#799388;--line:#cbdcd1}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{overflow:hidden;background:#fafbf8}canvas{display:block;width:100%;height:100%;touch-action:none}button{font:inherit;cursor:pointer;color:inherit}button:focus-visible,a:focus-visible{outline:2px solid #247e6d;outline-offset:3px}
+:root{color-scheme:light;font-family:"Noto Sans SC",Inter,"Helvetica Neue",Arial,sans-serif;color:#275d50;background:#fafbf8;--green:#006748;--muted:#799388;--line:#cbdcd1}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{overflow:hidden;background:#fafbf8}canvas{display:block;width:100%;height:100%;background:#fafbf8;touch-action:none}button{font:inherit;cursor:pointer;color:inherit}button:focus-visible,a:focus-visible{outline:2px solid #247e6d;outline-offset:3px}
 header{position:fixed;z-index:5;top:0;left:0;right:0;height:106px;background:linear-gradient(180deg,rgba(250,251,248,.94),rgba(250,251,248,.60));pointer-events:none}header .inner{position:absolute;left:26px;right:26px;top:45px;display:flex;justify-content:space-between;align-items:center;pointer-events:auto}header .name{letter-spacing:.10em;font-size:15px;font-weight:650;color:#006e4d;text-decoration:none}header .menu{border:0;background:none;color:var(--green);width:30px;height:30px;padding:5px;display:grid;place-content:center;gap:5px}header .menu span{display:block;width:17px;height:1px;background:currentColor}header .rule{position:absolute;bottom:0;left:26px;right:26px;height:1px;background:#16845c}
 #stage{position:fixed;inset:0}#hint{position:fixed;bottom:97px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.10em;color:#9baa9f;opacity:0;transition:opacity .3s;pointer-events:none}body.hint #hint{opacity:1}
 #bottom{position:fixed;z-index:4;left:24px;right:24px;bottom:max(19px,env(safe-area-inset-bottom));height:48px;pointer-events:none;display:flex;align-items:center;justify-content:space-between;gap:10px}.glass{border:1px solid rgba(133,161,149,.26);background:rgba(251,252,249,.73);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:999px;box-shadow:0 4px 15px rgba(92,120,107,.028);pointer-events:auto}#bottom button{background:transparent;border:0;color:#728b7f;font-size:11px}#history{padding:9px 14px;white-space:nowrap}#zoomBox{display:flex;align-items:center;gap:2px;padding:3px 6px}#zoomBox button{width:25px;height:28px;font-size:15px;font-weight:300}#zoomLabel{font-size:11px;min-width:36px;text-align:center;color:#738b81}#zoomBox .divider{height:15px;width:1px;background:#d7e2da;margin:0 2px}
@@ -118,23 +118,6 @@ body.hint #hint{opacity:.78}body.history-open #hint{opacity:0}
   html.embedded #sourceReadingBadge,html.embedded #lifeModelBadge{top:100px}
 }
 @media(prefers-reduced-motion:reduce){#mode button{transition:none}#hint{transition:none}}
-
-/* Shared translucent material for every Murmurgrove floating panel.
-   Keep typography crisp; soften only the surface behind it. */
-:root{--grove-panel-glass:rgba(251,253,250,.64);--grove-panel-border:rgba(111,162,131,.30)}
-.glass{background:var(--grove-panel-glass);-webkit-backdrop-filter:blur(15px) saturate(112%);backdrop-filter:blur(15px) saturate(112%);border-color:var(--grove-panel-border)}
-#card,#historyPanel,#debugPanel,#sourceReadingBadge,#lifeModelBadge,#frameFull{
-  background:var(--grove-panel-glass);
-  border-color:var(--grove-panel-border);
-  -webkit-backdrop-filter:blur(16px) saturate(112%);
-  backdrop-filter:blur(16px) saturate(112%);
-}
-/* The sticky history notes otherwise draw an opaque rectangle inside the glass panel. */
-#historyVersionView .hp-note,#historyFrameView .hp-note{background:rgba(251,253,250,.73);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-#historyPanel .hp-tabs button[aria-selected=true],#historyVersions .version-entry[aria-pressed=true],#historyFrames .version-entry[aria-pressed=true]{background:rgba(217,237,221,.64)}
-@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
-  .glass,#card,#historyPanel,#debugPanel,#sourceReadingBadge,#lifeModelBadge,#frameFull{background:rgba(251,253,250,.87)}
-}
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>

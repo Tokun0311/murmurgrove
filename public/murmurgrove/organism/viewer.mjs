@@ -339,6 +339,18 @@ function drawLivedEvidenceMarks(pos,time){
   ctx.lineWidth=.7;ctx.stroke();
  }
 }
+// The parent must not expose the iframe's first compositing layer before a
+// verified organism frame has actually been painted. Signal after two rAFs,
+// not from DOMContentLoaded, iframe load, or the start of data verification.
+let firstPaintSignalScheduled=false;
+function announceFirstPaint(){
+ if(firstPaintSignalScheduled)return;
+ firstPaintSignalScheduled=true;
+ if(window.parent===window||!new URLSearchParams(location.search).has('embedded'))return;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  window.parent.postMessage({type:'murmurgrove:first-painted-frame'},location.origin);
+ }));
+}
 function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0:Date.now()/1000;
  if(ready){
   const dt=lastFrameAt?cl(now-lastFrameAt,0,80):16;lastFrameAt=now;
@@ -370,6 +382,7 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
    lastFrameScreenNodes=pos.map((p,i)=>[nodes[i].id,Number(p[0].toFixed(4)),Number(p[1].toFixed(4))]);
   }
   lastFrameRenderedAt=new Date().toISOString();lastFrameCamera={mode,angle,elevation,zoom,pan:[...pan],selectedId:selected};
+  announceFirstPaint();
   frames++;if(now-lastFpsAt>950){fps=Math.round(frames*1000/(now-lastFpsAt));lastFpsAt=now;frames=0;updateDebug();}
  }
  requestAnimationFrame(render);
