@@ -188,6 +188,54 @@ html body :is(button,a,select,input,textarea):focus-visible {
    viewer pages, and is already supplied by Base.astro when embedded. */
 html body header .rule { background:#16845c !important; }
 
+
+/* Open archive finder. The native 174-option dropdown is kept only as a hidden
+   compatibility bridge for the source-backed viewer's existing change handler. */
+html body #recordSelect[hidden],html body #recordMatches[hidden]{display:none!important}
+html body #debugPanel{
+  width:min(320px,calc(100vw - 36px))!important;max-width:none!important;
+  max-height:min(76dvh,620px);overflow-y:auto;overscroll-behavior:contain;
+  padding:17px 19px 18px!important;right:18px;top:94px;
+  color:#567768;font-size:11px;line-height:1.55;
+}
+html body #debugPanel .finder-eyebrow{color:#84a296;font-size:9px;letter-spacing:.16em;margin-bottom:13px}
+html body #debugPanel .finder-label{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#2a7255;line-height:1.5}
+html body #debugPanel .finder-label span{font-size:10px;white-space:nowrap;color:#91aa9b}
+html body #debugPanel .finder-line{position:relative;margin-top:8px}
+html body #debugPanel #recordQuery{
+  display:block;width:100%;padding:9px 45px 9px 0;
+  border:0!important;border-bottom:1px solid rgba(89,143,112,.46)!important;
+  border-radius:0!important;outline:0!important;box-shadow:none!important;
+  background:transparent!important;color:#1f6049;font-size:12px;line-height:1.5;
+  font-family:inherit;appearance:none;-webkit-appearance:none;
+}
+html body #debugPanel #recordQuery::-webkit-search-cancel-button{display:none!important;-webkit-appearance:none!important}
+html body #debugPanel .finder-clear{position:absolute;right:23px;top:6px;padding:0 3px;background:transparent!important;color:#79a18c;border:0!important;box-shadow:none!important;line-height:24px;font-size:17px;cursor:pointer}
+html body #debugPanel .finder-clear[hidden]{display:none!important}
+html body #debugPanel #recordQuery::placeholder{color:#9aae9f;opacity:1}
+html body #debugPanel .finder-loupe{position:absolute;right:1px;top:4px;font-size:18px;color:#7ea38b;pointer-events:none}
+html body #debugPanel #recordQuery:focus-visible{border-bottom-color:#08784c!important;text-decoration:none!important}
+html body #debugPanel .finder-message{font-size:10px;color:#91a99b;margin:9px 0 15px;line-height:1.55}
+html body #debugPanel #recordMatches{max-height:min(255px,33dvh);overflow:auto;overscroll-behavior:contain;margin:4px 0 0;padding:0 4px 0 0;scrollbar-width:thin;scrollbar-color:#a2c3ad transparent}
+html body #debugPanel #recordMatches .record-hit{
+  display:block;width:100%;background:transparent!important;border:0!important;
+  border-bottom:1px solid rgba(144,180,155,.24)!important;
+  border-radius:0!important;outline:0!important;box-shadow:none!important;
+  text-align:left;padding:10px 3px 10px 0;color:#326b52;font-family:inherit;
+}
+html body #debugPanel #recordMatches .record-hit .record-type{display:block;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:#93aa9e;margin-bottom:3px}
+html body #debugPanel #recordMatches .record-hit .record-name{display:block;font-size:11px;line-height:1.48;overflow-wrap:anywhere}
+html body #debugPanel #recordMatches .record-hit:is(:hover,.is-active,:focus-visible){color:#056d48;background:linear-gradient(90deg,rgba(94,161,120,.10),transparent 90%)!important;text-decoration:none!important}
+html body #debugPanel #recordMatches .record-hit:is(.is-active,:focus-visible){border-bottom-color:#58a17a!important}
+html body #debugPanel .finder-details{border-top:1px solid rgba(134,171,151,.32)!important;padding-top:12px;margin-top:8px}
+html body #debugPanel .finder-details summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;font-size:11px;color:#507b61}
+html body #debugPanel .finder-details summary::-webkit-details-marker{display:none}
+html body #debugPanel .finder-details[open] summary span{transform:rotate(45deg)}
+html body #debugPanel #debugText{margin-top:12px;font-size:10px;color:#789184;line-height:1.8}
+html body #debugPanel .finder-disclaimer{font-size:10px;color:#91a698;line-height:1.6;margin-bottom:0}
+html body.debug #status{display:none!important}
+@media(max-width:600px){html body #debugPanel{top:76px;left:16px;right:16px;width:auto!important;max-height:min(66dvh,560px);padding:15px 14px 16px!important}html body #debugPanel .record-hit{touch-action:manipulation;min-height:42px}}
+
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>
@@ -234,7 +282,17 @@ html body header .rule { background:#16845c !important; }
 </section>
 <div id="lifeModelBadge" hidden role="status" aria-label="Reconstructed rule state, not a historical photograph"><span id="lifeModelText">RULE MODEL</span><button id="lifeModelExit" type="button" aria-label="Return to current state">×</button></div>
 <dialog id="frameFull" aria-label="View saved optical frame"><div class="full-top"><span>OBSERVED / OPTICAL FRAME</span><button id="frameFullClose" aria-label="Close frame preview" type="button">×</button></div><img id="frameFullImage" alt="Recorded optical frame"><p id="frameFullCaption"></p></dialog>
-<div id="debugPanel"><h3>ARCHIVE / VIEWER STATUS</h3><div id="debugText"></div><hr style="border:0;border-top:1px solid #dbe8de;margin:10px 0"><label for="recordSelect">Find verified archive records (174)</label><select id="recordSelect"><option value="">Select a record…</option></select><p style="margin:8px 0 0">Three viewing lenses read the same archive. Unattested events never activate Writing fibers or mature propulsion cores.</p></div><div id="status"></div><div id="loadingError" style="display:none;position:fixed;inset:35% 12%;background:#fff;border:1px solid #ddbdb1;border-radius:9px;padding:20px;z-index:10;color:#95594a;font-size:12px;white-space:pre-wrap"></div>
+<div id="debugPanel" aria-label="Explore the archive">
+  <div class="finder-eyebrow">EXPLORE / ARCHIVE</div>
+  <div class="record-finder" id="recordFinder">
+    <label for="recordQuery" class="finder-label">Find a record <span id="recordCount">Loading…</span></label>
+    <div class="finder-line"><input id="recordQuery" type="search" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="recordMatches" placeholder="Type a title or category…"><button id="recordClear" type="button" class="finder-clear" aria-label="Clear search" hidden>×</button><span class="finder-loupe" aria-hidden="true">⌕</span></div>
+    <div id="recordMatches" role="listbox" aria-label="Matching archive records" hidden></div>
+    <p class="finder-message" id="recordMessage" role="status" aria-live="polite">Search exhibitions, people, institutions or concepts.</p>
+    <select id="recordSelect" hidden tabindex="-1" aria-hidden="true"><option value="">Select a record…</option></select>
+  </div>
+  <details class="finder-details"><summary>About this organism <span aria-hidden="true">＋</span></summary><div id="debugText"></div><p class="finder-disclaimer">Three lenses read the same verified archive. Unattested acts cannot activate Writing fibers or mature cores.</p></details>
+</div><div id="status"></div><div id="loadingError" style="display:none;position:fixed;inset:35% 12%;background:#fff;border:1px solid #ddbdb1;border-radius:9px;padding:20px;z-index:10;color:#95594a;font-size:12px;white-space:pre-wrap"></div>
 <script type="module" src="./viewer.mjs"></script>
 <script>
 // Same-origin event bridge: the TOW ARCHIVE masthead keeps its single original
@@ -247,6 +305,142 @@ html body header .rule { background:#16845c !important; }
     lastSent = performance.now();
     window.parent.postMessage({type:'murmurgrove:pointer-position', x:e.clientX, y:e.clientY}, location.origin);
   }, {capture:true,passive:true});
+})();
+</script>
+
+<script>
+/* Accessible, borderless record finder. Its only authoritative data source is
+   the original select populated by viewer.mjs after record integrity checks.
+   No search result or relationship is synthesized. */
+(() => {
+  const source = document.getElementById('recordSelect');
+  const query = document.getElementById('recordQuery');
+  const clearBtn = document.getElementById('recordClear');
+  const list = document.getElementById('recordMatches');
+  const message = document.getElementById('recordMessage');
+  const panel = document.getElementById('debugPanel');
+  const count = document.getElementById('recordCount');
+  if (!source || !query || !clearBtn || !list || !message || !panel) return;
+  const helper = 'Search exhibitions, people, institutions or concepts.';
+  const norm = s => String(s || '').normalize('NFKC').toLocaleLowerCase().trim();
+  let matches = [], active = 0;
+  const verified = () => [...source.options].filter(o => o.value);
+  const updateCount = () => {
+    if (!count) return;
+    const n = verified().length;
+    count.textContent = n ? `${n} verified` : 'Loading…';
+  };
+  const closeResults = () => {
+    matches = [];
+    active = 0;
+    list.replaceChildren();
+    list.hidden = true;
+    query.setAttribute('aria-expanded', 'false');
+    query.removeAttribute('aria-activedescendant');
+  };
+  const reset = () => {
+    query.value = '';
+    clearBtn.hidden = true;
+    closeResults();
+    message.textContent = helper;
+  };
+  const select = (id, label) => {
+    // Abort if the verified option vanished during a source refresh.
+    if (!verified().some(o => o.value === id)) { render(); return; }
+    source.value = id;
+    query.value = label;
+    clearBtn.hidden = false;
+    closeResults();
+    // Focus must return before the clicked option is removed from the DOM.
+    query.focus({ preventScroll: true });
+    source.dispatchEvent(new Event('change', { bubbles: true }));
+    message.textContent = 'Record selected. Use the focused particle to explore.';
+  };
+  const highlight = () => {
+    [...list.children].forEach((item, i) => {
+      item.classList.toggle('is-active', i === active);
+      item.setAttribute('aria-selected', String(i === active));
+    });
+    const chosen = list.children[active];
+    if (!chosen) return;
+    query.setAttribute('aria-activedescendant', chosen.id);
+    const top = chosen.offsetTop - list.offsetTop;
+    if (top < list.scrollTop) list.scrollTop = top;
+    else if (top + chosen.offsetHeight > list.scrollTop + list.clientHeight) {
+      list.scrollTop = top + chosen.offsetHeight - list.clientHeight;
+    }
+  };
+  const render = () => {
+    updateCount();
+    clearBtn.hidden = !query.value;
+    const q = norm(query.value);
+    closeResults();
+    if (!q) { message.textContent = helper; return; }
+    const options = verified();
+    if (!options.length) { message.textContent = 'Archive records are still loading…'; return; }
+    const found = options.map((o, i) => {
+      const label = o.textContent || '';
+      const text = norm(label), id = norm(o.value);
+      const score = text.startsWith(q) ? 0 :
+        text.includes(' · ' + q) ? 1 : text.includes(q) ? 2 : id.includes(q) ? 3 : 99;
+      return { id: o.value, label, score, order: i };
+    }).filter(o => o.score !== 99).sort((a, b) => a.score - b.score || a.order - b.order);
+    matches = found.slice(0, 8);
+    if (!matches.length) { message.textContent = 'No matching verified records.'; return; }
+    for (const [i, record] of matches.entries()) {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'record-hit';
+      item.id = 'archive-record-result-' + i;
+      item.setAttribute('role', 'option');
+      item.setAttribute('tabindex', '-1');
+      item.setAttribute('aria-selected', String(i === 0));
+      const divider = record.label.indexOf(' · ');
+      const type = document.createElement('span');
+      type.className = 'record-type';
+      type.textContent = divider < 0 ? 'ARCHIVE' : record.label.slice(0, divider);
+      const name = document.createElement('span');
+      name.className = 'record-name';
+      name.textContent = divider < 0 ? record.label : record.label.slice(divider + 3);
+      item.append(type, name);
+      item.addEventListener('click', () => select(record.id, record.label));
+      list.append(item);
+    }
+    list.hidden = false;
+    query.setAttribute('aria-expanded', 'true');
+    message.textContent = found.length > 8
+      ? `Showing 8 of ${found.length} matching records`
+      : `${found.length} matching record${found.length === 1 ? '' : 's'}`;
+    highlight();
+  };
+  query.addEventListener('input', render);
+  clearBtn.addEventListener('click', () => { reset(); query.focus({ preventScroll: true }); });
+  query.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && (!list.hidden || query.value)) {
+      e.preventDefault(); e.stopPropagation(); reset();
+    } else if (!list.hidden && matches.length && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) {
+      e.preventDefault();
+      if (e.key === 'Home') active = 0;
+      else if (e.key === 'End') active = matches.length - 1;
+      else active = (active + (e.key === 'ArrowDown' ? 1 : -1) + matches.length) % matches.length;
+      highlight();
+    } else if (e.key === 'Enter' && !list.hidden && matches[active]) {
+      e.preventDefault(); select(matches[active].id, matches[active].label);
+    }
+  });
+  document.addEventListener('pointerdown', e => {
+    if (!panel.contains(e.target)) closeResults();
+  }, true);
+  new MutationObserver(() => {
+    if (!document.body.classList.contains('debug')) reset();
+  }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  // The viewer verifies and inserts options asynchronously. Refresh a typed
+  // search and the verified count as soon as source data arrives or changes.
+  new MutationObserver(() => {
+    if (query.value && document.body.classList.contains('debug')) render();
+    else updateCount();
+  }).observe(source, { childList: true, subtree: true });
+  updateCount();
 })();
 </script>
 </body></html>
