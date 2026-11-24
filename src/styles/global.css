@@ -51,7 +51,7 @@ button, select, input, textarea { font:inherit }
 
 
 /* murmurgrove: richer green and spacious brand lettering */
-.brand { color:#087f5b; font-weight:700; text-transform:uppercase; letter-spacing:.075em; word-spacing:.16em; }
+.brand { color:#087f5b; font-weight:700; text-transform:none; letter-spacing:.035em; word-spacing:normal; }
 
 /* Archive tag controls, restrained outlines and active selection */
 .filter-languages { gap:8px; }
