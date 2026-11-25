@@ -32,6 +32,10 @@ const MOBILE_HOME=matchMedia('(max-width: 700px)').matches || matchMedia('(point
 // The 65% panorama is the phone zoom floor and the orbit/pan threshold.
 // Landing magnification is distinct from returning to the full organism.
 const ZOOM_BASE=.65,ZOOM_MIN=.65,OVERVIEW_ZOOM=.65,DEFAULT_ZOOM=MOBILE_HOME?2:3,ZOOM_MAX=24;
+// The opening is a camera invitation, not a new Life/Morphology mode.
+// Begin with the complete organism before gently rotating and approaching it.
+const ENTRANCE_HOLD_MS=650,ENTRANCE_MOVE_MS=3850;
+const ENTRANCE_TARGET_ANGLE=.63,ENTRANCE_TARGET_ELEVATION=.20;
 const TAU=13,BASELINE_HASH='62372e469ead425dd43fc16e737ea40cd48ce5a0188a87b868d1bee62c8ba9d3';
 function isMobileOverview(value=zoom){return MOBILE_HOME&&value<=OVERVIEW_ZOOM+.006;}
 const memoryKey='murmurgrove.phase2.6.readonly.session'+(MOBILE_HOME?'.compact-overview-v3':'');
@@ -50,6 +54,46 @@ let velocityPan=[0,0],velocityAngle=0,velocityElevation=0;
 let activeGesture=null,pinchGesture=null;
 const activePointers=new Map();
 let touchPair=null,userFramedPan=false,touchOrbitTarget=null;
+let entrance=null;
+// An actual intention to interact takes priority over the introductory camera.
+// Mere mouse hovering does not interrupt it; tapping a node remains a tap.
+function cancelEntrance(){
+ if(!entrance)return;
+ entrance=null;
+ zoomGoal=null;zoomAnchor=null;
+ saveMemory();
+}
+function prepareEntrance(){
+ entrance=null;
+ zoomGoal=null;zoomAnchor=null;pan=[0,0];lastSafePan=[0,0];panIntent=null;
+ edgeReturnVelocity=[0,0];velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
+ followSelected=false;userFramedPan=false;touchOrbitTarget=null;
+ mode='Whole';selected=null;
+ if(reducedMotionMedia.matches){
+  zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;elevation=ENTRANCE_TARGET_ELEVATION;
+  return;
+ }
+ zoom=OVERVIEW_ZOOM;
+ angle=ENTRANCE_TARGET_ANGLE-.58;elevation=ENTRANCE_TARGET_ELEVATION-.11;
+ entrance={startedAt:null,initialAngle:angle,initialElevation:elevation};
+}
+function advanceEntrance(now){
+ if(!entrance)return;
+ if(entrance.startedAt===null)entrance.startedAt=now;
+ const elapsed=Math.max(0,now-entrance.startedAt);
+ const t=cl((elapsed-ENTRANCE_HOLD_MS)/ENTRANCE_MOVE_MS,0,1);
+ // Quintic smoothstep has zero velocity and acceleration at both endpoints.
+ const eased=t*t*t*(t*(6*t-15)+10);
+ zoom=OVERVIEW_ZOOM+(DEFAULT_ZOOM-OVERVIEW_ZOOM)*eased;
+ angle=entrance.initialAngle+(ENTRANCE_TARGET_ANGLE-entrance.initialAngle)*eased;
+ elevation=entrance.initialElevation+(ENTRANCE_TARGET_ELEVATION-entrance.initialElevation)*eased;
+ pan=[0,0];syncZoomDisplay();
+ if(t>=1){
+  zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;elevation=ENTRANCE_TARGET_ELEVATION;
+  entrance=null;syncZoomDisplay();saveMemory();
+ }
+}
+
 let lastSafePan=[0,0]; // Optical camera limit only; never edits archival geometry.
 // Pointer input can stretch beyond the visible boundary; it never touches T0.
 let panIntent=null,edgeReturnVelocity=[0,0];
@@ -463,6 +507,7 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
  if(ready){
   const dt=lastFrameAt?cl(now-lastFrameAt,0,80):16;lastFrameAt=now;
   stepCamera(dt);
+  advanceEntrance(now);
   // Touch orbit samples arrive at uneven intervals. Smooth orientation at
   // the actual rendering cadence instead of snapping on every pointer event.
   if(touchOrbitTarget){
@@ -982,6 +1027,12 @@ function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math
  panIntent=null;edgeReturnVelocity=[0,0];
  if(ready)reframe();}
 function initUI(){
+ // Capture *before* individual controls and pointer handlers so users take
+ // over immediately, without consuming the click, tap, wheel or drag itself.
+ window.addEventListener('pointerdown',cancelEntrance,true);
+ window.addEventListener('wheel',cancelEntrance,{capture:true,passive:true});
+ window.addEventListener('keydown',cancelEntrance,true);
+ window.addEventListener('click',cancelEntrance,true);
  if(MOBILE_HOME){const hint=document.querySelector('#hint .touch-hint');if(hint)hint.textContent='One finger to orbit · Pinch to zoom · Zoom in to pan';}
  document.querySelectorAll('#mode button').forEach(b=>b.addEventListener('click',()=>chooseMode(b.dataset.mode)));
  $('minus').addEventListener('click',()=>requestZoom((zoomGoal??zoom)/1.35,controlAnchor()));
@@ -1160,12 +1211,12 @@ async function init(){
   const {navigationHash,...navBody}=nav;if(await sha(navBody)!==navigationHash)throw Error('Navigation SHA-256 invalid');
   const {snapshotHash,...snapBody}=snapshot;if(await sha(snapBody)!==snapshotHash||manifest.snapshots.find(s=>s.phase==='T0')?.snapshotHash!==snapshotHash)throw Error('Silent T0 snapshot SHA-256 invalid');
   preprocess();await verifyLoadedLivedEvidence();
-  lifeNowState=computeLifeState(new Date().toISOString());activateLifeState(lifeNowState);pan=[0,0];pendingPanNorm=null;resize();ready=true;initUI();chooseMode(mode);setZoom(zoom);
+  lifeNowState=computeLifeState(new Date().toISOString());activateLifeState(lifeNowState);pan=[0,0];pendingPanNorm=null;resize();ready=true;prepareEntrance();initUI();chooseMode(mode);setZoom(zoom);
   if(selected)showCard(selected);
   const select=$('recordSelect'),livedSelect=$('livedRecord');for(const r of records){const option=document.createElement('option');option.value=r.id;option.textContent=`${r.kind} · ${r.title}`;select.append(option);livedSelect.append(option.cloneNode(true));}
   $('loading').style.display='none';lastFpsAt=performance.now();requestAnimationFrame(render);
   if(!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
-  window.__MURMUR_REAL__={baselineHash:BASELINE_HASH,nodes:174,metadataLinks:158,isolatedRecords:20,interiorQuietDisplayPositions:20,zoomMaximum:ZOOM_MAX,zoomMinimum:ZOOM_MIN,zoomDefault:DEFAULT_ZOOM,get isMobileOverview(){return isMobileOverview();},
+  window.__MURMUR_REAL__={baselineHash:BASELINE_HASH,nodes:174,metadataLinks:158,isolatedRecords:20,interiorQuietDisplayPositions:20,zoomMaximum:ZOOM_MAX,zoomMinimum:ZOOM_MIN,zoomDefault:DEFAULT_ZOOM,get entrance(){return {active:!!entrance,holdMs:ENTRANCE_HOLD_MS,durationMs:ENTRANCE_MOVE_MS};},get isMobileOverview(){return isMobileOverview();},
     get camera(){return {angle,elevation,zoom,pan:[...pan],selected,followSelected};},
     get screenNodes(){return lastFrameScreenNodes?.map(x=>[x[0],x[1],x[2]])||[];},
     approvedLifeEvents:livedEvidence.length,authoredEvidenceTraces:livedTraces.size,activatedWritingFibers:0,matureCores:0,lifeRuleVersion:LIFE_RULE_VERSION,derivedLifeEvents:lifeNowState.authoredEventsUsed,
