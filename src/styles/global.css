@@ -803,3 +803,6 @@ html.murmur-preparing body .frame { opacity:0; }
 @media(prefers-reduced-motion:reduce) {
   body .frame { transition:none; }
 }
+
+/* Reserve scrollbar space on short and long pages to prevent horizontal layout shift. */
+html { scrollbar-gutter: stable; }
