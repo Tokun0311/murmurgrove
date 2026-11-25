@@ -376,6 +376,26 @@ html body #debugPanel #finderClose {display:none;}
   }
 }
 
+
+/* DESKTOP INFO CONTROL: the ⓘ button opens the actual explanation, not a
+   collapsed footnote of the search finder. Search remains available below it,
+   including on the embedded home where the iframe masthead is hidden. */
+html body.info-open #debugPanel {display:flex;flex-direction:column;gap:10px;}
+html body.info-open #debugPanel .finder-top {order:0;display:flex;align-items:center;justify-content:space-between;}
+html body.info-open #debugPanel .finder-details {order:1;margin:0;padding:0;border-top:0!important;}
+html body.info-open #debugPanel .finder-details summary {font-size:12px;font-weight:500;color:#257153;}
+html body.info-open #debugPanel .finder-details summary {pointer-events:none;cursor:default;}
+html body.info-open #debugPanel .finder-details summary span {display:none!important;}
+html body.info-open #debugPanel .record-finder {order:2;margin-top:2px;padding-top:12px;border-top:1px solid rgba(134,171,151,.32);}
+html body.info-open #debugPanel #finderClose {display:grid!important;place-items:center;border:0!important;
+  background:transparent!important;color:#749789;min-width:36px;min-height:36px;padding:0;font-size:21px;}
+@media(min-width:651px){
+  html body.info-open #debugPanel {top:auto!important;bottom:calc(max(19px,env(safe-area-inset-bottom)) + 64px)!important;
+    right:24px!important;left:auto!important;width:min(340px,calc(100vw - 48px))!important;
+    max-width:none!important;max-height:min(65dvh,600px)!important;
+    overflow-y:auto!important;overscroll-behavior:contain;scrollbar-width:thin;}
+}
+
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>
@@ -554,7 +574,7 @@ html body #debugPanel #finderClose {display:none;}
     highlight();
   };
   document.getElementById('finderClose')?.addEventListener('click', () => {
-    document.body.classList.remove('debug');
+    document.body.classList.remove('debug', 'info-open');
     document.getElementById('about')?.setAttribute('aria-expanded', 'false');
   });
   query.addEventListener('input', render);

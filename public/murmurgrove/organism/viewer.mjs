@@ -729,7 +729,7 @@ function setHistoryTab(next){
 function setHistoryOpen(open){
  if(open && matchMedia('(max-width:650px)').matches){
   if($('debugPanel').contains(document.activeElement))document.activeElement.blur();
-  document.body.classList.remove('debug');
+  document.body.classList.remove('debug','info-open');
   $('about').setAttribute('aria-expanded','false');
  }
  historyOpen=Boolean(open);document.body.classList.toggle('history-open',historyOpen);
@@ -1063,17 +1063,32 @@ function initUI(){
  $('frameFullClose').addEventListener('click',()=>$('frameFull').close());
  $('sourceReadingExit').addEventListener('click',exitSourceReading);
   $('historyClose').addEventListener('click',()=>setHistoryOpen(false));
- // On phones, Finder and History are separate reading modes, not two
- // simultaneously floating panels. Preserve the authentic historyOpen state.
- const toggleFinder=()=>{
-  const opening=!document.body.classList.contains('debug');
+ // The top menu invites archive searching. The bottom-right information
+ // control must open the explanation itself, not a collapsed search footnote.
+ // Search remains below the explanation for the embedded desktop homepage.
+ const finderPanel=$('debugPanel');
+ const aboutDetails=finderPanel.querySelector('.finder-details');
+ const finderEyebrow=finderPanel.querySelector('.finder-eyebrow');
+ const toggleViewerPanel=(kind)=>{
+  const info=kind==='info';
+  const isOpen=document.body.classList.contains('debug');
+  const isInfo=document.body.classList.contains('info-open');
+  const opening=!(isOpen && isInfo===info);
   if(opening && matchMedia('(max-width:650px)').matches && historyOpen)setHistoryOpen(false);
   document.body.classList.toggle('debug',opening);
-  $('about').setAttribute('aria-expanded',String(opening));
+  document.body.classList.toggle('info-open',opening && info);
+  $('about').setAttribute('aria-expanded',String(opening && info));
+  $('menu').setAttribute('aria-expanded',String(opening && !info));
+  if(opening){
+   finderPanel.setAttribute('aria-label',info?'About this organism and archive search':'Explore the archive');
+   finderEyebrow.textContent=info?'ABOUT / ORGANISM':'EXPLORE / ARCHIVE';
+   if(aboutDetails)aboutDetails.open=info;
+   if(info)finderPanel.scrollTop=0;
+  }
  };
- $('menu').addEventListener('click',toggleFinder);
- $('about').addEventListener('click',toggleFinder);
- $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);document.body.classList.remove('debug');});
+ $('menu').addEventListener('click',()=>toggleViewerPanel('search'));
+ $('about').addEventListener('click',()=>toggleViewerPanel('info'));
+ $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);document.body.classList.remove('debug','info-open');});
  function cancelMomentum(){velocityPan=[0,0];velocityAngle=0;velocityElevation=0;edgeReturnVelocity=[0,0];}
  function gestureHintDismiss(){document.body.classList.remove('hint');}
  function pointerLocal(clientX,clientY){const rect=canvas.getBoundingClientRect();return [clientX-rect.left,clientY-rect.top];}
@@ -1206,7 +1221,7 @@ function initUI(){
  canvas.addEventListener('dblclick',e=>{e.preventDefault();gestureHintDismiss();lastPointer=pointerHere(e);
   requestZoom((zoomGoal??zoom)<2?2:(zoomGoal??zoom)*1.45,lastPointer);});
  window.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){setHistoryOpen(false);showCard(null);document.body.classList.remove('debug');}
+  if(e.key==='Escape'){setHistoryOpen(false);showCard(null);document.body.classList.remove('debug','info-open');}
   if(e.key.toLowerCase()==='r'&&!e.target.closest('input,textarea,select')){
    angle=.63;elevation=.20;userFramedPan=false;followSelected=false;cancelMomentum();showCard(null);setZoom(DEFAULT_ZOOM,[W*.5,H*.48]);
   }
