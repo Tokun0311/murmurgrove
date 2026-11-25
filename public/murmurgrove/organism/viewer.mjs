@@ -29,10 +29,12 @@ const cl=(v,a,b)=>Math.min(b,Math.max(a,v));
 // Keep the historical 65% projection as an optical reference; changing the
 // zoom floor must not accidentally magnify every archived particle.
 const MOBILE_HOME=matchMedia('(max-width: 700px)').matches || matchMedia('(pointer: coarse) and (max-width: 1100px)').matches;
-const ZOOM_BASE=.65,ZOOM_MIN=MOBILE_HOME?.42:.65,DEFAULT_ZOOM=MOBILE_HOME?.55:.65,ZOOM_MAX=24;
+// The 65% panorama is the phone zoom floor and the orbit/pan threshold.
+// Landing magnification is distinct from returning to the full organism.
+const ZOOM_BASE=.65,ZOOM_MIN=.65,OVERVIEW_ZOOM=.65,DEFAULT_ZOOM=MOBILE_HOME?2:3,ZOOM_MAX=24;
 const TAU=13,BASELINE_HASH='62372e469ead425dd43fc16e737ea40cd48ce5a0188a87b868d1bee62c8ba9d3';
-function isMobileOverview(value=zoom){return MOBILE_HOME&&value<=DEFAULT_ZOOM+.006;}
-const memoryKey='murmurgrove.phase2.6.readonly.session'+(MOBILE_HOME?'.compact-overview-v2':'');
+function isMobileOverview(value=zoom){return MOBILE_HOME&&value<=OVERVIEW_ZOOM+.006;}
+const memoryKey='murmurgrove.phase2.6.readonly.session'+(MOBILE_HOME?'.compact-overview-v3':'');
 let records=[],links=[],nodes=[],nodeMap=new Map(),nodeIndex=new Map(),neighborData=[],pulseNeighbors=[],components=[],mainIds=new Set(),isolated=new Set(),viewPositions=[],componentById=new Map();
 let manifest,baseline,nav,snapshot,ready=false,angle=.63,elevation=.20,zoom=DEFAULT_ZOOM,mode='Whole',selected=null,followSelected=false,viewHash='';
 let observationLedger=[],observationGroups=[],historyMonth=null,historyOpen=false,historyTab='visits',activeHistoryContext=null;
@@ -847,7 +849,7 @@ function renderLifeReadings(){
 }
 function updateDebug(){
  $('status').textContent=`${fps} FPS · ${links.length} verified metadata links`;
- $('debugText').innerHTML=`Archive baseline: <strong>181</strong> records<br>Visible records: <strong>174</strong><br>Documented links: <strong>${links.length}</strong><br>Independent records: <strong>${isolated.size}</strong><br>Attested lived acts: <strong>${livedEvidence.length}</strong><br>Activated Writing fibers: <strong>0</strong><br>Mature cores: <strong>0</strong><br><br><strong>Explore</strong><br>Drag to orbit at overview scale.<br>Zoom toward the pointer with the wheel or trackpad.<br>Drag to pan when magnified.<br>Shift + drag or right drag to orbit at any scale.<br>On a phone at the 55% overview, drag with one finger to orbit and the body stays centered. Above 55%, one finger pans; pinch to zoom. Hold one finger and move the other to orbit.<br>Select a particle to focus, then follow its card title to read its archive source.`;
+ $('debugText').innerHTML=`Archive baseline: <strong>181</strong> records<br>Visible records: <strong>174</strong><br>Documented links: <strong>${links.length}</strong><br>Independent records: <strong>${isolated.size}</strong><br>Attested lived acts: <strong>${livedEvidence.length}</strong><br>Activated Writing fibers: <strong>0</strong><br>Mature cores: <strong>0</strong><br><br><strong>Explore</strong><br>Drag to orbit at overview scale.<br>Zoom toward the pointer with the wheel or trackpad.<br>Drag to pan when magnified.<br>Shift + drag or right drag to orbit at any scale.<br>On a phone at the 65% overview, drag with one finger to orbit and the body stays centered. Above 65%, one finger pans; pinch to zoom. Hold one finger and move the other to orbit.<br>Select a particle to focus, then follow its card title to read its archive source.`;
 }
 
 function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
@@ -861,7 +863,7 @@ function initUI(){
  document.querySelectorAll('#mode button').forEach(b=>b.addEventListener('click',()=>chooseMode(b.dataset.mode)));
  $('minus').addEventListener('click',()=>requestZoom((zoomGoal??zoom)/1.35,controlAnchor()));
  $('plus').addEventListener('click',()=>requestZoom((zoomGoal??zoom)*1.35,controlAnchor()));
- $('closeCard').addEventListener('click',()=>showCard(null));$('locator').addEventListener('click',()=>{userFramedPan=false;followSelected=false;requestZoom(DEFAULT_ZOOM,[W*.5,H*.48]);});
+ $('closeCard').addEventListener('click',()=>showCard(null));$('locator').addEventListener('click',()=>{userFramedPan=false;followSelected=false;requestZoom(OVERVIEW_ZOOM,[W*.5,H*.48]);});
  $('history').addEventListener('click',()=>setHistoryOpen(!historyOpen));
  $('historyVisitsTab').addEventListener('click',()=>setHistoryTab('visits'));
  $('historyVersionsTab').addEventListener('click',()=>setHistoryTab('versions'));
@@ -1004,7 +1006,11 @@ function initUI(){
   }
  });
  window.addEventListener('resize',resize);window.addEventListener('pagehide',saveMemory);
- window.addEventListener('pageshow',()=>{if(ready){storedMemory();chooseMode(mode);setZoom(zoom);if(selected)showCard(selected);}});
+ window.addEventListener('pageshow',e=>{if(e.persisted&&ready){
+  angle=.63;elevation=.20;pan=[0,0];pendingPanNorm=null;
+  followSelected=false;userFramedPan=false;touchOrbitTarget=null;cancelMomentum();
+  selected=null;showCard(null);chooseMode('Whole');setZoom(DEFAULT_ZOOM,[W*.5,H*.48]);
+ }});
 }
 async function init(){
  try{
@@ -1019,7 +1025,7 @@ async function init(){
   const {navigationHash,...navBody}=nav;if(await sha(navBody)!==navigationHash)throw Error('Navigation SHA-256 invalid');
   const {snapshotHash,...snapBody}=snapshot;if(await sha(snapBody)!==snapshotHash||manifest.snapshots.find(s=>s.phase==='T0')?.snapshotHash!==snapshotHash)throw Error('Silent T0 snapshot SHA-256 invalid');
   preprocess();await verifyLoadedLivedEvidence();
-  lifeNowState=computeLifeState(new Date().toISOString());activateLifeState(lifeNowState);storedMemory();resize();ready=true;initUI();chooseMode(mode);setZoom(zoom);
+  lifeNowState=computeLifeState(new Date().toISOString());activateLifeState(lifeNowState);pan=[0,0];pendingPanNorm=null;resize();ready=true;initUI();chooseMode(mode);setZoom(zoom);
   if(selected)showCard(selected);
   const select=$('recordSelect'),livedSelect=$('livedRecord');for(const r of records){const option=document.createElement('option');option.value=r.id;option.textContent=`${r.kind} · ${r.title}`;select.append(option);livedSelect.append(option.cloneNode(true));}
   $('loading').style.display='none';lastFpsAt=performance.now();requestAnimationFrame(render);
