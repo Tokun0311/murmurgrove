@@ -7,6 +7,8 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { analyzeExhibition, validateAiSuggestions, buildAiPrompt, validateNewRecordProposals } from './analyzer.mjs';
+import {extractDocx} from './word-import.mjs';
+import {readArchive,buildGraph,answerQuestion,groundedPrompt,readEvents,activeRelations,validateClaim,appendEvent,readConceptMeta,updateConceptMeta,mergeConcept,syncGraph,hash as digest,slugValid} from './research-core.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const TYPE_FIELDS = {
@@ -119,9 +121,9 @@ function renderMd(type,fields,body,original){
 function apiError(status,message){return Object.assign(new Error(message),{status});}
 function isDate(s){if(!/^\d{4}-\d{2}-\d{2}$/.test(s||''))return false;const d=new Date(s+'T00:00:00Z');return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===s;}
 function json(res,status,obj){res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'});res.end(JSON.stringify(obj));}
-async function readJSON(req){
+async function readJSON(req,maxSize=1024*1024){
   if(!req.headers['content-type']?.startsWith('application/json'))throw apiError(415,'Expected application/json');
-  let size=0;const chunks=[];for await(const c of req){size+=c.length;if(size>1024*1024)throw apiError(413,'Record exceeds 1MB');chunks.push(c);}
+  let size=0;const chunks=[];for await(const c of req){size+=c.length;if(size>maxSize)throw apiError(413,'Request body too large');chunks.push(c);}
   try{return JSON.parse(Buffer.concat(chunks).toString('utf8'))}catch{throw apiError(400,'Invalid JSON')}
 }
 async function exists(p){try{await fsp.access(p);return true}catch{return false}}
@@ -144,9 +146,16 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
   if(!await exists(path.join(root,'src','content.config.ts'))||!await exists(path.join(root,'src','data')))throw new Error(`This editor must live inside the Astro project root. Expected src/data/ and src/content.config.ts in ${root}`);
   const privateDir=privateRoot?path.resolve(privateRoot):path.join(here,'.private'),draftDir=path.join(privateDir,'drafts'),backupDir=path.join(privateDir,'backups');
   const token=crypto.randomBytes(24).toString('hex');
-  const files={'/':{file:'index.html',mime:'text/html; charset=utf-8'},'/assets/editor.css':{file:'assets/editor.css',mime:'text/css; charset=utf-8'},'/assets/editor.js':{file:'assets/editor.js',mime:'application/javascript; charset=utf-8'}};
+  let updateQueue=Promise.resolve();
+  async function serializeWrite(fn){const prior=updateQueue;let release;updateQueue=new Promise(resolve=>release=resolve);await prior;try{return await fn()}finally{release()}}
+  const files={'/':{file:'index.html',mime:'text/html; charset=utf-8'},'/assets/editor.css':{file:'assets/editor.css',mime:'text/css; charset=utf-8'},'/assets/editor.js':{file:'assets/editor.js',mime:'application/javascript; charset=utf-8'},'/assets/research.js':{file:'assets/research.js',mime:'application/javascript; charset=utf-8'}};
   async function readCatalog(){
     const entries=await Promise.all(['people','institutions','concepts','exhibitions'].map(t=>recordList(root,t)));
+    const cmeta=await readConceptMeta(root);
+    for(const row of entries[2])row.fields.aliases=cmeta[row.slug]?.aliases||[];
+    const active=new Map(entries[2].map(c=>[c.slug,c]));
+    for(const old of entries[2])if(cmeta[old.slug]?.mergedInto){const newId=cmeta[old.slug].mergedInto,canonical=active.get(newId);if(canonical){canonical.fields.aliases=[...new Set([...(canonical.fields.aliases||[]),old.title,...(old.fields.aliases||[])])];}}
+    entries[2]=entries[2].filter(x=>!cmeta[x.slug]?.mergedInto);
     return {people:entries[0],institutions:entries[1],concepts:entries[2],exhibitions:entries[3]};
   }
   const server=http.createServer(async(req,res)=>{
@@ -162,7 +171,15 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
       if(req.method==='GET'&&u.pathname==='/api/record'){
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug')),file=getPaths(root,type,slug).file;
         if(!await exists(file))throw apiError(404,'Record not found');const raw=await fsp.readFile(file,'utf8');const p=splitMd(raw);
-        return json(res,200,{type,slug,fields:readFields(p.yaml),body:p.body,hash:sha(raw)});
+        let originalTextSha=null;
+        const privateLink=path.join(privateDir,'source-links',type,`${slug}.json`);
+        if(await exists(privateLink)){try{originalTextSha=JSON.parse(await fsp.readFile(privateLink,'utf8')).originalTextSha||null}catch{}}
+        return json(res,200,{type,slug,fields:readFields(p.yaml),body:p.body,hash:sha(raw),originalTextSha});
+      }
+      if(req.method==='GET'&&u.pathname==='/api/relations')return json(res,200,{claims:activeRelations(await readEvents(root))});
+      if(req.method==='GET'&&u.pathname==='/api/concept-meta')return json(res,200,{concepts:await readConceptMeta(root)});
+      if(req.method==='GET'&&u.pathname==='/api/history'){
+        const file=path.join(root,'public/murmurgrove/research/history-index.json');return json(res,200,{entries:await exists(file)?JSON.parse(await fsp.readFile(file,'utf8')):[]});
       }
       if(req.method==='GET'&&u.pathname==='/api/drafts'){
         const type=requireType(u.searchParams.get('type'));const dir=path.join(draftDir,type);
@@ -174,10 +191,71 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug'));
         const file=path.join(draftDir,type,`${slug}.json`);if(!await exists(file))throw apiError(404,'Draft not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
       }
-      if(req.method==='POST'&&['/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/delete-draft'].includes(u.pathname)){
+      if(req.method==='POST'&&['/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
         const expectedOrigin=`http://127.0.0.1:${server.address().port}`;
         if(req.headers.origin!==expectedOrigin||req.headers['x-editor-token']!==token)throw apiError(403,'Untrusted request');
-        const p=await readJSON(req);
+        const p=await readJSON(req,u.pathname==='/api/import-word'?12*1024*1024:1024*1024);
+        if(u.pathname==='/api/capture-original'){
+          if(typeof p.text!=='string'||!p.text.trim()||Buffer.byteLength(p.text,'utf8')>700000)throw apiError(422,'Original text must be nonempty and under 700 KB UTF-8. Split larger notes into sections.');
+          const fingerprint=sha(p.text);
+          const originals=path.join(privateDir,'originals');await fsp.mkdir(originals,{recursive:true});
+          const file=path.join(originals,`text-${fingerprint}.txt`);
+          try{await fsp.writeFile(file,p.text,{flag:'wx',mode:0o600})}catch(e){if(e.code!=='EEXIST')throw e}
+          const metadata=path.join(originals,`text-${fingerprint}.json`);
+          if(!await exists(metadata))await saveAtomic(metadata,JSON.stringify({sha256:fingerprint,title:typeof p.title==='string'?p.title.slice(0,150):'',capturedAt:new Date().toISOString(),format:'text/plain; charset=utf-8',source:'explicit-user-snapshot',privacy:'PRIVATE_LOCAL_ORIGINAL'},null,2)+'\n');
+          return json(res,200,{ok:true,sha256:fingerprint,relativePath:'murmurgrove-editor/.private/originals/text-'+fingerprint+'.txt',warning:'Snapshot saved only on this computer, excluded from Git. No public content or archive relationship changed.'});
+        }
+        if(u.pathname==='/api/import-word'){
+          if(typeof p.name!=='string'||p.name.length>255||!/^.+\.docx$/i.test(p.name)||typeof p.base64!=='string'||p.base64.length>11*1024*1024||!/^[A-Za-z0-9+/]+=*$/.test(p.base64))throw apiError(422,'Select a .docx Word file under 8 MB. Legacy .doc is not supported.');
+          const bytes=Buffer.from(p.base64,'base64');if(bytes.length>8*1024*1024)throw apiError(413,'Word document too large');
+          let textBody;try{textBody=extractDocx(bytes)}catch(e){throw apiError(422,e.message)}
+          const fingerprint=digest(bytes.toString('base64'));const originals=path.join(privateDir,'originals');await fsp.mkdir(originals,{recursive:true});
+          const file=path.join(originals,`${fingerprint}.docx`);
+          try{await fsp.writeFile(file,bytes,{flag:'wx'})}catch(e){if(e.code!=='EEXIST')throw e}
+          const meta=path.join(originals,`${fingerprint}.json`);
+          if(!await exists(meta))await saveAtomic(meta,JSON.stringify({sha256:crypto.createHash('sha256').update(bytes).digest('hex'),filename:path.basename(p.name),importedAt:new Date().toISOString(),textSha256:sha(textBody),privacy:'PRIVATE_LOCAL_ORIGINAL'},null,2)+'\n');
+          return json(res,200,{ok:true,name:p.name,text:textBody,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),originalCopy:'murmurgrove-editor/.private/originals/'+fingerprint+'.docx',warning:'Original Word file copied locally and excluded from Git. No public file was changed.'});
+        }
+        if(['/api/ask','/api/grounded-prompt','/api/ask-local-ai'].includes(u.pathname)){
+          const g=await buildGraph(root),answer=answerQuestion(p.question,g);
+          if(u.pathname==='/api/ask')return json(res,200,answer);
+          if(u.pathname==='/api/grounded-prompt')return json(res,200,{prompt:groundedPrompt(p.question,answer),evidenceCount:answer.results.length});
+          if(!answer.results.length)throw apiError(422,'No published evidence matched. Add records or improve the question before asking AI.');
+          const model=String(p.model||'').trim();if(!/^[a-zA-Z0-9_.:\/-]{2,90}$/.test(model))throw apiError(422,'Provide an installed local Ollama model name.');
+          let output;try{
+            const local=await fetch('http://127.0.0.1:11434/api/generate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({model,prompt:groundedPrompt(p.question,answer),stream:false,options:{temperature:0.15,num_predict:900}}),signal:AbortSignal.timeout(120000)});
+            if(!local.ok)throw new Error('Ollama HTTP '+local.status+' (model may not be installed)');
+            const result=await local.json();output=String(result.response||'').slice(0,16000);
+            if(!output.trim())throw new Error('Local model returned an empty response');
+          }catch(e){throw apiError(503,'Local model unavailable: '+e.message+'. No online service was contacted.');}
+          const markers=[...output.matchAll(/\[S(\d+)\]/g)].map(m=>Number(m[1]));
+          const invalid=markers.filter(n=>n<1||n>answer.results.length);
+          if(invalid.length)throw apiError(422,'Model invented a source citation. Answer rejected; retry with grounded sources.');
+          return json(res,200,{analysis:output,method:'OPTIONAL_LOCAL_OLLAMA_ANALYSIS_NOT_VERIFIED_FACT',sources:answer.results,model,warning:'AI interpretation requires human checking. The prompt contained only published archive excerpts.'});
+        }
+        if(u.pathname==='/api/relation-preview'){
+          try{return json(res,200,{claim:await validateClaim(root,p.claim)})}catch(e){throw apiError(422,e.message)}
+        }
+        if(u.pathname==='/api/relation-approve'){
+          if(p.confirm!==true)throw apiError(422,'Review and confirm relation publication');
+          return await serializeWrite(async()=>{try{const e=await appendEvent(root,{action:'approve',claim:p.claim});const synced=await syncGraph(root);return json(res,200,{ok:true,event:e,graphHash:synced.graph.graphHash})}catch(e){throw apiError(422,e.message)}});
+        }
+        if(u.pathname==='/api/relation-withdraw'){
+          if(p.confirm!==true)throw apiError(422,'Confirm withdrawing this interpretation');
+          return await serializeWrite(async()=>{try{const e=await appendEvent(root,{action:'withdraw',claimId:p.claimId,reason:p.reason});const synced=await syncGraph(root);return json(res,200,{ok:true,event:e,graphHash:synced.graph.graphHash})}catch(e){throw apiError(422,e.message)}});
+        }
+        if(u.pathname==='/api/concept-meta'){
+          if(p.confirm!==true)throw apiError(422,'Confirm concept metadata update');
+          return await serializeWrite(async()=>{try{const meta=await updateConceptMeta(root,p);const synced=await syncGraph(root);return json(res,200,{ok:true,meta,graphHash:synced.graph.graphHash})}catch(e){throw apiError(422,e.message)}});
+        }
+        if(u.pathname==='/api/concept-merge'){
+          if(p.confirm!==true)throw apiError(422,'Explicitly confirm merging these concepts');
+          return await serializeWrite(async()=>{try{const merged=await mergeConcept(root,p);const sync=await syncGraph(root);return json(res,200,{ok:true,merged,graphHash:sync.graph.graphHash})}catch(e){throw apiError(422,e.message)}});
+        }
+        if(u.pathname==='/api/sync-research'){
+          if(p.confirm!==true)throw apiError(422,'Confirm local publication of derived research index');
+          return await serializeWrite(async()=>{const result=await syncGraph(root);return json(res,200,{ok:true,changed:result.changed,summary:result.summary||null,graphHash:result.graph.graphHash,records:result.graph.records.length,relations:result.graph.relations.length,warning:'Generated source state is NOT a historical organism frame.'})});
+        }
         if(['/api/analyze','/api/ai-prompt','/api/ai-review'].includes(u.pathname)){
           if(p.type!=='exhibitions')throw apiError(422,'Analysis currently supports Exhibitions only');
           if(typeof p.title!=='string'||typeof p.body!=='string'||typeof p.location!=='string'||p.body.length>100000||p.title.length>1000||p.location.length>800)throw apiError(422,'Invalid or excessive text to analyze');
@@ -230,9 +308,11 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         }
         const fields=normalise(type,p.fields||{},{strict:u.pathname==='/api/publish'});
         const body=typeof p.body==='string'?p.body:'';
+        const originalTextSha=typeof p.originalTextSha==='string'&&/^[a-f0-9]{64}$/.test(p.originalTextSha)?p.originalTextSha:null;
+        if(originalTextSha&&!await exists(path.join(privateDir,'originals',`text-${originalTextSha}.txt`)))throw apiError(422,'Original text snapshot is missing on this computer. Capture it again before saving.');
         if(u.pathname==='/api/draft'){
           const file=path.join(draftDir,type,`${slug}.json`);
-          const data={type,slug,fields,body,hash:p.hash||null,updatedAt:new Date().toISOString()};
+          const data={type,slug,fields,body,hash:p.hash||null,wordOriginalSha:typeof p.wordOriginalSha==='string'&&/^[a-f0-9]{64}$/.test(p.wordOriginalSha)?p.wordOriginalSha:null,originalTextSha,updatedAt:new Date().toISOString()};
           await saveAtomic(file,JSON.stringify(data,null,2)+'\n');return json(res,200,{ok:true,kind:'draft',relativePath:'murmurgrove-editor/.private/drafts/'+type+'/'+slug+'.json'});
         }
         if(p.confirmPublic!==true)throw apiError(422,'Please confirm public publication');
@@ -251,7 +331,17 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         }
         const raw=renderMd(type,fields,body,old);
         await saveAtomic(paths.file,raw);
-        return json(res,200,{ok:true,kind:'published',relativePath:'src/data/'+type+'/'+slug+'.md',updated:!!old,sha256:sha(raw)});
+        let syncResult;
+        try{syncResult=await syncGraph(root)}catch(e){
+          // Revert the changed record if source-index validation fails. Original backups remain private.
+          if(old!==null)await saveAtomic(paths.file,old);else await fsp.rm(paths.file,{force:true});
+          throw apiError(422,'Publication rolled back: research synchronization failed: '+e.message);
+        }
+        if(originalTextSha){
+          const link=path.join(privateDir,'source-links',type,`${slug}.json`);
+          await saveAtomic(link,JSON.stringify({type,slug,originalTextSha,linkedAt:new Date().toISOString(),privacy:'PRIVATE_LOCAL_REFERENCE'},null,2)+'\n');
+        }
+        return json(res,200,{ok:true,kind:'published',relativePath:'src/data/'+type+'/'+slug+'.md',updated:!!old,sha256:sha(raw),research:{graphHash:syncResult.graph.graphHash,changed:syncResult.changed},warning:'Research source index synced. Pinned T0 and historical organism snapshots remain unchanged.'});
       }
       return json(res,404,{error:'Not found'});
     }catch(error){console.error('[editor]',error.message);return json(res,error.status||500,{error:error.status?error.message:'Unexpected local editor error; check terminal.'});}

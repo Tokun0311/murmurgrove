@@ -1,0 +1,28 @@
+---
+// Non-destructive reader: interpretive relations supplement, never rewrite, the original record.
+import fs from 'node:fs/promises';
+import path from 'node:path';
+const {kind,id}=Astro.props;
+const key=`${kind}:${id}`;
+let rows=[];
+try{
+ const graph=JSON.parse(await fs.readFile(path.join(process.cwd(),'public/murmurgrove/research/current.json'),'utf8'));
+ const names=new Map(graph.records.map((r)=>[r.key,r]));
+ rows=graph.relations.filter(r=>r.kind!=='recorded-link'&&(r.source===key||r.target===key)).map(r=>{
+  const other=names.get(r.source===key?r.target:r.source);
+  return other?{...r,other}:null;
+ }).filter(Boolean);
+}catch{rows=[];}
+---
+{rows.length>0&&<section class="research-context" aria-label="Reviewed research connections" style="margin-top:34px;padding-top:18px;border-top:1px solid #d6e4da">
+ <h2 style="font-size:17px;font-weight:500">Research connections</h2>
+ <p style="font-size:12px;line-height:1.7;color:#73917c">Interpretive links reflect reviewed, source-backed research claims. They do not modify the original record or represent historical organism states.</p>
+ <ol class="archive-list">
+ {rows.slice(0,30).map((r)=><li class="archive-entry" style="padding:12px 0;border-bottom:1px solid #e3ede5">
+  <span style="display:block;font-size:10px;color:#849e8b">{r.kind} · {r.provenance[0]?.method||'reviewed'}</span>
+  <a href={r.other.path}>{r.other.title}</a>
+  {r.provenance[0]?.reason&&<p style="font-size:12px;line-height:1.7;color:#72927c;margin:5px 0">{r.provenance[0].reason}</p>}
+  {r.provenance[0]?.evidence&&<p style="font-size:11px;line-height:1.6;color:#68856f">Evidence: “{r.provenance[0].evidence}”</p>}
+ </li>)}
+ </ol>
+</section>}

@@ -1,0 +1,19 @@
+---
+import fs from 'node:fs/promises';
+import path from 'node:path';
+const {id}=Astro.props;
+let meta=null;
+try{
+ const all=JSON.parse(await fs.readFile(path.join(process.cwd(),'src/data/murmurgrove-relations/concepts.json'),'utf8'));
+ meta=all[id]||null;
+}catch{}
+---
+{meta&&<section class="research-concept-memory" aria-label="Concept definition and development" style="margin:25px 0;padding-top:14px;border-top:1px solid #d9e8dc">
+  <p style="font-size:11px;color:#72907a">Research concept · {meta.status} · revised {meta.updatedAt?.slice(0,10)}</p>
+  {meta.mergedInto&&<p style="font-size:12px;line-height:1.7;color:#357955">Current classification merged into <a href={`/concepts/${meta.mergedInto}/`}>{meta.mergedInto}</a>. Historical record preserved.</p>}
+  {meta.aliases?.length>0&&<p style="font-size:12px;color:#577e66">Related terms: {meta.aliases.join(' · ')}</p>}
+  {meta.definition&&<section><h2 style="font-size:17px;font-weight:500">Definition</h2><p style="white-space:pre-wrap;line-height:1.85">{meta.definition}</p></section>}
+  {meta.interpretation&&<section><h2 style="font-size:17px;font-weight:500">Interpretation</h2><p style="white-space:pre-wrap;line-height:1.85">{meta.interpretation}</p></section>}
+  {meta.development&&<section><h2 style="font-size:17px;font-weight:500">Development</h2><p style="white-space:pre-wrap;line-height:1.85">{meta.development}</p></section>}
+  <p style="font-size:11px;color:#799481">These are curated interpretations rather than universal definitions. Dated revisions are preserved in the archive's source history.</p>
+</section>}

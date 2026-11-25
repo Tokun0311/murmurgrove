@@ -1,0 +1,20 @@
+---
+// Public reader for the existing 'entries' content collection, whose files live in src/data/writing.
+import Base from '../../layouts/Base.astro';
+import {getCollection} from 'astro:content';
+const entries=(await getCollection('entries',({data})=>data.draft!==true)).sort((a,b)=>b.data.date.valueOf()-a.data.date.valueOf());
+---
+<Base title="Writing | murmurgrove">
+  <main style="max-width:900px;margin:48px auto 100px;padding:0 25px;color:#1f6d4b">
+    <a href="/" style="font-size:12px;color:#63977a;text-decoration:none">← murmurgrove</a>
+    <h1 style="font-size:34px;letter-spacing:-.025em;font-weight:500">Writing</h1>
+    <p style="color:#6b9278;font-size:13px;line-height:1.8">Published research texts, distinct from privately stored working drafts.</p>
+    <ol style="padding:0;margin:32px 0;list-style:none">
+      {entries.map(e=><li style="padding:16px 0;border-top:1px solid #d9e8dc">
+        <time style="font-size:11px;color:#769884">{e.data.date.toISOString().slice(0,10)}</time>
+        <div><a href={`/writing/${e.id}/`} style="color:#137b4d;font-size:17px;text-decoration:none">{e.data.title}</a></div>
+        <p style="font-size:12px;color:#6c8f7c">{e.data.description}</p>
+      </li>)}
+    </ol>
+  </main>
+</Base>

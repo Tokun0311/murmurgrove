@@ -55,7 +55,7 @@ const GROUP_TO_COLLECTION={people:'people',institutions:'institutions',concepts:
 function compactName(s){return normalise(s).replace(/[\s\p{P}\p{S}]+/gu,'');}
 function sourceParts(record){return [['title',String(record.title||'')],['location',String(record.location||'')],['body',String(record.body||'')]];}
 function recordHasExactQuote(parts,quote){return parts.find(([label,s])=>s.includes(quote))?.[0]||null;}
-function existingNames(record,group){return [...new Set([record.title,record.fields?.name,record.fields?.title,record.fields?.reading,...(group==='concepts'?(ALIASES[record.slug]||[]):[])].filter(x=>typeof x==='string'&&x.trim()))];}
+function existingNames(record,group){return [...new Set([record.title,record.fields?.name,record.fields?.title,record.fields?.reading,...(group==='concepts'?[...(ALIASES[record.slug]||[]),...(record.fields?.aliases||[])]:[])].filter(x=>typeof x==='string'&&x.trim()))];}
 function suggestSlug(name,group){
   const latin=String(name).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,70).replace(/-+$/,'');
   if(latin.length>1)return latin;
@@ -118,7 +118,7 @@ export function analyzeExhibition({title='',location='',body='',slug='',fields={
   }
   for(const record of catalog.concepts||[]){
     if(!record.slug||seen.concepts.has(record.slug))continue;
-    const names=[...labels(record,'concepts'),...(ALIASES[record.slug]||[])];const ev=findEvidence(sources,names);if(!ev)continue;
+    const names=[...labels(record,'concepts'),...(ALIASES[record.slug]||[]),...(record.fields?.aliases||[])];const ev=findEvidence(sources,names);if(!ev)continue;
     if(Array.isArray(fields.concepts)&&fields.concepts.includes(record.slug))continue;
     const actual=labels(record,'concepts').some(n=>normalise(n)===normalise(ev.matched));
     groups.concepts.push(asSuggestion('concepts',record,ev,actual?'Concept title explicitly occurs in this record':'Known multilingual vocabulary match; review meaning before accepting',actual?'exact':'vocabulary'));

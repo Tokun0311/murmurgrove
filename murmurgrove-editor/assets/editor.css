@@ -49,3 +49,34 @@
 .manual-proposal .form-field{margin:14px 0 0}
 .manual-proposal textarea{min-height:60px}
 .manual-proposal .action-link{margin-top:15px}
+/* Local research workspace. Open lines and typographic grouping, never closed card frames. */
+.research-atelier{border-top:1px solid var(--green);margin:42px 0 25px;padding:23px 0 7px;max-width:100%;min-width:0}
+.research-atelier.word-import{margin:5px 0 25px;padding:19px 0 5px;border-top:1px solid var(--line)}
+.research-atelier h2{font-size:19px;line-height:1.3;margin:19px 0 12px;color:var(--ink);font-weight:500}
+.research-atelier h3{font-size:13px;color:var(--green);font-weight:600;margin:23px 0 10px}
+.research-atelier label{display:block;color:var(--green);font-size:11px;font-weight:600;margin:18px 0 6px}
+.research-atelier input[type=file]{font-size:12px;color:var(--ink);max-width:100%;min-width:0}
+.research-atelier select,.research-atelier textarea{display:block;box-sizing:border-box;width:100%;min-width:0;color:var(--ink);font:inherit;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:9px 3px 10px 0;outline:none}
+.research-atelier textarea{resize:vertical;line-height:1.6;font-size:13px;min-height:68px}
+.research-atelier select:focus,.research-atelier textarea:focus{border-color:var(--green)}
+.research-atelier button{border:0;background:transparent;color:var(--green);font-weight:600;font:inherit;font-size:12px;padding:9px 0;border-bottom:1px solid var(--green);cursor:pointer}
+.research-atelier button:hover{text-decoration:underline}
+.research-atelier .micro-copy,.micro-copy{font-size:12px;line-height:1.68;color:var(--muted);overflow-wrap:anywhere}
+.research-atelier .atelier-actions{display:flex;gap:10px 28px;align-items:center;flex-wrap:wrap;margin:12px 0 15px;min-width:0}
+.research-atelier .atelier-divider{margin:32px 0 25px;border-top:1px solid var(--line)}
+.research-atelier .two-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px 25px;min-width:0}
+.research-atelier .source-hit{padding:13px 0 17px;border-bottom:1px solid var(--line);min-width:0}
+.research-atelier .source-hit-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.research-atelier .source-hit strong{font-weight:600;font-size:13px}
+.research-atelier .source-hit small{font-size:10px;color:var(--muted)}
+.research-atelier .source-quote{border-left:1px solid var(--green);font-size:12px;color:var(--ink);padding:3px 0 4px 12px;margin:10px 0;line-height:1.6;overflow-wrap:anywhere}
+.research-atelier .source-full{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.75 ui-monospace,SFMono-Regular,monospace;max-height:380px;overflow-y:auto;padding:12px 0;border-top:1px solid var(--line)}
+.research-atelier a.action-link{font-size:12px;color:var(--green);text-decoration:none;border-bottom:1px solid var(--green)}
+@media(max-width:680px){.research-atelier .two-fields{grid-template-columns:1fr}.research-atelier .source-hit-head{display:block}.research-atelier h2{font-size:17px}}
+
+/* Paste-first capture; always open typography instead of cards or boxes. */
+.research-atelier.source-import{margin:16px 0 35px;padding:17px 0 6px;border-top:1px solid var(--line)}
+.research-atelier.source-import .atelier-actions{align-items:baseline}
+.research-atelier.source-import #original-message{flex:1;min-width:210px}
+.research-atelier.source-import .optional-import{margin:15px 0 0;border-top:1px solid var(--line)}
+.research-atelier.source-import .optional-import summary{font-size:12px}
