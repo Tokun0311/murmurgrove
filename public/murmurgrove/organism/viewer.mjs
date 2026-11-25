@@ -50,6 +50,8 @@ let velocityPan=[0,0],velocityAngle=0,velocityElevation=0;
 let activeGesture=null,pinchGesture=null;
 const activePointers=new Map();
 let touchPair=null,userFramedPan=false,touchOrbitTarget=null;
+let lastSafePan=[0,0]; // Optical camera limit only; never edits archival geometry.
+
 const smallTouchViewport=matchMedia('(pointer:coarse)').matches;
 const reducedMotionMedia=matchMedia('(prefers-reduced-motion: reduce)');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -142,6 +144,74 @@ function reframe(){const projected=viewPositions.map(project);
 }
 function coords(p){const a=project(p),scale=baseScale*zoom/ZOOM_BASE;
  return [W*.5+pan[0]+(a[0]-center[0])*scale,H*.48+pan[1]-(a[1]-center[1])*scale,a[2]];}
+
+/** Constrain the camera by REAL visible specimens, not an arbitrary pixel limit.
+ * A drag may inspect peripheral filaments, but cannot push the entire organism
+ * out of the viewport. Selection of a small/isolated component remains possible.
+ * The check uses stable rest positions, not animated pixels or invented links.
+ */
+function boundPanToOrganism(requested,previous=lastSafePan){
+ if(!ready||W<30||H<30||!viewPositions.length||isMobileOverview())return requested;
+ const selectedComponent=selected&&componentById.has(selected)?componentById.get(selected):null;
+ const focusIds=sourceView?.structure?.projectedIds ||
+   (selectedComponent!==null&&zoom>=4?new Set(components[selectedComponent]):mainIds);
+ const scale=baseScale*zoom/ZOOM_BASE;
+ const available=[];
+ for(let i=0;i<nodes.length;i++){
+  if(!focusIds.has(nodes[i].id))continue;
+  const p=project(viewPositions[i]);
+  available.push([W*.5+(p[0]-center[0])*scale,H*.48-(p[1]-center[1])*scale]);
+ }
+ if(!available.length)return [0,0];
+ // At high magnification the viewer may legitimately inspect a single node.
+ // Preserve a meaningful patch of the body at ordinary magnifications.
+ // On deep close-ups, even one selected/isolated node is a valid specimen.
+ const xMin=W*.14,xMax=W*.86,yMin=H*.14,yMax=H*.86;
+ const visibleCount=candidate=>{
+  let count=0;
+  for(const p of available){
+   const x=p[0]+candidate[0],y=p[1]+candidate[1];
+   if(x>=xMin&&x<=xMax&&y>=yMin&&y<=yMax)count++;
+  }
+  return count;
+ };
+ const overviewReference=visibleCount([0,0]);
+ const minimum=zoom>=9?1:zoom>=6?2:zoom>=4?4:zoom>=3?8:12;
+ const needed=Math.min(available.length,Math.max(minimum,Math.ceil(overviewReference*.55)));
+ if(visibleCount(requested)>=needed)return requested;
+ let safe=previous;
+ if(visibleCount(safe)<needed){
+  // Saved camera from a previous viewport, a large pinch, or rotation can
+  // start beyond the limit. Find the nearest actually valid framing.
+  let best=null,bestDistance=Infinity;
+  for(const p of available){
+   const candidate=[W*.5-p[0],H*.48-p[1]];
+   if(visibleCount(candidate)<needed)continue;
+   const distance=Math.hypot(candidate[0]-requested[0],candidate[1]-requested[1]);
+   if(distance<bestDistance){bestDistance=distance;best=candidate;}
+  }
+  if(!best){
+   // At extreme zoom or small components even a single-node neighborhood
+   // may be all that exists; keep the nearest real record safely visible.
+   let distance=Infinity;
+   for(const p of available){const candidate=[W*.5-p[0],H*.48-p[1]];
+    const d=Math.hypot(candidate[0]-requested[0],candidate[1]-requested[1]);
+    if(d<distance){distance=d;best=candidate;}
+   }
+  }
+  safe=best||[0,0];
+ }
+ // Walk only as far as the real specimen remains visible. No snap-back and
+ // no rubber-band overshoot; dragging against the limit simply stops.
+ let lo=0,hi=1;
+ for(let iteration=0;iteration<18;iteration++){
+  const t=(lo+hi)*.5;
+  const next=[safe[0]+(requested[0]-safe[0])*t,safe[1]+(requested[1]-safe[1])*t];
+  if(visibleCount(next)>=needed)lo=t;else hi=t;
+ }
+ return [safe[0]+(requested[0]-safe[0])*lo,safe[1]+(requested[1]-safe[1])*lo];
+}
+
 function gaussian(n,p,time){
  const quietTime=time,breathClock=breathingTime(time,mode),waveClock=opticalTime(time,mode);
  const entry=neighborData[n],data=nodes[n],main=mainIds.has(data.id),isol=isolated.has(data.id);
@@ -389,6 +459,18 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
     pan=[pan[0]+(aim[0]-pointed[0])*ease,pan[1]+(aim[1]-pointed[1])*ease];
    }
   }
+  // One shared optical boundary for mouse drag, touch pan, two-finger pan,
+  // cursor-anchored zoom, selected-node follow and momentum. Historical data
+  // and the frame's 3D geometry are never changed.
+  if(!isMobileOverview()){
+   const requested=[...pan];
+   const safe=boundPanToOrganism(requested);
+   if(Math.abs(safe[0]-requested[0])>.05||Math.abs(safe[1]-requested[1])>.05){
+    // Inertia must not keep pushing against the edge.
+    velocityPan=[0,0];
+   }
+   pan=safe;lastSafePan=[...safe];
+  }else lastSafePan=[...pan];
   if(sourceView){
    lastFrameScreenNodes=null;
    const pos=viewPositions.map(coords);drawSourceReading();if(selected)positionCard(pos);
