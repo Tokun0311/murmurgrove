@@ -7,26 +7,37 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
 <!doctype html>
 <html lang="en">
   <head>
-<!-- murmurgrove favicon -->
-<link rel="icon" href="/favicon.ico" type="image/x-icon" />
-
-<link
-  rel="icon"
-  href="/favicon-96x96.png?v=2"
-  type="image/png"
-  sizes="96x96"
-  media="(prefers-color-scheme: light)"
-/>
-
-<link
-  rel="icon"
-  href="/favicon-dark-96x96.png?v=2"
-  type="image/png"
-  sizes="96x96"
-  media="(prefers-color-scheme: dark)"
-/>
-
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />    <meta charset="UTF-8" />
+    <!-- murmurgrove favicon: one icon, switching between the original two green files -->
+    <link
+      id="murmurgrove-favicon"
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="/favicon-96x96.png?v=5"
+    />
+    <script is:inline>
+      (() => {
+        const favicon = document.getElementById('murmurgrove-favicon');
+        const preference = window.matchMedia('(prefers-color-scheme: dark)');
+        const updateFavicon = () => {
+          const path = preference.matches
+            ? '/favicon-dark-96x96.png'
+            : '/favicon-96x96.png';
+          const next = `${path}?v=5`;
+          if (favicon && favicon.getAttribute('href') !== next) {
+            favicon.setAttribute('href', next);
+          }
+        };
+        updateFavicon();
+        if (typeof preference.addEventListener === 'function') {
+          preference.addEventListener('change', updateFavicon);
+        } else if (typeof preference.addListener === 'function') {
+          preference.addListener(updateFavicon);
+        }
+      })();
+    </script>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta charset="UTF-8" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#ffffff" />
     <script is:inline>
