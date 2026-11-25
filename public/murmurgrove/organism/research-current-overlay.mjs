@@ -6,7 +6,9 @@
 const main=document.getElementById('stage');
 if(main){
  const canvas=document.createElement('canvas');canvas.id='research-current-optics';canvas.setAttribute('aria-hidden','true');
- Object.assign(canvas.style,{position:'fixed',inset:'0',width:'100%',height:'100%',pointerEvents:'none',zIndex:'1'});
+ // The viewer stylesheet assigns an opaque paper background to every canvas.
+ // This overlay must remain transparent, or it masks the entire organism.
+ Object.assign(canvas.style,{position:'fixed',inset:'0',width:'100%',height:'100%',pointerEvents:'none',zIndex:'1',background:'transparent'});
  document.body.append(canvas);const ctx=canvas.getContext('2d');let source=null,lastWidth=0,lastHeight=0;
  async function refresh(){try{const res=await fetch('./data/research-current.json',{cache:'no-store'});if(!res.ok)return;const json=await res.json();
   if(json.schema!=='murmurgrove.read-only-research-optics.1'||json.mode!=='DERIVED_CURRENT_SOURCE_READING'||!Array.isArray(json.links)||!json.activity)return;
