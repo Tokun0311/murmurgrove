@@ -255,9 +255,9 @@ html body.debug #status{display:none!important}
     gap: 1px !important;
     padding: 3px 0 !important;
     width: 44px !important;
-    background: rgba(250,252,249,.32) !important;
-    backdrop-filter: blur(6px) !important;
-    -webkit-backdrop-filter: blur(6px) !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -278,7 +278,7 @@ html body.debug #status{display:none!important}
     font-size: 16px !important;
     font-weight: 400 !important;
     line-height: 1 !important;
-    color: #78988b !important;
+    color: #84998d !important;
     background: transparent !important;
     border: 0 !important;
     border-radius: 0 !important;
@@ -290,19 +290,11 @@ html body.debug #status{display:none!important}
     color: #006d4d !important;
     background: transparent !important;
   }
-  html body #mode button[aria-pressed="true"]::before {
-    content: "";
-    position: absolute;
-    left: 1px;
-    top: 14px;
-    width: 2px;
-    height: 16px;
-    background: #16845c;
-    pointer-events: none;
-  }
   html body #mode button:focus-visible {
     color: #006d4d !important;
-    background: rgba(221,239,226,.44) !important;
+    background: transparent !important;
+    outline: 1px solid #006d4d;
+    outline-offset: -3px;
   }
   /* The buttons no longer compete with the bottom history / zoom controls. */
   html body #hint { max-width: calc(100vw - 84px); }
