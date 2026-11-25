@@ -51,6 +51,32 @@ let activeGesture=null,pinchGesture=null;
 const activePointers=new Map();
 let touchPair=null,userFramedPan=false,touchOrbitTarget=null;
 let lastSafePan=[0,0]; // Optical camera limit only; never edits archival geometry.
+// Pointer input can stretch beyond the visible boundary; it never touches T0.
+let panIntent=null,edgeReturnVelocity=[0,0];
+const ELASTIC_LIMIT=72,ELASTIC_RATIO=.135;
+/** A rubber sheet: initially yields, then increasingly resists stretching.
+ * Pure and monotonic; unlike clamping, dragging never meets a hard wall.
+ */
+function rubberDisplacement(delta,limit){return limit*delta/(limit+Math.abs(delta));}
+function elasticLimit(){return Math.min(ELASTIC_LIMIT,Math.max(32,Math.min(W,H)*ELASTIC_RATIO));}
+/** A damped spring settles gently after release. Mildly underdamped for life-like rebound. */
+function springToEdge(position,safe,dt){
+ const time=Math.min(dt,36)/1000,frequency=10,damping=.78;
+ const next=[...position],v=[...edgeReturnVelocity];
+ // Substeps keep the spring stable when the tab is throttled.
+ const steps=Math.max(1,Math.ceil(time/.012));
+ for(let k=0;k<steps;k++){
+  const h=time/steps;
+  for(let axis=0;axis<2;axis++){
+   const displacement=next[axis]-safe[axis];
+   const acceleration=-frequency*frequency*displacement-2*damping*frequency*v[axis];
+   v[axis]+=acceleration*h;next[axis]+=v[axis]*h;
+  }
+ }
+ edgeReturnVelocity=v;
+ for(let axis=0;axis<2;axis++)if(Math.abs(next[axis]-safe[axis])<.23&&Math.abs(v[axis])<2){next[axis]=safe[axis];edgeReturnVelocity[axis]=0;}
+ return next;
+}
 
 const smallTouchViewport=matchMedia('(pointer:coarse)').matches;
 const reducedMotionMedia=matchMedia('(prefers-reduced-motion: reduce)');
@@ -83,7 +109,10 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
   pendingPanNorm=s.panNorm; if(W>1&&H>1){pan=[s.panNorm[0]*W,s.panNorm[1]*H];pendingPanNorm=null;}
  }
 }catch{}}
-function saveMemory(){try{sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected,followSelected,userFramedPan,historyMonth,historyTab,panNorm:[pan[0]/Math.max(W,1),pan[1]/Math.max(H,1)]}));}catch{}}
+function saveMemory(){try{
+ const storedPan=ready&&!isMobileOverview()?boundPanToOrganism(pan):pan;
+ sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected,followSelected,userFramedPan,historyMonth,historyTab,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
+ }catch{}}
 function preprocess(){
  records=nav.records.filter(r=>!r.quarantined);
  nodes=snapshot.nodes.map(n=>({...n,record:records.find(r=>r.id===n.id)}));nodeMap=new Map(nodes.map(n=>[n.id,n]));nodeIndex=new Map(nodes.map((n,i)=>[n.id,i]));
@@ -201,8 +230,8 @@ function boundPanToOrganism(requested,previous=lastSafePan){
   }
   safe=best||[0,0];
  }
- // Walk only as far as the real specimen remains visible. No snap-back and
- // no rubber-band overshoot; dragging against the limit simply stops.
+ // Find the nearest legal camera center; a separate optical spring and
+ // compliant rubber resistance handle motion around this legal framing.
  let lo=0,hi=1;
  for(let iteration=0;iteration<18;iteration++){
   const t=(lo+hi)*.5;
@@ -459,18 +488,26 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
     pan=[pan[0]+(aim[0]-pointed[0])*ease,pan[1]+(aim[1]-pointed[1])*ease];
    }
   }
-  // One shared optical boundary for mouse drag, touch pan, two-finger pan,
-  // cursor-anchored zoom, selected-node follow and momentum. Historical data
-  // and the frame's 3D geometry are never changed.
+  // A unified compliant boundary for mouse, touch and trackpad gestures.
+  // During a drag the *raw intent* is elastic; release springs back rather
+  // than stopping sharply. Everything below is optical, not archival data.
   if(!isMobileOverview()){
-   const requested=[...pan];
-   const safe=boundPanToOrganism(requested);
-   if(Math.abs(safe[0]-requested[0])>.05||Math.abs(safe[1]-requested[1])>.05){
-    // Inertia must not keep pushing against the edge.
-    velocityPan=[0,0];
+   if(panIntent){
+    const safe=boundPanToOrganism(panIntent);
+    const radius=elasticLimit();
+    pan=[safe[0]+rubberDisplacement(panIntent[0]-safe[0],radius),
+         safe[1]+rubberDisplacement(panIntent[1]-safe[1],radius)];
+    lastSafePan=[...safe];edgeReturnVelocity=[0,0];
+   }else{
+    const safe=boundPanToOrganism(pan);
+    const outside=Math.hypot(pan[0]-safe[0],pan[1]-safe[1]);
+    if(outside>.06||Math.hypot(...edgeReturnVelocity)>.1){
+     // Do not let inertial velocity continuously pull against the spring.
+     velocityPan=[0,0];pan=springToEdge(pan,safe,dt);
+    }else {pan=safe;edgeReturnVelocity=[0,0];}
+    lastSafePan=[...safe];
    }
-   pan=safe;lastSafePan=[...safe];
-  }else lastSafePan=[...pan];
+  }else {lastSafePan=[...pan];panIntent=null;edgeReturnVelocity=[0,0];}
   if(sourceView){
    lastFrameScreenNodes=null;
    const pos=viewPositions.map(coords);drawSourceReading();if(selected)positionCard(pos);
@@ -534,7 +571,10 @@ function setZoom(value,anchor=anchorPoint(),{persist=true}={}){
  const old=zoom,next=cl(value,ZOOM_MIN,ZOOM_MAX);
  // The inverse projection of this exact pointer is unchanged after zoom.
  if(next!==old)pan=panForCursorZoom(pan,old,next,anchor,[W*.5,H*.48]);
- zoom=next;if(isMobileOverview()||(!MOBILE_HOME&&zoom<=1))followSelected=false; // Manual zoom never restarts automatic follow.
+ zoom=next;
+ if(panIntent)panIntent=[...pan]; // Pinch zoom anchors the *current* visible lens.
+ edgeReturnVelocity=[0,0];
+ if(isMobileOverview()||(!MOBILE_HOME&&zoom<=1))followSelected=false; // Manual zoom never restarts automatic follow.
  if(isMobileOverview())userFramedPan=false;
  $('zoomLabel').textContent=Math.round(zoom*100)+'%';
  document.body.classList.toggle('deep',zoom>=2);if(persist)saveMemory();
@@ -939,6 +979,7 @@ function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math
  if(pendingPanNorm){pan=[pendingPanNorm[0]*W,pendingPanNorm[1]*H];pendingPanNorm=null;}
  else if(oldW>1&&oldH>1)pan=[pan[0]*W/oldW,pan[1]*H/oldH];
  if(isMobileOverview())pan=[0,0];
+ panIntent=null;edgeReturnVelocity=[0,0];
  if(ready)reframe();}
 function initUI(){
  if(MOBILE_HOME){const hint=document.querySelector('#hint .touch-hint');if(hint)hint.textContent='One finger to orbit · Pinch to zoom · Zoom in to pan';}
@@ -961,7 +1002,7 @@ function initUI(){
  $('menu').addEventListener('click',()=>document.body.classList.toggle('debug'));
  $('about').addEventListener('click',()=>document.body.classList.toggle('debug'));
  $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);document.body.classList.remove('debug');});
- function cancelMomentum(){velocityPan=[0,0];velocityAngle=0;velocityElevation=0;}
+ function cancelMomentum(){velocityPan=[0,0];velocityAngle=0;velocityElevation=0;edgeReturnVelocity=[0,0];}
  function gestureHintDismiss(){document.body.classList.remove('hint');}
  function pointerLocal(clientX,clientY){const rect=canvas.getBoundingClientRect();return [clientX-rect.left,clientY-rect.top];}
  function pointerPoints(){return [...activePointers.values()].map(p=>p.local);}
@@ -986,6 +1027,7 @@ function initUI(){
   const local=pointerHere(e);lastPointer=local;pointerType=e.pointerType;
   gestureHintDismiss();cancelMomentum();touchOrbitTarget=null;zoomGoal=null;zoomAnchor=null;
   activePointers.set(e.pointerId,{local,client:[e.clientX,e.clientY]});
+  panIntent=[...pan];
   canvas.setPointerCapture(e.pointerId);
   if(activePointers.size>=2){
    const pair=pointerPoints();
@@ -1012,7 +1054,10 @@ function initUI(){
    if(g.kind==='pinch'){
     const prev=pinchState(g.prev);
     const deltaMid=[now.mid[0]-prev.mid[0],now.mid[1]-prev.mid[1]];
-    if(!isMobileOverview())pan=[pan[0]+deltaMid[0],pan[1]+deltaMid[1]];
+    if(!isMobileOverview()){
+     const src=panIntent||pan;
+     panIntent=[src[0]+deltaMid[0],src[1]+deltaMid[1]];
+    }
     if(prev.distance>.5&&now.distance>.5){
      // Do not write sessionStorage on every touchmove; save once at gesture end.
      setZoom(zoom*now.distance/prev.distance,now.mid,{persist:false});
@@ -1028,7 +1073,11 @@ function initUI(){
     touchOrbitTarget.elevation=cl(touchOrbitTarget.elevation+cl(dy,-32,32)*.0026,-1.17,1.17);
    }else if(g.kind==='pan'){
     const prev=pinchState(g.prev);
-    if(!isMobileOverview()){pan=[pan[0]+now.mid[0]-prev.mid[0],pan[1]+now.mid[1]-prev.mid[1]];userFramedPan=true;}
+    if(!isMobileOverview()){
+     const src=panIntent||pan;
+     panIntent=[src[0]+now.mid[0]-prev.mid[0],src[1]+now.mid[1]-prev.mid[1]];
+     userFramedPan=true;
+    }
    }
    g.prev=current.map(p=>[...p]);pinchGesture=now;
    return;
@@ -1045,10 +1094,10 @@ function initUI(){
      touchOrbitTarget={angle:activeGesture.angle+dx*.0042,
        elevation:cl(activeGesture.elevation+dy*.0030,-1.17,1.17)};
     }else{
-     pan=[activeGesture.pan[0]+dx,activeGesture.pan[1]+dy];
+     panIntent=[activeGesture.pan[0]+dx,activeGesture.pan[1]+dy];
      userFramedPan=true;
     }
-   }else if(next.kind==='pan')pan=next.pan;else {angle=next.angle;elevation=next.elevation;}
+   }else if(next.kind==='pan')panIntent=next.pan;else {angle=next.angle;elevation=next.elevation;}
    if(e.pointerType!=='touch')canvas.style.cursor='grabbing';
    const h=activeGesture.history;h.push({x:e.clientX,y:e.clientY,t:performance.now()});
    if(h.length>14)h.shift();
@@ -1071,7 +1120,10 @@ function initUI(){
    activeGesture={pointerId:id,position:[...p.client],pan:[...pan],angle,elevation,zoomAtStart:zoom,
      shift:false,rightButton:false,kind:MOBILE_HOME&&isMobileOverview()?'rotate':'pan',moved:true,
      history:[{x:p.client[0],y:p.client[1],t:performance.now()}]};
-  }else {touchPair=null;pinchGesture=null;}
+  }else {touchPair=null;pinchGesture=null;panIntent=null;}
+  if(activePointers.size===1)panIntent=[...pan];
+  // Persist legal camera after the spring settles rather than a stretched
+  // edge pose that would be surprising when the next session opens.
   canvas.style.cursor='grab';saveMemory();
  }
  canvas.addEventListener('pointerup',e=>pointerEnd(e));
@@ -1090,6 +1142,7 @@ function initUI(){
  window.addEventListener('resize',resize);window.addEventListener('pagehide',saveMemory);
  window.addEventListener('pageshow',e=>{if(e.persisted&&ready){
   angle=.63;elevation=.20;pan=[0,0];pendingPanNorm=null;
+  panIntent=null;edgeReturnVelocity=[0,0];
   followSelected=false;userFramedPan=false;touchOrbitTarget=null;cancelMomentum();
   selected=null;showCard(null);chooseMode('Whole');setZoom(DEFAULT_ZOOM,[W*.5,H*.48]);
  }});
