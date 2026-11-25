@@ -108,7 +108,13 @@ const ELASTIC_LIMIT=72,ELASTIC_RATIO=.135;
  * Pure and monotonic; unlike clamping, dragging never meets a hard wall.
  */
 function rubberDisplacement(delta,limit){return limit*delta/(limit+Math.abs(delta));}
-function elasticLimit(){return Math.min(ELASTIC_LIMIT,Math.max(32,Math.min(W,H)*ELASTIC_RATIO));}
+function elasticLimit(){
+ // On a phone, an edge is an explorable place rather than an early stop.
+ // Allow a larger compliant overscroll, without changing desktop drag physics.
+ return MOBILE_HOME
+  ?Math.min(90,Math.max(48,Math.min(W,H)*.19))
+  :Math.min(ELASTIC_LIMIT,Math.max(32,Math.min(W,H)*ELASTIC_RATIO));
+}
 /** A damped spring settles gently after release. Mildly underdamped for life-like rebound. */
 function springToEdge(position,safe,dt){
  const time=Math.min(dt,36)/1000,frequency=10,damping=.78;
@@ -247,7 +253,11 @@ function boundPanToOrganism(requested,previous=lastSafePan){
  // At high magnification the viewer may legitimately inspect a single node.
  // Preserve a meaningful patch of the body at ordinary magnifications.
  // On deep close-ups, even one selected/isolated node is a valid specimen.
- const xMin=W*.14,xMax=W*.86,yMin=H*.14,yMax=H*.86;
+ // The mobile viewport must be able to reach the actual sparse perimeter.
+ // Desktop retains the earlier density-preserving center region.
+ const mobilePerimeter=MOBILE_HOME&&zoom>OVERVIEW_ZOOM+.006;
+ const xMin=W*(mobilePerimeter?.065:.14),xMax=W*(mobilePerimeter?.935:.86);
+ const yMin=H*(mobilePerimeter?.09:.14),yMax=H*(mobilePerimeter?.91:.86);
  const visibleCount=candidate=>{
   let count=0;
   for(const p of available){
@@ -258,7 +268,12 @@ function boundPanToOrganism(requested,previous=lastSafePan){
  };
  const overviewReference=visibleCount([0,0]);
  const minimum=zoom>=9?1:zoom>=6?2:zoom>=4?4:zoom>=3?8:12;
- const needed=Math.min(available.length,Math.max(minimum,Math.ceil(overviewReference*.55)));
+ // Desktop requires a coherent patch to stay visible. On a magnified phone,
+ // a few genuine peripheral nodes are sufficient: otherwise the user can
+ // never reach the organism's outermost strands. Never allow an empty view.
+ const needed=mobilePerimeter
+  ?Math.min(available.length,zoom>=8?2:zoom>=4?4:7)
+  :Math.min(available.length,Math.max(minimum,Math.ceil(overviewReference*.55)));
  if(visibleCount(requested)>=needed)return requested;
  let safe=previous;
  if(visibleCount(safe)<needed){
