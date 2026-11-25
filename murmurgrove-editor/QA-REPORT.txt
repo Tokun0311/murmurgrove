@@ -1,0 +1,11 @@
+murmurgrove / editor v0.3 QA 2026-11-25
+- Node regression: 10/10 pass (node --test tests/*.test.mjs)
+- Server: v0.3 /api/new-review and /api/candidate-draft protected by token, localhost Origin and exact-record quote validation.
+- Existing ID matching and publication behaviour retained from v0.2.
+- New candidate draft saved ONLY to .private/drafts; no src/data write, no organism snapshot mutation.
+- Existing same-name private drafts, same public IDs, invalid slug, fabricated evidence, or cross-origin writes rejected.
+- Local explicit labels for new People, Institutions and Concepts; existing multilingual aliases excluded when known.
+- AI newRecords import accepted only if evidence is exact and new person/institution name occurs in RECORD. Still unverified inference.
+- Browser JS static fixture checks: 1365px/390px/320px, zero horizontal overflow, zero page errors. Demonstrated new draft and imported inferred concept with mocked API responses.
+- LIMITATION: actual localhost web navigation was disallowed by sandbox browser network policy; the real browser+server integrated flow requires confirmation on user's Windows device. No full Astro production build or Cloudflare deployment conducted.
+- Installation is overlay-only murmurgrove-editor/ folder; no replacement of src/, public/, historic data, .private drafts or Git configuration.

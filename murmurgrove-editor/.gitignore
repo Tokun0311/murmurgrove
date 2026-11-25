@@ -1,0 +1,3 @@
+# Private editor content: never commit to Git or deploy to Cloudflare.
+.private/
+*.local.json

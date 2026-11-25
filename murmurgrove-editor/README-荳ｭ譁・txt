@@ -1,0 +1,57 @@
+murmurgrove / editor v0.3
+LOCAL-FIRST · PORTABLE · EVIDENCE-FIRST · UNVERIFIED NEW NODE DRAFTS
+
+目标
+在 v0.2 已有 ID 关联分析的基础上，新版允许提出并创建尚不存在的 People、Institutions、Concepts 记录，尤其适合新增人物和新的研究 Concept。
+
+一、新增能力
+1. Exhibition / Event 的正文里写清楚带标签的一行：
+    Director: Lee Chang-dong
+    Institution: Example Museum
+    Concept: interpersonal distance
+    概念：情感距离
+   本地扫描将这些明确的文字提议为新记录。只有名称在原文中出现且不与已存在记录/同义术语精确匹配的候选才会显示。
+2. 若某个新概念是文章隐含的思想而非原文标出的术语，可展开 Optional / Deeper analysis with ChatGPT，复制新版 AI 提示词至 ChatGPT；把 JSON 返回编辑器，点击 Validate proposed AI links。新版 JSON 包含 suggestions（已有 ID）和 newRecords（新候选）。
+3. 自己也可以展开 Propose another new person, institution or concept，填写名称、对应原文中【连续且完全相同】的短引文和提议理由；验证通过后才会进入候选列表。
+4. 新候选显示组别、名称、拟议 ID、原文引文与待核实理由；对于已有相似名称提供重复检查提示。ID 可以手动改为安全的英文小写短横线格式。
+5. 点击 Create PRIVATE draft 只会生成 murmurgrove-editor/.private/drafts/<people|institutions|concepts>/<id>.json。这一步不会修改公开 src/data，不会自动变更正在编辑的展览关系，也不会推送 GitHub。
+6. 转到相应栏目 People、Institutions、Concepts → Private drafts，选择新增条目，核实人物身份、导演关系/机构信息或概念定义。准备好后明确确认发布，保存至本地 Astro；通过 GitHub Desktop Commit → Push 才会公开。
+7. 然后回到原 Exhibition，使用已有 ID 搜索/关联功能，将新条目加入需要的关联字段，再决定是否发布原记录。
+
+二、这版不能自动做什么
+- 本地算法只识别明确标注的行与已有词表；它不能独立从任意叙述中理解、证实抽象概念。概念性的“推断”仍需通过你主动使用 ChatGPT / 手动候选完成。
+- AI 提议不会自动成为事实；名称/引文一致不等于确认一个人真的执导了某部影片，或某位艺术家实际参展。仍需权威出处或你的人工核实。
+- 新的人物、机构和概念只有通过私人草稿→单独发布→人工确认关系，才能写进公开档案。首页生命体 snapshot / 历史数据的自动同步仍不包含在 v0.3，不能假称新增记录已经变成生命体新节点。
+- 多语言同义词查重仅覆盖已有名称和内建术语表，不等于全面语义查重。新 Concept 必须检查其是否属于既有 Concept 的别名/分支。
+- 没有额外的 Movie / Film 专门集合。当前可用的分类仍为 Exhibitions、People、Institutions、Concepts、Writing；不要把电影作品和展览活动自动等同。
+
+三、Windows 升级（已有 v0.1 / v0.2）
+1. 先关闭现有编辑器运行中的黑色 CMD 窗口；建议先用 GitHub Desktop Commit 本地修改。
+2. 解压 ZIP，得到 murmurgrove-editor 文件夹。
+3. 进入现有 Astro 项目根目录（与 src、public、package.json 同级），将新 murmurgrove-editor 文件夹合并进去并覆盖程序同名文件。绝不要删除整个旧 editor 文件夹。
+4. 请保留旧的 murmurgrove-editor/.private 文件夹，它不在 ZIP 里。私人草稿和备份储存在那里。
+5. 双击 START-EDITOR.bat；在浏览器进入 http://127.0.0.1:4317。
+6. 无需 npm install、无需 API key，也无需更换 Cloudflare Pages 配置。
+
+四、个人隐私与迁移
+- 编辑器只监听 127.0.0.1；本地扫描和保存不上传资料。
+- Copy AI analysis prompt 会把 RECORD 全部相关文本、已有档案目录复制出来。只有当你主动粘贴进 ChatGPT 时才会发送；在公司电脑上不要输入商业机密、私人日记或同事敏感信息。
+- .private/ 被编辑器子目录内 .gitignore 排除，但本机管理员、企业备份软件和恶意软件仍可能访问其中的资料。
+- 更换电脑：Git Clone 原项目后编辑器程序随源码迁移，个人未公开草稿需要单独以加密方式备份和拷贝 .private 文件夹。
+- 若你要彻底减少身份关联，仍需审查公开论文、GitHub commit、旧网页缓存、原文署名及私人注释。
+
+五、测试
+在编辑器文件夹内运行：node --test tests/*.test.mjs
+目前10/10自动测试通过；包括新人物、新概念、多语言已收录词条拦截、精确引文校验、非法ID拒绝、草稿重复保护、公开目录不被触碰、原有文章完整性。
+浏览器 UI 静态模拟：1365、390、320 像素，候选按钮和模拟后端响应检查通过，无横向溢出和 JS 页面错误。
+真实浏览器与本机 localhost 的端到端联动受测试环境网络策略限制，尚未执行；首次在 Windows 上建议先创建一条私人草稿来确认路径。
+
+六、示例（与你之前的问题对应）
+展览标题：Possible Love
+正文：Watched the film with my friend.\nDirector: Lee Chang-dong\nConcept: interpersonal distance
+
+先 Analyze record，Lee Chang-dong 与 interpersonal distance 会作为新候选出现。Create PRIVATE draft → 审核 → 分别发布 → 返回 Exhibition 关联。
+注意：这段示例只是用户输入的文字，不证明导演事实；本编辑器不会自动查询电影的真实片目或权威资料。
+
+七、长期原则
+先保留研究原始事实与原文证据，再构建经你认可的关系；生命体生成机制独立维护。
