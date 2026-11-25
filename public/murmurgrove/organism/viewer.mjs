@@ -39,6 +39,12 @@ const ENTRANCE_TARGET_ANGLE=.63,ENTRANCE_TARGET_ELEVATION=.20;
 const TAU=13,BASELINE_HASH='62372e469ead425dd43fc16e737ea40cd48ce5a0188a87b868d1bee62c8ba9d3';
 function isMobileOverview(value=zoom){return MOBILE_HOME&&value<=OVERVIEW_ZOOM+.006;}
 const memoryKey='murmurgrove.phase2.6.readonly.session'+(MOBILE_HOME?'.compact-overview-v3':'');
+// One opening invitation per top-level browsing tab; the original camera
+// survives normal in-site navigation and refreshes through sessionStorage.
+const entranceVisitKey='murmurgrove.organism.entrance.seen.v1';
+function hasSeenEntrance(){try{return sessionStorage.getItem(entranceVisitKey)==='1';}catch{return false;}}
+function markEntranceSeen(){try{sessionStorage.setItem(entranceVisitKey,'1');}catch{}}
+
 let records=[],links=[],nodes=[],nodeMap=new Map(),nodeIndex=new Map(),neighborData=[],pulseNeighbors=[],components=[],mainIds=new Set(),isolated=new Set(),viewPositions=[],componentById=new Map();
 let manifest,baseline,nav,snapshot,ready=false,angle=.63,elevation=.20,zoom=DEFAULT_ZOOM,mode='Whole',selected=null,followSelected=false,viewHash='';
 let observationLedger=[],observationGroups=[],historyMonth=null,historyOpen=false,historyTab='visits',activeHistoryContext=null;
@@ -141,21 +147,23 @@ function componentGroups(allNodes,edges){const ids=new Set(allNodes.map(n=>n.id)
   groups.push(group.sort());}
  return groups.sort((a,b)=>b.length-a.length||a[0].localeCompare(b[0]));}
 function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)||'null');
- if(!s||s.sourceHash!==BASELINE_HASH||!Number.isFinite(s.zoom)||s.zoom<ZOOM_MIN||s.zoom>ZOOM_MAX||!['Whole','Growth','Movement'].includes(s.mode))return;
+ if(!s||s.sourceHash!==BASELINE_HASH||!Number.isFinite(s.zoom)||s.zoom<ZOOM_MIN||s.zoom>ZOOM_MAX||!['Whole','Growth','Movement'].includes(s.mode))return false;
  if(Number.isFinite(s.angle))angle=s.angle;if(Number.isFinite(s.elevation))elevation=cl(s.elevation,-1.2,1.2);
  zoom=s.zoom;mode=s.mode;selected=s.selected&&nodeMap.has(s.selected)?s.selected:null;
-  if(typeof s.historyMonth==='string'&&observationGroups.some(g=>g.key===s.historyMonth))historyMonth=s.historyMonth;
+ if(typeof s.historyMonth==='string'&&observationGroups.some(g=>g.key===s.historyMonth))historyMonth=s.historyMonth;
  if(['visits','versions','frames','acts','life'].includes(s.historyTab))historyTab=s.historyTab;
+ historyOpen=Boolean(s.historyOpen);
  followSelected=Boolean(selected&&s.followSelected&&zoom>1);
  userFramedPan=!isMobileOverview()&&Boolean(s.userFramedPan);
  if(isMobileOverview()){pan=[0,0];pendingPanNorm=null;}
  else if(Array.isArray(s.panNorm)&&s.panNorm.length===2&&s.panNorm.every(x=>Number.isFinite(x)&&Math.abs(x)<20)){
   pendingPanNorm=s.panNorm; if(W>1&&H>1){pan=[s.panNorm[0]*W,s.panNorm[1]*H];pendingPanNorm=null;}
  }
-}catch{}}
+ return true;
+}catch{return false;}}
 function saveMemory(){try{
  const storedPan=ready&&!isMobileOverview()?boundPanToOrganism(pan):pan;
- sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected,followSelected,userFramedPan,historyMonth,historyTab,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
+ sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected,followSelected,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
  }catch{}}
 function preprocess(){
  records=nav.records.filter(r=>!r.quarantined);
@@ -1191,12 +1199,9 @@ function initUI(){
   }
  });
  window.addEventListener('resize',resize);window.addEventListener('pagehide',saveMemory);
- window.addEventListener('pageshow',e=>{if(e.persisted&&ready){
-  angle=.63;elevation=.20;pan=[0,0];pendingPanNorm=null;
-  panIntent=null;edgeReturnVelocity=[0,0];
-  followSelected=false;userFramedPan=false;touchOrbitTarget=null;cancelMomentum();
-  selected=null;showCard(null);chooseMode('Whole');setZoom(DEFAULT_ZOOM,[W*.5,H*.48]);
- }});
+ // A back-forward cache restoration already has the live canvas and camera.
+ // Never force it back to the opening position or replay the invitation.
+ window.addEventListener('pageshow',e=>{if(e.persisted&&ready){resize();syncZoomDisplay();}});
 }
 async function init(){
  try{
@@ -1211,8 +1216,22 @@ async function init(){
   const {navigationHash,...navBody}=nav;if(await sha(navBody)!==navigationHash)throw Error('Navigation SHA-256 invalid');
   const {snapshotHash,...snapBody}=snapshot;if(await sha(snapBody)!==snapshotHash||manifest.snapshots.find(s=>s.phase==='T0')?.snapshotHash!==snapshotHash)throw Error('Silent T0 snapshot SHA-256 invalid');
   preprocess();await verifyLoadedLivedEvidence();
-  lifeNowState=computeLifeState(new Date().toISOString());activateLifeState(lifeNowState);pan=[0,0];pendingPanNorm=null;resize();ready=true;prepareEntrance();initUI();chooseMode(mode);setZoom(zoom);
+  lifeNowState=computeLifeState(new Date().toISOString());activateLifeState(lifeNowState);
+  pan=[0,0];pendingPanNorm=null;resize();ready=true;
+  // Read the last view BEFORE chooseMode/setZoom can save and overwrite it.
+  // On the very first entry, play the guided overview once, even if a stale
+  // camera happened to be stored by an earlier version of the site.
+  if(!hasSeenEntrance()){
+   prepareEntrance();markEntranceSeen();
+  }else if(!storedMemory()){
+   // A return without a valid saved view gets a steady centered view, NOT
+   // another introductory animation (e.g. archive data/version migration).
+   entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
+   elevation=ENTRANCE_TARGET_ELEVATION;pan=[0,0];mode='Whole';
+  }
+  reframe();initUI();chooseMode(mode);setZoom(zoom);
   if(selected)showCard(selected);
+  if(historyOpen)setHistoryOpen(true);
   const select=$('recordSelect'),livedSelect=$('livedRecord');for(const r of records){const option=document.createElement('option');option.value=r.id;option.textContent=`${r.kind} · ${r.title}`;select.append(option);livedSelect.append(option.cloneNode(true));}
   $('loading').style.display='none';lastFpsAt=performance.now();requestAnimationFrame(render);
   if(!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
