@@ -300,6 +300,82 @@ html body.debug #status{display:none!important}
   html body #hint { max-width: calc(100vw - 84px); }
 }
 
+
+
+/* The phone-only close control must not change the original desktop finder. */
+html body #debugPanel #finderClose {display:none;}
+
+/* MOBILE PANELS · one readable archive surface at a time.
+   The organism, public records and the desktop layout are untouched.
+   Avoid stacked floating sheets over a small viewport. */
+@media (max-width:650px) {
+  html body #debugPanel,
+  html body #historyPanel {
+    position:fixed !important;
+    top:clamp(136px,19dvh,160px) !important;
+    bottom:calc(74px + env(safe-area-inset-bottom)) !important;
+    left:14px !important;
+    right:14px !important;
+    width:auto !important;
+    height:auto !important;
+    max-width:none !important;
+    max-height:none !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    z-index:12 !important;
+    padding:18px 16px 24px !important;
+    /* The background is an open, nearly-paper-white reading surface.
+       No closed card border, shadow, or side rail is introduced. */
+    background:#fafbf8 !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    border:0 !important;
+    box-shadow:none !important;
+    border-radius:0 !important;
+    scrollbar-width:thin;
+    scrollbar-color:#a6c7b3 transparent;
+  }
+  html body.history-open #historyPanel { display:block !important; }
+  html body #historyPanel :is(#historyVisitView,#historyVersionView,#historyFrameView,#historyActsView,#historyLifeView) {
+    max-height:none !important;
+    overflow:visible !important;
+  }
+  html body #historyPanel :is(#historyEntries,#lifeStateEntries) {
+    max-height:none !important;
+    overflow:visible !important;
+  }
+  html body #historyPanel {font-size:12px !important;line-height:1.65 !important;}
+  html body #historyPanel .hp-kicker {font-size:10px !important;}
+  html body #historyPanel .hp-count {font-size:11px !important;line-height:1.55 !important;}
+  html body #historyPanel .hp-note {font-size:11px !important;line-height:1.65 !important;}
+  html body #historyPanel .hp-tabs {gap:2px 8px;row-gap:3px;}
+  html body #historyPanel .hp-tabs button {min-height:38px;padding:7px 3px;font-size:11px !important;}
+  html body #historyPanel .hp-top {margin-bottom:6px;}
+  html body #debugPanel .finder-top {display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  html body #debugPanel .finder-eyebrow {margin-bottom:0;}
+  html body #debugPanel #finderClose {display:grid;place-items:center;flex:none;width:44px;height:44px;
+    margin:-10px -8px 0 0;padding:0;color:#749789;font-size:22px;font-weight:300;
+    background:transparent !important;border:0 !important;cursor:pointer;touch-action:manipulation;}
+  html body #debugPanel {font-size:12px !important;line-height:1.65 !important;}
+  html body #debugPanel .finder-label {font-size:14px !important;}
+  /* iOS Safari zooms the entire viewport on text fields smaller than 16px. */
+  html body #debugPanel #recordQuery {font-size:16px !important;}
+  html body #debugPanel .finder-message {font-size:11px !important;}
+  html body #debugPanel .record-finder {margin-top:11px;}
+  html body #debugPanel #recordMatches {max-height:none;}
+  /* The three lenses remain precisely as designed. They only step out of
+     the way while the visitor is reading an archive or history panel. */
+  html body:is(.debug,.history-open) #mode,
+  html body:is(.debug,.history-open) #card,
+  html body:is(.debug,.history-open) #sourceReadingBadge,
+  html body:is(.debug,.history-open) #lifeModelBadge {
+    opacity:0 !important;pointer-events:none !important;visibility:hidden !important;
+  }
+}
+
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>
@@ -347,7 +423,7 @@ html body.debug #status{display:none!important}
 <div id="lifeModelBadge" hidden role="status" aria-label="Reconstructed rule state, not a historical photograph"><span id="lifeModelText">RULE MODEL</span><button id="lifeModelExit" type="button" aria-label="Return to current state">×</button></div>
 <dialog id="frameFull" aria-label="View saved optical frame"><div class="full-top"><span>OBSERVED / OPTICAL FRAME</span><button id="frameFullClose" aria-label="Close frame preview" type="button">×</button></div><img id="frameFullImage" alt="Recorded optical frame"><p id="frameFullCaption"></p></dialog>
 <div id="debugPanel" aria-label="Explore the archive">
-  <div class="finder-eyebrow">EXPLORE / ARCHIVE</div>
+  <div class="finder-top"><div class="finder-eyebrow">EXPLORE / ARCHIVE</div><button id="finderClose" type="button" aria-label="Close archive search">×</button></div>
   <div class="record-finder" id="recordFinder">
     <label for="recordQuery" class="finder-label">Find a record <span id="recordCount">Loading…</span></label>
     <div class="finder-line"><input id="recordQuery" type="search" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="recordMatches" placeholder="Type a title or category…"><button id="recordClear" type="button" class="finder-clear" aria-label="Clear search" hidden>×</button><span class="finder-loupe" aria-hidden="true">⌕</span></div>
@@ -477,6 +553,10 @@ html body.debug #status{display:none!important}
       : `${found.length} matching record${found.length === 1 ? '' : 's'}`;
     highlight();
   };
+  document.getElementById('finderClose')?.addEventListener('click', () => {
+    document.body.classList.remove('debug');
+    document.getElementById('about')?.setAttribute('aria-expanded', 'false');
+  });
   query.addEventListener('input', render);
   clearBtn.addEventListener('click', () => { reset(); query.focus({ preventScroll: true }); });
   query.addEventListener('keydown', e => {

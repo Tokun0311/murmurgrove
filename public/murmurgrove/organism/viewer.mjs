@@ -727,6 +727,11 @@ function setHistoryTab(next){
  saveMemory();
 }
 function setHistoryOpen(open){
+ if(open && matchMedia('(max-width:650px)').matches){
+  if($('debugPanel').contains(document.activeElement))document.activeElement.blur();
+  document.body.classList.remove('debug');
+  $('about').setAttribute('aria-expanded','false');
+ }
  historyOpen=Boolean(open);document.body.classList.toggle('history-open',historyOpen);
  $('history').setAttribute('aria-expanded',String(historyOpen));
  if(historyOpen)setHistoryTab(historyTab);
@@ -1058,8 +1063,16 @@ function initUI(){
  $('frameFullClose').addEventListener('click',()=>$('frameFull').close());
  $('sourceReadingExit').addEventListener('click',exitSourceReading);
   $('historyClose').addEventListener('click',()=>setHistoryOpen(false));
- $('menu').addEventListener('click',()=>document.body.classList.toggle('debug'));
- $('about').addEventListener('click',()=>document.body.classList.toggle('debug'));
+ // On phones, Finder and History are separate reading modes, not two
+ // simultaneously floating panels. Preserve the authentic historyOpen state.
+ const toggleFinder=()=>{
+  const opening=!document.body.classList.contains('debug');
+  if(opening && matchMedia('(max-width:650px)').matches && historyOpen)setHistoryOpen(false);
+  document.body.classList.toggle('debug',opening);
+  $('about').setAttribute('aria-expanded',String(opening));
+ };
+ $('menu').addEventListener('click',toggleFinder);
+ $('about').addEventListener('click',toggleFinder);
  $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);document.body.classList.remove('debug');});
  function cancelMomentum(){velocityPan=[0,0];velocityAngle=0;velocityElevation=0;edgeReturnVelocity=[0,0];}
  function gestureHintDismiss(){document.body.classList.remove('hint');}
