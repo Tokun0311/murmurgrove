@@ -1,7 +1,9 @@
 ---
 import Base from '../../layouts/Base.astro';
 import OrganismLink from '../../components/OrganismLink.astro';
+import ResearchContinuity from '../../components/ResearchContinuity.astro';
 import { getCollection, render } from 'astro:content';
+import {currentConceptIds} from '../../lib/current-research.mjs';
 export async function getStaticPaths(){return (await getCollection('exhibitions')).map(item=>({params:{slug:item.id},props:{item}}));}
 const {item}=Astro.props;
 const {Content}=await render(item);
@@ -13,7 +15,9 @@ const inst = institutions.find(x=>x.id===item.data.institution);
 const relatedInst = item.data.relatedInstitutions.map(id=>institutions.find(x=>x.id===id)).filter(Boolean);
 const conceptById = new Map(concepts.map(x=>[x.id,x]));
 const artistLinks=item.data.artists.map(id=>personById.get(id)).filter(Boolean);
-const conceptLinks=item.data.concepts.map(id=>conceptById.get(id)).filter(Boolean);
+const activeConceptIds=currentConceptIds(item.id);
+const conceptLinks=activeConceptIds.map(id=>conceptById.get(id)).filter(Boolean);
+const earlierConcepts=item.data.concepts.filter(id=>!activeConceptIds.includes(id)).map(id=>conceptById.get(id)).filter(Boolean);
 const visitDate=item.data.visitedOn.toISOString().slice(0,10);
 const visitYear=visitDate.slice(0,4);
 ---
@@ -31,10 +35,11 @@ const visitYear=visitDate.slice(0,4);
     {relatedInst.length > 0 && <section class="record-relations" aria-label="Related institutions"><h2>Institutions</h2><div class="tags">{relatedInst.map(i=><a class="tag" href={`/institutions/${i.id}/`}>{i.data.name}</a>)}</div></section>}
     {artistLinks.length > 0 && <section class="record-relations" aria-label="People and collectives"><h2>People</h2><div class="tags">{artistLinks.map(p=><a class="tag" href={`/people/${p.id}/`}>{p.data.name}</a>)}</div></section>}
     {conceptLinks.length > 0 && <section class="record-relations" aria-label="Related concepts"><h2>Concepts</h2><div class="tags">{conceptLinks.map(c=><a class="tag" href={`/concepts/${c.id}/`}>{c.data.title}</a>)}</div></section>}
+    {earlierConcepts.length>0 && <details class="record-relations"><summary class="note">Earlier recorded classification</summary><div class="tags">{earlierConcepts.map(c=><a class="tag" href={`/concepts/${c.id}/`}>{c.data.title}</a>)}</div></details>}
     <div class="prose"><Content/></div>
     {item.data.verification==='recorded' && <p class="note">Reviewed archive entry.</p>}
     <p class="note">Editorial note: visit dates and first-person observations come from personal records. Refer to the source links in each entry for independently documented programme details.</p>
-  </article>
+  <ResearchContinuity type="exhibitions" id={item.id}/></article>
 </Base>
 
 <style>

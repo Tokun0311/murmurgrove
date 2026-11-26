@@ -10,7 +10,8 @@ import { analyzeExhibition, validateAiSuggestions, buildAiPrompt, validateNewRec
 import {extractDocx} from './word-import.mjs';
 import {cleanBundle,publishBundle} from './bundle.mjs';
 // MURMURGROVE_EXHIBITION_FIRST_V12
-import {readArchive,buildGraph,answerQuestion,groundedPrompt,readEvents,activeRelations,validateClaim,appendEvent,readConceptMeta,updateConceptMeta,mergeConcept,syncGraph,hash as digest,slugValid} from './research-core.mjs';
+import {listQuestions,createQuestion,appendQuestion,annotateRevision,readRevisionNotes} from './research-continuity.mjs';
+import {assessClaims,readArchive,buildGraph,answerQuestion,groundedPrompt,readEvents,activeRelations,validateClaim,appendEvent,readConceptMeta,updateConceptMeta,mergeConcept,syncGraph,hash as digest,slugValid} from './research-core.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const TYPE_FIELDS = {
@@ -194,7 +195,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         if(await exists(privateLink)){try{originalTextSha=JSON.parse(await fsp.readFile(privateLink,'utf8')).originalTextSha||null}catch{}}
         return json(res,200,{type,slug,fields:readFields(p.yaml),body:p.body,hash:sha(raw),originalTextSha});
       }
-      if(req.method==='GET'&&u.pathname==='/api/relations')return json(res,200,{claims:activeRelations(await readEvents(root))});
+      if(req.method==='GET'&&u.pathname==='/api/relations')return json(res,200,{claims:assessClaims(await readArchive(root),activeRelations(await readEvents(root)))});
       if(req.method==='GET'&&u.pathname==='/api/concept-meta')return json(res,200,{concepts:await readConceptMeta(root)});
       if(req.method==='GET'&&u.pathname==='/api/history'){
         const file=path.join(root,'public/murmurgrove/research/history-index.json');return json(res,200,{entries:await exists(file)?JSON.parse(await fsp.readFile(file,'utf8')):[]});
@@ -209,10 +210,15 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug'));
         const file=path.join(draftDir,type,`${slug}.json`);if(!await exists(file))throw apiError(404,'Draft not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
       }
-      if(req.method==='POST'&&['/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
+      if(req.method==='POST'&&['/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
         const expectedOrigin=`http://127.0.0.1:${server.address().port}`;
         if(req.headers.origin!==expectedOrigin||req.headers['x-editor-token']!==token)throw apiError(403,'Untrusted request');
         const p=await readJSON(req,u.pathname==='/api/import-word'?12*1024*1024:1024*1024);
+        if(u.pathname==='/api/questions-list')return json(res,200,{questions:await listQuestions(privateDir)});
+        if(u.pathname==='/api/question-create')return await serializeWrite(async()=>json(res,200,{question:await createQuestion(root,privateDir,p)}));
+        if(u.pathname==='/api/question-append')return await serializeWrite(async()=>json(res,200,{question:await appendQuestion(root,privateDir,p)}));
+        if(u.pathname==='/api/revision-list'){const type=requireType(p.type),id=requireSlug(p.id);return json(res,200,{entries:await readRevisionNotes(root,type,id)});}
+        if(u.pathname==='/api/revision-note')return await serializeWrite(async()=>json(res,200,{entry:await annotateRevision(root,p)}));
         if(u.pathname==='/api/recovery-save'||u.pathname==='/api/recovery-delete')return await serializeWrite(async()=>{
           const id=recoveryId(p.id),file=recoveryFile(id);
           if(u.pathname==='/api/recovery-delete'){await fsp.rm(file,{force:true});return json(res,200,{ok:true});}
@@ -263,7 +269,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         }
         if(u.pathname==='/api/relation-approve'){
           if(p.confirm!==true)throw apiError(422,'Review and confirm relation publication');
-          return await serializeWrite(async()=>{try{const e=await appendEvent(root,{action:'approve',claim:p.claim});const synced=await syncGraph(root);return json(res,200,{ok:true,event:e,graphHash:synced.graph.graphHash})}catch(e){throw apiError(422,e.message)}});
+          return await serializeWrite(async()=>{try{const e=await appendEvent(root,{action:'approve',claim:p.claim,supersedes:p.supersedes});const synced=await syncGraph(root);return json(res,200,{ok:true,event:e,graphHash:synced.graph.graphHash})}catch(e){throw apiError(422,e.message)}});
         }
         if(u.pathname==='/api/relation-withdraw'){
           if(p.confirm!==true)throw apiError(422,'Confirm withdrawing this interpretation');

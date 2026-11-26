@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>murmurgrove / editor 2.0 (local)</title>
+<title>murmurgrove / editor 2.1 · Research Continuity (local)</title>
 <link rel="stylesheet" href="/assets/editor.css">
 <script type="module" src="/assets/editor.js"></script>
 <script type="module" src="/assets/research.js"></script>
@@ -31,7 +31,7 @@
     <div id="record-workspace"><section id="recovery-panel" hidden><strong>Private recovery / 未完成的编辑</strong><div id="recovery-list"></div></section>
     <div class="panel-top"><span class="eyebrow" id="record-mode">03 / NEW RECORD</span><span class="tiny" id="dirty-indicator">NOT SAVED</span></div>
     <div class="intro">
-      <h1 id="editor-title">A new record</h1>
+      <button type="button" id="link-current-question" class="action-link" hidden>Link to research question</button><h1 id="editor-title">A new record</h1>
       <p id="intro-note">Choose a collection, then describe what you want to keep.</p>
     </div>
     <nav id="editor-stepnav" class="v13-stepnav" aria-label="Record sections"><button type="button" data-editor-jump="capture-phase">01 记录 / Capture</button><button type="button" data-editor-jump="connect-workspace">02 关联 / Connect</button><button type="button" data-editor-jump="publish-phase">03 发布 / Publish</button></nav>
@@ -83,6 +83,16 @@
     </div>
     <section hidden class="research-atelier" id="research-workspace" aria-labelledby="research-head">
       <div class="eyebrow" id="research-head">RESEARCH WORKSPACE / SOURCE-BACKED</div>
+      <section class="continuity-section" aria-labelledby="questions-title">
+        <div class="continuity-heading"><h2 id="questions-title">Research questions</h2><span class="tiny">PRIVATE · LOCAL</span></div>
+        <div class="atelier-actions"><select id="question-select" aria-label="Saved research questions"><option value="">Choose a question</option></select><button type="button" id="question-new">+ New question</button></div>
+        <div id="question-create" hidden><label for="question-title">Question</label><textarea id="question-title" rows="2" placeholder="What do I want to understand?"></textarea><label for="question-origin">Origin / optional public record</label><select id="question-origin"></select><button type="button" id="question-save">Create privately</button></div>
+        <div id="question-detail" hidden><h3 id="question-current"></h3><p class="micro-copy" id="question-state"></p><div id="question-timeline" class="source-results"></div>
+          <label for="question-kind">Continue the question</label><select id="question-kind"><option value="reflection">Add reflection</option><option value="revision">Revise question</option><option value="link">Link a record</option><option value="status">Change status</option></select>
+          <div id="question-status-wrap" hidden><label for="question-status">Status</label><select id="question-status"><option>ongoing</option><option>paused</option><option>resolved</option></select></div>
+          <label for="question-note">New reflection / reason</label><textarea id="question-note" rows="3"></textarea><label for="question-record">Related public record (optional)</label><select id="question-record"></select><div class="atelier-actions"><button type="button" id="question-append">Save privately</button><button type="button" id="question-search" class="action-link">Search archive with this question</button></div>
+        </div><p id="question-message" class="micro-copy" role="status">Questions and reflections never enter the public graph.</p>
+      </section><div class="atelier-divider"></div>
       <h2>Ask the archive</h2>
       <p class="micro-copy">Questions search the <strong>published archive only</strong>. Results cite exact record excerpts and open their full original pages. Local retrieval is not a generative AI answer.</p>
       <label for="research-question">Question or topic</label>
@@ -99,7 +109,8 @@
       <label for="link-reason">Why does this link matter?</label><textarea id="link-reason" rows="3" placeholder="Explain the evidence, your inference, or an unresolved issue. Minimum 15 characters."></textarea>
       <div class="atelier-actions"><button type="button" id="check-relation" class="action-link">Check evidence</button><button type="button" id="approve-relation">Approve relationship</button></div>
       <div id="relation-message" class="micro-copy" role="status"></div>
-      <h3>Active reviewed relationships</h3><div id="active-relations" class="source-results"></div>
+      <div class="atelier-actions"><button type="button" id="cancel-rereview" hidden>Cancel re-review</button></div>
+      <h3>Reviewed relationships</h3><div id="active-relations" class="source-results"></div>
       <div class="atelier-divider"></div>
       <h2>Concept memory</h2>
       <p class="micro-copy">A concept can be provisional or mature. Aliases prevent duplicate Chinese, Japanese and English labels. Definition, Interpretation and Development remain distinct.</p>
@@ -119,6 +130,12 @@
         <button type="button" id="apply-concept-merge">Review and merge without deletion</button>
       </details>
       <div class="atelier-divider"></div>
+      <details class="continuity-section" id="revision-notes"><summary>Research history / annotate a revision</summary>
+        <p class="micro-copy">Record a dated explanation of a published record’s revision. Only this explanation is public; private originals and old text are not copied. Withdrawal is an annotation, not a deletion command.</p>
+        <label for="revision-record">Public record</label><select id="revision-record"></select>
+        <label for="revision-kind">Revision kind</label><select id="revision-kind"><option value="correction">Correction</option><option value="addition">Addition</option><option value="reinterpretation">Reinterpretation</option><option value="withdrawal">Withdrawal</option></select>
+        <label for="revision-note">Public explanation</label><textarea id="revision-note" rows="3"></textarea><div class="atelier-actions"><button type="button" id="revision-read">Read current source</button><button type="button" id="revision-save">Review &amp; save annotation</button></div><p id="revision-message" class="micro-copy" role="status"></p><div id="revision-source" class="source-results"></div><div id="revision-list" class="source-results"></div>
+      </details><div class="atelier-divider"></div>
       <h2>Sync &amp; source history</h2>
       <p class="micro-copy">Rebuild the derived current research network after confirmed changes. Preserves the frozen T₀ organism baseline and all prior source versions. Then review the generated files in GitHub Desktop before Push.</p>
       <div class="atelier-actions"><button type="button" id="sync-research">Regenerate current research layer</button><button type="button" class="action-link" id="load-research-history">Inspect source versions</button></div>

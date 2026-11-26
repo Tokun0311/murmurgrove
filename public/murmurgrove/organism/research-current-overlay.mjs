@@ -4,9 +4,9 @@ import { cubicBezierAt } from './relation-flow.mjs';
 const kinds = { exhibitions: 'exhibition', people: 'person', institutions: 'institution', concepts: 'concept', writing: 'writing' };
 const average = points => [0, 1, 2].map(axis => points.reduce((sum, p) => sum + p[axis], 0) / points.length);
 const normalize = vector => { const length = Math.hypot(...vector); return length ? vector.map(value => value / length) : [1, 0, 0]; };
-const edgeKey = (a, b) => a < b ? a + '|' + b : b + '|' + a;
+export const edgeKey = (a, b) => a < b ? a + '|' + b : b + '|' + a;
 
-export function readCurrentResearch(graph) {
+export function readCurrentResearch(graph, {excludedIds=new Set()}={}) {
   if (graph?.schema !== 'murmurgrove.current-research.1' ||
       graph.provenance !== 'DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY' ||
       !Array.isArray(graph.records) || !Array.isArray(graph.relations)) throw new Error('Invalid public research projection');
@@ -19,6 +19,7 @@ export function readCurrentResearch(graph) {
         typeof row.title !== 'string' || !row.title.trim() || !/^[a-f0-9]{64}$/.test(row.contentHash) ||
         records.has(kind + ':' + row.id)) throw new Error('Invalid public research record');
     const id = kind + ':' + row.id;
+    if(excludedIds.has(id))continue; // Frozen quarantine is not promoted by current metadata.
     keys.set(row.key, id);
     records.set(id, { id, kind, title: row.title, path: row.path, occurredOn: row.date,
       aliases: Array.isArray(row.aliases) ? row.aliases.filter(alias => typeof alias === 'string') : [] });
@@ -38,7 +39,7 @@ export function readCurrentResearch(graph) {
     seen.add(key);
     relations.push({ from, to, kind: edge.kind });
   }
-  return { records, relations };
+  return { records, relations, pairKeys:new Set(relations.map(e=>edgeKey(e.from,e.to))) };
 }
 
 // Extend only components with a path to an existing optical anchor. Each wave

@@ -37,13 +37,28 @@ function words(s){const str=normalize(s);const western=str.match(/[a-z\d]{2,}/g)
  for(const w of cjk){if(w.length<=2)out.push(w);else for(let j=0;j<w.length-1;j++)out.push(w.slice(j,j+2));}
  return [...new Set(out)];}
 function excerpt(s,term,max=235){if(!s)return '';const original=String(s).replace(/\s+/g,' ');const i=normalize(original).indexOf(normalize(term));const at=Math.max(0,(i>=0?i:0)-60);return original.slice(at,at+max);}
-export function activeRelations(events){const map=new Map();for(const e of events){if(e.action==='approve')map.set(e.claim.id,e.claim);else if(e.action==='withdraw')map.delete(e.claimId);}return [...map.values()];}
+export function activeRelations(events){const map=new Map();for(const e of events){if(e.action==='approve'){if(e.claim.supersedes)map.delete(e.claim.supersedes);map.set(e.claim.id,e.claim);}else if(e.action==='withdraw')map.delete(e.claimId);}return [...map.values()];}
 export async function readEvents(root){const file=path.join(root,SOURCE_DIR,'events.jsonl');if(!await exists(file))return [];
  const lines=(await fs.readFile(file,'utf8')).split(/\r?\n/).filter(Boolean);let prev='GENESIS';const events=[];
  for(const line of lines){let e;try{e=JSON.parse(line)}catch{throw Error('Relation ledger contains invalid JSON')}
   const {sha256,...rest}=e;if(e.prev!==prev||hash(rest)!==sha256)throw Error('Relation ledger SHA chain is invalid; stop before publishing');
   if(e.action!=='approve'&&e.action!=='withdraw')throw Error('Unknown relation ledger action');events.push(e);prev=sha256;
  }return events;
+}
+const evidenceText=r=>`${r.title}\n${r.body}\n${r.fields.location||''}`.replace(/\r\n/g,'\n');
+const evidenceFingerprint=r=>hash(evidenceText(r));
+// A changed context requires a human review, even if the exact quotation survives.
+export function assessClaims(records,claims){
+ const byKey=new Map(records.map(r=>[r.key,r]));
+ return claims.map(claim=>{
+  const s=byKey.get(recordKey(claim.source.type,claim.source.id)),t=byKey.get(recordKey(claim.target.type,claim.target.id));
+  let issue=null;
+  if(!s||!t)issue='Record unavailable';
+  else if(typeof claim.evidence!=='string'||!evidenceText(s).includes(claim.evidence.replace(/\r\n/g,'\n')))issue='Exact quotation no longer present';
+  else if(!claim.sourceEvidenceHash||!claim.targetEvidenceHash)issue='Earlier approval has no evidence fingerprint';
+  else if(claim.sourceEvidenceHash!==evidenceFingerprint(s)||claim.targetEvidenceHash!==evidenceFingerprint(t))issue='Source or target context changed';
+  return {...claim,reviewStatus:issue?'needs-review':'current',reviewIssue:issue};
+ });
 }
 export async function validateClaim(root,claim,records=null){if(!claim||typeof claim!=='object')throw Error('Invalid claim');
  const r=records||await readArchive(root),byKey=new Map(r.map(x=>[x.key,x]));
@@ -52,13 +67,20 @@ export async function validateClaim(root,claim,records=null){if(!claim||typeof c
  if(source.type===target.type&&source.id===target.id)throw Error('A relation needs two different records');
  const s=byKey.get(recordKey(source.type,source.id)),t=byKey.get(recordKey(target.type,target.id));if(!s||!t)throw Error('Both source and target must already be published records');
  if(!['documented','interpretive','comparison','revision'].includes(kind))throw Error('Unknown relation kind');
- if(typeof evidence!=='string'||evidence.length<5||evidence.length>500||!`${s.title}\n${s.body}\n${s.fields.location||''}`.includes(evidence))throw Error('Evidence must be an EXACT quote from the published source record');
+ if(typeof evidence!=='string'||evidence.length<5||evidence.length>500||!evidenceText(s).includes(evidence.replace(/\r\n/g,'\n')))throw Error('Evidence must be an EXACT quote from the published source record');
  if(typeof reason!=='string'||reason.trim().length<15||reason.length>2000)throw Error('Explain the relation in at least 15 characters');
- return {source:{type:source.type,id:source.id},target:{type:target.type,id:target.id},kind,evidence,reason:reason.trim()};
+ return {source:{type:source.type,id:source.id},target:{type:target.type,id:target.id},kind,evidence:evidence.replace(/\r\n/g,'\n'),reason:reason.trim(),sourceEvidenceHash:evidenceFingerprint(s),targetEvidenceHash:evidenceFingerprint(t)};
 }
 export async function appendEvent(root,event){const dir=path.join(root,SOURCE_DIR),file=path.join(dir,'events.jsonl');const all=await readEvents(root);
  const prev=all.length?all.at(-1).sha256:'GENESIS';const payload={v:1,action:event.action,at:new Date().toISOString(),prev};
- if(event.action==='approve'){payload.claim={id:`rel-${crypto.randomUUID()}`,...(await validateClaim(root,event.claim)),at:payload.at};}
+ if(event.action==='approve'){
+  const reviewed=await validateClaim(root,event.claim);
+  if(event.supersedes){const prior=activeRelations(all).find(c=>c.id===event.supersedes);
+   if(!prior||prior.kind!==reviewed.kind||JSON.stringify(prior.source)!==JSON.stringify(reviewed.source)||JSON.stringify(prior.target)!==JSON.stringify(reviewed.target))throw Error('Select the same active relationship to review again');
+   reviewed.supersedes=prior.id;
+  }
+  payload.claim={id:`rel-${crypto.randomUUID()}`,...reviewed,at:payload.at};
+ }
  else if(event.action==='withdraw'){
   if(!activeRelations(all).some(x=>x.id===event.claimId))throw Error('Active claim ID not found');
   payload.claimId=event.claimId;payload.reason=String(event.reason||'Relation withdrawn after review').slice(0,500);
@@ -102,7 +124,7 @@ export async function mergeConcept(root,{from,to,reason}){
  return{from,to,reason:reason.trim(),version:e.afterHash};
 }
 function relationEdges(records,approved,conceptMeta={}){const byKey=new Map(records.map(r=>[r.key,r]));const edges=new Map();
- const canonical=k=>k.startsWith('concepts:')&&conceptMeta[k.slice(9)]?.mergedInto?`concepts:${conceptMeta[k.slice(9)].mergedInto}`:k;
+ const canonical=key=>{let k=key;const seen=new Set();while(k.startsWith('concepts:')&&conceptMeta[k.slice(9)]?.mergedInto){if(seen.has(k))throw Error('Concept merge cycle; current graph not changed');seen.add(k);k=`concepts:${conceptMeta[k.slice(9)].mergedInto}`;if(!byKey.has(k))throw Error('Merged concept target missing');}return k;};
  const add=(s,t,kind,provenance)=>{if(!byKey.has(s)||!byKey.has(t)||s===t)return;const originalS=s,originalT=t;s=canonical(s);t=canonical(t);if(s===t)return;const k=`${s}|${t}|${kind}`;if(!edges.has(k))edges.set(k,{source:s,target:t,kind,provenance:[]});edges.get(k).provenance.push({...provenance,...(originalS!==s||originalT!==t?{canonicalisedFrom:[originalS,originalT]}:{})});};
  for(const r of records.filter(r=>r.type==='exhibitions')){
   for(const [k,type] of [['artists','people'],['concepts','concepts'],['relatedInstitutions','institutions'],['institution','institutions']]){
@@ -118,7 +140,7 @@ function publishedAliases(fields, concept){
  return [...new Set([fields.reading,fields.sortName,...list(fields.aliases),...list(fields.alternativeNames),...(concept?.aliases||[])]
   .filter(value=>typeof value==='string'&&value.trim()).map(value=>value.trim()))];
 }
-export async function buildGraph(root){const records=await readArchive(root),events=await readEvents(root),claims=activeRelations(events),conceptMeta=await readConceptMeta(root),edges=relationEdges(records,claims,conceptMeta);
+export async function buildGraph(root){const records=await readArchive(root),events=await readEvents(root),assessed=assessClaims(records,activeRelations(events)),claims=assessed.filter(c=>c.reviewStatus==='current'),conceptMeta=await readConceptMeta(root),edges=relationEdges(records,claims,conceptMeta);
  const rec=records.map(({type,id,key,title,body,fields,path,contentHash})=>({type,id,key,title,path,contentHash,summary:body.replace(/\s+/g,' ').slice(0,460),text:body.slice(0,18000),date:String(fields.visitedOn||fields.date||''),conceptStage:type==='concepts'?(conceptMeta[id]?.status||'unclassified'):null,aliases:publishedAliases(fields,type==='concepts'?conceptMeta[id]:null),conceptReading:type==='concepts'?[conceptMeta[id]?.definition||'',conceptMeta[id]?.interpretation||'',conceptMeta[id]?.development||''].filter(Boolean).join('\n'):'',mergedInto:type==='concepts'?(conceptMeta[id]?.mergedInto||null):null}));
  const sourceDigest=hash(records.map(r=>[r.key,r.contentHash]));const relationDigest=hash(events.map(e=>e.sha256));
  const graphHash=hash({sourceDigest,relationDigest,conceptMeta,edges});

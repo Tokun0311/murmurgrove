@@ -1,12 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
-const items = (await getCollection('concepts')).sort((a,b)=>a.data.title.localeCompare(b.data.title));
+import {currentConcept,currentConceptIds} from '../../lib/current-research.mjs';
+const items = (await getCollection('concepts')).filter(item=>!currentConcept(item.id)?.mergedInto).sort((a,b)=>a.data.title.localeCompare(b.data.title));
 const exhibitions = await getCollection('exhibitions');
 const frequency = new Map(items.map(item => [item.id, 0]));
 const connections = new Map<string, number>();
 for (const e of exhibitions) {
-  const concepts = [...new Set(e.data.concepts)].filter(id => frequency.has(id));
+  const concepts = [...new Set(currentConceptIds(e.id))].filter(id => frequency.has(id));
   concepts.forEach(id => frequency.set(id, (frequency.get(id) ?? 0) + 1));
   for(let i=0; i<concepts.length; i++) for(let j=i+1; j<concepts.length; j++) {
     const [a,b] = [concepts[i], concepts[j]].sort();

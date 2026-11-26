@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { currentGraph } from './current-research.mjs';
 
 // Only public projection data is read at build time. Reachability follows the
 // same source evidence and anchor membership as the current viewer; no new
@@ -24,7 +25,7 @@ export function buildArchiveNavigation(graph, nav, snapshot) {
     const from=keys.get(edge.source),to=keys.get(edge.target);
     const primary=edge.kind==='recorded-link'&&edge.source?.startsWith('exhibitions:');
     const evidenced=Array.isArray(edge.provenance)&&edge.provenance.some(proof=>primary?proof.method==='frontmatter'&&keys.has(proof.source):proof.method==='reviewed-claim'&&proof.claimId&&proof.evidence&&proof.reason);
-    if(from&&to&&from!==to&&evidenced)edges.push([from,to]);
+    if(from&&to&&from!==to&&evidenced&&!quarantined.has(from)&&!quarantined.has(to))edges.push([from,to]);
   }
   let changed=true;
   while(changed){
@@ -41,7 +42,7 @@ export function buildArchiveNavigation(graph, nav, snapshot) {
 let navigation={aliases:new Map(),locations:new Map()};
 try{
   const read=path=>JSON.parse(readFileSync(resolve(process.cwd(),'public/murmurgrove',path),'utf8'));
-  navigation=buildArchiveNavigation(read('research/current.json'),read('organism/data/navigation.json'),read('organism/data/T0.json'));
+  navigation=buildArchiveNavigation(currentGraph,read('organism/data/navigation.json'),read('organism/data/T0.json'));
 }catch(error){
   // Fail closed: ordinary archive pages remain readable, without a false
   // location or fabricated alias, if the optional projection is unavailable.

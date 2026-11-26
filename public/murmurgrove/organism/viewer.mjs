@@ -19,7 +19,7 @@ import {LIVED_KINDS,makeLivedDraft,validateSealedLivedEvidence,verifyLivedIndex,
 import {LIFE_RULE_VERSION,deriveLifeMorphology,lifeRecordMap,applyLifeOffset,eventReconstructionTimes} from './life-morphology.mjs';
 import {verifyLifeStateIndex,verifyLifeCapture} from './life-checkpoints.mjs';
 import {verifyWithdrawalIndex,withdrawalSet,filterWithdrawnEvidence,lifeCaptureIncludesWithdrawal} from './withdrawals.mjs';
-import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch} from './research-current-overlay.mjs';
+import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch,edgeKey} from './research-current-overlay.mjs';
 const $=id=>document.getElementById(id);
 const canvas=$('stage'),ctx=canvas.getContext('2d',{alpha:false}),roles={
  concept:['Direction field',EMERALD.roles.concept],exhibition:['Observation chamber',EMERALD.roles.exhibition],
@@ -240,7 +240,7 @@ async function refreshCurrentResearch(){
   if(!response.ok)throw Error('Public research HTTP '+response.status);
   const graph=await response.json();
   if(request!==currentRequested||graph.graphHash===currentResearch?.hash)return;
-  const research=readCurrentResearch(graph);
+  const research=readCurrentResearch(graph,{excludedIds:new Set(nav.records.filter(r=>r.quarantined).map(r=>r.id))});
   const anchors=new Map(nodes.map((node,index)=>[node.id,viewPositions[index]]));
   const layer=placeCurrentResearch(research,anchors,links);
   const now=performance.now();
@@ -425,6 +425,7 @@ function drawBackground(time,pos){
   ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(point[0],point[1],radius,0,Math.PI*2);ctx.fill();
  }
 }
+function currentBaselineVisible(link){return Boolean(sourceView||lifePreviewEvent||activeHistoryContext||!currentResearch||currentResearch.pairKeys.has(edgeKey(link.from,link.to)));}
 function drawLinks(pos,time){
  const breathClock=breathingTime(time,mode);
  time=breathClock; // slow organic shape breathing, never fast local twitch
@@ -433,6 +434,7 @@ function drawLinks(pos,time){
  // 158 true, unactivated metadata relations. Multiple hairline passes still
  // reference the SAME source link and share the exact two real endpoint IDs.
  links.forEach((l,index)=>{
+  if(!currentBaselineVisible(l))return;
   const a=nodeMap.get(l.from),b=nodeMap.get(l.to),ai=nodeIndex.get(l.from),bi=nodeIndex.get(l.to);
   const p=pos[ai],q=pos[bi],ageA=daySpan(a.record?.occurredOn),ageB=daySpan(b.record?.occurredOn),age=ageA??ageB??0;
   const old=mode==='Growth'&&age>90;
@@ -459,6 +461,7 @@ function drawRelationFlow(pos,time){
  if(selected&&isolated.has(selected)&&zoom>=12)return; // isolated close-up: no unrelated glints
  const fieldScreen=neighborData.map(v=>{const p=project(v.tangent);return [p[0],-p[1]];});
  links.forEach((link,index)=>{
+  if(!currentBaselineVisible(link))return;
   if(activeHistoryContext&&!activeHistoryContext.linkIndices.has(index))return;
   const ai=nodeIndex.get(link.from),bi=nodeIndex.get(link.to);
   if(ai===undefined||bi===undefined)return;
