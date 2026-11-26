@@ -224,5 +224,19 @@
     "edgeCount": 195,
     "priorHash": "3c0cc27686bb7a50c893d15255ed0ca2dee1cbe805f420c09bf940458fd4b93c",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-26T05-24-31-708Z-bf385c7ba212.json",
+    "graphHash": "bf385c7ba212b6b21646e56a9277bc40a20ee3526794120134d1ed91838fa91e",
+    "at": "2026-11-26T05:24:31.689Z",
+    "added": [],
+    "changed": [
+      "exhibitions:2026-10-30-59"
+    ],
+    "removed": [],
+    "recordCount": 186,
+    "edgeCount": 199,
+    "priorHash": "8c63e433531263a36fbbacc63d4888c7e9f5b09dc68f4a0c9c4551e460324c27",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]

@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "8c63e433531263a36fbbacc63d4888c7e9f5b09dc68f4a0c9c4551e460324c27",
-  "generatedAt": "2026-11-26T02:40:38.829Z",
+  "graphHash": "bf385c7ba212b6b21646e56a9277bc40a20ee3526794120134d1ed91838fa91e",
+  "generatedAt": "2026-11-26T05:24:31.689Z",
   "links": [
     {
       "source": "exhibitions:2026-01-07-02",
@@ -856,7 +856,27 @@
     },
     {
       "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
       "target": "concepts:politics-of-representation",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:site-specificity",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:sound-and-technology",
       "kind": "recorded-link"
     },
     {
@@ -982,7 +1002,7 @@
   ],
   "activity": {
     "exhibitions:2026-01-07-02": 3,
-    "concepts:sound-and-technology": 5,
+    "concepts:sound-and-technology": 6,
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
@@ -995,7 +1015,7 @@
     "institutions:icc": 2,
     "people:mikami-seiko": 1,
     "exhibitions:2026-01-24-05": 2,
-    "concepts:curatorial-practices": 10,
+    "concepts:curatorial-practices": 11,
     "institutions:curation-fair": 1,
     "exhibitions:2026-01-24-06": 2,
     "concepts:identity-and-representation": 2,
@@ -1015,7 +1035,7 @@
     "concepts:transcultural-studies": 5,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 14,
+    "concepts:institutional-studies": 15,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -1050,7 +1070,7 @@
     "institutions:gyre-gallery": 2,
     "people:zadok-ben-david": 1,
     "exhibitions:2026-04-24-24": 2,
-    "concepts:site-specificity": 4,
+    "concepts:site-specificity": 5,
     "institutions:thailand-biennale": 1,
     "exhibitions:2026-04-26-25": 2,
     "institutions:singapore-art-museum": 2,
@@ -1147,7 +1167,7 @@
     "institutions:gwangju-biennale": 1,
     "exhibitions:2026-10-28-58": 2,
     "institutions:acc": 1,
-    "exhibitions:2026-10-30-59": 2,
+    "exhibitions:2026-10-30-59": 6,
     "institutions:busan-biennale": 1,
     "exhibitions:2026-11-06-60": 3,
     "people:takagi-yuriko": 1,

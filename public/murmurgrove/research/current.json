@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-26T02:40:38.829Z",
-  "sourceDigest": "1e4729ae229138e4b33873ff679c49de843557900279e45dceeb70b53b5c54db",
+  "generatedAt": "2026-11-26T05:24:31.689Z",
+  "sourceDigest": "c83651aaba5949a1585eac4e3c1242142a23e3bc0498f9495db760b071896cb3",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "8c63e433531263a36fbbacc63d4888c7e9f5b09dc68f4a0c9c4551e460324c27",
+  "graphHash": "bf385c7ba212b6b21646e56a9277bc40a20ee3526794120134d1ed91838fa91e",
   "records": [
     {
       "type": "exhibitions",
@@ -897,9 +897,9 @@
       "key": "exhibitions:2026-10-30-59",
       "title": "Busan Biennale 2026《Dissident Chorus》",
       "path": "/exhibitions/2026-10-30-59/",
-      "contentHash": "48079f66f22846e21a40da3acf86aebcbdcfc0dbe173d30ddef6f2b5ee6d2d6d",
-      "summary": "2026年参观记录。此页面保存观展时间、机构及关联研究对象。",
-      "text": "2026年参观记录。此页面保存观展时间、机构及关联研究对象。",
+      "contentHash": "ff60dde7d79e1f8a352ee81d8ab9c0dededef85217bb11df9bb73027fec5061e",
+      "summary": "2026年参观记录。",
+      "text": "2026年参观记录。",
       "date": "2026-10-30",
       "conceptStage": null,
       "aliases": [],
@@ -4725,7 +4725,51 @@
     },
     {
       "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
       "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:site-specificity",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:sound-and-technology",
       "kind": "recorded-link",
       "provenance": [
         {
@@ -5002,7 +5046,7 @@
   "concepts": {},
   "activity": {
     "exhibitions:2026-01-07-02": 3,
-    "concepts:sound-and-technology": 5,
+    "concepts:sound-and-technology": 6,
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
@@ -5015,7 +5059,7 @@
     "institutions:icc": 2,
     "people:mikami-seiko": 1,
     "exhibitions:2026-01-24-05": 2,
-    "concepts:curatorial-practices": 10,
+    "concepts:curatorial-practices": 11,
     "institutions:curation-fair": 1,
     "exhibitions:2026-01-24-06": 2,
     "concepts:identity-and-representation": 2,
@@ -5035,7 +5079,7 @@
     "concepts:transcultural-studies": 5,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 14,
+    "concepts:institutional-studies": 15,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -5070,7 +5114,7 @@
     "institutions:gyre-gallery": 2,
     "people:zadok-ben-david": 1,
     "exhibitions:2026-04-24-24": 2,
-    "concepts:site-specificity": 4,
+    "concepts:site-specificity": 5,
     "institutions:thailand-biennale": 1,
     "exhibitions:2026-04-26-25": 2,
     "institutions:singapore-art-museum": 2,
@@ -5167,7 +5211,7 @@
     "institutions:gwangju-biennale": 1,
     "exhibitions:2026-10-28-58": 2,
     "institutions:acc": 1,
-    "exhibitions:2026-10-30-59": 2,
+    "exhibitions:2026-10-30-59": 6,
     "institutions:busan-biennale": 1,
     "exhibitions:2026-11-06-60": 3,
     "people:takagi-yuriko": 1,
