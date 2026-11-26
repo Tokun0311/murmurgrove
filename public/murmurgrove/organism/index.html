@@ -412,6 +412,9 @@ html body #debugPanel .interaction-guide p{margin:7px 0}
 /* Complete, on-demand relations. Keep the original borderless paper haze. */
 #card{max-height:max(80px,calc(100dvh - min(108px,29dvh) - min(155px,34dvh)));overflow-y:auto;overscroll-behavior:contain;overflow-wrap:anywhere;scrollbar-width:thin}
 #card:has(.relation-disclosure[open]){width:min(285px,77vw);max-width:min(285px,77vw)}
+#card{opacity:1;transition:opacity 240ms ease-out}
+#card.relation-travelling{opacity:0;pointer-events:none;transition-duration:150ms}
+@media(prefers-reduced-motion:reduce){#card{transition:none!important}}
 #card .relation-disclosure summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#668d79;min-height:28px;cursor:pointer;touch-action:manipulation}
 #card .relation-disclosure summary::-webkit-details-marker{display:none}
 #card .relation-disclosure summary:focus-visible{text-decoration:underline;text-underline-offset:4px}
@@ -527,7 +530,7 @@ html body #debugPanel .interaction-guide p{margin:7px 0}
   document.addEventListener('murmurgrove:close-viewer-panel', () => setPanel(null));
 })();
 </script>
-<script type="module" src="./viewer.mjs?research=3-spatial-relations"></script>
+<script type="module" src="./viewer.mjs?research=4-calm-journey"></script>
 <script>
 // Same-origin event bridge: the murmurgrove masthead keeps its single original
 // cursor trail, even while pointer events are delivered to this iframe.

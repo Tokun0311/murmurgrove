@@ -64,6 +64,7 @@ let touchPair=null,userFramedPan=false,touchOrbitTarget=null;
 let entrance=null;
 let pendingSelection=null,pendingFollow=false;
 let relationFocusId=null; // only explicit in-organism relation navigation
+let relationJourney=null,relationJourneySerial=0;
 function requestedLocation(){
  try{
   const owner=window.parent!==window&&new URLSearchParams(location.search).has('embedded')?window.parent:window;
@@ -180,7 +181,7 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
  }
  return true;
 }catch{return false;}}
-function saveMemory(){try{
+function saveMemory(){if(relationJourney)return;try{
  const storedPan=ready&&!isMobileOverview()?boundPanToOrganism(pan):pan;
  sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected:selected||pendingSelection,followSelected:selected?followSelected:pendingFollow,relationFocusId,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
  }catch{}}
@@ -253,7 +254,7 @@ async function refreshCurrentResearch(){
   currentResearch={...research,hash:graph.graphHash};
   currentLayer=layer;
   currentStart=now;
-  if(selected&&!sourceView&&!lifePreviewEvent)showCard(selected);
+  if(selected&&!relationJourney&&!sourceView&&!lifePreviewEvent)showCard(selected);
   fillFinder(research.records);
   updateDebug();
  }catch(error){
@@ -625,13 +626,14 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
   if(isMobileOverview()){
    // At full view, neither one nor two fingers can move the specimen offscreen.
    // Returning from a pan eases back to its center instead of snapping.
-   if(!relationFocusId){followSelected=false;userFramedPan=false;}
+   if(!relationFocusId&&!relationJourney){followSelected=false;userFramedPan=false;}
    velocityPan=[0,0];
-   if(!relationFocusId)pan=easePanHome(pan,dt,120);
-   if(Math.hypot(...pan)<.35)pan=[0,0];
-  }else if(!MOBILE_HOME&&zoom<=1&&!relationFocusId){followSelected=false;if(!activeGesture&&!touchPair&&!userFramedPan)pan=easePanHome(pan,dt);}
+   if(!relationFocusId&&!relationJourney)pan=easePanHome(pan,dt,120);
+   if(!relationJourney&&Math.hypot(...pan)<.35)pan=[0,0];
+  }else if(!MOBILE_HOME&&zoom<=1&&!relationFocusId&&!relationJourney){followSelected=false;if(!activeGesture&&!touchPair&&!userFramedPan)pan=easePanHome(pan,dt);}
   reframe();
-  if(followSelected&&selected&&zoom>1){
+  if(relationJourney)advanceRelationJourney(now);
+  if(!relationJourney&&followSelected&&selected&&zoom>1){
    const focusIndex=nodeIndex.get(selected);
    const focusRest=focusIndex===undefined?currentRest(selected):viewPositions[focusIndex];
    if(focusRest){
@@ -644,7 +646,8 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
   // A unified compliant boundary for mouse, touch and trackpad gestures.
   // During a drag the *raw intent* is elastic; release springs back rather
   // than stopping sharply. Everything below is optical, not archival data.
-  if(!isMobileOverview()){
+  if(relationJourney){lastSafePan=[...pan];panIntent=null;edgeReturnVelocity=[0,0];}
+  else if(!isMobileOverview()){
    if(panIntent){
     const safe=boundPanToOrganism(panIntent);
     const radius=elasticLimit();
@@ -695,34 +698,63 @@ function canLocateRelation(id){
  if(lifePreviewEvent)return nodeMap.has(id);
  return nodeMap.has(id)||Boolean(currentRest(id));
 }
+// One finite camera journey replaces the previous exponentially damped chase.
+// Interpolate the camera centre in projection-space units, not moving pixels.
+// No changes to organism geometry, optical time, mode or historical reading.
+function cancelRelationJourney({dismiss=false}={}){
+ if(!relationJourney)return;
+ relationJourney=null;relationJourneySerial++;
+ $('card').classList.remove('relation-travelling');
+ if(dismiss){followSelected=false;relationFocusId=null;showCard(null);}
+}
+function finishRelationJourney(j){
+ if(relationJourney!==j)return;
+ relationJourney=null;
+ relationFocusId=j.id;
+ zoom=j.toZoom;pan=[j.to[0]*zoom,j.to[1]*zoom];
+ lastSafePan=[...pan];userFramedPan=true;
+ syncZoomDisplay();showCard(j.id);followSelected=true;saveMemory();
+ // Position the new panel before revealing it. Never drag the old panel across
+ // the canvas or reveal the target panel at the previous record's coordinates.
+ const serial=relationJourneySerial;
+ requestAnimationFrame(()=>{
+  if(serial!==relationJourneySerial||selected!==j.id||relationJourney)return;
+  $('card').classList.remove('relation-travelling');
+  if(j.keyboard)$('cardLink').focus({preventScroll:true});
+ });
+}
+function advanceRelationJourney(now){
+ const j=relationJourney;if(!j)return;
+ if(!canLocateRelation(j.id)){cancelRelationJourney({dismiss:true});return;}
+ // A hidden tab or a very slow frame cannot turn the remainder into a huge jump.
+ if(j.last===null)j.last=now;
+ j.elapsed+=Math.min(Math.max(0,now-j.last),50);j.last=now;
+ const t=reducedMotionMedia.matches?1:cl(j.elapsed/j.duration,0,1);
+ const u=t*t*t*(10+t*(-15+6*t)); // quintic, zero velocity and acceleration at both ends
+ zoom=j.fromZoom*Math.exp(Math.log(j.toZoom/j.fromZoom)*u);
+ pan=[(j.from[0]+(j.to[0]-j.from[0])*u)*zoom,(j.from[1]+(j.to[1]-j.from[1])*u)*zoom];
+ syncZoomDisplay();
+ if(t>=1)finishRelationJourney(j);
+}
 function navigateRelation(id,{keyboard=false}={}){
  if(!canLocateRelation(id))return false;
- cancelEntrance();
- // Cancel residual inertia and a previous zoom intention before following a
- // different real node. No change to angle, elevation, mode or history view.
+ cancelRelationJourney();cancelEntrance();
  velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
  touchOrbitTarget=null;panIntent=null;edgeReturnVelocity=[0,0];
  zoomGoal=null;zoomAnchor=null;userFramedPan=true;
- relationFocusId=id;
- showCard(id);
- // At overview, a slight magnification enables existing camera-follow logic.
- // Above overview retain the exact scale, including deep close-ups.
- if(zoom<=1){
-  const focus=viewPositions[nodeIndex.get(id)]||currentRest(id);
-  requestZoom(1.65,coords(focus),{keepFollow:true});
- }
- followSelected=true;
- // Honor the user's reduced-motion preference for this explicit camera move.
- if(reducedMotionMedia.matches){
-  if(zoomGoal!==null)setZoom(zoomGoal,zoomAnchor,{persist:false});
-  reframe();
-  const focus=viewPositions[nodeIndex.get(id)]||currentRest(id);
-  const point=coords(focus);
-  pan=[pan[0]+W*.5-point[0],pan[1]+H*.46-point[1]];
-  followSelected=true;lastSafePan=[...pan];
- }
- saveMemory();
- if(keyboard)$('cardLink').focus({preventScroll:true});
+ followSelected=false;relationFocusId=null;
+ reframe();
+ const focus=viewPositions[nodeIndex.get(id)]||currentRest(id);
+ const projected=project(focus),scale=baseScale/ZOOM_BASE;
+ const toZoom=zoom<=1?1.65:zoom;
+ const from=[pan[0]/zoom,pan[1]/zoom];
+ const to=[-(projected[0]-center[0])*scale,(projected[1]-center[1])*scale-H*.02/toZoom];
+ const distance=Math.hypot((to[0]-from[0])*zoom/W,(to[1]-from[1])*zoom/H);
+ const duration=cl(760+540*Math.pow(distance,.78)+280*Math.abs(Math.log(toZoom/zoom)),760,2800);
+ const j={id,keyboard,from,to,fromZoom:zoom,toZoom,duration,elapsed:0,last:null};
+ relationJourneySerial++;relationJourney=j;
+ $('card').classList.add('relation-travelling');
+ if(reducedMotionMedia.matches)finishRelationJourney(j);
  return true;
 }
 function renderCardRelations(id,actual,keepOpen=false){
@@ -776,7 +808,7 @@ function renderCardRelations(id,actual,keepOpen=false){
  details.append(body);details.open=keepOpen;host.replaceChildren(details);
  if(keepOpen)body.scrollTop=oldScroll;
 }
-function showCard(id){if(id!==relationFocusId)relationFocusId=null;if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;relationFocusId=null;$('cardConnected').replaceChildren();$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
+function showCard(id){if(relationJourney)cancelRelationJourney();if(id!==relationFocusId){$('card').classList.remove('relation-travelling');relationJourneySerial++;}if(id!==relationFocusId)relationFocusId=null;if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;relationFocusId=null;$('cardConnected').replaceChildren();$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
  const keepRelationsOpen=selected===id&&Boolean($('cardConnected').querySelector('details[open]'));
  selected=id;const n=nodeMap.get(id)||{id,record:currentResearch?.records.get(id)};
  const r=(sourceView?sourceView.structure.sourceRecords.get(id):null)||
@@ -802,7 +834,7 @@ function selectAndFollow(id,{magnify=true}={}){
  }
  followSelected=zoom>1||zoomGoal>1;saveMemory();
 }
-function positionCard(pos){const i=nodeIndex.get(selected);
+function positionCard(pos){if(relationJourney)return;const i=nodeIndex.get(selected);
  const p=i===undefined?currentPoints.get(selected)?.point:followSelected&&zoom>=8?coords(viewPositions[i]):pos[i];
  if(!p)return;
  const card=$('card'),width=card.offsetWidth||160,height=card.offsetHeight||100;
@@ -833,6 +865,7 @@ function setZoom(value,anchor=anchorPoint(),{persist=true}={}){
 }
 /** A wheel or zoom-button changes a target, not the camera instantaneously. */
 function requestZoom(value,anchor=anchorPoint(),{keepFollow=false}={}){
+ if(relationJourney)cancelRelationJourney({dismiss:true});
  zoomGoal=cl(value,ZOOM_MIN,ZOOM_MAX);zoomAnchor=[...anchor];
  velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
  if(!keepFollow){followSelected=false;relationFocusId=null;}
@@ -926,6 +959,7 @@ function setHistoryTab(next){
  saveMemory();
 }
 function setHistoryOpen(open){
+ if(relationJourney)cancelRelationJourney({dismiss:true});
  if(open && matchMedia('(max-width:650px)').matches)document.dispatchEvent(new Event('murmurgrove:close-viewer-panel'));
  historyOpen=Boolean(open);document.body.classList.toggle('history-open',historyOpen);
  $('history').setAttribute('aria-expanded',String(historyOpen));
@@ -992,6 +1026,7 @@ async function loadVerifiedSourceEntry(entry){
  return result.navigation;
 }
 function exitSourceReading(){
+ if(relationJourney)cancelRelationJourney({dismiss:true});
  versionRequest++;sourceView=null;relationFocusId=null;
  $('sourceReadingBadge').hidden=true;
  document.body.classList.remove('source-reading');
@@ -1008,6 +1043,7 @@ async function enterSourceReading(checkpointId,action){
   const structure=sourceStructure(current,nodes.map(n=>n.id),previous);
   validateStructureCounts(structure,entry);
   if(request!==versionRequest)return;
+  if(relationJourney)cancelRelationJourney({dismiss:true});
   exitLifePreview();sourceView={entry,structure};followSelected=false;relationFocusId=null;
   activeHistoryContext=null;
   if(selected&&!structure.projectedIds.has(selected))showCard(null);
@@ -1161,12 +1197,14 @@ function activateLifeState(state){
  lifeActiveState=state;lifeFields=lifeRecordMap(state);
 }
 function exitLifePreview(){
+ if(relationJourney)cancelRelationJourney({dismiss:true});
  if(lifePreviewEvent)relationFocusId=null;
  lifeCheckpointRequest++;lifePreviewEvent=null;lifePreviewAsOf=null;
  activateLifeState(lifeNowState);$('lifeModelBadge').hidden=true;
  if(historyOpen&&historyTab==='life')renderLifeReadings();
 }
 function previewLifeEvent(eventId){
+ if(relationJourney)cancelRelationJourney({dismiss:true});
  const evidence=livedEvidence.find(x=>x.event.eventId===eventId);
  if(!evidence)return;
  lifePreviewEvent=eventId;lifePreviewAsOf=evidence.event.recordedAt;
@@ -1236,7 +1274,7 @@ function updateDebug(){
   '</strong><br>Activated Writing fibers: <strong>'+snapshot.fibers.length+'</strong><br>Mature cores: <strong>'+snapshot.propulsionCores.length+'</strong><br><br>';
 }
 
-function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
+function resize(){if(relationJourney)cancelRelationJourney({dismiss:true});const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
  currentCanvas.width=canvas.width;currentCanvas.height=canvas.height;currentContext?.setTransform(dpr,0,0,dpr,0,0);
  if(pendingPanNorm){pan=[pendingPanNorm[0]*W,pendingPanNorm[1]*H];pendingPanNorm=null;}
@@ -1297,6 +1335,7 @@ function initUI(){
  canvas.addEventListener('pointerdown',e=>{
   if(e.pointerType==='mouse'&&e.button!==0&&e.button!==2)return;
   if(e.pointerType==='touch'&&activePointers.size>=2)return;
+  if(relationJourney)cancelRelationJourney({dismiss:true});
   if(relationFocusId){relationFocusId=null;followSelected=false;zoomGoal=null;zoomAnchor=null;}
   const local=pointerHere(e);lastPointer=local;pointerType=e.pointerType;
   gestureHintDismiss();cancelMomentum();touchOrbitTarget=null;zoomGoal=null;zoomAnchor=null;
@@ -1413,7 +1452,7 @@ function initUI(){
    angle=.63;elevation=.20;userFramedPan=false;followSelected=false;cancelMomentum();showCard(null);setZoom(DEFAULT_ZOOM,[W*.5,H*.48]);
   }
  });
- window.addEventListener('resize',resize);window.addEventListener('pagehide',saveMemory);
+ window.addEventListener('resize',resize);window.addEventListener('pagehide',()=>{if(!relationJourney)saveMemory();});
  // A back-forward cache restoration already has the live canvas and camera.
  // Never force it back to the opening position or replay the invitation.
  window.addEventListener('pageshow',e=>{if(e.persisted&&ready){resize();syncZoomDisplay();}});
@@ -1482,7 +1521,7 @@ async function init(){
   $('loading').style.display='none';lastFpsAt=performance.now();requestAnimationFrame(render);
   if(firstVisit&&!locate&&!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
   window.__MURMUR_REAL__={baselineHash:BASELINE_HASH,nodes:174,metadataLinks:158,isolatedRecords:20,interiorQuietDisplayPositions:20,zoomMaximum:ZOOM_MAX,zoomMinimum:ZOOM_MIN,zoomDefault:DEFAULT_ZOOM,get entrance(){return {active:!!entrance,holdMs:ENTRANCE_HOLD_MS,durationMs:ENTRANCE_MOVE_MS};},get isMobileOverview(){return isMobileOverview();},
-    get camera(){return {angle,elevation,zoom,pan:[...pan],selected,followSelected};},
+    get camera(){return {angle,elevation,zoom,pan:[...pan],selected,followSelected};},get relationJourney(){return relationJourney?{id:relationJourney.id,elapsed:relationJourney.elapsed,duration:relationJourney.duration}:null;},
     get screenNodes(){return lastFrameScreenNodes?.map(x=>[x[0],x[1],x[2]])||[];},
     approvedLifeEvents:livedEvidence.length,authoredEvidenceTraces:livedTraces.size,activatedWritingFibers:0,matureCores:0,lifeRuleVersion:LIFE_RULE_VERSION,derivedLifeEvents:lifeNowState.authoredEventsUsed,
     get lifeReading(){return {asOf:lifeActiveState?.asOf,eventsUsed:lifeActiveState?.authoredEventsUsed||0,activeRecords:lifeActiveState?.activeRecords||0,sedimentaryRecords:lifeActiveState?.sedimentaryRecords||0,previewIsRuleReconstruction:Boolean(lifePreviewEvent),activatedFibers:0,matureCores:0};},datedExhibitionRecords:observationLedger.length,observationalMonths:observationGroups.length,chronicleVersions:chronicleIndex.entries.length,recordedOpticalFrames:opticalFrameIndex.entries.length,livedActs:livedEvidence.length,withdrawnActs:withdrawnIds.size,sealedDerivedLifeStates:lifeStateIndex.entries.filter(e=>!lifeCaptureIncludesWithdrawal(e.sourceEventHead,livedIndex,withdrawalIndex,e.excludedEventIds)).length,verifiedHistoricalMorphologies:0,
