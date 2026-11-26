@@ -8,6 +8,7 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
 <html lang="en">
   <head>
     <!-- murmurgrove favicon: theme selection, no added JavaScript -->
+    {isHome && <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />}
     <link rel="icon" type="image/png" sizes="96x96"
           media="(prefers-color-scheme: light)"
           href="/favicon-96x96.png?v=20261125-safe" />
@@ -41,6 +42,14 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {isHome && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'murmurgrove',
+        url: new URL('/', Astro.site ?? Astro.url.origin).href,
+      })} />
+    )}
   </head>
   <body>
     <script is:inline>
