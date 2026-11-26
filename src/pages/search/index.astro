@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
+import {aliasesForPath} from '../../lib/archive-navigation.mjs';
 const [exhibitions,people,institutions,concepts]=await Promise.all([getCollection('exhibitions'),getCollection('people'),getCollection('institutions'),getCollection('concepts')]);
 const records=[
   ...exhibitions.map(r=>({type:'Exhibitions',path:'/exhibitions/'+r.id+'/',title:r.data.title,terms:[r.id,r.data.region,r.data.location]})),
@@ -21,7 +22,7 @@ const records=[
       <p id="archive-search-count" role="status" aria-live="polite"></p>
     </div>
     <ol class="archive-list search-list">
-      {records.map(r=><li class="archive-entry" data-search-type={r.type} data-search-path={r.path} data-search-terms={[r.title,...r.terms].join(' ')} hidden><a href={r.path}>{r.title}</a><span>{r.type}</span></li>)}
+      {records.map(r=><li class="archive-entry" data-search-type={r.type} data-search-path={r.path} data-search-terms={[r.title,...r.terms,...aliasesForPath(r.path)].join(' ')} hidden><a href={r.path}>{r.title}</a><span>{r.type}</span></li>)}
     </ol>
     <noscript><p>Search is available with JavaScript. The archive sections remain accessible through navigation.</p></noscript>
   </section>
@@ -36,13 +37,11 @@ const buttons=[...document.querySelectorAll<HTMLButtonElement>('[data-search-cat
 const rows=[...document.querySelectorAll<HTMLLIElement>('[data-search-type]')];
 const normalize=(s:string)=>s.normalize('NFKD').toLocaleLowerCase().replace(/[\p{M}\p{P}\p{Z}\s]/gu,'');
 let category='All';
-const aliases=new Map<string,string[]>();
 function renderSearch(){
   const q=normalize(query?.value||'');
   let found=0;
   for(const row of rows){
-    const names=[row.dataset.searchTerms||'',...(aliases.get(row.dataset.searchPath||'')||[])];
-    const match=(category==='All'||row.dataset.searchType===category)&&(!q||names.some(name=>normalize(name).includes(q)));
+    const match=(category==='All'||row.dataset.searchType===category)&&(!q||normalize(row.dataset.searchTerms||'').includes(q));
     row.hidden=!match;if(match)found++;
   }
   if(count)count.textContent=found===0?'No matching records':found+' '+(found===1?'record':'records');
@@ -53,9 +52,4 @@ const previous=history.state?.murmurgroveSearch;
 if(previous){if(query&&typeof previous.query==='string')query.value=previous.query;if(buttons.some(b=>b.dataset.searchCategory===previous.category))category=previous.category;buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.searchCategory===category)));}
 window.addEventListener('pagehide',()=>{try{history.replaceState({...history.state,murmurgroveSearch:{query:query?.value||'',category}},'')}catch{}});
 renderSearch();
-fetch('/murmurgrove/research/current.json').then(r=>r.ok?r.json():null).then(graph=>{
-  if(!Array.isArray(graph?.records))return;
-  for(const record of graph.records)if(typeof record.path==='string'&&Array.isArray(record.aliases))aliases.set(record.path,record.aliases.filter((v:unknown)=>typeof v==='string'));
-  renderSearch();
-}).catch(()=>{});
 </script>

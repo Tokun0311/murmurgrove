@@ -131,7 +131,18 @@ const lastDate = calendarDates[0] || '2026-01-01';
   let selectedRegion='all';
   let selectedDate:string|null=config.lastDate||null;
   let currentMonth=config.lastDate.slice(0,7);
-  const saved=history.state?.murmurgroveExhibitions;
+  let saved=history.state?.murmurgroveExhibitions;
+  // The explicit back link is a new navigation, unlike browser Back.
+  // Restore the same index state only when returning from a record.
+  if(!saved&&document.referrer){
+    try{
+      const ref=new URL(document.referrer);
+      if(ref.origin===location.origin&&/^\/exhibitions\/[^/]+\/$/.test(ref.pathname)){
+        saved=JSON.parse(sessionStorage.getItem('murmurgrove.exhibitions.index.v1')||'null');
+        if(saved)history.replaceState({...history.state,murmurgroveExhibitions:saved},'');
+      }
+    }catch{}
+  }
   if(saved&&typeof saved==='object'){
     if(regionBtns.some(b=>b.dataset.region===saved.region))selectedRegion=saved.region;
     if(saved.date===null||dateCounts.has(saved.date))selectedDate=saved.date;
@@ -140,7 +151,9 @@ const lastDate = calendarDates[0] || '2026-01-01';
     regionBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.region===selectedRegion)));
   }
   function rememberIndex(){
-    try{history.replaceState({...history.state,murmurgroveExhibitions:{region:selectedRegion,date:selectedDate,month:currentMonth,sort:sorter?.value||'newest',calendarOpen:document.getElementById('mobile-calendar-toggle')?.getAttribute('aria-expanded')==='true',scroll:window.scrollY}},'');}catch{}
+    const state={region:selectedRegion,date:selectedDate,month:currentMonth,sort:sorter?.value||'newest',calendarOpen:document.getElementById('mobile-calendar-toggle')?.getAttribute('aria-expanded')==='true',scroll:window.scrollY};
+    try{history.replaceState({...history.state,murmurgroveExhibitions:state},'');}catch{}
+    try{sessionStorage.setItem('murmurgrove.exhibitions.index.v1',JSON.stringify(state));}catch{}
   }
   window.addEventListener('pagehide',rememberIndex);
   document.querySelector('.exhibition-index')?.addEventListener('click',event=>{

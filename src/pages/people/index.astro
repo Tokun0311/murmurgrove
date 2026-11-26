@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
+import {aliasesForPath} from '../../lib/archive-navigation.mjs';
 const items = (await getCollection('people')).sort((a,b)=>
   (a.data.sortName || a.data.name).localeCompare(b.data.sortName || b.data.name, 'en')
 );
@@ -30,7 +31,7 @@ const usedLatin = new Set(indexed.map(x=>x.letter));
       <p id="people-result-count" class="people-result-count" role="status" aria-live="polite">{items.length} people &amp; collectives</p>
     </div>
     <ol class="archive-list" id="people-list">
-      {indexed.map(({item,letter})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''} ${item.id}`.toLocaleLowerCase()} data-letter={letter}>
+      {indexed.map(({item,letter})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''} ${item.id} ${aliasesForPath('/people/'+item.id+'/').join(' ')}`.toLocaleLowerCase()} data-letter={letter}>
         <a href={`/people/${item.id}/`}>{item.data.name.includes(" / ") ? <><span class="person-latin">{item.data.name.split(" / ")[0]}</span><span class="person-native">{item.data.name.split(" / ").slice(1).join(" / ")}</span></> : <span class="person-latin">{item.data.name}</span>}</a>
       </li>)}
     </ol>

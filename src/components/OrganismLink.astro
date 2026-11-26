@@ -1,0 +1,9 @@
+---
+import {organismLocation} from '../lib/archive-navigation.mjs';
+const {path}=Astro.props;
+const id=organismLocation(path);
+---
+{id && <a class="eyebrow organism-location-link" href={`/?locate=${encodeURIComponent(id)}`} aria-label="Locate this record in the organism">◌ Locate in organism</a>}
+<style is:global>
+.record-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.record-nav .organism-location-link{color:var(--quiet);font-size:12px;white-space:nowrap}.record-nav .organism-location-link:hover{color:var(--ink)}
+</style>

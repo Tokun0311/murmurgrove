@@ -237,9 +237,9 @@ html body #debugPanel #recordMatches .record-hit .record-name{display:block;font
 html body #debugPanel #recordMatches .record-hit:is(:hover,.is-active,:focus-visible){color:#056d48;background:linear-gradient(90deg,rgba(94,161,120,.10),transparent 90%)!important;text-decoration:none!important}
 html body #debugPanel #recordMatches .record-hit:is(.is-active,:focus-visible){border-bottom-color:#58a17a!important}
 html body #debugPanel .finder-details{border-top:1px solid rgba(134,171,151,.32)!important;padding-top:12px;margin-top:8px}
-html body #debugPanel .finder-details summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;font-size:11px;color:#507b61}
-html body #debugPanel .finder-details summary::-webkit-details-marker{display:none}
-html body #debugPanel .finder-details[open] summary span{transform:rotate(45deg)}
+html body #debugPanel .finder-details > summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;font-size:11px;color:#507b61}
+html body #debugPanel .finder-details > summary::-webkit-details-marker{display:none}
+html body #debugPanel .finder-details[open] > summary span{transform:rotate(45deg)}
 html body #debugPanel #debugText{margin-top:12px;font-size:10px;color:#789184;line-height:1.8}
 html body #debugPanel .finder-disclaimer{font-size:10px;color:#91a698;line-height:1.6;margin-bottom:0}
 html body.debug #status{display:none!important}
@@ -393,9 +393,9 @@ html body #debugPanel #finderClose {display:none;}
 html body.info-open #debugPanel {display:flex;flex-direction:column;gap:10px;z-index:11;}
 html body.info-open #debugPanel .finder-top {order:0;display:flex;align-items:center;justify-content:space-between;}
 html body.info-open #debugPanel .finder-details {order:1;margin:0;padding:0;border-top:0!important;}
-html body.info-open #debugPanel .finder-details summary {font-size:12px;font-weight:500;color:#257153;}
-html body.info-open #debugPanel .finder-details summary {pointer-events:none;cursor:default;}
-html body.info-open #debugPanel .finder-details summary span {display:none!important;}
+html body.info-open #debugPanel .finder-details > summary {font-size:12px;font-weight:500;color:#257153;}
+html body.info-open #debugPanel .finder-details > summary {pointer-events:none;cursor:default;}
+html body.info-open #debugPanel .finder-details > summary span {display:none!important;}
 html body.info-open #debugPanel .record-finder {order:2;margin-top:2px;padding-top:12px;border-top:1px solid rgba(134,171,151,.32);}
 html body.info-open #debugPanel #finderClose {display:grid!important;place-items:center;border:0!important;
   background:transparent!important;color:#749789;min-width:36px;min-height:36px;padding:0;font-size:21px;}
@@ -406,6 +406,9 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
     overflow-y:auto!important;overscroll-behavior:contain;scrollbar-width:thin;}
 }
 
+html body #debugPanel .interaction-guide{margin:4px 0 10px}
+html body #debugPanel .interaction-guide summary{cursor:pointer;color:#507b61;font-size:11px;pointer-events:auto}
+html body #debugPanel .interaction-guide p{margin:7px 0}
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>
@@ -461,7 +464,7 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
     <p class="finder-message" id="recordMessage" role="status" aria-live="polite">Search exhibitions, people, institutions or concepts.</p>
     <select id="recordSelect" hidden tabindex="-1" aria-hidden="true"><option value="">Select a record…</option></select>
   </div>
-  <details class="finder-details"><summary>About this organism <span aria-hidden="true">＋</span></summary><div id="debugText"><span id="debugStats"></span><strong>Explore</strong><br>Drag to orbit at overview scale.<br>Zoom toward the pointer with the wheel or trackpad.<br>Drag to pan when magnified.<br>Shift + drag or right drag to orbit at any scale.<br>On a phone at the 65% overview, drag with one finger to orbit and the body stays centered. Above 65%, one finger pans; pinch to zoom. Hold one finger and move the other to orbit.<br>Select a particle to focus, then follow its card title to read its archive source.</div><p class="finder-disclaimer">Three lenses read the same verified archive. Unattested acts cannot activate Writing fibers or mature cores.</p></details>
+  <details class="finder-details"><summary>About this organism <span aria-hidden="true">＋</span></summary><div id="debugText"><p>The organism makes documented relationships in the evolving archive perceptible. Current research and preserved historical evidence remain distinct.</p><span id="debugStats"></span><details class="interaction-guide"><summary>Interaction</summary><p>Drag to orbit at overview scale; drag to pan when magnified. Zoom toward the pointer with the wheel or trackpad. Shift + drag or right drag to orbit at any scale.</p><p>On a phone at the 65% overview, one finger orbits; above 65%, one finger pans. Pinch to zoom. Hold one finger and move the other to orbit.</p><p>Select a particle to focus, then follow its card title to read the archive source.</p></details></div><p class="finder-disclaimer">Three lenses read the same verified archive. Unattested acts cannot activate Writing fibers or mature cores.</p></details>
 </div><div id="status"></div><div id="loadingError" style="display:none;position:fixed;inset:35% 12%;background:#fff;border:1px solid #ddbdb1;border-radius:9px;padding:20px;z-index:10;color:#95594a;font-size:12px;white-space:pre-wrap"></div>
 <script>
 // The information controls and instructions work even when the viewer module

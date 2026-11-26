@@ -62,6 +62,14 @@ let activeGesture=null,pinchGesture=null;
 const activePointers=new Map();
 let touchPair=null,userFramedPan=false,touchOrbitTarget=null;
 let entrance=null;
+let pendingSelection=null,pendingFollow=false;
+function requestedLocation(){
+ try{
+  const owner=window.parent!==window&&new URLSearchParams(location.search).has('embedded')?window.parent:window;
+  const url=new URL(owner.location.href),id=url.searchParams.get('locate');
+  return id&&/^(exhibition|person|institution|concept|writing):[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)?{owner,url,id}:null;
+ }catch{return null;}
+}
 // An actual intention to interact takes priority over the introductory camera.
 // Mere mouse hovering does not interrupt it; tapping a node remains a tap.
 function cancelEntrance(){
@@ -157,6 +165,8 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
  if(!s||s.sourceHash!==BASELINE_HASH||!Number.isFinite(s.zoom)||s.zoom<ZOOM_MIN||s.zoom>ZOOM_MAX||!['Whole','Growth','Movement'].includes(s.mode))return false;
  if(Number.isFinite(s.angle))angle=s.angle;if(Number.isFinite(s.elevation))elevation=cl(s.elevation,-1.2,1.2);
  zoom=s.zoom;mode=s.mode;selected=s.selected&&nodeMap.has(s.selected)?s.selected:null;
+ pendingSelection=!selected&&typeof s.selected==='string'?s.selected:null;
+ pendingFollow=Boolean(pendingSelection&&s.followSelected);
  if(typeof s.historyMonth==='string'&&observationGroups.some(g=>g.key===s.historyMonth))historyMonth=s.historyMonth;
  if(['visits','versions','frames','acts','life'].includes(s.historyTab))historyTab=s.historyTab;
  historyOpen=Boolean(s.historyOpen);
@@ -170,7 +180,7 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
 }catch{return false;}}
 function saveMemory(){try{
  const storedPan=ready&&!isMobileOverview()?boundPanToOrganism(pan):pan;
- sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected,followSelected,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
+ sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected:selected||pendingSelection,followSelected:selected?followSelected:pendingFollow,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
  }catch{}}
 function preprocess(){
  records=nav.records.filter(r=>!r.quarantined);
@@ -1136,6 +1146,10 @@ function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math
  panIntent=null;edgeReturnVelocity=[0,0];
  if(ready)reframe();}
 function initUI(){
+ const dismissIntro=()=>{document.body.classList.remove('hint');pendingSelection=null;pendingFollow=false;};
+ window.addEventListener('pointerdown',dismissIntro,{capture:true});
+ window.addEventListener('wheel',dismissIntro,{capture:true,passive:true});
+ window.addEventListener('keydown',dismissIntro,{capture:true});
  // Capture *before* individual controls and pointer handlers so users take
  // over immediately, without consuming the click, tap, wheel or drag itself.
  window.addEventListener('pointerdown',cancelEntrance,true);
@@ -1326,7 +1340,8 @@ async function init(){
   // Read the last view BEFORE chooseMode/setZoom can save and overwrite it.
   // On the very first entry, play the guided overview once, even if a stale
   // camera happened to be stored by an earlier version of the site.
-  if(!hasSeenEntrance()){
+  const locate=requestedLocation(),firstVisit=!hasSeenEntrance();
+  if(firstVisit&&!locate){
    prepareEntrance();markEntranceSeen();
   }else if(!storedMemory()){
    // A return without a valid saved view gets a steady centered view, NOT
@@ -1334,6 +1349,7 @@ async function init(){
    entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
    elevation=ENTRANCE_TARGET_ELEVATION;pan=[0,0];mode='Whole';
   }
+  if(firstVisit)markEntranceSeen();
   // A panel opened during loading takes priority over remembered mobile history.
   if(historyOpen && matchMedia('(max-width:650px)').matches && document.body.classList.contains('debug'))historyOpen=false;
   reframe();initUI();chooseMode(mode);setZoom(zoom);
@@ -1342,11 +1358,29 @@ async function init(){
   const livedSelect=$('livedRecord');
  for(const r of records)livedSelect.append(new Option(r.kind+' · '+r.title,r.id));
  fillFinder(new Map(records.map(record=>[record.id,record])));
- refreshCurrentResearch();
+ refreshCurrentResearch().then(()=>{
+  if(locate&&(nodeMap.has(locate.id)||currentRest(locate.id))){
+   pendingSelection=null;pendingFollow=false;cancelEntrance();
+   if(historyOpen)setHistoryOpen(false);
+   selectAndFollow(locate.id);
+   try{const url=new URL(locate.owner.location.href);
+    if(url.searchParams.get('locate')===locate.id){url.searchParams.delete('locate');locate.owner.history.replaceState(locate.owner.history.state,'',url.href);}
+   }catch{}
+  }else if(locate){
+   // The public projection may have changed since the archive page was built.
+   // Never invent a point. Open the existing finder to expose real status.
+   const record=currentResearch?.records.get(locate.id);
+   if(record){$('about').click();$('recordQuery').value=record.title;$('recordQuery').dispatchEvent(new Event('input',{bubbles:true}));}
+  }else if(pendingSelection&&currentResearch){
+   const id=pendingSelection,follow=pendingFollow;pendingSelection=null;pendingFollow=false;
+   if(currentRest(id)){showCard(id);followSelected=Boolean(follow&&zoom>1);}
+   saveMemory();
+  }
+ });
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshCurrentResearch();});
  setInterval(()=>{if(!document.hidden)refreshCurrentResearch();},60_000);
   $('loading').style.display='none';lastFpsAt=performance.now();requestAnimationFrame(render);
-  if(!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
+  if(firstVisit&&!locate&&!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
   window.__MURMUR_REAL__={baselineHash:BASELINE_HASH,nodes:174,metadataLinks:158,isolatedRecords:20,interiorQuietDisplayPositions:20,zoomMaximum:ZOOM_MAX,zoomMinimum:ZOOM_MIN,zoomDefault:DEFAULT_ZOOM,get entrance(){return {active:!!entrance,holdMs:ENTRANCE_HOLD_MS,durationMs:ENTRANCE_MOVE_MS};},get isMobileOverview(){return isMobileOverview();},
     get camera(){return {angle,elevation,zoom,pan:[...pan],selected,followSelected};},
     get screenNodes(){return lastFrameScreenNodes?.map(x=>[x[0],x[1],x[2]])||[];},

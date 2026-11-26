@@ -1,9 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
+import OrganismLink from '../../components/OrganismLink.astro';
 import { getCollection, render } from 'astro:content';
 export async function getStaticPaths(){return (await getCollection('concepts')).map(item=>({params:{slug:item.id},props:{item}}));}
 const {item}=Astro.props;
 const {Content}=await render(item);
 const exhibitions=(await getCollection('exhibitions')).filter(e=>e.data.concepts.includes(item.id)).sort((a,b)=>b.data.visitedOn.valueOf()-a.data.visitedOn.valueOf());
 ---
-<Base title={`${item.data.title} | murmurgrove`} description={`Explore ${item.data.title} and related exhibitions in the murmurgrove research archive.`}><article class="article"><a class="eyebrow" href="/concepts/">← Themes & Concepts</a><h1>{item.data.title}</h1><div class="prose"><Content/></div>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{e.data.visitedOn.toISOString().slice(0,10)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}</article></Base>
+<Base title={`${item.data.title} | murmurgrove`} description={`Explore ${item.data.title} and related exhibitions in the murmurgrove research archive.`}><article class="article"><nav class="record-nav" aria-label="Record navigation"><a class="eyebrow" href="/concepts/">← Themes & Concepts</a><OrganismLink path={`/concepts/${item.id}/`}/></nav><h1>{item.data.title}</h1><div class="prose"><Content/></div>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{e.data.visitedOn.toISOString().slice(0,10)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}</article></Base>
