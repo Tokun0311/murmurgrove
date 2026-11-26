@@ -742,7 +742,7 @@ function setHistoryTab(next){
  saveMemory();
 }
 function setHistoryOpen(open){
- if(open && matchMedia('(max-width:650px)').matches)setViewerPanel(null);
+ if(open && matchMedia('(max-width:650px)').matches)document.dispatchEvent(new Event('murmurgrove:close-viewer-panel'));
  historyOpen=Boolean(open);document.body.classList.toggle('history-open',historyOpen);
  $('history').setAttribute('aria-expanded',String(historyOpen));
  if(historyOpen)setHistoryTab(historyTab);
@@ -1040,7 +1040,7 @@ function renderLifeReadings(){
 }
 function updateDebug(){
  $('status').textContent=`${fps} FPS · ${links.length} verified metadata links`;
- $('debugText').innerHTML=`Archive baseline: <strong>181</strong> records<br>Visible records: <strong>174</strong><br>Documented links: <strong>${links.length}</strong><br>Independent records: <strong>${isolated.size}</strong><br>Attested lived acts: <strong>${livedEvidence.length}</strong><br>Activated Writing fibers: <strong>0</strong><br>Mature cores: <strong>0</strong><br><br><strong>Explore</strong><br>Drag to orbit at overview scale.<br>Zoom toward the pointer with the wheel or trackpad.<br>Drag to pan when magnified.<br>Shift + drag or right drag to orbit at any scale.<br>On a phone at the 65% overview, drag with one finger to orbit and the body stays centered. Above 65%, one finger pans; pinch to zoom. Hold one finger and move the other to orbit.<br>Select a particle to focus, then follow its card title to read its archive source.`;
+ $('debugStats').innerHTML=`Archive baseline: <strong>181</strong> records<br>Visible records: <strong>174</strong><br>Documented links: <strong>${links.length}</strong><br>Independent records: <strong>${isolated.size}</strong><br>Attested lived acts: <strong>${livedEvidence.length}</strong><br>Activated Writing fibers: <strong>0</strong><br>Mature cores: <strong>0</strong><br><br>`;
 }
 
 function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
@@ -1074,7 +1074,7 @@ function initUI(){
  $('frameFullClose').addEventListener('click',()=>$('frameFull').close());
  $('sourceReadingExit').addEventListener('click',exitSourceReading);
   $('historyClose').addEventListener('click',()=>setHistoryOpen(false));
- $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);setViewerPanel(null);});
+ $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);document.dispatchEvent(new Event('murmurgrove:close-viewer-panel'));});
  function cancelMomentum(){velocityPan=[0,0];velocityAngle=0;velocityElevation=0;edgeReturnVelocity=[0,0];}
  function gestureHintDismiss(){document.body.classList.remove('hint');}
  function pointerLocal(clientX,clientY){const rect=canvas.getBoundingClientRect();return [clientX-rect.left,clientY-rect.top];}
@@ -1217,42 +1217,8 @@ function initUI(){
  // Never force it back to the opening position or replay the invitation.
  window.addEventListener('pageshow',e=>{if(e.persisted&&ready){resize();syncZoomDisplay();}});
 }
-function setViewerPanel(kind){
- const panel=$('debugPanel');
- const info=kind==='info';
- if(!kind && panel.contains(document.activeElement))document.activeElement.blur();
- document.body.classList.toggle('debug',Boolean(kind));
- document.body.classList.toggle('info-open',info);
- $('about').setAttribute('aria-expanded',String(info));
- $('menu').setAttribute('aria-expanded',String(kind==='search'));
- if(!kind)return;
- panel.setAttribute('aria-label',info?'About this organism and archive search':'Explore the archive');
- panel.querySelector('.finder-eyebrow').textContent=info?'ABOUT / ORGANISM':'EXPLORE / ARCHIVE';
- panel.querySelector('.finder-details').open=info;
- if(info)panel.scrollTop=0;
-}
-
-function toggleViewerPanel(kind){
- const isOpen=document.body.classList.contains('debug');
- const isInfo=document.body.classList.contains('info-open');
- if(isOpen && isInfo===(kind==='info')){
-  setViewerPanel(null);
-  return;
- }
- if(matchMedia('(max-width:650px)').matches && historyOpen)setHistoryOpen(false);
- setViewerPanel(kind);
-}
-
-// The panel controls are available while the organism evidence loads.
-$('menu').addEventListener('click',()=>toggleViewerPanel('search'));
-$('about').addEventListener('click',()=>toggleViewerPanel('info'));
-$('finderClose').addEventListener('click',()=>{
- const opener=document.body.classList.contains('info-open')?'about':'menu';
- setViewerPanel(null);
- $(opener).focus({preventScroll:true});
-});
-window.addEventListener('keydown',e=>{
- if(e.key==='Escape' && document.body.classList.contains('debug'))setViewerPanel(null);
+document.addEventListener('murmurgrove:open-viewer-panel',()=>{
+ if(historyOpen && matchMedia('(max-width:650px)').matches)setHistoryOpen(false);
 });
 
 async function init(){

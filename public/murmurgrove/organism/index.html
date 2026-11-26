@@ -389,7 +389,8 @@ html body #debugPanel #finderClose {display:none;}
 /* DESKTOP INFO CONTROL: the ⓘ button opens the actual explanation, not a
    collapsed footnote of the search finder. Search remains available below it,
    including on the embedded home where the iframe masthead is hidden. */
-html body.info-open #debugPanel {display:flex;flex-direction:column;gap:10px;}
+#about {touch-action:manipulation;}
+html body.info-open #debugPanel {display:flex;flex-direction:column;gap:10px;z-index:11;}
 html body.info-open #debugPanel .finder-top {order:0;display:flex;align-items:center;justify-content:space-between;}
 html body.info-open #debugPanel .finder-details {order:1;margin:0;padding:0;border-top:0!important;}
 html body.info-open #debugPanel .finder-details summary {font-size:12px;font-weight:500;color:#257153;}
@@ -460,9 +461,49 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
     <p class="finder-message" id="recordMessage" role="status" aria-live="polite">Search exhibitions, people, institutions or concepts.</p>
     <select id="recordSelect" hidden tabindex="-1" aria-hidden="true"><option value="">Select a record…</option></select>
   </div>
-  <details class="finder-details"><summary>About this organism <span aria-hidden="true">＋</span></summary><div id="debugText"></div><p class="finder-disclaimer">Three lenses read the same verified archive. Unattested acts cannot activate Writing fibers or mature cores.</p></details>
+  <details class="finder-details"><summary>About this organism <span aria-hidden="true">＋</span></summary><div id="debugText"><span id="debugStats"></span><strong>Explore</strong><br>Drag to orbit at overview scale.<br>Zoom toward the pointer with the wheel or trackpad.<br>Drag to pan when magnified.<br>Shift + drag or right drag to orbit at any scale.<br>On a phone at the 65% overview, drag with one finger to orbit and the body stays centered. Above 65%, one finger pans; pinch to zoom. Hold one finger and move the other to orbit.<br>Select a particle to focus, then follow its card title to read its archive source.</div><p class="finder-disclaimer">Three lenses read the same verified archive. Unattested acts cannot activate Writing fibers or mature cores.</p></details>
 </div><div id="status"></div><div id="loadingError" style="display:none;position:fixed;inset:35% 12%;background:#fff;border:1px solid #ddbdb1;border-radius:9px;padding:20px;z-index:10;color:#95594a;font-size:12px;white-space:pre-wrap"></div>
-<script type="module" src="./viewer.mjs"></script>
+<script>
+// The information controls and instructions work even when the viewer module
+// is still loading or a rendering dependency is unavailable.
+(() => {
+  const panel = document.getElementById('debugPanel');
+  const infoButton = document.getElementById('about');
+  const menuButton = document.getElementById('menu');
+  const details = panel.querySelector('.finder-details');
+  const eyebrow = panel.querySelector('.finder-eyebrow');
+  let activePanel = null;
+
+  function setPanel(kind) {
+    if (!kind && panel.contains(document.activeElement)) document.activeElement.blur();
+    activePanel = kind;
+    const info = kind === 'info';
+    document.body.classList.toggle('debug', Boolean(kind));
+    document.body.classList.toggle('info-open', info);
+    infoButton.setAttribute('aria-expanded', String(info));
+    menuButton.setAttribute('aria-expanded', String(kind === 'search'));
+    if (!kind) return;
+    panel.setAttribute('aria-label', info ? 'About this organism and archive search' : 'Explore the archive');
+    eyebrow.textContent = info ? 'ABOUT / ORGANISM' : 'EXPLORE / ARCHIVE';
+    details.open = info;
+    if (info) panel.scrollTop = 0;
+    document.dispatchEvent(new Event('murmurgrove:open-viewer-panel'));
+  }
+
+  infoButton.addEventListener('click', () => setPanel(activePanel === 'info' ? null : 'info'));
+  menuButton.addEventListener('click', () => setPanel(activePanel === 'search' ? null : 'search'));
+  document.getElementById('finderClose').addEventListener('click', () => {
+    const opener = activePanel === 'info' ? infoButton : menuButton;
+    setPanel(null);
+    opener.focus({ preventScroll: true });
+  });
+  window.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && activePanel) setPanel(null);
+  });
+  document.addEventListener('murmurgrove:close-viewer-panel', () => setPanel(null));
+})();
+</script>
+<script type="module" src="./viewer.mjs?panel=2"></script>
 <script>
 // Same-origin event bridge: the murmurgrove masthead keeps its single original
 // cursor trail, even while pointer events are delivered to this iframe.
