@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "76fd75791e11d1faf909d0a4acc35398252aafc93f7adb90858ad80abbd30735",
-  "generatedAt": "2026-11-26T02:08:47.839Z",
+  "graphHash": "3c0cc27686bb7a50c893d15255ed0ca2dee1cbe805f420c09bf940458fd4b93c",
+  "generatedAt": "2026-11-26T02:11:15.544Z",
   "links": [
     {
       "source": "exhibitions:2026-01-07-02",
@@ -916,7 +916,27 @@
     },
     {
       "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:moving-image",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
       "target": "institutions:art-week-tokyo",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:x-zhu-nowell",
       "kind": "recorded-link"
     }
   ],
@@ -945,17 +965,17 @@
     "institutions:skwat": 1,
     "people:wolfgang-tillmans": 1,
     "exhibitions:2026-02-08-08": 2,
-    "concepts:moving-image": 1,
+    "concepts:moving-image": 2,
     "institutions:tokyo-photographic-art-museum": 3,
     "exhibitions:2026-02-13-09": 3,
     "concepts:performance": 7,
     "institutions:tokyo-metropolitan-theatre": 2,
     "people:saeborg": 1,
     "exhibitions:2026-02-14-10": 2,
-    "concepts:transcultural-studies": 4,
+    "concepts:transcultural-studies": 5,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 12,
+    "concepts:institutional-studies": 13,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -1097,7 +1117,8 @@
     "exhibitions:2026-11-08-62": 3,
     "institutions:space-un": 1,
     "people:julianknxx": 1,
-    "exhibitions:2026-11-08-63": 2,
-    "institutions:art-week-tokyo": 1
+    "exhibitions:2026-11-08-63": 6,
+    "institutions:art-week-tokyo": 1,
+    "people:x-zhu-nowell": 1
   }
 }

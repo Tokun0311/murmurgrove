@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-26T02:08:47.839Z",
-  "sourceDigest": "bd6c2a4e8c705280cc996dc1c1edc5756a9ddfd0fbf63e5c356952c49e5262a8",
+  "generatedAt": "2026-11-26T02:11:15.544Z",
+  "sourceDigest": "12960de88f1db1fa3fa7724efe0f6bbf6d4930d9c089aa7cd560780bc4485f55",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "76fd75791e11d1faf909d0a4acc35398252aafc93f7adb90858ad80abbd30735",
+  "graphHash": "3c0cc27686bb7a50c893d15255ed0ca2dee1cbe805f420c09bf940458fd4b93c",
   "records": [
     {
       "type": "exhibitions",
@@ -957,7 +957,7 @@
       "key": "exhibitions:2026-11-08-63",
       "title": "大手町｜Art Week Tokyo・Rockbund相关项目",
       "path": "/exhibitions/2026-11-08-63/",
-      "contentHash": "74a8e5fbbf0eabd051c644a085d7cb5c750f2fc550234af459a545389bbd9bab",
+      "contentHash": "06c55858d64f7fa5702c517d2aa5ec8e04c4b712bcdc5227ca5375c108956165",
       "summary": "记录了东京大手町与 Art Week Tokyo 及 Rockbund 相关的艺术活动。具体项目名称尚待核实。",
       "text": "记录了东京大手町与 Art Week Tokyo 及 Rockbund 相关的艺术活动。具体项目名称尚待核实。",
       "date": "2026-11-08",
@@ -4746,7 +4746,51 @@
     },
     {
       "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:moving-image",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
       "target": "institutions:art-week-tokyo",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:x-zhu-nowell",
       "kind": "recorded-link",
       "provenance": [
         {
@@ -4782,17 +4826,17 @@
     "institutions:skwat": 1,
     "people:wolfgang-tillmans": 1,
     "exhibitions:2026-02-08-08": 2,
-    "concepts:moving-image": 1,
+    "concepts:moving-image": 2,
     "institutions:tokyo-photographic-art-museum": 3,
     "exhibitions:2026-02-13-09": 3,
     "concepts:performance": 7,
     "institutions:tokyo-metropolitan-theatre": 2,
     "people:saeborg": 1,
     "exhibitions:2026-02-14-10": 2,
-    "concepts:transcultural-studies": 4,
+    "concepts:transcultural-studies": 5,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 12,
+    "concepts:institutional-studies": 13,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -4934,8 +4978,9 @@
     "exhibitions:2026-11-08-62": 3,
     "institutions:space-un": 1,
     "people:julianknxx": 1,
-    "exhibitions:2026-11-08-63": 2,
-    "institutions:art-week-tokyo": 1
+    "exhibitions:2026-11-08-63": 6,
+    "institutions:art-week-tokyo": 1,
+    "people:x-zhu-nowell": 1
   },
   "claims": []
 }
