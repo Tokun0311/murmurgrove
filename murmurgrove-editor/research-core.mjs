@@ -113,8 +113,13 @@ function relationEdges(records,approved,conceptMeta={}){const byKey=new Map(reco
  for(const c of approved)add(recordKey(c.source.type,c.source.id),recordKey(c.target.type,c.target.id),c.kind,{method:'reviewed-claim',claimId:c.id,evidence:c.evidence,reason:c.reason});
  return [...edges.values()].sort((a,b)=>(a.source+a.target+a.kind).localeCompare(b.source+b.target+b.kind));
 }
+function publishedAliases(fields, concept){
+ const list=value=>Array.isArray(value)?value:[value];
+ return [...new Set([fields.reading,fields.sortName,...list(fields.aliases),...list(fields.alternativeNames),...(concept?.aliases||[])]
+  .filter(value=>typeof value==='string'&&value.trim()).map(value=>value.trim()))];
+}
 export async function buildGraph(root){const records=await readArchive(root),events=await readEvents(root),claims=activeRelations(events),conceptMeta=await readConceptMeta(root),edges=relationEdges(records,claims,conceptMeta);
- const rec=records.map(({type,id,key,title,body,fields,path,contentHash})=>({type,id,key,title,path,contentHash,summary:body.replace(/\s+/g,' ').slice(0,460),text:body.slice(0,18000),date:String(fields.visitedOn||fields.date||''),conceptStage:type==='concepts'?(conceptMeta[id]?.status||'unclassified'):null,aliases:type==='concepts'?(conceptMeta[id]?.aliases||[]):[],conceptReading:type==='concepts'?[conceptMeta[id]?.definition||'',conceptMeta[id]?.interpretation||'',conceptMeta[id]?.development||''].filter(Boolean).join('\n'):'',mergedInto:type==='concepts'?(conceptMeta[id]?.mergedInto||null):null}));
+ const rec=records.map(({type,id,key,title,body,fields,path,contentHash})=>({type,id,key,title,path,contentHash,summary:body.replace(/\s+/g,' ').slice(0,460),text:body.slice(0,18000),date:String(fields.visitedOn||fields.date||''),conceptStage:type==='concepts'?(conceptMeta[id]?.status||'unclassified'):null,aliases:publishedAliases(fields,type==='concepts'?conceptMeta[id]:null),conceptReading:type==='concepts'?[conceptMeta[id]?.definition||'',conceptMeta[id]?.interpretation||'',conceptMeta[id]?.development||''].filter(Boolean).join('\n'):'',mergedInto:type==='concepts'?(conceptMeta[id]?.mergedInto||null):null}));
  const sourceDigest=hash(records.map(r=>[r.key,r.contentHash]));const relationDigest=hash(events.map(e=>e.sha256));
  const graphHash=hash({sourceDigest,relationDigest,conceptMeta,edges});
  const activity={};for(const e of edges){activity[e.source]=(activity[e.source]||0)+1;activity[e.target]=(activity[e.target]||0)+1;}

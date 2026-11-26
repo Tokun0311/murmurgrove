@@ -503,7 +503,7 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
   document.addEventListener('murmurgrove:close-viewer-panel', () => setPanel(null));
 })();
 </script>
-<script type="module" src="./viewer.mjs?panel=2"></script>
+<script type="module" src="./viewer.mjs?research=1"></script>
 <script>
 // Same-origin event bridge: the murmurgrove masthead keeps its single original
 // cursor trail, even while pointer events are delivered to this iframe.
@@ -517,9 +517,7 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
 </script>
 
 <script>
-/* Accessible, borderless record finder. Its only authoritative data source is
-   the original select populated by viewer.mjs after record integrity checks.
-   No search result or relationship is synthesized. */
+/* The viewer populates the index from the published research projection. */
 (() => {
   const source = document.getElementById('recordSelect');
   const query = document.getElementById('recordQuery');
@@ -530,7 +528,7 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
   const count = document.getElementById('recordCount');
   if (!source || !query || !clearBtn || !list || !message || !panel) return;
   const helper = 'Search exhibitions, people, institutions or concepts.';
-  const norm = s => String(s || '').normalize('NFKC').toLocaleLowerCase().trim();
+  const norm = s => String(s || '').normalize('NFKC').toLowerCase().replace(/[\s\p{Dash_Punctuation}\u2212]+/gu, '');
   let matches = [], active = 0;
   const verified = () => [...source.options].filter(o => o.value);
   const updateCount = () => {
@@ -588,16 +586,20 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
     if (!options.length) { message.textContent = 'Archive records are still loading…'; return; }
     const found = options.map((o, i) => {
       const label = o.textContent || '';
-      const text = norm(label), id = norm(o.value);
-      const score = text.startsWith(q) ? 0 :
-        text.includes(' · ' + q) ? 1 : text.includes(q) ? 2 : id.includes(q) ? 3 : 99;
-      return { id: o.value, label, score, order: i };
+      const title = o.dataset.title || label;
+      const terms = [title, ...JSON.parse(o.dataset.aliases || '[]')].map(norm);
+      const score = terms.includes(q) ? 0 : terms.some(term => term.startsWith(q)) ? 1 :
+        terms.some(term => term.includes(q)) ? 2 : norm(o.value).includes(q) ? 3 : 99;
+      return { id: o.value, label, score, order: i, unplaced: o.dataset.unplaced };
     }).filter(o => o.score !== 99).sort((a, b) => a.score - b.score || a.order - b.order);
     matches = found.slice(0, 8);
     if (!matches.length) { message.textContent = 'No matching verified records.'; return; }
     for (const [i, record] of matches.entries()) {
-      const item = document.createElement('button');
-      item.type = 'button';
+      const item = document.createElement(record.unplaced ? 'a' : 'button');
+      if (record.unplaced) {
+        item.href = record.unplaced;
+        item.target = '_top';
+      } else item.type = 'button';
       item.className = 'record-hit';
       item.id = 'archive-record-result-' + i;
       item.setAttribute('role', 'option');
@@ -610,8 +612,9 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
       const name = document.createElement('span');
       name.className = 'record-name';
       name.textContent = divider < 0 ? record.label : record.label.slice(divider + 3);
+      if (record.unplaced) type.textContent += ' · No spatial position · Open archive';
       item.append(type, name);
-      item.addEventListener('click', () => select(record.id, record.label));
+      if (!record.unplaced) item.addEventListener('click', () => select(record.id, record.label));
       list.append(item);
     }
     list.hidden = false;
@@ -633,7 +636,7 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
       else active = (active + (e.key === 'ArrowDown' ? 1 : -1) + matches.length) % matches.length;
       highlight();
     } else if (e.key === 'Enter' && !list.hidden && matches[active]) {
-      e.preventDefault(); select(matches[active].id, matches[active].label);
+      e.preventDefault(); list.children[active].click();
     }
   });
   document.addEventListener('pointerdown', e => {
@@ -651,4 +654,4 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
   updateCount();
 })();
 </script>
-<script type="module" src="./research-current-overlay.mjs"></script></body></html>
+</body></html>
