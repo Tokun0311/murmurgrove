@@ -681,7 +681,53 @@ function nearest(x,y){if(!ready)return null;const pos=sourceView?viewPositions.m
 }
 function locatorSVG(n){const position=viewPositions[nodeIndex.get(n.id)]||currentRest(n.id);const x=cl((project(position)[0]-center[0])/5+.5,0,1),y=cl(.5-(project(position)[1]-center[1])/5,0,1);
  return `<svg viewBox="0 0 26 26" aria-hidden="true"><ellipse cx="13" cy="13" rx="10" ry="8" fill="none" stroke="#c4d7ca" stroke-width=".65"/><circle cx="${(3+x*20).toFixed(1)}" cy="${(4+y*18).toFixed(1)}" r="1.9" fill="#387c60"/><circle cx="13" cy="13" r="1" fill="#b4c6ba"/></svg>`;}
-function showCard(id){if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
+// Show every related record, grouped by its actual archive kind. No graph
+// mutation, new links, or current-data substitutions in historical readings.
+function renderCardRelations(id,actual,keepOpen=false){
+ const host=$('cardConnected');
+ const oldScroll=keepOpen?(host.querySelector('.relation-groups')?.scrollTop||0):0;
+ if(!actual.length){host.textContent='No documented relations yet';return;}
+ const order=['concept','person','institution','exhibition','writing','other'];
+ const labels={concept:'Concepts',person:'People',institution:'Institutions',exhibition:'Exhibitions',writing:'Writing',other:'Other records'};
+ const groups=new Map(order.map(kind=>[kind,new Map()]));
+ for(const edge of actual){
+  const linkedId=edge.from===id?edge.to:edge.from;
+  const other=(sourceView?sourceView.structure.sourceRecords.get(linkedId):!lifePreviewEvent?currentResearch?.records.get(linkedId):null)||nodeMap.get(linkedId)?.record;
+  const kind=other?.kind||linkedId.split(':')[0];
+  const group=groups.get(kind)||groups.get('other');
+  if(!group.has(linkedId))group.set(linkedId,{id:linkedId,record:other,count:0});
+  group.get(linkedId).count++;
+ }
+ const details=document.createElement('details');details.className='relation-disclosure';
+ const summary=document.createElement('summary');
+ const count=document.createElement('span');
+ const hasInterpretation=actual.some(edge=>['interpretive','comparison','revision'].includes(edge.kind));
+ count.textContent=`${actual.length} ${hasInterpretation?'research':'documented'} relation${actual.length===1?'':'s'}`;
+ const sign=document.createElement('span');sign.className='relation-sign';sign.setAttribute('aria-hidden','true');
+ summary.append(count,sign);details.append(summary);
+ const body=document.createElement('div');body.className='relation-groups';body.tabIndex=0;body.setAttribute('role','region');body.setAttribute('aria-label','All related archive records');
+ for(const [kind,records] of groups){
+  if(!records.size)continue;
+  const section=document.createElement('section');section.className='relation-group';
+  const heading=document.createElement('h3');heading.textContent=`${labels[kind]} · ${records.size}`;
+  const list=document.createElement('ul');
+  for(const {id:otherId,record,count:relationCount} of records.values()){
+   const li=document.createElement('li');
+   const path=record?.path;
+   const item=document.createElement(typeof path==='string'&&/^\/(?:exhibitions|people|institutions|concepts|writing)\/[a-z0-9-]+\/$/.test(path)?'a':'span');
+   item.textContent=record?.title||otherId;
+   if(item.tagName==='A'){item.href=path;item.target='_top';item.addEventListener('click',saveMemory);}
+   li.append(item);
+   if(relationCount>1){const note=document.createElement('small');note.textContent=` · ${relationCount} relations`;li.append(note);}
+   list.append(li);
+  }
+  section.append(heading,list);body.append(section);
+ }
+ details.append(body);details.open=keepOpen;host.replaceChildren(details);
+ if(keepOpen)body.scrollTop=oldScroll;
+}
+function showCard(id){if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;$('cardConnected').replaceChildren();$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
+ const keepRelationsOpen=selected===id&&Boolean($('cardConnected').querySelector('details[open]'));
  selected=id;const n=nodeMap.get(id)||{id,record:currentResearch?.records.get(id)};
  const r=(sourceView?sourceView.structure.sourceRecords.get(id):null)||
   (!sourceView&&!lifePreviewEvent?currentResearch?.records.get(id):null)||n.record,category=r?.kind||n.kind;
@@ -692,12 +738,8 @@ function showCard(id){if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&
  $('cardLink').target='_top';
  $('cardLink').onclick=()=>{saveMemory();};
  $('locator').innerHTML=locatorSVG(n);
- const actual=(sourceView?sourceView.structure.projectedEdges:!lifePreviewEvent&&currentResearch?currentResearch.relations:links).filter(l=>l.from===id||l.to===id),rLinks=actual.slice(0,3).map(l=>{
-  const linkedId=l.from===id?l.to:l.from;const other=(sourceView?sourceView.structure.sourceRecords.get(linkedId):!lifePreviewEvent?currentResearch?.records.get(linkedId):null)||nodeMap.get(linkedId)?.record;
-  return other?.path?`<a target="_top" href="${esc(other.path)}">${esc(other.title)}</a>`:'';
- }).filter(Boolean);
- $('cardConnected').innerHTML=actual.length?`${actual.length} documented relation${actual.length===1?'':'s'} · ${rLinks.join(' · ')}`:'No documented relations yet';
- for(const a of $('cardConnected').querySelectorAll('a'))a.addEventListener('click',saveMemory);
+ const actual=(sourceView?sourceView.structure.projectedEdges:!lifePreviewEvent&&currentResearch?currentResearch.relations:links).filter(l=>l.from===id||l.to===id);
+ renderCardRelations(id,actual,keepRelationsOpen);
  $('card').style.display='block';document.body.classList.toggle('deep',zoom>=2);saveMemory();
 }
 function selectAndFollow(id,{magnify=true}={}){
@@ -713,7 +755,9 @@ function positionCard(pos){const i=nodeIndex.get(selected);
  const p=i===undefined?currentPoints.get(selected)?.point:followSelected&&zoom>=8?coords(viewPositions[i]):pos[i];
  if(!p)return;
  const card=$('card'),width=card.offsetWidth||160,height=card.offsetHeight||100;
- const x=cl(p[0]+12,8,W-width-8),y=cl(p[1]+12,108,H-height-155);
+ // Keep the expanded card within the usable viewport, including short screens.
+ const top=Math.min(108,H*.29),bottom=Math.min(155,H*.34);
+ const x=cl(p[0]+12,8,Math.max(8,W-width-8)),y=cl(p[1]+12,top,Math.max(top,H-height-bottom));
  card.style.left=x+'px';card.style.top=y+'px';document.body.classList.toggle('deep',zoom>=2);
 }
 function pointerHere(e){const rect=canvas.getBoundingClientRect();return [e.clientX-rect.left,e.clientY-rect.top];}
