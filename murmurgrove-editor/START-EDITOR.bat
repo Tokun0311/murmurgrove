@@ -7,13 +7,13 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-node "_upgrade-v13\install.mjs"
+node "_upgrade-v14\install.mjs"
 if errorlevel 1 (
   pause
   exit /b 1
 )
 echo.
-echo   murmurgrove / editor v1.3
+echo   murmurgrove / editor v1.4
 echo   http://127.0.0.1:4317
 echo   Keep this window open while editing.
 echo.

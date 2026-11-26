@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>murmurgrove / editor v1.2 (local)</title>
+<title>murmurgrove / editor v1.3 (local)</title>
 <link rel="stylesheet" href="/assets/editor.css">
 <script type="module" src="/assets/editor.js"></script>
 <script type="module" src="/assets/research.js"></script>
@@ -34,9 +34,9 @@
       <h1 id="editor-title">A new record</h1>
       <p id="intro-note">Choose a collection, then describe what you want to keep.</p>
     </div>
-    <div id="alert" role="status" aria-live="polite" hidden></div>
+    <div id="alert" role="status" aria-live="polite" hidden></div><nav id="editor-stepnav" class="v13-stepnav" aria-label="Record sections"><button type="button" data-editor-jump="capture-phase">01 记录 / Capture</button><button type="button" data-editor-jump="connect-workspace">02 关联 / Connect</button><button type="button" data-editor-jump="publish-phase">03 发布 / Publish</button></nav><div id="editor-review-status" role="status" aria-live="polite"></div>
     <details id="record-id-wrap"><summary>Record ID / URL (advanced)</summary><div class="form-field slug-field"><label for="slug">Record ID <span class="small-note">(used in page URL)</span></label><input id="slug" autocapitalize="off" spellcheck="false" placeholder="example-exhibition-2026" maxlength="100"><div class="field-help">Use lowercase English letters, numbers and hyphens only. IDs cannot be renamed when editing an existing record.</div></div></details>
-    <form id="edit-form" autocomplete="off"><div class="bundle-phase">01 / CAPTURE</div><div id="typed-fields"></div><details id="advanced-fields-wrap"><summary>Additional record details / optional fields</summary><div id="advanced-fields"></div></details>
+    <form id="edit-form" autocomplete="off"><div class="bundle-phase" id="capture-phase">01 / CAPTURE · 记录</div><div id="typed-fields"></div><details id="advanced-fields-wrap"><summary>Additional record details / optional fields</summary><div id="advanced-fields"></div></details>
       <div class="form-field body-field"><label for="body">Research text / Paste here</label><textarea id="body" rows="14" placeholder="Paste your finished text from any app, on Windows or macOS. You can also type directly. Then preserve the original before editing…"></textarea><button type="button" id="body-outline" class="action-link outline-btn">Insert a note outline</button></div>
       <section class="research-atelier source-import" aria-labelledby="original-title">
         <div class="eyebrow" id="original-title">ORIGINAL TEXT / PASTE FIRST</div>
@@ -47,8 +47,8 @@
           <div class="atelier-actions"><input id="word-file" type="file" accept=".docx" aria-label="Choose optional Word docx"><button id="import-word" type="button" class="action-link">Import .docx text</button></div><p id="word-message" class="micro-copy" role="status"></p>
         </details>
       </section>
-      <section id="connect-workspace"><div class="bundle-phase">02 / CONNECT</div><p class="micro-copy">Search existing records or create and link new people, institutions and concepts here.</p><div id="connect-fields"></div><div id="bundle-review" hidden></div></section>
-      <section class="analysis-section" id="analysis-section" aria-labelledby="analysis-heading">
+      <section id="connect-workspace"><div class="bundle-phase">02 / CONNECT · 关联</div><p class="micro-copy">直接选择已有概念，搜索人物与机构，或在这里新建。<br><span id="connect-count"></span></p><div id="connect-fields"></div><div id="bundle-review" hidden></div></section>
+      <details id="analysis-fold"><summary>智能分析与建议 / Optional relationship analysis</summary><section class="analysis-section" id="analysis-section" aria-labelledby="analysis-heading">
         <div class="analysis-head"><span class="eyebrow" id="analysis-heading">04 / RELATIONSHIP ANALYSIS</span><span class="tiny" id="analysis-status">READY TO SCAN</span></div>
         <div class="analysis-intro">Local analysis suggests existing records from your writing. Nothing is linked without your review.</div>
         <div class="analysis-actions"><button type="button" class="analyse-trigger" id="run-analysis">Analyze record</button><span class="analysis-note">Auto-scans after editing · local, no network AI</span></div>
@@ -75,10 +75,10 @@
           <p class="analysis-note">AI can now propose NEW people, institutions and concepts as well as existing links. Every new proposal requires an exact quote and duplicate check. Review each staged record and its link before grouped publication. The analysis itself never publishes.</p>
         </details>
       </section>
-      <div class="bundle-phase">03 / PUBLISH</div><div class="preview-title"><span class="eyebrow">05 / PREVIEW</span><button id="toggle-preview" type="button" class="action-link">View draft text</button></div>
+      </details><div class="bundle-phase" id="publish-phase">03 / PUBLISH · 保存与发布</div><div class="preview-title"><span class="eyebrow">05 / PREVIEW</span><button id="toggle-preview" type="button" class="action-link">View draft text</button></div>
       <div id="preview" class="preview" hidden></div>
       <div class="public-warning"><p><strong>Before publishing:</strong> new Markdown records under <code>src/data/</code> become part of your public website after GitHub Push. <em>needs-review</em> does not mean private. Please check names, confidential details and links.</p><label class="confirmation"><input id="confirm-public" type="checkbox"> I reviewed this record and any new linked records for public publication.</label></div>
-      <div class="action-row"><button type="button" id="delete-draft" class="danger-link" hidden>Delete private draft</button><button type="button" id="save-draft" class="primary-quiet">Save private draft</button><button type="submit" id="publish" class="publish">Publish to local Astro files</button></div>
+      <div class="action-row"><button type="button" id="delete-draft" class="danger-link" hidden>Delete private draft</button><button type="button" id="save-draft" class="primary-quiet">Save private draft / 保存私稿</button><button type="submit" id="publish" class="publish">Publish local files / 写入公开文件</button></div>
     </form>
     </div>
     <section hidden class="research-atelier" id="research-workspace" aria-labelledby="research-head">
@@ -127,6 +127,6 @@
     <div class="afterword"><span class="eyebrow">NEXT STEP</span><p>Review local files in GitHub Desktop, run the website build, then Commit → Push when ready. Private drafts and original text are never pushed by this editor. Historical T₀ stays untouched.</p></div>
   </section>
 </main>
-<footer>murmurgrove / editor v1.2 · exhibition-first · no cloud editor account · no external dependencies</footer>
+<footer>murmurgrove / editor v1.3 · clear workflow · no cloud editor account · no external dependencies</footer>
 </body>
 </html>
