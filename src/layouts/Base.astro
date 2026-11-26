@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-const { title = 'murmurgrove', description = 'An evolving research archive of exhibitions, people, institutions and concepts. A living organism made visible through their relationships.' } = Astro.props;
+const { noindex = false, title = 'murmurgrove', description = 'An evolving research archive of exhibitions, people, institutions and concepts. A living organism made visible through their relationships.' } = Astro.props;
 const isHome = Astro.url.pathname === '/';
 const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
 ---
@@ -8,6 +8,7 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
 <html lang="en">
   <head>
     <!-- murmurgrove favicon: theme selection, no added JavaScript -->
+    {isHome && <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />}
     <link rel="icon" type="image/png" sizes="96x96"
           media="(prefers-color-scheme: light)"
           href="/favicon-96x96.png?v=20261125-safe" />
@@ -29,15 +30,26 @@ const activeSection = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
     <meta name="murmurgrove-release" content="white-stage-page-reveal-20261124" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="murmurgrove" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href} />
+    <meta property="og:image" content={new URL('/murmurgrove-icon-512.png', Astro.site ?? Astro.url.origin).href} />
+    <meta property="og:image:alt" content="murmurgrove emblem" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {isHome && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'murmurgrove',
+        url: new URL('/', Astro.site ?? Astro.url.origin).href,
+      })} />
+    )}
   </head>
   <body>
     <script is:inline>

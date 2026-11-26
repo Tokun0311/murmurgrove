@@ -75,7 +75,7 @@ const locationTypes=countryEntries.flatMap(({country,entries})=>entries
   .map(item=>({country,name:item.data.name,id:item.id,city:item.data.city})));
 const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.city]?.country);
 ---
-<Base title="Institutions & Spaces | murmurgrove">
+<Base title="Institutions & Spaces | murmurgrove" description="Explore the museums, galleries and other spaces documented in the murmurgrove research archive, organized by geography.">
   <section class="archive institutions-page">
     <h1 class="sr-only">Institutions &amp; Spaces</h1>
 
