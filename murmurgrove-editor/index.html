@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>murmurgrove / editor v1.1 (local)</title>
+<title>murmurgrove / editor v1.2 (local)</title>
 <link rel="stylesheet" href="/assets/editor.css">
 <script type="module" src="/assets/editor.js"></script>
 <script type="module" src="/assets/research.js"></script>
@@ -27,14 +27,16 @@
     <div class="privacy-side">Drafts stay only in this computer's <code>.private</code> folder. They are not sent to GitHub or Cloudflare.</div>
   </aside>
   <section class="main-panel">
+    <nav class="editor-switch" aria-label="Editor workspace"><button type="button" id="switch-record" aria-pressed="true">Records</button><button type="button" id="switch-research" aria-pressed="false">Research</button></nav>
+    <div id="record-workspace">
     <div class="panel-top"><span class="eyebrow" id="record-mode">03 / NEW RECORD</span><span class="tiny" id="dirty-indicator">NOT SAVED</span></div>
     <div class="intro">
       <h1 id="editor-title">A new record</h1>
       <p id="intro-note">Choose a collection, then describe what you want to keep.</p>
     </div>
     <div id="alert" role="status" aria-live="polite" hidden></div>
-    <div class="form-field slug-field"><label for="slug">Record ID <span class="small-note">(used in page URL)</span></label><input id="slug" autocapitalize="off" spellcheck="false" placeholder="example-exhibition-2026" maxlength="100"><div class="field-help">Use lowercase English letters, numbers and hyphens only. IDs cannot be renamed when editing an existing record.</div></div>
-    <form id="edit-form" autocomplete="off"><div id="typed-fields"></div>
+    <details id="record-id-wrap"><summary>Record ID / URL (advanced)</summary><div class="form-field slug-field"><label for="slug">Record ID <span class="small-note">(used in page URL)</span></label><input id="slug" autocapitalize="off" spellcheck="false" placeholder="example-exhibition-2026" maxlength="100"><div class="field-help">Use lowercase English letters, numbers and hyphens only. IDs cannot be renamed when editing an existing record.</div></div></details>
+    <form id="edit-form" autocomplete="off"><div class="bundle-phase">01 / CAPTURE</div><div id="typed-fields"></div><details id="advanced-fields-wrap"><summary>Additional record details / optional fields</summary><div id="advanced-fields"></div></details>
       <div class="form-field body-field"><label for="body">Research text / Paste here</label><textarea id="body" rows="14" placeholder="Paste your finished text from any app, on Windows or macOS. You can also type directly. Then preserve the original before editing…"></textarea><button type="button" id="body-outline" class="action-link outline-btn">Insert a note outline</button></div>
       <section class="research-atelier source-import" aria-labelledby="original-title">
         <div class="eyebrow" id="original-title">ORIGINAL TEXT / PASTE FIRST</div>
@@ -45,6 +47,7 @@
           <div class="atelier-actions"><input id="word-file" type="file" accept=".docx" aria-label="Choose optional Word docx"><button id="import-word" type="button" class="action-link">Import .docx text</button></div><p id="word-message" class="micro-copy" role="status"></p>
         </details>
       </section>
+      <section id="connect-workspace"><div class="bundle-phase">02 / CONNECT</div><p class="micro-copy">Search existing records or create and link new people, institutions and concepts here.</p><div id="connect-fields"></div><div id="bundle-review" hidden></div></section>
       <section class="analysis-section" id="analysis-section" aria-labelledby="analysis-heading">
         <div class="analysis-head"><span class="eyebrow" id="analysis-heading">04 / RELATIONSHIP ANALYSIS</span><span class="tiny" id="analysis-status">READY TO SCAN</span></div>
         <div class="analysis-intro">Local analysis suggests existing records from your writing. Nothing is linked without your review.</div>
@@ -53,7 +56,7 @@
         <div class="analysis-footer"><button class="publish" type="button" id="apply-analysis" disabled>Apply approved relations to form</button><span class="analysis-note">Only changes form fields. Publishing remains separate.</span></div>
         <section class="new-node-review" id="new-node-review" aria-labelledby="new-node-heading">
           <div class="analysis-group-heading" id="new-node-heading">NEW / PEOPLE · INSTITUTIONS · CONCEPTS</div>
-          <p class="analysis-note">New names and concepts are only unverified proposals. Creating a candidate writes a PRIVATE draft, never a public record or a network edge.</p>
+          <p class="analysis-note">New names and concepts are unverified proposals. Add them to this Exhibition, review the linked records above, and save or publish the group together.</p>
           <div id="new-node-list" aria-live="polite"></div>
           <details class="manual-proposal">
             <summary>Propose another new person, institution or concept</summary>
@@ -69,15 +72,16 @@
           <button type="button" id="copy-ai-prompt" class="action-link">Copy AI analysis prompt</button>
           <textarea id="ai-json" rows="5" placeholder='Paste JSON: {"suggestions":[...]}' aria-label="AI suggestions JSON"></textarea>
           <button type="button" class="action-link" id="import-ai">Validate proposed AI links</button>
-          <p class="analysis-note">AI can now propose NEW people, institutions and concepts as well as existing links. Every new proposal requires an exact quote, duplicate check, private draft creation and your separate publication decision. The analysis itself never publishes.</p>
+          <p class="analysis-note">AI can now propose NEW people, institutions and concepts as well as existing links. Every new proposal requires an exact quote and duplicate check. Review each staged record and its link before grouped publication. The analysis itself never publishes.</p>
         </details>
       </section>
-      <div class="preview-title"><span class="eyebrow">05 / PREVIEW</span><button id="toggle-preview" type="button" class="action-link">View draft text</button></div>
+      <div class="bundle-phase">03 / PUBLISH</div><div class="preview-title"><span class="eyebrow">05 / PREVIEW</span><button id="toggle-preview" type="button" class="action-link">View draft text</button></div>
       <div id="preview" class="preview" hidden></div>
-      <div class="public-warning"><p><strong>Before publishing:</strong> new Markdown records under <code>src/data/</code> become part of your public website after GitHub Push. <em>needs-review</em> does not mean private. Please check names, confidential details and links.</p><label class="confirmation"><input id="confirm-public" type="checkbox"> I reviewed this record for public publication.</label></div>
+      <div class="public-warning"><p><strong>Before publishing:</strong> new Markdown records under <code>src/data/</code> become part of your public website after GitHub Push. <em>needs-review</em> does not mean private. Please check names, confidential details and links.</p><label class="confirmation"><input id="confirm-public" type="checkbox"> I reviewed this record and any new linked records for public publication.</label></div>
       <div class="action-row"><button type="button" id="delete-draft" class="danger-link" hidden>Delete private draft</button><button type="button" id="save-draft" class="primary-quiet">Save private draft</button><button type="submit" id="publish" class="publish">Publish to local Astro files</button></div>
     </form>
-    <section class="research-atelier" id="research-workspace" aria-labelledby="research-head">
+    </div>
+    <section hidden class="research-atelier" id="research-workspace" aria-labelledby="research-head">
       <div class="eyebrow" id="research-head">RESEARCH WORKSPACE / SOURCE-BACKED</div>
       <h2>Ask the archive</h2>
       <p class="micro-copy">Questions search the <strong>published archive only</strong>. Results cite exact record excerpts and open their full original pages. Local retrieval is not a generative AI answer.</p>
@@ -120,9 +124,9 @@
       <div class="atelier-actions"><button type="button" id="sync-research">Regenerate current research layer</button><button type="button" class="action-link" id="load-research-history">Inspect source versions</button></div>
       <div id="sync-message" class="micro-copy" role="status"></div><div id="source-history" class="source-results"></div>
     </section>
-    <div class="afterword"><span class="eyebrow">06 / NEXT STEP</span><p>To activate a NEW node: open its <strong>Private drafts</strong> entry in People / Institutions / Concepts, verify and publish it separately, then return to your Exhibition and link the real ID. For other updates: GitHub Desktop → Commit → Push. A separate current source layer is regenerated without modifying the verified historical T₀ snapshot.</p></div>
+    <div class="afterword"><span class="eyebrow">NEXT STEP</span><p>Review local files in GitHub Desktop, run the website build, then Commit → Push when ready. Private drafts and original text are never pushed by this editor. Historical T₀ stays untouched.</p></div>
   </section>
 </main>
-<footer>murmurgrove / editor v1.1 · paste-first · no cloud editor account · no external dependencies</footer>
+<footer>murmurgrove / editor v1.2 · exhibition-first · no cloud editor account · no external dependencies</footer>
 </body>
 </html>

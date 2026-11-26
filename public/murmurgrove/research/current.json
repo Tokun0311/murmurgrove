@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-26T02:11:15.544Z",
-  "sourceDigest": "12960de88f1db1fa3fa7724efe0f6bbf6d4930d9c089aa7cd560780bc4485f55",
+  "generatedAt": "2026-11-26T02:40:38.829Z",
+  "sourceDigest": "1e4729ae229138e4b33873ff679c49de843557900279e45dceeb70b53b5c54db",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "3c0cc27686bb7a50c893d15255ed0ca2dee1cbe805f420c09bf940458fd4b93c",
+  "graphHash": "8c63e433531263a36fbbacc63d4888c7e9f5b09dc68f4a0c9c4551e460324c27",
   "records": [
     {
       "type": "exhibitions",
@@ -967,6 +967,21 @@
       "mergedInto": null
     },
     {
+      "type": "exhibitions",
+      "id": "2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "key": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "title": "没後20年　ナムジュン・パイク｜じゅげむ展 / Nam June Paik | The 20th anniversary of his passing",
+      "path": "/exhibitions/2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing/",
+      "contentHash": "76f997b4b318b6d4c8d95a68e9e2dafd03f66ac5179d6834b9f6999d20c6e302",
+      "summary": "",
+      "text": "",
+      "date": "2026-11-22",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
       "type": "people",
       "id": "alfredo-jaar",
       "key": "people:alfredo-jaar",
@@ -1215,6 +1230,21 @@
       "contentHash": "913920ee8977cbf12dc90dd4b29f805354086d48c4ac7a648b8115a4d1e61adf",
       "summary": "日本媒体艺术家，运用感应技术与交互装置，研究身体感知、信息环境及人与技术的边界。",
       "text": "日本媒体艺术家，运用感应技术与交互装置，研究身体感知、信息环境及人与技术的边界。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "nam-june-paik",
+      "key": "people:nam-june-paik",
+      "title": "Nam June Paik",
+      "path": "/people/nam-june-paik/",
+      "contentHash": "17b223615a71b0aee67f0571d2962c1f0d30932b45e7dfb2887d7b9d31f1add2",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1605,6 +1635,21 @@
       "contentHash": "5e6649d22cad8d343b9c82a4e13afd3e90a0714da515325eab9b29b95107eb19",
       "summary": "位于东京京桥的美术馆，由石桥财团运营，收藏与展示日本及国际艺术作品。",
       "text": "位于东京京桥的美术馆，由石桥财团运营，收藏与展示日本及国际艺术作品。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
+      "id": "arts-council-tokyo",
+      "key": "institutions:arts-council-tokyo",
+      "title": "Arts Council Tokyo",
+      "path": "/institutions/arts-council-tokyo/",
+      "contentHash": "0ded8e96515bcfbce3d7c033ea747a9e6b291b2ab20a516efeff642ca0480c2e",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -2415,6 +2460,21 @@
       "contentHash": "9da4b81282ced8db4d7d01b053f95cd45c9cb8c08fb95cec598932f0f140feb7",
       "summary": "早稻田大学是东京的研究与教育机构。这里收录的项目尚未对应到校内的具体展览／活动场所。",
       "text": "早稻田大学是东京的研究与教育机构。这里收录的项目尚未对应到校内的具体展览／活动场所。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
+      "id": "watari-um-the-watari-museum-of-contemporary-art",
+      "key": "institutions:watari-um-the-watari-museum-of-contemporary-art",
+      "title": "WATARI-UM, The Watari Museum of Contemporary Art",
+      "path": "/institutions/watari-um-the-watari-museum-of-contemporary-art/",
+      "contentHash": "dac212073f5e2f76b7f3b0e1e2666067a8edbb559f42fc4ed11471e873d4b8da",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -4798,12 +4858,100 @@
           "source": "exhibitions:2026-11-08-63"
         }
       ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:moving-image",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:technology-and-body",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "institutions:arts-council-tokyo",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "institutions:watari-um-the-watari-museum-of-contemporary-art",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "people:nam-june-paik",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
     }
   ],
   "concepts": {},
   "activity": {
     "exhibitions:2026-01-07-02": 3,
-    "concepts:sound-and-technology": 4,
+    "concepts:sound-and-technology": 5,
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
@@ -4812,11 +4960,11 @@
     "people:shiga-lieko": 1,
     "people:yamashiro-chikako": 1,
     "exhibitions:2026-01-11-04": 3,
-    "concepts:technology-and-body": 3,
+    "concepts:technology-and-body": 4,
     "institutions:icc": 2,
     "people:mikami-seiko": 1,
     "exhibitions:2026-01-24-05": 2,
-    "concepts:curatorial-practices": 9,
+    "concepts:curatorial-practices": 10,
     "institutions:curation-fair": 1,
     "exhibitions:2026-01-24-06": 2,
     "concepts:identity-and-representation": 2,
@@ -4826,7 +4974,7 @@
     "institutions:skwat": 1,
     "people:wolfgang-tillmans": 1,
     "exhibitions:2026-02-08-08": 2,
-    "concepts:moving-image": 2,
+    "concepts:moving-image": 3,
     "institutions:tokyo-photographic-art-museum": 3,
     "exhibitions:2026-02-13-09": 3,
     "concepts:performance": 7,
@@ -4836,7 +4984,7 @@
     "concepts:transcultural-studies": 5,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 13,
+    "concepts:institutional-studies": 14,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -4980,7 +5128,11 @@
     "people:julianknxx": 1,
     "exhibitions:2026-11-08-63": 6,
     "institutions:art-week-tokyo": 1,
-    "people:x-zhu-nowell": 1
+    "people:x-zhu-nowell": 1,
+    "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing": 8,
+    "institutions:arts-council-tokyo": 1,
+    "institutions:watari-um-the-watari-museum-of-contemporary-art": 1,
+    "people:nam-june-paik": 1
   },
   "claims": []
 }

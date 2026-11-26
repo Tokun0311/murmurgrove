@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { analyzeExhibition, validateAiSuggestions, buildAiPrompt, validateNewRecordProposals } from './analyzer.mjs';
 import {extractDocx} from './word-import.mjs';
+import {cleanBundle,publishBundle} from './bundle.mjs';
+// MURMURGROVE_EXHIBITION_FIRST_V12
 import {readArchive,buildGraph,answerQuestion,groundedPrompt,readEvents,activeRelations,validateClaim,appendEvent,readConceptMeta,updateConceptMeta,mergeConcept,syncGraph,hash as digest,slugValid} from './research-core.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -191,7 +193,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug'));
         const file=path.join(draftDir,type,`${slug}.json`);if(!await exists(file))throw apiError(404,'Draft not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
       }
-      if(req.method==='POST'&&['/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
+      if(req.method==='POST'&&['/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
         const expectedOrigin=`http://127.0.0.1:${server.address().port}`;
         if(req.headers.origin!==expectedOrigin||req.headers['x-editor-token']!==token)throw apiError(403,'Untrusted request');
         const p=await readJSON(req,u.pathname==='/api/import-word'?12*1024*1024:1024*1024);
@@ -302,6 +304,8 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
           try{await fsp.writeFile(draft,JSON.stringify(doc,null,2)+'\n',{flag:'wx'});}catch(e){if(e.code==='EEXIST')throw apiError(409,'Private draft already exists');throw e;}
           return json(res,201,{ok:true,kind:'private-proposed-record',type,slug,relativePath:'murmurgrove-editor/.private/drafts/'+type+'/'+slug+'.json',warning:'Only a private draft was created. Review and publish separately, then link back to the exhibition.'});
         }
+        if(u.pathname==='/api/bundle-publish')return await serializeWrite(async()=>json(res,200,await publishBundle(p,{root,privateDir,draftDir,backupDir,normalise,getPaths,recordList,readCatalog,readConceptMeta,renderMd,saveAtomic,syncGraph,sha,exists})));
+        return await serializeWrite(async()=>{
         const type=requireType(p.type),slug=requireSlug(p.slug),paths=getPaths(root,type,slug);
         if(u.pathname==='/api/delete-draft'){
           await fsp.rm(path.join(draftDir,type,`${slug}.json`),{force:true});return json(res,200,{ok:true});
@@ -312,10 +316,11 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         if(originalTextSha&&!await exists(path.join(privateDir,'originals',`text-${originalTextSha}.txt`)))throw apiError(422,'Original text snapshot is missing on this computer. Capture it again before saving.');
         if(u.pathname==='/api/draft'){
           const file=path.join(draftDir,type,`${slug}.json`);
-          const data={type,slug,fields,body,hash:p.hash||null,wordOriginalSha:typeof p.wordOriginalSha==='string'&&/^[a-f0-9]{64}$/.test(p.wordOriginalSha)?p.wordOriginalSha:null,originalTextSha,updatedAt:new Date().toISOString()};
+          const data={type,slug,fields,body,hash:p.hash||null,wordOriginalSha:typeof p.wordOriginalSha==='string'&&/^[a-f0-9]{64}$/.test(p.wordOriginalSha)?p.wordOriginalSha:null,originalTextSha,...(type==='exhibitions'?{bundle:cleanBundle(p.bundle)}:{}),updatedAt:new Date().toISOString()};
           await saveAtomic(file,JSON.stringify(data,null,2)+'\n');return json(res,200,{ok:true,kind:'draft',relativePath:'murmurgrove-editor/.private/drafts/'+type+'/'+slug+'.json'});
         }
         if(p.confirmPublic!==true)throw apiError(422,'Please confirm public publication');
+        if(p.bundle?.length)throw apiError(422,'Use grouped publication for staged linked records.');
         if(type==='writing' && fields.draft===true)throw apiError(422,'Writing must be public to publish');
         await checkRelations(root,fields);
         if(type==='exhibitions' && !fields.visitedOn.startsWith('2026-')){
@@ -342,6 +347,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
           await saveAtomic(link,JSON.stringify({type,slug,originalTextSha,linkedAt:new Date().toISOString(),privacy:'PRIVATE_LOCAL_REFERENCE'},null,2)+'\n');
         }
         return json(res,200,{ok:true,kind:'published',relativePath:'src/data/'+type+'/'+slug+'.md',updated:!!old,sha256:sha(raw),research:{graphHash:syncResult.graph.graphHash,changed:syncResult.changed},warning:'Research source index synced. Pinned T0 and historical organism snapshots remain unchanged.'});
+        });
       }
       return json(res,404,{error:'Not found'});
     }catch(error){console.error('[editor]',error.message);return json(res,error.status||500,{error:error.status?error.message:'Unexpected local editor error; check terminal.'});}

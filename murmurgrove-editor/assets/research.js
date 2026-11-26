@@ -81,4 +81,5 @@ async function loadHistory(){try{const r=await req('/api/history');const out=$('
 async function init(){try{const r=await req('/api/bootstrap');token=r.token;await Promise.all([loadCatalog(),loadRelations(),loadConceptMeta()]);}catch(e){status('sync-message','Research workspace unavailable: '+e.message,true)}}
 for(const [id,fn] of [['capture-original',captureOriginal],['import-word',importWord],['ask-archive',ask],['run-local-ai',runLocalAI],['copy-grounded-prompt',copyResearchPrompt],['check-relation',relationPreview],['approve-relation',relationApprove],['save-concept-meta',saveConcept],['apply-concept-merge',mergeConceptUI],['sync-research',sync],['load-research-history',loadHistory]])$(id).addEventListener('click',fn);
 $('concept-pick').addEventListener('change',showConcept);
+window.addEventListener('editor-research-open',()=>{if(token)Promise.all([loadCatalog(),loadRelations(),loadConceptMeta()]).catch(()=>{});});
 init();
