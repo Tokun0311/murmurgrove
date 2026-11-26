@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-26T05:24:31.689Z",
-  "sourceDigest": "c83651aaba5949a1585eac4e3c1242142a23e3bc0498f9495db760b071896cb3",
+  "generatedAt": "2026-11-26T09:38:27.581Z",
+  "sourceDigest": "301d1aeb72ba0ee7e592990e56baa182233654474d8155bf62c2492da08b73a8",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "bf385c7ba212b6b21646e56a9277bc40a20ee3526794120134d1ed91838fa91e",
+  "graphHash": "0d53bb8f6a440720486f3224078310d25d3461f10a1c5cdd48d9b47e139c4d55",
   "records": [
     {
       "type": "exhibitions",
@@ -972,9 +972,9 @@
       "key": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
       "title": "没後20年　ナムジュン・パイク｜じゅげむ展 / Nam June Paik | The 20th anniversary of his passing",
       "path": "/exhibitions/2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing/",
-      "contentHash": "76f997b4b318b6d4c8d95a68e9e2dafd03f66ac5179d6834b9f6999d20c6e302",
-      "summary": "",
-      "text": "",
+      "contentHash": "b453c9b3dd6a38f2dae9a55b6c01bf4c7b3be747673f7826547e184365a91a6c",
+      "summary": "在展览结束前，终于和朋友一起去了白南准去世20周年纪念展《じゅげむ》。 此次展览由 Watari-um 美术馆策划。这座位于东京神宫前的私人当代艺术美术馆，前身是由和多利志津子于1972年创办的商业画廊「ギャルリー・ワタリ」（Galerie Watari）。从1972年至1980年代末，画廊向日本介绍了许多活跃于欧美当代艺术前沿的艺术家，如白南准、Keith Haring、Andy Warhol、Donald Judd 和 Sol LeWitt 等。 1990年，正值日本泡沫经济末期，由瑞士建筑师 Mario Botta 设计的美术馆正式开馆，完成了从商业画廊向私人当代艺术美术馆的制度性转变。此后，这一机构以 Watari-um, The Watari Museum of Contemporary Art 的名称，继续作为艺术展示、艺术实践与公众文化交流的空间运营至今。 （2026-11-26 编辑中）",
+      "text": "在展览结束前，终于和朋友一起去了白南准去世20周年纪念展《じゅげむ》。\n\n此次展览由 Watari-um 美术馆策划。这座位于东京神宫前的私人当代艺术美术馆，前身是由和多利志津子于1972年创办的商业画廊「ギャルリー・ワタリ」（Galerie Watari）。从1972年至1980年代末，画廊向日本介绍了许多活跃于欧美当代艺术前沿的艺术家，如白南准、Keith Haring、Andy Warhol、Donald Judd 和 Sol LeWitt 等。\n\n1990年，正值日本泡沫经济末期，由瑞士建筑师 Mario Botta 设计的美术馆正式开馆，完成了从商业画廊向私人当代艺术美术馆的制度性转变。此后，这一机构以 Watari-um, The Watari Museum of Contemporary Art 的名称，继续作为艺术展示、艺术实践与公众文化交流的空间运营至今。\n\n（2026-11-26 编辑中）",
       "date": "2026-11-22",
       "conceptStage": null,
       "aliases": [],

@@ -238,5 +238,19 @@
     "edgeCount": 199,
     "priorHash": "8c63e433531263a36fbbacc63d4888c7e9f5b09dc68f4a0c9c4551e460324c27",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-26T09-38-27-598Z-0d53bb8f6a44.json",
+    "graphHash": "0d53bb8f6a440720486f3224078310d25d3461f10a1c5cdd48d9b47e139c4d55",
+    "at": "2026-11-26T09:38:27.581Z",
+    "added": [],
+    "changed": [
+      "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+    ],
+    "removed": [],
+    "recordCount": 186,
+    "edgeCount": 199,
+    "priorHash": "bf385c7ba212b6b21646e56a9277bc40a20ee3526794120134d1ed91838fa91e",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]

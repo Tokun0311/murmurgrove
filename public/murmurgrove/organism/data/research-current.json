@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "bf385c7ba212b6b21646e56a9277bc40a20ee3526794120134d1ed91838fa91e",
-  "generatedAt": "2026-11-26T05:24:31.689Z",
+  "graphHash": "0d53bb8f6a440720486f3224078310d25d3461f10a1c5cdd48d9b47e139c4d55",
+  "generatedAt": "2026-11-26T09:38:27.581Z",
   "links": [
     {
       "source": "exhibitions:2026-01-07-02",
