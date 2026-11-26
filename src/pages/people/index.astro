@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
+import {aliasesForPath} from '../../lib/archive-navigation.mjs';
 const items = (await getCollection('people')).sort((a,b)=>
   (a.data.sortName || a.data.name).localeCompare(b.data.sortName || b.data.name, 'en')
 );
@@ -18,18 +19,19 @@ const usedLatin = new Set(indexed.map(x=>x.letter));
   <section class="archive people-index">
     <h1 class="sr-only">People &amp; Collectives</h1>
     <div class="people-search-area">
-      <label class="people-search-label" for="people-search">SEARCH PEOPLE</label>
-      <input id="people-search" type="search" placeholder="Search by name..." autocomplete="off" />
+      <label class="sr-only" for="people-search">Search people and collectives</label>
+      <input id="people-search" type="search" placeholder="Find a person or collective" autocomplete="off" />
       <nav class="people-index-nav" aria-label="Browse people alphabetically">
         <div class="filter-languages people-index-buttons" aria-label="Latin alphabet filters">
           <button type="button" data-people-filter="all" aria-pressed="true">All</button>
           {latin.map(letter=><button type="button" data-people-filter={letter} aria-pressed="false" disabled={!usedLatin.has(letter)}>{letter}</button>)}
+          {usedLatin.has('') && <button type="button" data-people-filter="other" aria-pressed="false" aria-label="Names without a Latin initial">Other</button>}
         </div>
       </nav>
       <p id="people-result-count" class="people-result-count" role="status" aria-live="polite">{items.length} people &amp; collectives</p>
     </div>
     <ol class="archive-list" id="people-list">
-      {indexed.map(({item,letter})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''}`.toLocaleLowerCase()} data-letter={letter}>
+      {indexed.map(({item,letter})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''} ${item.id} ${aliasesForPath('/people/'+item.id+'/').join(' ')}`.toLocaleLowerCase()} data-letter={letter}>
         <a href={`/people/${item.id}/`}>{item.data.name.includes(" / ") ? <><span class="person-latin">{item.data.name.split(" / ")[0]}</span><span class="person-native">{item.data.name.split(" / ").slice(1).join(" / ")}</span></> : <span class="person-latin">{item.data.name}</span>}</a>
       </li>)}
     </ol>
@@ -65,12 +67,13 @@ const usedLatin = new Set(indexed.map(x=>x.letter));
   const count = document.querySelector<HTMLElement>('#people-result-count');
   const empty = document.querySelector<HTMLElement>('#people-empty');
   let selected = 'all';
+  const normalizeSearch=(value:string)=>value.normalize('NFKD').toLocaleLowerCase().replace(/[\p{M}\p{P}\p{Z}\s]/gu,'');
   function updatePeople() {
-    const q=(search?.value||'').normalize('NFKC').trim().toLocaleLowerCase();
+    const q=normalizeSearch(search?.value||'');
     let shown=0;
     for(const row of rows){
-      const matchesFilter=selected==='all'||row.dataset.letter===selected;
-      const matchesSearch=!q||(row.dataset.peopleName||'').normalize('NFKC').includes(q);
+      const matchesFilter=selected==='all'||(selected==='other'?!row.dataset.letter:row.dataset.letter===selected);
+      const matchesSearch=!q||normalizeSearch(row.dataset.peopleName||'').includes(q);
       row.hidden=!(matchesFilter&&matchesSearch);
       if(!row.hidden)shown++;
     }

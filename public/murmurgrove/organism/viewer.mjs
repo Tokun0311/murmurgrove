@@ -19,6 +19,7 @@ import {LIVED_KINDS,makeLivedDraft,validateSealedLivedEvidence,verifyLivedIndex,
 import {LIFE_RULE_VERSION,deriveLifeMorphology,lifeRecordMap,applyLifeOffset,eventReconstructionTimes} from './life-morphology.mjs';
 import {verifyLifeStateIndex,verifyLifeCapture} from './life-checkpoints.mjs';
 import {verifyWithdrawalIndex,withdrawalSet,filterWithdrawnEvidence,lifeCaptureIncludesWithdrawal} from './withdrawals.mjs';
+import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch} from './research-current-overlay.mjs';
 const $=id=>document.getElementById(id);
 const canvas=$('stage'),ctx=canvas.getContext('2d',{alpha:false}),roles={
  concept:['Direction field',EMERALD.roles.concept],exhibition:['Observation chamber',EMERALD.roles.exhibition],
@@ -61,6 +62,14 @@ let activeGesture=null,pinchGesture=null;
 const activePointers=new Map();
 let touchPair=null,userFramedPan=false,touchOrbitTarget=null;
 let entrance=null;
+let pendingSelection=null,pendingFollow=false;
+function requestedLocation(){
+ try{
+  const owner=window.parent!==window&&new URLSearchParams(location.search).has('embedded')?window.parent:window;
+  const url=new URL(owner.location.href),id=url.searchParams.get('locate');
+  return id&&/^(exhibition|person|institution|concept|writing):[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)?{owner,url,id}:null;
+ }catch{return null;}
+}
 // An actual intention to interact takes priority over the introductory camera.
 // Mere mouse hovering does not interrupt it; tapping a node remains a tap.
 function cancelEntrance(){
@@ -156,6 +165,8 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
  if(!s||s.sourceHash!==BASELINE_HASH||!Number.isFinite(s.zoom)||s.zoom<ZOOM_MIN||s.zoom>ZOOM_MAX||!['Whole','Growth','Movement'].includes(s.mode))return false;
  if(Number.isFinite(s.angle))angle=s.angle;if(Number.isFinite(s.elevation))elevation=cl(s.elevation,-1.2,1.2);
  zoom=s.zoom;mode=s.mode;selected=s.selected&&nodeMap.has(s.selected)?s.selected:null;
+ pendingSelection=!selected&&typeof s.selected==='string'?s.selected:null;
+ pendingFollow=Boolean(pendingSelection&&s.followSelected);
  if(typeof s.historyMonth==='string'&&observationGroups.some(g=>g.key===s.historyMonth))historyMonth=s.historyMonth;
  if(['visits','versions','frames','acts','life'].includes(s.historyTab))historyTab=s.historyTab;
  historyOpen=Boolean(s.historyOpen);
@@ -169,7 +180,7 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
 }catch{return false;}}
 function saveMemory(){try{
  const storedPan=ready&&!isMobileOverview()?boundPanToOrganism(pan):pan;
- sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected,followSelected,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
+ sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected:selected||pendingSelection,followSelected:selected?followSelected:pendingFollow,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
  }catch{}}
 function preprocess(){
  records=nav.records.filter(r=>!r.quarantined);
@@ -202,6 +213,65 @@ function preprocess(){
   const dx=viewPositions[i][0]-viewPositions[j][0],dy=viewPositions[i][1]-viewPositions[j][1],dz=viewPositions[i][2]-viewPositions[j][2];
   const d2=dx*dx+dy*dy+dz*dz;if(d2>.55*.55)return [];
   return [{record:p,dist:Math.sqrt(d2),weight:Math.exp(-d2/(2*.23*.23))}];}));
+}
+const currentCanvas=document.createElement('canvas');
+currentCanvas.id='research-current-optics';
+currentCanvas.setAttribute('aria-hidden','true');
+Object.assign(currentCanvas.style,{position:'fixed',inset:'0',width:'100%',height:'100%',pointerEvents:'none',zIndex:'1',background:'transparent'});
+canvas.after(currentCanvas);
+const currentContext=currentCanvas.getContext('2d');
+let currentResearch=null,currentLayer=null,currentStart=0,currentPoints=new Map();
+let currentRequested=0;
+function fillFinder(archive){
+ const select=$('recordSelect'),placeholder=select.options[0];
+ const options=[...archive.values()].map(record=>{
+  const option=new Option(record.kind+' · '+record.title,record.id);
+  option.dataset.aliases=JSON.stringify(record.aliases||[]);
+  option.dataset.title=record.title;
+  if(!nodeMap.has(record.id)&&!currentLayer?.additions.has(record.id))option.dataset.unplaced=record.path;
+  return option;
+ });
+ select.replaceChildren(placeholder,...options);
+}
+async function refreshCurrentResearch(){
+ const request=++currentRequested;
+ try{
+  const response=await fetch('../research/current.json',{cache:'no-cache'});
+  if(!response.ok)throw Error('Public research HTTP '+response.status);
+  const graph=await response.json();
+  if(request!==currentRequested||graph.graphHash===currentResearch?.hash)return;
+  const research=readCurrentResearch(graph);
+  const anchors=new Map(nodes.map((node,index)=>[node.id,viewPositions[index]]));
+  const layer=placeCurrentResearch(research,anchors,links);
+  const now=performance.now();
+  if(currentLayer){
+   const previous=currentProjection(currentLayer,point=>point,now-currentStart,reducedMotionMedia.matches);
+   for(const [id,placement] of layer.additions)placement.previous=previous.get(id);
+  }
+  currentResearch={...research,hash:graph.graphHash};
+  currentLayer=layer;
+  currentStart=now;
+  if(selected&&!sourceView&&!lifePreviewEvent)showCard(selected);
+  fillFinder(research.records);
+  updateDebug();
+ }catch(error){
+  if(request===currentRequested&&!currentResearch)console.warn('Current research unavailable:',error);
+ }
+}
+function drawCurrentLayer(now,basePositions){
+ if(!currentContext)return;
+ if(!currentLayer||sourceView||lifePreviewEvent){
+  if(currentLayer)currentContext.clearRect(0,0,W,H);
+  currentPoints.clear();
+  return;
+ }
+ const reduced=reducedMotionMedia.matches;
+ currentPoints=currentProjection(currentLayer,coords,now-currentStart,reduced);
+ drawCurrentResearch(currentContext,currentLayer,currentPoints,id=>basePositions[nodeIndex.get(id)],
+  {mode,zoom,clock:now-currentStart,reduced,selected});
+}
+function currentRest(id){
+ return sourceView||lifePreviewEvent?null:currentLayer?.additions.get(id)?.rest;
 }
 function daySpan(date){if(!date||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date))return null;
  const start=Date.parse(date+'T00:00:00Z');if(!Number.isFinite(start))return null;
@@ -247,6 +317,11 @@ function boundPanToOrganism(requested,previous=lastSafePan){
  for(let i=0;i<nodes.length;i++){
   if(!focusIds.has(nodes[i].id))continue;
   const p=project(viewPositions[i]);
+  available.push([W*.5+(p[0]-center[0])*scale,H*.48-(p[1]-center[1])*scale]);
+ }
+ const currentFocus=currentRest(selected);
+ if(currentFocus){
+  const p=project(currentFocus);
   available.push([W*.5+(p[0]-center[0])*scale,H*.48-(p[1]-center[1])*scale]);
  }
  if(!available.length)return [0,0];
@@ -549,10 +624,11 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
   reframe();
   if(followSelected&&selected&&zoom>1){
    const focusIndex=nodeIndex.get(selected);
-   if(focusIndex!==undefined){
+   const focusRest=focusIndex===undefined?currentRest(selected):viewPositions[focusIndex];
+   if(focusRest){
     // Lock to the specimen's resting neighborhood, NOT to its moving pixel.
     // Its quiet independent optical drift remains visible inside the lens.
-    const pointed=coords(viewPositions[focusIndex]),aim=[W*.5,H*.46],ease=1-Math.exp(-dt/160);
+    const pointed=coords(focusRest),aim=[W*.5,H*.46],ease=1-Math.exp(-dt/160);
     pan=[pan[0]+(aim[0]-pointed[0])*ease,pan[1]+(aim[1]-pointed[1])*ease];
    }
   }
@@ -578,12 +654,12 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
   }else {lastSafePan=[...pan];panIntent=null;edgeReturnVelocity=[0,0];}
   if(sourceView){
    lastFrameScreenNodes=null;
-   const pos=viewPositions.map(coords);drawSourceReading();if(selected)positionCard(pos);
+   const pos=viewPositions.map(coords);drawSourceReading();drawCurrentLayer(now,pos);if(selected)positionCard(pos);
   }else{
-   const pos=positions(time);drawBackground(time,pos);drawLinks(pos,time);drawRelationFlow(pos,time);drawNodes(pos,time);drawLivedEvidenceMarks(pos,time);if(selected)positionCard(pos);
+   const pos=positions(time);drawBackground(time,pos);drawLinks(pos,time);drawRelationFlow(pos,time);drawNodes(pos,time);drawLivedEvidenceMarks(pos,time);drawCurrentLayer(now,pos);if(selected)positionCard(pos);
    lastFrameScreenNodes=pos.map((p,i)=>[nodes[i].id,Number(p[0].toFixed(4)),Number(p[1].toFixed(4))]);
   }
-  lastFrameRenderedAt=new Date().toISOString();lastFrameCamera={mode,angle,elevation,zoom,pan:[...pan],selectedId:selected};
+  lastFrameRenderedAt=new Date().toISOString();lastFrameCamera={mode,angle,elevation,zoom,pan:[...pan],selectedId:nodeMap.has(selected)?selected:null};
   announceFirstPaint();
   frames++;if(now-lastFpsAt>950){fps=Math.round(frames*1000/(now-lastFpsAt));lastFpsAt=now;frames=0;updateDebug();}
  }
@@ -593,12 +669,19 @@ function chooseMode(next){if(!['Whole','Growth','Movement'].includes(next))retur
  for(const b of document.querySelectorAll('#mode button'))b.setAttribute('aria-pressed',String(b.dataset.mode===mode));saveMemory();updateDebug();}
 function nearest(x,y){if(!ready)return null;const pos=sourceView?viewPositions.map(coords):positions(Date.now()/1000);let min=Infinity,best=null;
  for(let i=0;i<pos.length;i++){if(sourceView&&!sourceView.structure.projectedIds.has(nodes[i].id))continue;const p=pos[i],d=Math.hypot(p[0]-x,p[1]-y);if(d<min){min=d;best=nodes[i];}}
+ if(!sourceView&&!lifePreviewEvent)for(const [id,{point,growth}] of currentPoints){
+  if(growth<.25)continue;
+  const distance=Math.hypot(point[0]-x,point[1]-y);
+  if(distance<min){min=distance;best={id};}
+ }
  return min<cl(10*Math.sqrt(zoom/ZOOM_BASE),9,23)?best:null;
 }
-function locatorSVG(n){const position=viewPositions[nodeIndex.get(n.id)];const x=cl((project(position)[0]-center[0])/5+.5,0,1),y=cl(.5-(project(position)[1]-center[1])/5,0,1);
+function locatorSVG(n){const position=viewPositions[nodeIndex.get(n.id)]||currentRest(n.id);const x=cl((project(position)[0]-center[0])/5+.5,0,1),y=cl(.5-(project(position)[1]-center[1])/5,0,1);
  return `<svg viewBox="0 0 26 26" aria-hidden="true"><ellipse cx="13" cy="13" rx="10" ry="8" fill="none" stroke="#c4d7ca" stroke-width=".65"/><circle cx="${(3+x*20).toFixed(1)}" cy="${(4+y*18).toFixed(1)}" r="1.9" fill="#387c60"/><circle cx="13" cy="13" r="1" fill="#b4c6ba"/></svg>`;}
-function showCard(id){if(!id||!nodeMap.has(id)||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
- selected=id;const n=nodeMap.get(id),r=(sourceView?sourceView.structure.sourceRecords.get(id):null)||n.record,category=r?.kind||n.kind;
+function showCard(id){if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
+ selected=id;const n=nodeMap.get(id)||{id,record:currentResearch?.records.get(id)};
+ const r=(sourceView?sourceView.structure.sourceRecords.get(id):null)||
+  (!sourceView&&!lifePreviewEvent?currentResearch?.records.get(id):null)||n.record,category=r?.kind||n.kind;
  $('category').textContent=category==='exhibition'?'EXHIBITIONS':category.toUpperCase();
  $('cardTitle').textContent=r?.title||id;
  $('cardRole').textContent=roles[category]?.[0]||'Archive material';
@@ -606,8 +689,8 @@ function showCard(id){if(!id||!nodeMap.has(id)||(sourceView&&!sourceView.structu
  $('cardLink').target='_top';
  $('cardLink').onclick=()=>{saveMemory();};
  $('locator').innerHTML=locatorSVG(n);
- const actual=(sourceView?sourceView.structure.projectedEdges:links).filter(l=>l.from===id||l.to===id),rLinks=actual.slice(0,3).map(l=>{
-  const linkedId=l.from===id?l.to:l.from;const other=(sourceView?sourceView.structure.sourceRecords.get(linkedId):null)||nodeMap.get(linkedId)?.record;
+ const actual=(sourceView?sourceView.structure.projectedEdges:!lifePreviewEvent&&currentResearch?currentResearch.relations:links).filter(l=>l.from===id||l.to===id),rLinks=actual.slice(0,3).map(l=>{
+  const linkedId=l.from===id?l.to:l.from;const other=(sourceView?sourceView.structure.sourceRecords.get(linkedId):!lifePreviewEvent?currentResearch?.records.get(linkedId):null)||nodeMap.get(linkedId)?.record;
   return other?.path?`<a target="_top" href="${esc(other.path)}">${esc(other.title)}</a>`:'';
  }).filter(Boolean);
  $('cardConnected').innerHTML=actual.length?`${actual.length} documented relation${actual.length===1?'':'s'} · ${rLinks.join(' · ')}`:'No documented relations yet';
@@ -615,16 +698,18 @@ function showCard(id){if(!id||!nodeMap.has(id)||(sourceView&&!sourceView.structu
  $('card').style.display='block';document.body.classList.toggle('deep',zoom>=2);saveMemory();
 }
 function selectAndFollow(id,{magnify=true}={}){
- if(!id||!nodeMap.has(id)){showCard(null);return;}
+ if(!id||(!nodeMap.has(id)&&!currentRest(id))){showCard(null);return;}
  showCard(id);
  if(magnify&&zoom<1.65){
-  const projected=sourceView?coords(viewPositions[nodeIndex.get(id)]):positions(Date.now()/1000)[nodeIndex.get(id)];
+  const projected=currentRest(id)?coords(currentRest(id)):sourceView?coords(viewPositions[nodeIndex.get(id)]):positions(Date.now()/1000)[nodeIndex.get(id)];
   requestZoom(1.65,[projected[0],projected[1]],{keepFollow:true});
  }
  followSelected=zoom>1||zoomGoal>1;saveMemory();
 }
-function positionCard(pos){const i=nodes.findIndex(n=>n.id===selected);if(i<0)return;
- const p=followSelected&&zoom>=8?coords(viewPositions[i]):pos[i],card=$('card'),width=card.offsetWidth||160,height=card.offsetHeight||100;
+function positionCard(pos){const i=nodeIndex.get(selected);
+ const p=i===undefined?currentPoints.get(selected)?.point:followSelected&&zoom>=8?coords(viewPositions[i]):pos[i];
+ if(!p)return;
+ const card=$('card'),width=card.offsetWidth||160,height=card.offsetHeight||100;
  const x=cl(p[0]+12,8,W-width-8),y=cl(p[1]+12,108,H-height-155);
  card.style.left=x+'px';card.style.top=y+'px';document.body.classList.toggle('deep',zoom>=2);
 }
@@ -632,7 +717,8 @@ function pointerHere(e){const rect=canvas.getBoundingClientRect();return [e.clie
 function anchorPoint(){return lastPointer&&lastPointer.every(Number.isFinite)?lastPointer:[W*.5,H*.48];}
 function controlAnchor(){
  const index=selected?nodeIndex.get(selected):undefined;
- return index===undefined?[W*.5,H*.48]:coords(viewPositions[index]);
+ const rest=index===undefined?currentRest(selected):viewPositions[index];
+ return rest?coords(rest):[W*.5,H*.48];
 }
 function setZoom(value,anchor=anchorPoint(),{persist=true}={}){
  zoomGoal=null;zoomAnchor=null;
@@ -742,11 +828,7 @@ function setHistoryTab(next){
  saveMemory();
 }
 function setHistoryOpen(open){
- if(open && matchMedia('(max-width:650px)').matches){
-  if($('debugPanel').contains(document.activeElement))document.activeElement.blur();
-  document.body.classList.remove('debug','info-open');
-  $('about').setAttribute('aria-expanded','false');
- }
+ if(open && matchMedia('(max-width:650px)').matches)document.dispatchEvent(new Event('murmurgrove:close-viewer-panel'));
  historyOpen=Boolean(open);document.body.classList.toggle('history-open',historyOpen);
  $('history').setAttribute('aria-expanded',String(historyOpen));
  if(historyOpen)setHistoryTab(historyTab);
@@ -1043,18 +1125,31 @@ function renderLifeReadings(){
  }
 }
 function updateDebug(){
- $('status').textContent=`${fps} FPS · ${links.length} verified metadata links`;
- $('debugText').innerHTML=`Archive baseline: <strong>181</strong> records<br>Visible records: <strong>174</strong><br>Documented links: <strong>${links.length}</strong><br>Independent records: <strong>${isolated.size}</strong><br>Attested lived acts: <strong>${livedEvidence.length}</strong><br>Activated Writing fibers: <strong>0</strong><br>Mature cores: <strong>0</strong><br><br><strong>Explore</strong><br>Drag to orbit at overview scale.<br>Zoom toward the pointer with the wheel or trackpad.<br>Drag to pan when magnified.<br>Shift + drag or right drag to orbit at any scale.<br>On a phone at the 65% overview, drag with one finger to orbit and the body stays centered. Above 65%, one finger pans; pinch to zoom. Hold one finger and move the other to orbit.<br>Select a particle to focus, then follow its card title to read its archive source.`;
+ $('status').textContent=fps+' FPS · '+links.length+' baseline metadata links';
+ const current=currentResearch
+  ? 'Current public archive: <strong>'+currentResearch.records.size+'</strong> records<br>Current documented relations: <strong>'+
+    currentResearch.relations.length+'</strong><br>New positioned records: <strong>'+currentLayer.additions.size+
+    '</strong><br>Awaiting a spatial anchor: <strong>'+currentLayer.unplaced+'</strong><br><br>'
+  : 'Current public archive unavailable; showing the verified baseline.<br><br>';
+ $('debugStats').innerHTML=current+'Historical T₀ baseline: <strong>'+baseline.records.length+
+  '</strong> records<br>Baseline visible records: <strong>'+nodes.length+'</strong><br>Baseline documented links: <strong>'+links.length+
+  '</strong><br>Baseline independent records: <strong>'+isolated.size+'</strong><br>Attested lived acts: <strong>'+livedEvidence.length+
+  '</strong><br>Activated Writing fibers: <strong>'+snapshot.fibers.length+'</strong><br>Mature cores: <strong>'+snapshot.propulsionCores.length+'</strong><br><br>';
 }
 
 function resize(){const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+ currentCanvas.width=canvas.width;currentCanvas.height=canvas.height;currentContext?.setTransform(dpr,0,0,dpr,0,0);
  if(pendingPanNorm){pan=[pendingPanNorm[0]*W,pendingPanNorm[1]*H];pendingPanNorm=null;}
  else if(oldW>1&&oldH>1)pan=[pan[0]*W/oldW,pan[1]*H/oldH];
  if(isMobileOverview())pan=[0,0];
  panIntent=null;edgeReturnVelocity=[0,0];
  if(ready)reframe();}
 function initUI(){
+ const dismissIntro=()=>{document.body.classList.remove('hint');pendingSelection=null;pendingFollow=false;};
+ window.addEventListener('pointerdown',dismissIntro,{capture:true});
+ window.addEventListener('wheel',dismissIntro,{capture:true,passive:true});
+ window.addEventListener('keydown',dismissIntro,{capture:true});
  // Capture *before* individual controls and pointer handlers so users take
  // over immediately, without consuming the click, tap, wheel or drag itself.
  window.addEventListener('pointerdown',cancelEntrance,true);
@@ -1078,32 +1173,9 @@ function initUI(){
  $('frameFullClose').addEventListener('click',()=>$('frameFull').close());
  $('sourceReadingExit').addEventListener('click',exitSourceReading);
   $('historyClose').addEventListener('click',()=>setHistoryOpen(false));
- // The top menu invites archive searching. The bottom-right information
- // control must open the explanation itself, not a collapsed search footnote.
- // Search remains below the explanation for the embedded desktop homepage.
- const finderPanel=$('debugPanel');
- const aboutDetails=finderPanel.querySelector('.finder-details');
- const finderEyebrow=finderPanel.querySelector('.finder-eyebrow');
- const toggleViewerPanel=(kind)=>{
-  const info=kind==='info';
-  const isOpen=document.body.classList.contains('debug');
-  const isInfo=document.body.classList.contains('info-open');
-  const opening=!(isOpen && isInfo===info);
-  if(opening && matchMedia('(max-width:650px)').matches && historyOpen)setHistoryOpen(false);
-  document.body.classList.toggle('debug',opening);
-  document.body.classList.toggle('info-open',opening && info);
-  $('about').setAttribute('aria-expanded',String(opening && info));
-  $('menu').setAttribute('aria-expanded',String(opening && !info));
-  if(opening){
-   finderPanel.setAttribute('aria-label',info?'About this organism and archive search':'Explore the archive');
-   finderEyebrow.textContent=info?'ABOUT / ORGANISM':'EXPLORE / ARCHIVE';
-   if(aboutDetails)aboutDetails.open=info;
-   if(info)finderPanel.scrollTop=0;
-  }
- };
- $('menu').addEventListener('click',()=>toggleViewerPanel('search'));
- $('about').addEventListener('click',()=>toggleViewerPanel('info'));
- $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);document.body.classList.remove('debug','info-open');});
+ $('recordSelect').addEventListener('change',e=>{const id=e.target.value;
+  if(currentLayer?.additions.has(id)){if(sourceView)exitSourceReading();if(lifePreviewEvent)exitLifePreview();}
+  selectAndFollow(id);document.dispatchEvent(new Event('murmurgrove:close-viewer-panel'));});
  function cancelMomentum(){velocityPan=[0,0];velocityAngle=0;velocityElevation=0;edgeReturnVelocity=[0,0];}
  function gestureHintDismiss(){document.body.classList.remove('hint');}
  function pointerLocal(clientX,clientY){const rect=canvas.getBoundingClientRect();return [clientX-rect.left,clientY-rect.top];}
@@ -1236,7 +1308,7 @@ function initUI(){
  canvas.addEventListener('dblclick',e=>{e.preventDefault();gestureHintDismiss();lastPointer=pointerHere(e);
   requestZoom((zoomGoal??zoom)<2?2:(zoomGoal??zoom)*1.45,lastPointer);});
  window.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){setHistoryOpen(false);showCard(null);document.body.classList.remove('debug','info-open');}
+  if(e.key==='Escape'){setHistoryOpen(false);showCard(null);}
   if(e.key.toLowerCase()==='r'&&!e.target.closest('input,textarea,select')){
    angle=.63;elevation=.20;userFramedPan=false;followSelected=false;cancelMomentum();showCard(null);setZoom(DEFAULT_ZOOM,[W*.5,H*.48]);
   }
@@ -1246,6 +1318,10 @@ function initUI(){
  // Never force it back to the opening position or replay the invitation.
  window.addEventListener('pageshow',e=>{if(e.persisted&&ready){resize();syncZoomDisplay();}});
 }
+document.addEventListener('murmurgrove:open-viewer-panel',()=>{
+ if(historyOpen && matchMedia('(max-width:650px)').matches)setHistoryOpen(false);
+});
+
 async function init(){
  try{
   [baseline,nav,snapshot,manifest,chronicleIndex,opticalFrameIndex,livedIndex,lifeStateIndex,withdrawalIndex]=await Promise.all([...['known-data-baseline.v1','navigation','T0','manifest'].map(loadJSON),loadChronicle(),loadOpticalFrameIndex(),loadLivedIndex(),loadLifeCheckpointIndex(),loadWithdrawalIndex()]);
@@ -1264,7 +1340,8 @@ async function init(){
   // Read the last view BEFORE chooseMode/setZoom can save and overwrite it.
   // On the very first entry, play the guided overview once, even if a stale
   // camera happened to be stored by an earlier version of the site.
-  if(!hasSeenEntrance()){
+  const locate=requestedLocation(),firstVisit=!hasSeenEntrance();
+  if(firstVisit&&!locate){
    prepareEntrance();markEntranceSeen();
   }else if(!storedMemory()){
    // A return without a valid saved view gets a steady centered view, NOT
@@ -1272,17 +1349,46 @@ async function init(){
    entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
    elevation=ENTRANCE_TARGET_ELEVATION;pan=[0,0];mode='Whole';
   }
+  if(firstVisit)markEntranceSeen();
+  // A panel opened during loading takes priority over remembered mobile history.
+  if(historyOpen && matchMedia('(max-width:650px)').matches && document.body.classList.contains('debug'))historyOpen=false;
   reframe();initUI();chooseMode(mode);setZoom(zoom);
   if(selected)showCard(selected);
   if(historyOpen)setHistoryOpen(true);
-  const select=$('recordSelect'),livedSelect=$('livedRecord');for(const r of records){const option=document.createElement('option');option.value=r.id;option.textContent=`${r.kind} · ${r.title}`;select.append(option);livedSelect.append(option.cloneNode(true));}
+  const livedSelect=$('livedRecord');
+ for(const r of records)livedSelect.append(new Option(r.kind+' · '+r.title,r.id));
+ fillFinder(new Map(records.map(record=>[record.id,record])));
+ refreshCurrentResearch().then(()=>{
+  if(locate&&(nodeMap.has(locate.id)||currentRest(locate.id))){
+   pendingSelection=null;pendingFollow=false;cancelEntrance();
+   if(historyOpen)setHistoryOpen(false);
+   selectAndFollow(locate.id);
+   try{const url=new URL(locate.owner.location.href);
+    if(url.searchParams.get('locate')===locate.id){url.searchParams.delete('locate');locate.owner.history.replaceState(locate.owner.history.state,'',url.href);}
+   }catch{}
+  }else if(locate){
+   // The public projection may have changed since the archive page was built.
+   // Never invent a point. Open the existing finder to expose real status.
+   const record=currentResearch?.records.get(locate.id);
+   if(record){$('about').click();$('recordQuery').value=record.title;$('recordQuery').dispatchEvent(new Event('input',{bubbles:true}));}
+  }else if(pendingSelection&&currentResearch){
+   const id=pendingSelection,follow=pendingFollow;pendingSelection=null;pendingFollow=false;
+   if(currentRest(id)){showCard(id);followSelected=Boolean(follow&&zoom>1);}
+   saveMemory();
+  }
+ });
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshCurrentResearch();});
+ setInterval(()=>{if(!document.hidden)refreshCurrentResearch();},60_000);
   $('loading').style.display='none';lastFpsAt=performance.now();requestAnimationFrame(render);
-  if(!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
+  if(firstVisit&&!locate&&!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
   window.__MURMUR_REAL__={baselineHash:BASELINE_HASH,nodes:174,metadataLinks:158,isolatedRecords:20,interiorQuietDisplayPositions:20,zoomMaximum:ZOOM_MAX,zoomMinimum:ZOOM_MIN,zoomDefault:DEFAULT_ZOOM,get entrance(){return {active:!!entrance,holdMs:ENTRANCE_HOLD_MS,durationMs:ENTRANCE_MOVE_MS};},get isMobileOverview(){return isMobileOverview();},
     get camera(){return {angle,elevation,zoom,pan:[...pan],selected,followSelected};},
     get screenNodes(){return lastFrameScreenNodes?.map(x=>[x[0],x[1],x[2]])||[];},
     approvedLifeEvents:livedEvidence.length,authoredEvidenceTraces:livedTraces.size,activatedWritingFibers:0,matureCores:0,lifeRuleVersion:LIFE_RULE_VERSION,derivedLifeEvents:lifeNowState.authoredEventsUsed,
     get lifeReading(){return {asOf:lifeActiveState?.asOf,eventsUsed:lifeActiveState?.authoredEventsUsed||0,activeRecords:lifeActiveState?.activeRecords||0,sedimentaryRecords:lifeActiveState?.sedimentaryRecords||0,previewIsRuleReconstruction:Boolean(lifePreviewEvent),activatedFibers:0,matureCores:0};},datedExhibitionRecords:observationLedger.length,observationalMonths:observationGroups.length,chronicleVersions:chronicleIndex.entries.length,recordedOpticalFrames:opticalFrameIndex.entries.length,livedActs:livedEvidence.length,withdrawnActs:withdrawnIds.size,sealedDerivedLifeStates:lifeStateIndex.entries.filter(e=>!lifeCaptureIncludesWithdrawal(e.sourceEventHead,livedIndex,withdrawalIndex,e.excludedEventIds)).length,verifiedHistoricalMorphologies:0,
+    get currentResearch(){return currentResearch&&{records:currentResearch.records.size,relations:currentResearch.relations.length,
+      positioned:[...currentLayer.additions.keys()],unplaced:currentLayer.unplaced,mode,
+      visiblePositions:[...currentPoints].filter(([,value])=>value.growth>0).map(([id,{point}])=>[id,...point.slice(0,2)])};},
     get sourceReading(){return sourceView?{mode:SOURCE_READING_MODE,id:sourceView.entry.id,drawableNodes:sourceView.structure.drawableCount,drawableEdges:sourceView.structure.drawableEdges,unplaced:sourceView.structure.unplaced.length,geometryWasReused:true}:null;},exhibitionKernelDays:13,opticalMovementRate:MOVEMENT_RATE,opticalBreathingRate:BREATH_RATE,source:'real murmurgrove baseline; historical physiology unknown',get fps(){return fps;}};
  }catch(e){$('loading').style.display='none';$('loadingError').style.display='block';$('loadingError').textContent='Integrity check stopped rendering: '+e.message;console.error(e);}
 }

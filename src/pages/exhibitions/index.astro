@@ -17,7 +17,6 @@ const lastDate = calendarDates[0] || '2026-01-01';
     <section class="exhibition-calendar" aria-label="Browse exhibitions by date">
       <div class="exhibition-calendar-heading">
         <div>
-          <p class="eyebrow">BY DATE</p>
           <div class="exhibition-month-pickers" aria-label="Choose calendar month and year">
             <div class="calendar-picker" data-picker="month">
               <button type="button" class="calendar-picker-trigger" id="calendar-month-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="calendar-month-menu">November <span aria-hidden="true">⌄</span></button>
@@ -41,14 +40,13 @@ const lastDate = calendarDates[0] || '2026-01-01';
       <div class="exhibition-weekdays" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
       <div id="exhibition-calendar-grid" class="exhibition-calendar-grid" aria-label="Dates with exhibition records"></div>
       <div class="exhibition-calendar-footer">
-        <p id="exhibition-date-status" role="status" aria-live="polite">Select a marked date to view exhibitions.</p>
+        <p id="exhibition-date-status" class="sr-only" role="status" aria-live="polite">Select a marked date to view exhibitions.</p>
         <button id="exhibition-date-clear" type="button" hidden>Clear selection <span aria-hidden="true">×</span></button>
       </div>
     </section>
 
     <section class="exhibition-day-preview" aria-labelledby="exhibition-preview-heading">
       <div class="exhibition-preview-heading">
-        <p class="eyebrow">SELECTED DATE</p>
         <h2 id="exhibition-preview-heading" aria-live="polite">{lastDate.replaceAll('-', '.')}</h2>
       </div>
       <p id="exhibition-preview-count" class="exhibition-preview-count" aria-live="polite"></p>
@@ -63,16 +61,12 @@ const lastDate = calendarDates[0] || '2026-01-01';
     </div>
 
     <div class="exhibition-index-divider" aria-hidden="true"></div>
-    <div class="exhibition-index-heading">
-      <h2>All exhibitions</h2>
-      <p>Browse the full archive by region and date order.</p>
-    </div>
     <div class="filters exhibition-filters">
       <div class="filter-languages" aria-label="Region filters">
         <button type="button" data-region="all" aria-pressed="true">All</button>
         {regions.map(r=><button type="button" data-region={r} aria-pressed="false">{r}</button>)}
       </div>
-      <label class="sort-label">Sort <select id="date-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
+      <label class="sort-label"><span class="sr-only">Sort by visit date</span><select id="date-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
     </div>
     <p class="exhibition-result-count" id="exhibition-result-count" aria-live="polite"></p>
     <ol class="archive-list" id="archive-list">
@@ -137,6 +131,34 @@ const lastDate = calendarDates[0] || '2026-01-01';
   let selectedRegion='all';
   let selectedDate:string|null=config.lastDate||null;
   let currentMonth=config.lastDate.slice(0,7);
+  let saved=history.state?.murmurgroveExhibitions;
+  // The explicit back link is a new navigation, unlike browser Back.
+  // Restore the same index state only when returning from a record.
+  if(!saved&&document.referrer){
+    try{
+      const ref=new URL(document.referrer);
+      if(ref.origin===location.origin&&/^\/exhibitions\/[^/]+\/$/.test(ref.pathname)){
+        saved=JSON.parse(sessionStorage.getItem('murmurgrove.exhibitions.index.v1')||'null');
+        if(saved)history.replaceState({...history.state,murmurgroveExhibitions:saved},'');
+      }
+    }catch{}
+  }
+  if(saved&&typeof saved==='object'){
+    if(regionBtns.some(b=>b.dataset.region===saved.region))selectedRegion=saved.region;
+    if(saved.date===null||dateCounts.has(saved.date))selectedDate=saved.date;
+    if(typeof saved.month==='string'&&/^\d{4}-\d{2}$/.test(saved.month)&&saved.month>=config.firstDate.slice(0,7)&&saved.month<=config.lastDate.slice(0,7))currentMonth=saved.month;
+    if(sorter&&['newest','oldest'].includes(saved.sort))sorter.value=saved.sort;
+    regionBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.region===selectedRegion)));
+  }
+  function rememberIndex(){
+    const state={region:selectedRegion,date:selectedDate,month:currentMonth,sort:sorter?.value||'newest',calendarOpen:document.getElementById('mobile-calendar-toggle')?.getAttribute('aria-expanded')==='true',scroll:window.scrollY};
+    try{history.replaceState({...history.state,murmurgroveExhibitions:state},'');}catch{}
+    try{sessionStorage.setItem('murmurgrove.exhibitions.index.v1',JSON.stringify(state));}catch{}
+  }
+  window.addEventListener('pagehide',rememberIndex);
+  document.querySelector('.exhibition-index')?.addEventListener('click',event=>{
+    if(event.target instanceof Element&&event.target.closest('a[href]'))rememberIndex();
+  });
   const firstMonth=config.firstDate.slice(0,7);
   const lastMonth=config.lastDate.slice(0,7);
   const monthNames=Array.from({length:12},(_,i)=>new Intl.DateTimeFormat('en',{month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(2026,i,1))));
@@ -205,11 +227,24 @@ const lastDate = calendarDates[0] || '2026-01-01';
   };
   function updateList(){
     const visible=rows.filter(row=>selectedRegion==='all'||row.dataset.region===selectedRegion);
+    document.querySelectorAll(".archive-year-divider").forEach(el=>el.remove());
+    list?.classList.toggle("region-selected",selectedRegion!=="all");
     rows.forEach(row=>{row.hidden=!visible.includes(row)});
     visible.sort((a,b)=>{
       const cmp=(a.dataset.date||'').localeCompare(b.dataset.date||'');
       return sorter?.value==='oldest'?cmp:-cmp;
-    }).forEach(row=>list?.appendChild(row));
+    });
+    const multipleYears=new Set(visible.map(row=>row.dataset.date?.slice(0,4))).size>1;
+    let lastYear='';
+    for(const row of visible){
+      const year=row.dataset.date?.slice(0,4)||'';
+      if(multipleYears&&year!==lastYear&&list){
+        const marker=document.createElement('li');
+        marker.className='archive-year-divider';marker.textContent=year;
+        marker.setAttribute('aria-label','Year '+year);list.append(marker);lastYear=year;
+      }
+      list?.append(row);
+    }
     if(empty) empty.hidden=visible.length!==0;
     if(results) results.textContent=`${visible.length} ${visible.length===1?'record':'records'}`;
   }
@@ -271,11 +306,17 @@ const lastDate = calendarDates[0] || '2026-01-01';
   }));
   sorter?.addEventListener('change',updateList);
   renderCalendar();updateList();updatePreview();
+  if(saved&&Number.isFinite(saved.scroll))requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,saved.scroll)));
 </script>
 
 <script>
   const dateToggle = document.getElementById('mobile-calendar-toggle');
   const dateContent = document.getElementById('mobile-calendar-content');
+  if(history.state?.murmurgroveExhibitions?.calendarOpen){
+    dateToggle?.setAttribute('aria-expanded','true');
+    dateContent?.classList.add('mobile-calendar-open');
+    const sign=dateToggle?.querySelector('span');if(sign)sign.textContent='−';
+  }
   dateToggle?.addEventListener('click', () => {
     const open = dateToggle.getAttribute('aria-expanded') !== 'true';
     dateToggle.setAttribute('aria-expanded', String(open));
@@ -284,3 +325,10 @@ const lastDate = calendarDates[0] || '2026-01-01';
     if (sign) sign.textContent = open ? '−' : '+';
   });
 </script>
+
+<style is:global>
+  .exhibition-index #archive-list.region-selected .entry-type{display:none}
+  .exhibition-index #archive-list.region-selected .archive-entry{grid-template-columns:118px minmax(0,1fr)}
+  .exhibition-index .archive-year-divider{list-style:none;color:var(--quiet);font-size:13px;letter-spacing:.04em;padding:24px 0 9px}
+  @media(max-width:650px){.exhibition-index #archive-list.region-selected .archive-entry{grid-template-columns:83px minmax(0,1fr)}}
+</style>

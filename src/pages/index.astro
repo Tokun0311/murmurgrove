@@ -6,7 +6,7 @@ import Base from '../layouts/Base.astro';
     <iframe
       class="grove-embedded-view"
       id="murmurgrove-view"
-      src="/murmurgrove/organism/index.html?embedded=1"
+      src="/murmurgrove/organism/?embedded=1&amp;panel=2&amp;viewport=3"
       title="murmurgrove interactive organism and research history"
       loading="eager"
       referrerpolicy="same-origin"
@@ -25,6 +25,8 @@ import Base from '../layouts/Base.astro';
   // the organism without changing the global header or cursor implementation.
   const organismFrame = document.getElementById('murmurgrove-view');
   const organismHome = document.querySelector('.grove-home');
+  // Controls are native buttons inside the viewer. Their painted glyphs and
+  // pointer targets share one document; do not create parent hit proxies.
   let revealTimeout;
   organismFrame?.addEventListener('load', () => {
     // If verification fails, reveal the iframe's own readable error panel.
@@ -53,8 +55,13 @@ import Base from '../layouts/Base.astro';
 <style>
   /* Only the immersive HOME is full-viewport; Base.astro remains identical
      to all murmurgrove pages, including its logo, rule and both nav systems. */
+  /* The archive reserves a scrollbar gutter globally. The immersive home
+     has no scrolling: its iframe, browser hit testing and cursor canvas
+     must share the same viewport, including on classic-scrollbar desktops. */
+  :global(html:has(.grove-home)){scrollbar-gutter:auto;overflow:hidden}
+  :global(body:has(.grove-home)){overflow:hidden}
   .grove-home{position:fixed;inset:0;z-index:0;overflow:hidden;background:#fafbf8;color-scheme:light}
-  .grove-embedded-view{display:block;width:100%;height:100%;height:100dvh;border:0;background:#fafbf8;color-scheme:light;opacity:0;transition:opacity 180ms ease-out}
+  .grove-embedded-view{display:block;width:100%;height:100%;border:0;background:#fafbf8;color-scheme:light;opacity:0;transition:opacity 180ms ease-out}
   .grove-home.is-ready .grove-embedded-view{opacity:1}
   @media(prefers-reduced-motion:reduce){.grove-embedded-view{scroll-behavior:auto;transition:none}}
 </style>
