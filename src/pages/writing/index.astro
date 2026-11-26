@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 const entries=(await getCollection('entries',({data})=>!data.draft)).sort((a,b)=>b.data.date.getTime()-a.data.date.getTime());
 ---
-<Base title="Writing | TOW ARCHIVE">
+<Base title="Writing | murmurgrove" description="Read writing and research notes from the murmurgrove archive.">
   <section class="archive">
     <h1 class="section-title">Writing</h1>
     {entries.length===0?<p class="section-lead">No writing published yet.</p>:<ul class="archive-list">

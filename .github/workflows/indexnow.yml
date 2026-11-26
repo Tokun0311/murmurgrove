@@ -1,0 +1,77 @@
+name: Notify IndexNow after production publishes
+on:
+  check_run:
+    types: [completed]
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Verify production and list changes without submitting
+        type: boolean
+        default: true
+      bootstrap:
+        description: Allow an initial full submission if no previous state exists
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: murmurgrove-production-indexnow
+  cancel-in-progress: false
+
+jobs:
+  indexnow:
+    if: >-
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      (github.event_name != 'check_run' ||
+        (github.event.check_run.app.slug == 'cloudflare-workers-and-pages' &&
+         github.event.check_run.name == 'Cloudflare Pages' &&
+         github.event.check_run.conclusion == 'success' &&
+         github.event.check_run.head_sha == github.sha))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      STATE_ARTIFACT: murmurgrove-production-indexnow-state-v1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --ignore-scripts
+      - name: Restore the latest accepted production manifest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          INDEXNOW_STATE="$RUNNER_TEMP/indexnow/indexnow-state.json"
+          printf 'INDEXNOW_STATE=%s\n' "$INDEXNOW_STATE" >> "$GITHUB_ENV"
+          mkdir -p "$(dirname "$INDEXNOW_STATE")"
+          artifact_id=$(gh api -X GET "repos/$GITHUB_REPOSITORY/actions/artifacts" \
+            -f name="$STATE_ARTIFACT" -F per_page=100 \
+            --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at, .id) | last | .id // empty')
+          if [ -n "$artifact_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" > "$RUNNER_TEMP/indexnow-state.zip"
+            unzip -p "$RUNNER_TEMP/indexnow-state.zip" indexnow-state.json > "$INDEXNOW_STATE"
+          fi
+      - name: Verify production and notify IndexNow
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          BOOTSTRAP: ${{ inputs.bootstrap }}
+          INDEXNOW_EXPECTED_COMMIT: ${{ github.event.check_run.head_sha }}
+        run: |
+          args=()
+          if [ "$DRY_RUN" = true ]; then args+=(--dry-run); fi
+          if [ "$BOOTSTRAP" = true ]; then args+=(--bootstrap); fi
+          node scripts/submit-indexnow.mjs "${args[@]}"
+      - uses: actions/upload-artifact@v4
+        if: success() && inputs.dry_run != true
+        with:
+          name: ${{ env.STATE_ARTIFACT }}
+          path: ${{ env.INDEXNOW_STATE }}
+          if-no-files-found: error
+          retention-days: 30

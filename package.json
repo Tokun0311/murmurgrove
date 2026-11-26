@@ -10,6 +10,7 @@
     "test:sonic": "node --experimental-strip-types tests/sonic-topology.test.mjs"
   },
   "dependencies": {
-    "astro": "^5.16.0"
+    "astro": "^5.16.0",
+    "parse5": "8.1.1"
   }
 }

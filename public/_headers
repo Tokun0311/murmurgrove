@@ -1,0 +1,11 @@
+/indexnow-manifest.json
+  Cache-Control: no-cache
+  X-Robots-Tag: noindex
+/murmurgrove/current-graph.json
+  X-Robots-Tag: noindex
+/murmurgrove/history-index.json
+  X-Robots-Tag: noindex
+/murmurgrove/history/*
+  X-Robots-Tag: noindex
+/murmurgrove/organism/data/*
+  X-Robots-Tag: noindex
