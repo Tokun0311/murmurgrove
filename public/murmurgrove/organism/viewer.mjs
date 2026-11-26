@@ -742,11 +742,7 @@ function setHistoryTab(next){
  saveMemory();
 }
 function setHistoryOpen(open){
- if(open && matchMedia('(max-width:650px)').matches){
-  if($('debugPanel').contains(document.activeElement))document.activeElement.blur();
-  document.body.classList.remove('debug','info-open');
-  $('about').setAttribute('aria-expanded','false');
- }
+ if(open && matchMedia('(max-width:650px)').matches)setViewerPanel(null);
  historyOpen=Boolean(open);document.body.classList.toggle('history-open',historyOpen);
  $('history').setAttribute('aria-expanded',String(historyOpen));
  if(historyOpen)setHistoryTab(historyTab);
@@ -1078,32 +1074,7 @@ function initUI(){
  $('frameFullClose').addEventListener('click',()=>$('frameFull').close());
  $('sourceReadingExit').addEventListener('click',exitSourceReading);
   $('historyClose').addEventListener('click',()=>setHistoryOpen(false));
- // The top menu invites archive searching. The bottom-right information
- // control must open the explanation itself, not a collapsed search footnote.
- // Search remains below the explanation for the embedded desktop homepage.
- const finderPanel=$('debugPanel');
- const aboutDetails=finderPanel.querySelector('.finder-details');
- const finderEyebrow=finderPanel.querySelector('.finder-eyebrow');
- const toggleViewerPanel=(kind)=>{
-  const info=kind==='info';
-  const isOpen=document.body.classList.contains('debug');
-  const isInfo=document.body.classList.contains('info-open');
-  const opening=!(isOpen && isInfo===info);
-  if(opening && matchMedia('(max-width:650px)').matches && historyOpen)setHistoryOpen(false);
-  document.body.classList.toggle('debug',opening);
-  document.body.classList.toggle('info-open',opening && info);
-  $('about').setAttribute('aria-expanded',String(opening && info));
-  $('menu').setAttribute('aria-expanded',String(opening && !info));
-  if(opening){
-   finderPanel.setAttribute('aria-label',info?'About this organism and archive search':'Explore the archive');
-   finderEyebrow.textContent=info?'ABOUT / ORGANISM':'EXPLORE / ARCHIVE';
-   if(aboutDetails)aboutDetails.open=info;
-   if(info)finderPanel.scrollTop=0;
-  }
- };
- $('menu').addEventListener('click',()=>toggleViewerPanel('search'));
- $('about').addEventListener('click',()=>toggleViewerPanel('info'));
- $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);document.body.classList.remove('debug','info-open');});
+ $('recordSelect').addEventListener('change',e=>{selectAndFollow(e.target.value);setViewerPanel(null);});
  function cancelMomentum(){velocityPan=[0,0];velocityAngle=0;velocityElevation=0;edgeReturnVelocity=[0,0];}
  function gestureHintDismiss(){document.body.classList.remove('hint');}
  function pointerLocal(clientX,clientY){const rect=canvas.getBoundingClientRect();return [clientX-rect.left,clientY-rect.top];}
@@ -1236,7 +1207,7 @@ function initUI(){
  canvas.addEventListener('dblclick',e=>{e.preventDefault();gestureHintDismiss();lastPointer=pointerHere(e);
   requestZoom((zoomGoal??zoom)<2?2:(zoomGoal??zoom)*1.45,lastPointer);});
  window.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){setHistoryOpen(false);showCard(null);document.body.classList.remove('debug','info-open');}
+  if(e.key==='Escape'){setHistoryOpen(false);showCard(null);}
   if(e.key.toLowerCase()==='r'&&!e.target.closest('input,textarea,select')){
    angle=.63;elevation=.20;userFramedPan=false;followSelected=false;cancelMomentum();showCard(null);setZoom(DEFAULT_ZOOM,[W*.5,H*.48]);
   }
@@ -1246,6 +1217,44 @@ function initUI(){
  // Never force it back to the opening position or replay the invitation.
  window.addEventListener('pageshow',e=>{if(e.persisted&&ready){resize();syncZoomDisplay();}});
 }
+function setViewerPanel(kind){
+ const panel=$('debugPanel');
+ const info=kind==='info';
+ if(!kind && panel.contains(document.activeElement))document.activeElement.blur();
+ document.body.classList.toggle('debug',Boolean(kind));
+ document.body.classList.toggle('info-open',info);
+ $('about').setAttribute('aria-expanded',String(info));
+ $('menu').setAttribute('aria-expanded',String(kind==='search'));
+ if(!kind)return;
+ panel.setAttribute('aria-label',info?'About this organism and archive search':'Explore the archive');
+ panel.querySelector('.finder-eyebrow').textContent=info?'ABOUT / ORGANISM':'EXPLORE / ARCHIVE';
+ panel.querySelector('.finder-details').open=info;
+ if(info)panel.scrollTop=0;
+}
+
+function toggleViewerPanel(kind){
+ const isOpen=document.body.classList.contains('debug');
+ const isInfo=document.body.classList.contains('info-open');
+ if(isOpen && isInfo===(kind==='info')){
+  setViewerPanel(null);
+  return;
+ }
+ if(matchMedia('(max-width:650px)').matches && historyOpen)setHistoryOpen(false);
+ setViewerPanel(kind);
+}
+
+// The panel controls are available while the organism evidence loads.
+$('menu').addEventListener('click',()=>toggleViewerPanel('search'));
+$('about').addEventListener('click',()=>toggleViewerPanel('info'));
+$('finderClose').addEventListener('click',()=>{
+ const opener=document.body.classList.contains('info-open')?'about':'menu';
+ setViewerPanel(null);
+ $(opener).focus({preventScroll:true});
+});
+window.addEventListener('keydown',e=>{
+ if(e.key==='Escape' && document.body.classList.contains('debug'))setViewerPanel(null);
+});
+
 async function init(){
  try{
   [baseline,nav,snapshot,manifest,chronicleIndex,opticalFrameIndex,livedIndex,lifeStateIndex,withdrawalIndex]=await Promise.all([...['known-data-baseline.v1','navigation','T0','manifest'].map(loadJSON),loadChronicle(),loadOpticalFrameIndex(),loadLivedIndex(),loadLifeCheckpointIndex(),loadWithdrawalIndex()]);
@@ -1272,6 +1281,8 @@ async function init(){
    entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
    elevation=ENTRANCE_TARGET_ELEVATION;pan=[0,0];mode='Whole';
   }
+  // A panel opened during loading takes priority over remembered mobile history.
+  if(historyOpen && matchMedia('(max-width:650px)').matches && document.body.classList.contains('debug'))historyOpen=false;
   reframe();initUI();chooseMode(mode);setZoom(zoom);
   if(selected)showCard(selected);
   if(historyOpen)setHistoryOpen(true);

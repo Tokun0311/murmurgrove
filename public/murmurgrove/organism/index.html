@@ -408,12 +408,12 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>
-<header><div class="inner"><a class="name" href="/">murmurgrove</a><button id="menu" class="menu" aria-label="Viewer information" title="Viewer information"><span></span><span></span><span></span></button></div><div class="rule"></div></header>
+<header><div class="inner"><a class="name" href="/">murmurgrove</a><button id="menu" class="menu" aria-label="Viewer information" aria-controls="debugPanel" aria-expanded="false" title="Viewer information"><span></span><span></span><span></span></button></div><div class="rule"></div></header>
 <div id="loading">Verifying archive integrity…</div>
 <div id="card"><div class="top"><span id="category">CONCEPTS</span><button class="close" id="closeCard" aria-label="Close card">×</button></div><div class="detail"><div><a id="cardLink" class="card-link" href="#"><div class="card-title" id="cardTitle"></div></a><div class="role" id="cardRole"></div></div><button id="locator" class="locator" aria-label="Return to the full organism" title="Return to full view"></button></div><div class="connected" id="cardConnected"></div></div>
 <div class="glass" id="mode" role="group" aria-label="Choose a viewing lens"><button aria-pressed="true" data-mode="Whole" aria-label="Whole view" title="Whole">◌</button><button aria-pressed="false" data-mode="Growth" aria-label="Growth view" title="Growth">⋰</button><button aria-pressed="false" data-mode="Movement" aria-label="Movement view" title="Movement">∿</button></div>
 <div id="sourceReadingBadge" hidden role="status" aria-label="Source structure reading"><div><span id="sourceReadingText">SOURCE</span><span class="reading-meta" id="sourceReadingUnplaced">Using T₀ reference coordinates · not a historical morphology</span></div><button id="sourceReadingExit" type="button" aria-label="Exit source structure and return to the organism">×</button></div>
-<div id="bottom"><button class="glass" id="history" aria-controls="historyPanel" aria-expanded="false">◴ History</button><div class="glass" id="zoomBox"><button id="minus" aria-label="Zoom out">−</button><span id="zoomLabel">65%</span><button id="plus" aria-label="Zoom in">+</button><span class="divider"></span><button id="about" aria-label="Viewer information">ⓘ</button></div></div>
+<div id="bottom"><button class="glass" id="history" aria-controls="historyPanel" aria-expanded="false">◴ History</button><div class="glass" id="zoomBox"><button id="minus" aria-label="Zoom out">−</button><span id="zoomLabel">65%</span><button id="plus" aria-label="Zoom in">+</button><span class="divider"></span><button id="about" type="button" aria-label="Viewer information" aria-controls="debugPanel" aria-expanded="false">ⓘ</button></div></div>
 <section id="historyPanel" class="glass" role="region" aria-label="History and source evidence">
 <div class="hp-top"><div><div class="hp-kicker">HISTORY / EVIDENCE</div><div class="hp-count" id="historyCount"></div></div><button id="historyClose" aria-label="Close history" title="Close">×</button></div>
 <div class="hp-tabs" role="tablist" aria-label="Ways of reading history"><button id="historyVisitsTab" role="tab" aria-controls="historyVisitView" aria-selected="true" type="button">Visit traces</button><button id="historyVersionsTab" role="tab" aria-controls="historyVersionView" aria-selected="false" type="button">Archive versions</button><button id="historyFramesTab" role="tab" aria-controls="historyFrameView" aria-selected="false" type="button">Optical frames</button><button id="historyActsTab" role="tab" aria-controls="historyActsView" aria-selected="false" type="button">Lived acts</button><button id="historyLifeTab" role="tab" aria-controls="historyLifeView" aria-selected="false" type="button">Life states</button></div>
@@ -582,10 +582,6 @@ html body.info-open #debugPanel #finderClose {display:grid!important;place-items
       : `${found.length} matching record${found.length === 1 ? '' : 's'}`;
     highlight();
   };
-  document.getElementById('finderClose')?.addEventListener('click', () => {
-    document.body.classList.remove('debug', 'info-open');
-    document.getElementById('about')?.setAttribute('aria-expanded', 'false');
-  });
   query.addEventListener('input', render);
   clearBtn.addEventListener('click', () => { reset(); query.focus({ preventScroll: true }); });
   query.addEventListener('keydown', e => {
