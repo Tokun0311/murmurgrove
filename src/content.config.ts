@@ -19,6 +19,7 @@ const exhibitions = defineCollection({
     directions: z.record(z.string(), z.number().min(0).max(1.6)).optional(),
     institution: z.string().optional(),
     relatedInstitutions: z.array(z.string()).default([]),
+    exhibitionStart: z.coerce.date().optional(),
     exhibitionEnd: z.coerce.date().optional(),
     verification: z.enum(['recorded','needs-review']).default('needs-review')
   })

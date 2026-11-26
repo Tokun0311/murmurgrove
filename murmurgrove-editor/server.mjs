@@ -14,7 +14,7 @@ import {readArchive,buildGraph,answerQuestion,groundedPrompt,readEvents,activeRe
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const TYPE_FIELDS = {
-  exhibitions: { required: ['title','visitedOn','region','location','kind'], optional: ['dateLabel','artists','concepts','institution','relatedInstitutions','exhibitionEnd','verification'] },
+  exhibitions: { required: ['title','visitedOn','region','location','kind'], optional: ['dateLabel','artists','concepts','institution','relatedInstitutions','exhibitionStart','exhibitionEnd','verification'] },
   people: { required: ['name'], optional: ['kind','reading','sortName'] },
   institutions: { required: ['name'], optional: ['city','longitude','latitude','locationType','address','addressStatus','addressSource','venueName','venueAddress','venueStatus','associatedProject'] },
   concepts: { required: ['title'], optional: [] },
@@ -90,7 +90,10 @@ function normalise(type,submitted,{strict=false}={}){
     if(type==='exhibitions'){
       if(!isDate(fields.visitedOn))throw Object.assign(new Error('Use an ISO visit date, YYYY-MM-DD'),{status:422});
       fields.dateLabel=fields.visitedOn.slice(5);
-      if(fields.exhibitionEnd && !isDate(fields.exhibitionEnd))throw Object.assign(new Error('Invalid exhibition end date'),{status:422});
+      // MURMURGROVE_EDITOR_V14: optional dates, validated for both single and bundle publication.
+      if(fields.exhibitionStart && !isDate(fields.exhibitionStart))throw apiError(422,'Invalid exhibition start date');
+      if(fields.exhibitionEnd && !isDate(fields.exhibitionEnd))throw apiError(422,'Invalid exhibition end date');
+      if(fields.exhibitionStart && fields.exhibitionEnd && fields.exhibitionStart>fields.exhibitionEnd)throw apiError(422,'Exhibition start must not be later than exhibition end.');
       if(!['recorded','needs-review'].includes(fields.verification||'needs-review'))throw Object.assign(new Error('Unknown verification status'),{status:422});
       fields.verification ||= 'needs-review';
     }
@@ -133,7 +136,7 @@ async function recordList(root,type){
   const dir=path.join(root,'src/data',typeName(requireType(type)));
   const names=(await fsp.readdir(dir)).filter(x=>x.endsWith('.md') && slugOk(x.slice(0,-3)));
   const items=[];
-  for(const name of names){try{const raw=await fsp.readFile(path.join(dir,name),'utf8');const fields=readFields(splitMd(raw).yaml);items.push({slug:name.slice(0,-3),title:String(fields.title||fields.name||name),subtitle:type==='exhibitions'?`${fields.visitedOn||''} · ${fields.location||''}`:String(fields.city||fields.kind||''),fields});}catch{items.push({slug:name.slice(0,-3),title:name,subtitle:'Unable to read frontmatter',fields:{}});}}
+  for(const name of names){try{const raw=await fsp.readFile(path.join(dir,name),'utf8');const fields=readFields(splitMd(raw).yaml);items.push({slug:name.slice(0,-3),title:String(fields.title||fields.name||name),hasBody:Boolean(splitMd(raw).body.trim()),subtitle:type==='exhibitions'?`${fields.visitedOn||''} · ${fields.location||''}`:String(fields.city||fields.kind||''),fields});}catch{items.push({slug:name.slice(0,-3),title:name,subtitle:'Unable to read frontmatter',fields:{}});}}
   items.sort((a,b)=>type==='exhibitions'?String(b.fields.visitedOn||'').localeCompare(String(a.fields.visitedOn||'')):a.title.localeCompare(b.title));return items;
 }
 async function checkRelations(root,fields){
@@ -148,6 +151,10 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
   if(!await exists(path.join(root,'src','content.config.ts'))||!await exists(path.join(root,'src','data')))throw new Error(`This editor must live inside the Astro project root. Expected src/data/ and src/content.config.ts in ${root}`);
   const privateDir=privateRoot?path.resolve(privateRoot):path.join(here,'.private'),draftDir=path.join(privateDir,'drafts'),backupDir=path.join(privateDir,'backups');
   const token=crypto.randomBytes(24).toString('hex');
+  const recoveryDir=path.join(privateDir,'recovery-v2');
+  const recoveryId=id=>{if(typeof id!=='string'||!/^[a-f0-9-]{36}$/.test(id))throw apiError(400,'Invalid recovery ID');return id;};
+  const recoveryFile=id=>path.join(recoveryDir,recoveryId(id)+'.json');
+  const citiesFile=path.join(root,'src/lib/geographic-index.json');
   let updateQueue=Promise.resolve();
   async function serializeWrite(fn){const prior=updateQueue;let release;updateQueue=new Promise(resolve=>release=resolve);await prior;try{return await fn()}finally{release()}}
   const files={'/':{file:'index.html',mime:'text/html; charset=utf-8'},'/assets/editor.css':{file:'assets/editor.css',mime:'text/css; charset=utf-8'},'/assets/editor.js':{file:'assets/editor.js',mime:'application/javascript; charset=utf-8'},'/assets/research.js':{file:'assets/research.js',mime:'application/javascript; charset=utf-8'}};
@@ -169,6 +176,15 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const asset=files[u.pathname];const bytes=await fsp.readFile(path.join(here,asset.file));res.writeHead(200,{'content-type':asset.mime,'cache-control':'no-store','x-content-type-options':'nosniff','content-security-policy':"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"});return res.end(bytes);
       }
       if(req.method==='GET'&&u.pathname==='/api/bootstrap')return json(res,200,{token,project:path.basename(root),collections:Object.keys(TYPE_FIELDS),writingRoute:await exists(path.join(root,'src/pages/writing/index.astro'))});
+      if(req.method==='GET'&&u.pathname==='/api/geography')return json(res,200,{cities:await exists(citiesFile)?JSON.parse(await fsp.readFile(citiesFile,'utf8')):{}});
+      if(req.method==='GET'&&u.pathname==='/api/recoveries'){
+        const names=await exists(recoveryDir)?await fsp.readdir(recoveryDir):[];const items=[];
+        for(const name of names.filter(n=>/^[a-f0-9-]{36}\.json$/.test(n))){try{const x=JSON.parse(await fsp.readFile(path.join(recoveryDir,name),'utf8'));items.push({id:x.id,title:x.data.fields?.title||x.data.fields?.name||'Untitled',type:x.data.type,updatedAt:x.updatedAt});}catch{}}
+        return json(res,200,{items:items.sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt))});
+      }
+      if(req.method==='GET'&&u.pathname==='/api/recovery'){
+        const file=recoveryFile(u.searchParams.get('id'));if(!await exists(file))throw apiError(404,'Recovery not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
+      }
       if(req.method==='GET'&&u.pathname==='/api/records')return json(res,200,{items:await recordList(root,requireType(u.searchParams.get('type')))});
       if(req.method==='GET'&&u.pathname==='/api/record'){
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug')),file=getPaths(root,type,slug).file;
@@ -193,10 +209,17 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug'));
         const file=path.join(draftDir,type,`${slug}.json`);if(!await exists(file))throw apiError(404,'Draft not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
       }
-      if(req.method==='POST'&&['/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
+      if(req.method==='POST'&&['/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
         const expectedOrigin=`http://127.0.0.1:${server.address().port}`;
         if(req.headers.origin!==expectedOrigin||req.headers['x-editor-token']!==token)throw apiError(403,'Untrusted request');
         const p=await readJSON(req,u.pathname==='/api/import-word'?12*1024*1024:1024*1024);
+        if(u.pathname==='/api/recovery-save'||u.pathname==='/api/recovery-delete')return await serializeWrite(async()=>{
+          const id=recoveryId(p.id),file=recoveryFile(id);
+          if(u.pathname==='/api/recovery-delete'){await fsp.rm(file,{force:true});return json(res,200,{ok:true});}
+          const data=p.data;
+          if(!data||typeof data!=='object'||!ALLOWED_TYPES.has(data.type)||!['new','draft','existing'].includes(data.mode)||typeof data.slug!=='string'||typeof data.body!=='string'||!data.fields||typeof data.fields!=='object'||Array.isArray(data.fields))throw apiError(422,'Invalid recovery snapshot');
+          await saveAtomic(file,JSON.stringify({id,data,updatedAt:new Date().toISOString()},null,2)+'\n');return json(res,200,{ok:true});
+        });
         if(u.pathname==='/api/capture-original'){
           if(typeof p.text!=='string'||!p.text.trim()||Buffer.byteLength(p.text,'utf8')>700000)throw apiError(422,'Original text must be nonempty and under 700 KB UTF-8. Split larger notes into sections.');
           const fingerprint=sha(p.text);

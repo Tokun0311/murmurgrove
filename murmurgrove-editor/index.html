@@ -4,50 +4,49 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>murmurgrove / editor v1.3 (local)</title>
+<title>murmurgrove / editor 2.0 (local)</title>
 <link rel="stylesheet" href="/assets/editor.css">
 <script type="module" src="/assets/editor.js"></script>
 <script type="module" src="/assets/research.js"></script>
 </head>
 <body>
 <header class="masthead">
-  <div><div class="site-name">murmurgrove</div><div class="site-sub">EDITOR / PRIVATE LOCAL SESSION</div></div>
-  <div class="session"><span class="pulse" aria-hidden="true"></span> <span>LOCAL ONLY</span></div>
+  <div><div class="site-name">murmurgrove</div><div class="site-sub">RESEARCH ATELIER / LOCAL</div></div>
+  <nav class="workspaces" aria-label="Workspace"><button id="workspace-capture" type="button" aria-pressed="true">Capture</button><button id="workspace-archive" type="button" aria-pressed="false">Archive</button><button id="workspace-research" type="button" aria-pressed="false">Research</button></nav><div class="session"><span class="pulse" aria-hidden="true"></span> <span>LOCAL ONLY</span></div>
 </header>
 <main class="workspace">
   <aside class="sidebar">
-    <div class="eyebrow">01 / COLLECTION</div>
+    <div class="eyebrow">Collection</div>
     <nav class="collections" id="collection-tabs" aria-label="Record collections"></nav>
     <div class="side-rule"></div>
-    <div class="side-actions"><div class="eyebrow">02 / RECORDS</div><button id="new-record" class="action-link" type="button">+ New record</button></div>
+    <div class="side-actions"><div class="eyebrow">Records</div><button id="new-record" class="action-link" type="button">+ New record</button></div>
     <label for="filter-records" class="sr-only">Filter records</label>
     <input id="filter-records" type="search" placeholder="Search records…" autocomplete="off">
     <div class="side-toggle"><button class="link selected" id="show-published" type="button">Published</button><button class="link" id="show-drafts" type="button">Private drafts</button></div>
-    <div class="side-list" id="record-list" aria-label="Records"><div class="hint">Loading records…</div></div>
+    <label class="maintenance-label" for="archive-maintenance">整理筛选</label><select id="archive-maintenance"><option value="all">All records</option><option value="minimal">Name-only records</option><option value="city">Missing / unindexed city</option><option value="duplicate">Possible duplicates</option></select><div class="side-list" id="record-list" aria-label="Records"><div class="hint">Loading records…</div></div>
     <div class="privacy-side">Drafts stay only in this computer's <code>.private</code> folder. They are not sent to GitHub or Cloudflare.</div>
   </aside>
   <section class="main-panel">
     <nav class="editor-switch" aria-label="Editor workspace"><button type="button" id="switch-record" aria-pressed="true">Records</button><button type="button" id="switch-research" aria-pressed="false">Research</button></nav>
-    <div id="record-workspace">
+    <div id="record-workspace"><section id="recovery-panel" hidden><strong>Private recovery / 未完成的编辑</strong><div id="recovery-list"></div></section>
     <div class="panel-top"><span class="eyebrow" id="record-mode">03 / NEW RECORD</span><span class="tiny" id="dirty-indicator">NOT SAVED</span></div>
     <div class="intro">
       <h1 id="editor-title">A new record</h1>
       <p id="intro-note">Choose a collection, then describe what you want to keep.</p>
     </div>
-    <div id="alert" role="status" aria-live="polite" hidden></div><nav id="editor-stepnav" class="v13-stepnav" aria-label="Record sections"><button type="button" data-editor-jump="capture-phase">01 记录 / Capture</button><button type="button" data-editor-jump="connect-workspace">02 关联 / Connect</button><button type="button" data-editor-jump="publish-phase">03 发布 / Publish</button></nav><div id="editor-review-status" role="status" aria-live="polite"></div>
+    <nav id="editor-stepnav" class="v13-stepnav" aria-label="Record sections"><button type="button" data-editor-jump="capture-phase">01 记录 / Capture</button><button type="button" data-editor-jump="connect-workspace">02 关联 / Connect</button><button type="button" data-editor-jump="publish-phase">03 发布 / Publish</button></nav>
     <details id="record-id-wrap"><summary>Record ID / URL (advanced)</summary><div class="form-field slug-field"><label for="slug">Record ID <span class="small-note">(used in page URL)</span></label><input id="slug" autocapitalize="off" spellcheck="false" placeholder="example-exhibition-2026" maxlength="100"><div class="field-help">Use lowercase English letters, numbers and hyphens only. IDs cannot be renamed when editing an existing record.</div></div></details>
-    <form id="edit-form" autocomplete="off"><div class="bundle-phase" id="capture-phase">01 / CAPTURE · 记录</div><div id="typed-fields"></div><details id="advanced-fields-wrap"><summary>Additional record details / optional fields</summary><div id="advanced-fields"></div></details>
+    <form id="edit-form" autocomplete="off"><section class="v14-section v14-capture" aria-labelledby="capture-phase"><div class="bundle-phase" id="capture-phase">Exhibition / Record details</div><div id="typed-fields"></div><details id="advanced-fields-wrap"><summary>Additional record details / optional fields</summary><div id="advanced-fields"></div></details>
       <div class="form-field body-field"><label for="body">Research text / Paste here</label><textarea id="body" rows="14" placeholder="Paste your finished text from any app, on Windows or macOS. You can also type directly. Then preserve the original before editing…"></textarea><button type="button" id="body-outline" class="action-link outline-btn">Insert a note outline</button></div>
-      <section class="research-atelier source-import" aria-labelledby="original-title">
-        <div class="eyebrow" id="original-title">ORIGINAL TEXT / PASTE FIRST</div>
-        <p class="micro-copy">Write anywhere: Notes, Word, Pages, Google Docs, or directly in this editor. Paste into the text area above, then click <strong>Preserve original text</strong> before revising. It saves an exact UTF-8 plain-text snapshot in your LOCAL private folder, separate from your editable archive record. This is optional and never publishes your notes.</p>
+      <details class="research-atelier source-import" aria-labelledby="original-title"><summary id="original-title">Original sources &amp; Word import</summary>
+        <p class="micro-copy">The first paste into an empty new record is preserved privately. Manual snapshots remain available.</p>
         <div class="atelier-actions"><button id="capture-original" type="button" class="action-link">Preserve original text</button><span id="original-message" class="micro-copy" role="status" aria-live="polite">No original text snapshot captured in this session.</span></div>
         <details class="ai-assist optional-import"><summary>Optional / Import a .docx file instead</summary>
           <p class="micro-copy">Only if you already have a Word file. Copy-and-paste is the default and works across operating systems.</p>
           <div class="atelier-actions"><input id="word-file" type="file" accept=".docx" aria-label="Choose optional Word docx"><button id="import-word" type="button" class="action-link">Import .docx text</button></div><p id="word-message" class="micro-copy" role="status"></p>
         </details>
-      </section>
-      <section id="connect-workspace"><div class="bundle-phase">02 / CONNECT · 关联</div><p class="micro-copy">直接选择已有概念，搜索人物与机构，或在这里新建。<br><span id="connect-count"></span></p><div id="connect-fields"></div><div id="bundle-review" hidden></div></section>
+      </details>
+      </section><section id="connect-workspace" class="v14-section" aria-labelledby="connect-phase"><div class="bundle-phase" id="connect-phase">Connections</div><p class="micro-copy">直接选择已有概念，搜索人物与机构，或在这里新建。<br><span id="connect-count"></span></p><div id="connect-fields"></div></section>
       <details id="analysis-fold"><summary>智能分析与建议 / Optional relationship analysis</summary><section class="analysis-section" id="analysis-section" aria-labelledby="analysis-heading">
         <div class="analysis-head"><span class="eyebrow" id="analysis-heading">04 / RELATIONSHIP ANALYSIS</span><span class="tiny" id="analysis-status">READY TO SCAN</span></div>
         <div class="analysis-intro">Local analysis suggests existing records from your writing. Nothing is linked without your review.</div>
@@ -56,7 +55,7 @@
         <div class="analysis-footer"><button class="publish" type="button" id="apply-analysis" disabled>Apply approved relations to form</button><span class="analysis-note">Only changes form fields. Publishing remains separate.</span></div>
         <section class="new-node-review" id="new-node-review" aria-labelledby="new-node-heading">
           <div class="analysis-group-heading" id="new-node-heading">NEW / PEOPLE · INSTITUTIONS · CONCEPTS</div>
-          <p class="analysis-note">New names and concepts are unverified proposals. Add them to this Exhibition, review the linked records above, and save or publish the group together.</p>
+          <p class="analysis-note">New names and concepts are unverified proposals. Add them to this Exhibition, review the linked records in Publish, and save or publish the group together.</p>
           <div id="new-node-list" aria-live="polite"></div>
           <details class="manual-proposal">
             <summary>Propose another new person, institution or concept</summary>
@@ -75,10 +74,11 @@
           <p class="analysis-note">AI can now propose NEW people, institutions and concepts as well as existing links. Every new proposal requires an exact quote and duplicate check. Review each staged record and its link before grouped publication. The analysis itself never publishes.</p>
         </details>
       </section>
-      </details><div class="bundle-phase" id="publish-phase">03 / PUBLISH · 保存与发布</div><div class="preview-title"><span class="eyebrow">05 / PREVIEW</span><button id="toggle-preview" type="button" class="action-link">View draft text</button></div>
+      </details><section class="v14-section v14-publish" aria-labelledby="publish-phase"><div class="bundle-phase" id="publish-phase">Review &amp; publish</div><div id="publication-summary" class="publication-summary" aria-live="polite"></div><div id="bundle-review" hidden></div><div class="preview-title"><span class="eyebrow">Preview</span><button id="toggle-preview" type="button" class="action-link">Reading preview</button></div>
       <div id="preview" class="preview" hidden></div>
-      <div class="public-warning"><p><strong>Before publishing:</strong> new Markdown records under <code>src/data/</code> become part of your public website after GitHub Push. <em>needs-review</em> does not mean private. Please check names, confidential details and links.</p><label class="confirmation"><input id="confirm-public" type="checkbox"> I reviewed this record and any new linked records for public publication.</label></div>
-      <div class="action-row"><button type="button" id="delete-draft" class="danger-link" hidden>Delete private draft</button><button type="button" id="save-draft" class="primary-quiet">Save private draft / 保存私稿</button><button type="submit" id="publish" class="publish">Publish local files / 写入公开文件</button></div>
+      <div id="editor-review-status" role="status" aria-live="polite"></div><div id="alert" hidden></div><div class="public-warning"><p><strong>Before publishing:</strong> new Markdown records under <code>src/data/</code> become part of your public website after GitHub Push. <em>needs-review</em> does not mean private. Please check names, confidential details and links.</p><label class="confirmation"><input id="confirm-public" type="checkbox"> I reviewed this record and any new linked records for public publication.</label></div>
+      <div class="action-row"><button type="button" id="delete-draft" class="danger-link" hidden>Delete private draft</button><button type="button" id="save-draft" class="primary-quiet">Save draft</button><button type="submit" id="publish" class="publish">Publish local files</button></div>
+    </section>
     </form>
     </div>
     <section hidden class="research-atelier" id="research-workspace" aria-labelledby="research-head">
@@ -124,9 +124,10 @@
       <div class="atelier-actions"><button type="button" id="sync-research">Regenerate current research layer</button><button type="button" class="action-link" id="load-research-history">Inspect source versions</button></div>
       <div id="sync-message" class="micro-copy" role="status"></div><div id="source-history" class="source-results"></div>
     </section>
-    <div class="afterword"><span class="eyebrow">NEXT STEP</span><p>Review local files in GitHub Desktop, run the website build, then Commit → Push when ready. Private drafts and original text are never pushed by this editor. Historical T₀ stays untouched.</p></div>
+    <div class="afterword" id="publication-progress"><span class="eyebrow">NEXT STEP</span><p>Local publication writes files only. Build, review, Commit and Push manually in GitHub Desktop. Deployment and public search status are not verified by this editor.</p></div>
   </section>
 </main>
-<footer>murmurgrove / editor v1.3 · clear workflow · no cloud editor account · no external dependencies</footer>
+<footer>murmurgrove / editor 2.0 · Research Atelier · no cloud editor account · no external dependencies</footer>
+<div id="editor-toast" role="status" aria-live="polite" hidden><span id="editor-toast-text"></span><button type="button" id="editor-toast-close" aria-label="Dismiss notification">×</button></div>
 </body>
 </html>

@@ -18,8 +18,8 @@ const conceptById = new Map(concepts.map(x=>[x.id,x]));
     <h1>{item.data.title}</h1>
     <p class="lead">{item.data.region} · {item.data.location} · {item.data.kind}</p>
     <dl class="record-meta">
-      <div><dt>Visited</dt><dd>{item.data.dateLabel.replaceAll('-','.')}.2026</dd></div>
-      {item.data.exhibitionEnd && <div><dt>Exhibition end</dt><dd>{item.data.exhibitionEnd.toISOString().slice(0,10)}</dd></div>}
+      <div><dt>Visited</dt><dd>{item.data.dateLabel.replaceAll('-','.')}.{item.data.visitedOn.getUTCFullYear()}</dd></div>
+      {(item.data.exhibitionStart || item.data.exhibitionEnd) && <div><dt>{item.data.exhibitionStart && item.data.exhibitionEnd ? 'Exhibition period' : item.data.exhibitionStart ? 'Exhibition start' : 'Exhibition end'}</dt><dd>{[item.data.exhibitionStart,item.data.exhibitionEnd].filter(Boolean).map(d=>d!.toISOString().slice(0,10)).join(' – ')}</dd></div>}
       <div><dt>Archive status</dt><dd>{item.data.verification==='needs-review'?'Details to verify':'Reviewed archive entry'}</dd></div>
       {inst && <div><dt>Institution</dt><dd><a href={`/institutions/${inst.id}/`}>{inst.data.name}</a></dd></div>}
     </dl>

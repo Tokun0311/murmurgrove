@@ -18,7 +18,7 @@ async function captureOriginal(){
  try{
   status('original-message','Preserving an unedited local text snapshot…');
   const r=await req('/api/capture-original',{text,title:$('editor-title').textContent.slice(0,150)});
-  window.__murmurgroveOriginalSha=r.sha256;
+  window.__murmurgroveOriginalSha=r.sha256;window.dispatchEvent(new Event('editor-original-saved'));
   status('original-message',`Preserved privately · SHA-256 ${r.sha256.slice(0,14)}… · plain text. You can now edit, analyze and save a draft; the original stays unchanged.`);
  }catch(e){status('original-message',e.message,true)}
 }
@@ -28,7 +28,7 @@ async function importWord(){const file=$('word-file').files?.[0];if(!file)return
   const res=await req('/api/import-word',{name:file.name,base64:String(raw).split(',')[1]});
   const current=$('body').value;if(current.trim()&&!confirm('The editor already contains text. Append the imported Word text to the end? Cancel to keep the existing text unchanged.'))return status('word-message','Original Word file was preserved locally. Editor text left unchanged.');
   $('body').value=(current.trim()?current.trimEnd()+'\n\n':'')+res.text;
-  $('body').dispatchEvent(new Event('input',{bubbles:true}));wordSha=res.sha256;window.__murmurgroveWordSha=wordSha;
+  $('body').dispatchEvent(new Event('input',{bubbles:true}));wordSha=res.sha256;window.__murmurgroveWordSha=wordSha;window.dispatchEvent(new Event('editor-original-saved'));
   status('word-message',`Original preserved locally (SHA-256 ${wordSha.slice(0,14)}…). Text copied into editor; review before saving a private draft or publishing.`);
  }catch(e){status('word-message',e.message,true);}
 }

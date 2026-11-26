@@ -3,28 +3,8 @@ import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
 const items=await getCollection('institutions');
 
-const cityMeta = {
-  Tokyo: { lon: 139.692, lat: 35.69, country: 'Japan' },
-  Takamatsu: { lon: 134.05, lat: 34.34, country: 'Japan' },
-  Yokohama: { lon: 139.638, lat: 35.44, country: 'Japan' },
-  Fukuoka: { lon: 130.402, lat: 33.59, country: 'Japan' },
-  Kitakyushu: { lon: 130.875, lat: 33.88, country: 'Japan' },
-  Kyoto: { lon: 135.768, lat: 35.01, country: 'Japan' },
-  Hiroshima: { lon: 132.459, lat: 34.39, country: 'Japan' },
-  Gero: { lon: 137.245, lat: 35.81, country: 'Japan' },
-  Tokamachi: { lon: 138.757, lat: 37.13, country: 'Japan' },
-  Seoul: { lon: 126.978, lat: 37.57, country: 'South Korea' },
-  Gwangju: { lon: 126.852, lat: 35.16, country: 'South Korea' },
-  Busan: { lon: 129.075, lat: 35.18, country: 'South Korea' },
-  'Hong Kong': { lon: 114.17, lat: 22.31, country: 'Hong Kong' },
-  Singapore: { lon: 103.82, lat: 1.35, country: 'Singapore' },
-  'East Java': { lon: 112.75, lat: -7.25, country: 'Indonesia' },
-  Phuket: { lon: 98.39, lat: 7.88, country: 'Thailand' },
-  Berlin: { lon: 13.405, lat: 52.52, country: 'Germany' },
-  Copenhagen: { lon: 12.57, lat: 55.68, country: 'Denmark' },
-  London: { lon: -0.128, lat: 51.51, country: 'United Kingdom' },
-  Arles: { lon: 4.63, lat: 43.68, country: 'France' },
-};
+import cityRegistry from '../../lib/geographic-index.json';
+const cityMeta: Record<string,{lon:number;lat:number;country:string}> = cityRegistry;
 
 const countryOrder = ['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand','Germany','Denmark','United Kingdom','France'];
 const cityOrder = Object.keys(cityMeta);
