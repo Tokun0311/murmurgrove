@@ -1,0 +1,9 @@
+murmurgrove Editor v1.2 / 直接覆盖升级
+
+1. 关闭旧 Editor 的 CMD 窗口。
+2. 将解压后的 murmurgrove-editor 文件夹复制到原网站项目根目录（和 src、public、package.json 同级）。选择合并同名文件夹、替换同名文件。不要先删除原文件夹！不要删除 .private！
+3. 在合并后的原文件夹双击 START-EDITOR.bat。首次启动自动核对并备份 v1.1 程序、应用升级，再启动 Editor；不需要输入路径或 INSTALL。以后正常启动。浏览器 http://127.0.0.1:4317，必要时 Ctrl+F5。
+
+本包只包含覆盖所需文件，必须合并到已有 v1.1，而不是独立使用。若版本不兼容或原文件缺失，启动会停止，不强行修改。原程序备份位于 .private/editor-upgrade-backups/。私人草稿与原文不会被覆盖。
+
+新功能：Exhibitions 内就地新建人物、机构、概念，整组草稿及审核发布；Research 独立入口。实际本地发布前先用私人测试草稿验证。不会自动 GitHub Push 或改动生产网站。实际 Windows 浏览器端到端和 Astro build 尚未验证。

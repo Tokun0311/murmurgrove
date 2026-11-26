@@ -7,16 +7,15 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
+node "_upgrade-v12\prepare.mjs"
+if errorlevel 1 (
+  pause
+  exit /b 1
+)
 echo.
-echo   murmurgrove / editor
-
-echo   Starts only on this computer, at http://127.0.0.1:4317
-
+echo   murmurgrove / editor v1.2
+echo   http://127.0.0.1:4317
 echo   Keep this window open while editing.
 echo.
 node server.mjs
-if errorlevel 1 (
-  echo.
-  echo Editor could not start. Check the error above.
-  pause
-)
+if errorlevel 1 pause

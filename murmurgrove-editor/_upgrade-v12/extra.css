@@ -1,0 +1,16 @@
+/* v1.2 exhibition-first editor only; open layout, no closed cards. */
+[hidden]{display:none!important}
+.editor-switch{display:flex;gap:22px;padding-bottom:13px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.editor-switch button{border:0;background:none;color:var(--muted);padding:6px 0;font-weight:600}
+.editor-switch button[aria-pressed="true"]{color:var(--green);border-bottom:2px solid var(--green)}
+.bundle-phase{margin:32px 0 18px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;letter-spacing:.13em;color:var(--green);font-weight:700}
+#advanced-fields-wrap,#record-id-wrap{margin:16px 0 24px;border:0;border-bottom:1px solid var(--line);padding:8px 0 14px;background:transparent}
+#advanced-fields-wrap summary,#record-id-wrap summary{cursor:pointer;color:var(--muted);font-size:12px}
+#advanced-fields{padding:15px 0 0}
+.bundle-node{display:flex;flex-direction:column;gap:8px;padding:16px 0;border-bottom:1px solid var(--line)}
+.bundle-input{display:block;width:100%;padding:9px 0;margin-top:6px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none;color:var(--ink);resize:vertical}
+.bundle-chip,.bundle-result{border:0;border-bottom:1px solid var(--line);border-radius:0;background:none;color:var(--green);padding:5px 0;text-align:left}
+.bundle-result{display:block;width:100%;font-size:13px;padding:9px 0}
+.bundle-node .confirmation{margin:6px 0}.bundle-node small{overflow-wrap:anywhere}
+#bundle-review h3{font-weight:500;color:var(--green)}
+#connect-workspace{margin:28px 0}#analysis-section{margin-top:22px}#record-workspace{min-width:0}
