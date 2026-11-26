@@ -80,7 +80,7 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     <h1 class="sr-only">Institutions &amp; Spaces</h1>
 
     <section class="world-map-section" aria-label="Explore institution locations">
-      <div class="map-heading"><span class="map-heading-label">GEOGRAPHIC INDEX</span><span class="map-heading-meta">{countryEntries.length} countries · {items.length} entries</span></div>
+      <div class="map-heading"><span class="map-heading-meta">{countryEntries.length} countries · {items.length} entries</span></div>
       <div class="globe-index-layout">
       <!-- Mobile uses a resilient 2D land silhouette instead of alpha WebGL.
            It shares the existing country filter state, without touching desktop. -->
@@ -125,9 +125,8 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
         </div>
       </div>
       <aside class="geo-index" aria-label="Browse institutions by location">
-        <p class="geo-index-kicker">EXPLORE BY LOCATION</p>
-        <p class="mobile-geo-hint">Drag to rotate · Dots show archived cities</p>
-        <button type="button" class="geo-all-button is-active" data-jump-country="all" aria-pressed="true">All institutions <span>{items.length}</span></button>
+        <p class="mobile-geo-hint">Dots · archived countries</p>
+        <button type="button" class="geo-all-button is-active" data-jump-country="all" aria-pressed="true">All <span>{items.length}</span></button>
         <div class="geo-index-group"><h2>Asia</h2>
           {countryEntries.filter(g=>['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand'].includes(g.country)).map(({country,cities,entries})=>(
             <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
@@ -142,7 +141,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       </div>
     </section>
 
-    <p class="sr-only" id="institution-filter-count" role="status" aria-live="polite">{items.length} institutions</p>
+    <label class="sr-only" for="institution-search">Find an institution</label>
+    <input id="institution-search" type="search" placeholder="Find an institution" autocomplete="off" />
+    <p class="institution-search-count" id="institution-filter-count" role="status" aria-live="polite">{items.length} institutions</p>
     <div class="institution-geography-index">
       {countryEntries.map(({country,cities,entries}) => (
         <section class="institution-country-group" data-institution-group={country} aria-label={`${country} institutions`}>
@@ -376,17 +377,32 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     }).sort((a,b)=>a.dist-b.dist)[0];
     if(nearest && nearest.dist<.115) selectCountry(nearest.country);
   });
+  const institutionSearch=document.querySelector<HTMLInputElement>('#institution-search');
+  const normalizeInstitution=(value:string)=>value.normalize('NFKD').toLocaleLowerCase().replace(/[\p{M}\p{P}\p{Z}\s]/gu,'');
+  let selectedCountry='all';
   function filterCountry(country:string,scroll=false){
+    selectedCountry=country;
     updateMobileAtlas(country);
     geoButtons.forEach(b=>{const active=b.dataset.jumpCountry===country;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active))});
     let total=0;
+    const q=normalizeInstitution(institutionSearch?.value||'');
     institutionGroups.forEach(group=>{
-      group.hidden=country!=='all'&&group.dataset.institutionGroup!==country;
-      if(!group.hidden)total+=group.querySelectorAll('.institution-city-list li').length;
+      const inCountry=country==='all'||group.dataset.institutionGroup===country;
+      let groupCount=0;
+      for(const li of group.querySelectorAll<HTMLLIElement>('.institution-city-list li')){
+        li.hidden=Boolean(q&&!normalizeInstitution(li.textContent||'').includes(q));
+        if(!li.hidden)groupCount++;
+      }
+      for(const city of group.querySelectorAll<HTMLElement>('.institution-city-group')){
+        city.hidden=Boolean(q&&!city.querySelector('.institution-city-list li:not([hidden])'));
+      }
+      group.hidden=!inCountry||(Boolean(q)&&groupCount===0);
+      if(!group.hidden)total+=groupCount;
     });
     if(institutionCount)institutionCount.textContent=`${total} ${total===1?'institution':'institutions'}`;
     if(scroll)document.querySelector('.institution-geography-index')?.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'start'});
   }
+  institutionSearch?.addEventListener('input',()=>filterCountry(selectedCountry));
   let focusGlobeCountry:(country:string)=>void=()=>{};
   let focusMobileCountry:(country:string)=>void=()=>{};
   // Country dots and country names deliberately share exactly the same selection path.
@@ -956,3 +972,9 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
     }
   }
 </script>
+
+<style is:global>
+.institutions-page #institution-search{display:block;width:min(100%,420px);padding:9px 0;margin:18px 0 8px;font-size:15px;color:var(--ink)}
+.institutions-page .institution-search-count{font-size:12px;color:var(--quiet);margin:0 0 24px}
+.institutions-page .institution-city-list li[hidden],.institutions-page .institution-city-group[hidden],.institutions-page .institution-country-group[hidden]{display:none!important}
+</style>

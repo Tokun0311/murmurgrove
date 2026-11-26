@@ -133,7 +133,6 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
         <div class="concept-mobile-stage-shell">
           <div class="concept-mobile-stage-head">
             <p>CONCEPT FIELD</p>
-            <span>Tap any moving term to open its page</span>
           </div>
           <div class="concept-mobile-stage" id="concept-mobile-stage">
             <svg class="concept-mobile-links" id="concept-mobile-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -164,7 +163,7 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
         </div>
       </div>
     </div>
-    <p class="concept-note">Lines connect concepts tagged in the same exhibition. Larger words appear more frequently in the archive. Select a term to open its page.</p>
+    <p class="concept-note">Lines · Shared exhibition records<br />Size · Frequency in the archive</p>
   </section>
 </Base>
 <style>
@@ -208,7 +207,7 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
     .concept-archive{min-height:0}
     .concept-map-scroll{overflow:visible}
     .concept-mobile-explorer{display:block}
-    .concept-archive .concept-note{display:none;}
+    .concept-archive .concept-note{display:block;}
   }
   @media(max-width:650px){
     .concept-mobile-stage{height:1180px;}
@@ -394,6 +393,9 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
         edge.classList.toggle('is-related',related);
         edge.classList.toggle('is-muted',Boolean(id&&!related));
       }
+      const relatedIds=new Set(id?[id]:[]);
+      for(const edge of edgeEls)if(id&&edge.dataset.a===id&&edge.dataset.b)relatedIds.add(edge.dataset.b);else if(id&&edge.dataset.b===id&&edge.dataset.a)relatedIds.add(edge.dataset.a);
+      for(const node of nodes)node.el.classList.toggle('is-muted',Boolean(id&&!relatedIds.has(node.id)));
     };
     for(const n of nodes){
       n.el.addEventListener('pointerenter',()=>{n.held=true;updateFocus(n.id)});
@@ -438,3 +440,8 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
     reduced.addEventListener('change',sync);
   }
 </script>
+
+<style>
+.concept-node.is-muted{opacity:.32}
+.concept-mobile-orbit:focus,.concept-mobile-orbit:active{animation-play-state:paused}
+</style>

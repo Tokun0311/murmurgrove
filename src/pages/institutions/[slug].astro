@@ -14,6 +14,6 @@ const exhibitions=(await getCollection('exhibitions')).filter(e=>e.data.institut
     <p><strong>Location</strong> · {item.data.city || 'Not specified'}</p>
     {item.data.address ? <p><strong>Address</strong> · {item.data.address} {item.data.addressSource && <a href={item.data.addressSource} target="_blank" rel="noopener noreferrer">Source</a>}</p> :
       <p><strong>Street address</strong> · {item.data.locationType === 'variable' ? 'Multiple / non-fixed venues; see recorded venue above if available' : 'Not yet verified (city only)'}</p>}
-  </div><div class="prose"><Content/></div><h2>Related exhibitions & events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{e.data.visitedOn.toISOString().slice(0,10)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></article></Base>
+  </div><div class="prose"><Content/></div>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{e.data.visitedOn.toISOString().slice(0,10)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}</article></Base>
 
 <style>.institution-location-info{margin:1rem 0 2rem;color:var(--quiet);font-size:.85rem;line-height:1.7}.institution-location-info p{margin:.15rem 0}.institution-location-info strong{font-weight:500;color:var(--ink)}.institution-location-info a{margin-left:.45rem;text-underline-offset:3px}</style>

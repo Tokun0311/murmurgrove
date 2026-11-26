@@ -11,24 +11,31 @@ const personById = new Map(people.map(x=>[x.id,x]));
 const inst = institutions.find(x=>x.id===item.data.institution);
 const relatedInst = item.data.relatedInstitutions.map(id=>institutions.find(x=>x.id===id)).filter(Boolean);
 const conceptById = new Map(concepts.map(x=>[x.id,x]));
+const artistLinks=item.data.artists.map(id=>personById.get(id)).filter(Boolean);
+const conceptLinks=item.data.concepts.map(id=>conceptById.get(id)).filter(Boolean);
+const visitDate=item.data.visitedOn.toISOString().slice(0,10);
+const visitYear=visitDate.slice(0,4);
 ---
 <Base title={`${item.data.title} | murmurgrove`} description={`Murmurgrove exhibition record for ${item.data.title} in ${item.data.location}, visited on ${item.data.visitedOn.toISOString().slice(0, 10)}.`}>
   <article class="article">
     <a class="eyebrow" href="/exhibitions/">← Exhibitions</a>
     <h1>{item.data.title}</h1>
-    <p class="lead">{item.data.region} · {item.data.location} · {item.data.kind}</p>
+    <p class="lead">{[item.data.region,item.data.location!==inst?.data.name?item.data.location:null,item.data.kind].filter(Boolean).join(' · ')}</p>
     <dl class="record-meta">
-      <div><dt>Visited</dt><dd>{item.data.dateLabel.replaceAll('-','.')}.2026</dd></div>
+      <div><dt>Visited</dt><dd><time datetime={visitDate}>{item.data.dateLabel.replaceAll('-','.')}.{visitYear}</time></dd></div>
       {item.data.exhibitionEnd && <div><dt>Exhibition end</dt><dd>{item.data.exhibitionEnd.toISOString().slice(0,10)}</dd></div>}
-      <div><dt>Archive status</dt><dd>{item.data.verification==='needs-review'?'Details to verify':'Reviewed archive entry'}</dd></div>
+      {item.data.verification==='needs-review' && <div><dt>Archive status</dt><dd>Details to verify</dd></div>}
       {inst && <div><dt>Institution</dt><dd><a href={`/institutions/${inst.id}/`}>{inst.data.name}</a></dd></div>}
     </dl>
-    {relatedInst.length > 0 && <div class="tags">{relatedInst.map(i=><a class="tag" href={`/institutions/${i.id}/`}>{i.data.name}</a>)}</div>}
-    <div class="tags">
-      {item.data.artists.map((id)=>personById.get(id)).filter(Boolean).map(p=><a class="tag" href={`/people/${p.id}/`}>{p.data.name}</a>)}
-      {item.data.concepts.map((id)=>conceptById.get(id)).filter(Boolean).map(c=><a class="tag" href={`/concepts/${c.id}/`}>{c.data.title}</a>)}
-    </div>
+    {relatedInst.length > 0 && <section class="record-relations" aria-label="Related institutions"><h2>Institutions</h2><div class="tags">{relatedInst.map(i=><a class="tag" href={`/institutions/${i.id}/`}>{i.data.name}</a>)}</div></section>}
+    {artistLinks.length > 0 && <section class="record-relations" aria-label="People and collectives"><h2>People</h2><div class="tags">{artistLinks.map(p=><a class="tag" href={`/people/${p.id}/`}>{p.data.name}</a>)}</div></section>}
+    {conceptLinks.length > 0 && <section class="record-relations" aria-label="Related concepts"><h2>Concepts</h2><div class="tags">{conceptLinks.map(c=><a class="tag" href={`/concepts/${c.id}/`}>{c.data.title}</a>)}</div></section>}
     <div class="prose"><Content/></div>
+    {item.data.verification==='recorded' && <p class="note">Reviewed archive entry.</p>}
     <p class="note">Editorial note: visit dates and first-person observations come from personal records. Refer to the source links in each entry for independently documented programme details.</p>
   </article>
 </Base>
+
+<style>
+.record-relations{margin:18px 0 25px}.record-relations h2{font-size:12px;color:var(--quiet);font-weight:500;margin:0 0 8px}.record-relations .tags{column-gap:16px;row-gap:5px}.record-relations .tag{padding:3px 0;text-decoration:none}.record-relations .tag:hover{text-decoration:underline}
+</style>
