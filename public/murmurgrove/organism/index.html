@@ -424,8 +424,10 @@ html body #debugPanel .interaction-guide p{margin:7px 0}
 #card .relation-group h3{font-size:9px;font-weight:500;color:#789184;letter-spacing:.035em;margin:0 0 4px}
 #card .relation-group ul{list-style:none;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:11px;row-gap:5px;margin:0;padding:0}
 #card .relation-group li{min-width:0;max-width:100%;font-size:11px;line-height:1.5;overflow-wrap:anywhere;color:#5b8b75}
-#card .relation-group a{display:inline;color:#427a61}
-#card .relation-group a:hover{text-decoration:underline;text-underline-offset:3px}
+#card .relation-group .relation-target{display:inline;background:none;border:0;border-bottom:1px solid #dce9de;border-radius:0;padding:1px 0;margin:0;color:#427a61;font:inherit;line-height:inherit;text-align:left;cursor:pointer;overflow-wrap:anywhere;white-space:normal;max-width:100%;touch-action:manipulation}
+#card .relation-group .relation-target:hover,#card .relation-group .relation-target:focus-visible{text-decoration:underline;text-underline-offset:3px;color:#087f5b}
+#card .relation-group .relation-unplaced{color:#789184}
+#card .relation-group .relation-location-note{white-space:normal}
 #card .relation-group small{font-size:9px;color:#789184}
 @media(pointer:coarse){#card .relation-disclosure summary{min-height:36px}#card .relation-group li{font-size:12px;line-height:1.8}}
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
@@ -483,7 +485,7 @@ html body #debugPanel .interaction-guide p{margin:7px 0}
     <p class="finder-message" id="recordMessage" role="status" aria-live="polite">Search exhibitions, people, institutions or concepts.</p>
     <select id="recordSelect" hidden tabindex="-1" aria-hidden="true"><option value="">Select a record…</option></select>
   </div>
-  <details class="finder-details"><summary>About this organism <span aria-hidden="true">＋</span></summary><div id="debugText"><p>The organism makes documented relationships in the evolving archive perceptible. Current research and preserved historical evidence remain distinct.</p><span id="debugStats"></span><details class="interaction-guide"><summary>Interaction</summary><p>Drag to orbit at overview scale; drag to pan when magnified. Zoom toward the pointer with the wheel or trackpad. Shift + drag or right drag to orbit at any scale.</p><p>On a phone at the 65% overview, one finger orbits; above 65%, one finger pans. Pinch to zoom. Hold one finger and move the other to orbit.</p><p>Select a particle to focus, then follow its card title to read the archive source.</p></details></div><p class="finder-disclaimer">Three lenses read the same verified archive. Unattested acts cannot activate Writing fibers or mature cores.</p></details>
+  <details class="finder-details"><summary>About this organism <span aria-hidden="true">＋</span></summary><div id="debugText"><p>The organism makes documented relationships in the evolving archive perceptible. Current research and preserved historical evidence remain distinct.</p><span id="debugStats"></span><details class="interaction-guide"><summary>Interaction</summary><p>Drag to orbit at overview scale; drag to pan when magnified. Zoom toward the pointer with the wheel or trackpad. Shift + drag or right drag to orbit at any scale.</p><p>On a phone at the 65% overview, one finger orbits; above 65%, one finger pans. Pinch to zoom. Hold one finger and move the other to orbit.</p><p>Select a particle or a related record to move within the organism. Follow the focused card title to read the archive source.</p></details></div><p class="finder-disclaimer">Three lenses read the same verified archive. Unattested acts cannot activate Writing fibers or mature cores.</p></details>
 </div><div id="status"></div><div id="loadingError" style="display:none;position:fixed;inset:35% 12%;background:#fff;border:1px solid #ddbdb1;border-radius:9px;padding:20px;z-index:10;color:#95594a;font-size:12px;white-space:pre-wrap"></div>
 <script>
 // The information controls and instructions work even when the viewer module
@@ -525,7 +527,7 @@ html body #debugPanel .interaction-guide p{margin:7px 0}
   document.addEventListener('murmurgrove:close-viewer-panel', () => setPanel(null));
 })();
 </script>
-<script type="module" src="./viewer.mjs?research=2-relations"></script>
+<script type="module" src="./viewer.mjs?research=3-spatial-relations"></script>
 <script>
 // Same-origin event bridge: the murmurgrove masthead keeps its single original
 // cursor trail, even while pointer events are delivered to this iframe.

@@ -63,6 +63,7 @@ const activePointers=new Map();
 let touchPair=null,userFramedPan=false,touchOrbitTarget=null;
 let entrance=null;
 let pendingSelection=null,pendingFollow=false;
+let relationFocusId=null; // only explicit in-organism relation navigation
 function requestedLocation(){
  try{
   const owner=window.parent!==window&&new URLSearchParams(location.search).has('embedded')?window.parent:window;
@@ -167,6 +168,7 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
  zoom=s.zoom;mode=s.mode;selected=s.selected&&nodeMap.has(s.selected)?s.selected:null;
  pendingSelection=!selected&&typeof s.selected==='string'?s.selected:null;
  pendingFollow=Boolean(pendingSelection&&s.followSelected);
+ relationFocusId=s.followSelected&&typeof s.relationFocusId==='string'&&s.relationFocusId===s.selected?s.relationFocusId:null;
  if(typeof s.historyMonth==='string'&&observationGroups.some(g=>g.key===s.historyMonth))historyMonth=s.historyMonth;
  if(['visits','versions','frames','acts','life'].includes(s.historyTab))historyTab=s.historyTab;
  historyOpen=Boolean(s.historyOpen);
@@ -180,7 +182,7 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
 }catch{return false;}}
 function saveMemory(){try{
  const storedPan=ready&&!isMobileOverview()?boundPanToOrganism(pan):pan;
- sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected:selected||pendingSelection,followSelected:selected?followSelected:pendingFollow,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
+ sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected:selected||pendingSelection,followSelected:selected?followSelected:pendingFollow,relationFocusId,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
  }catch{}}
 function preprocess(){
  records=nav.records.filter(r=>!r.quarantined);
@@ -309,6 +311,9 @@ function coords(p){const a=project(p),scale=baseScale*zoom/ZOOM_BASE;
  */
 function boundPanToOrganism(requested,previous=lastSafePan){
  if(!ready||W<30||H<30||!viewPositions.length||isMobileOverview())return requested;
+ // Explicit navigation may visit a genuine peripheral node even when the
+ // normal free-pan density constraint would hold the camera in the main body.
+ if(relationFocusId===selected&&followSelected&&canLocateRelation(selected)&&!activeGesture&&!touchPair)return requested;
  const selectedComponent=selected&&componentById.has(selected)?componentById.get(selected):null;
  const focusIds=sourceView?.structure?.projectedIds ||
    (selectedComponent!==null&&zoom>=4?new Set(components[selectedComponent]):mainIds);
@@ -620,10 +625,11 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
   if(isMobileOverview()){
    // At full view, neither one nor two fingers can move the specimen offscreen.
    // Returning from a pan eases back to its center instead of snapping.
-   followSelected=false;userFramedPan=false;velocityPan=[0,0];
-   pan=easePanHome(pan,dt,120);
+   if(!relationFocusId){followSelected=false;userFramedPan=false;}
+   velocityPan=[0,0];
+   if(!relationFocusId)pan=easePanHome(pan,dt,120);
    if(Math.hypot(...pan)<.35)pan=[0,0];
-  }else if(!MOBILE_HOME&&zoom<=1){followSelected=false;if(!activeGesture&&!touchPair&&!userFramedPan)pan=easePanHome(pan,dt);}
+  }else if(!MOBILE_HOME&&zoom<=1&&!relationFocusId){followSelected=false;if(!activeGesture&&!touchPair&&!userFramedPan)pan=easePanHome(pan,dt);}
   reframe();
   if(followSelected&&selected&&zoom>1){
    const focusIndex=nodeIndex.get(selected);
@@ -683,6 +689,42 @@ function locatorSVG(n){const position=viewPositions[nodeIndex.get(n.id)]||curren
  return `<svg viewBox="0 0 26 26" aria-hidden="true"><ellipse cx="13" cy="13" rx="10" ry="8" fill="none" stroke="#c4d7ca" stroke-width=".65"/><circle cx="${(3+x*20).toFixed(1)}" cy="${(4+y*18).toFixed(1)}" r="1.9" fill="#387c60"/><circle cx="13" cy="13" r="1" fill="#b4c6ba"/></svg>`;}
 // Show every related record, grouped by its actual archive kind. No graph
 // mutation, new links, or current-data substitutions in historical readings.
+function canLocateRelation(id){
+ if(!id)return false;
+ if(sourceView)return nodeMap.has(id)&&sourceView.structure.projectedIds.has(id);
+ if(lifePreviewEvent)return nodeMap.has(id);
+ return nodeMap.has(id)||Boolean(currentRest(id));
+}
+function navigateRelation(id,{keyboard=false}={}){
+ if(!canLocateRelation(id))return false;
+ cancelEntrance();
+ // Cancel residual inertia and a previous zoom intention before following a
+ // different real node. No change to angle, elevation, mode or history view.
+ velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
+ touchOrbitTarget=null;panIntent=null;edgeReturnVelocity=[0,0];
+ zoomGoal=null;zoomAnchor=null;userFramedPan=true;
+ relationFocusId=id;
+ showCard(id);
+ // At overview, a slight magnification enables existing camera-follow logic.
+ // Above overview retain the exact scale, including deep close-ups.
+ if(zoom<=1){
+  const focus=viewPositions[nodeIndex.get(id)]||currentRest(id);
+  requestZoom(1.65,coords(focus),{keepFollow:true});
+ }
+ followSelected=true;
+ // Honor the user's reduced-motion preference for this explicit camera move.
+ if(reducedMotionMedia.matches){
+  if(zoomGoal!==null)setZoom(zoomGoal,zoomAnchor,{persist:false});
+  reframe();
+  const focus=viewPositions[nodeIndex.get(id)]||currentRest(id);
+  const point=coords(focus);
+  pan=[pan[0]+W*.5-point[0],pan[1]+H*.46-point[1]];
+  followSelected=true;lastSafePan=[...pan];
+ }
+ saveMemory();
+ if(keyboard)$('cardLink').focus({preventScroll:true});
+ return true;
+}
 function renderCardRelations(id,actual,keepOpen=false){
  const host=$('cardConnected');
  const oldScroll=keepOpen?(host.querySelector('.relation-groups')?.scrollTop||0):0;
@@ -713,11 +755,19 @@ function renderCardRelations(id,actual,keepOpen=false){
   const list=document.createElement('ul');
   for(const {id:otherId,record,count:relationCount} of records.values()){
    const li=document.createElement('li');
-   const path=record?.path;
-   const item=document.createElement(typeof path==='string'&&/^\/(?:exhibitions|people|institutions|concepts|writing)\/[a-z0-9-]+\/$/.test(path)?'a':'span');
+   const locatable=canLocateRelation(otherId);
+   const item=document.createElement(locatable?'button':'span');
    item.textContent=record?.title||otherId;
-   if(item.tagName==='A'){item.href=path;item.target='_top';item.addEventListener('click',saveMemory);}
+   if(locatable){
+    item.type='button';item.className='relation-target';
+    item.setAttribute('aria-label',`Focus ${item.textContent} in the organism`);
+    item.addEventListener('click',event=>navigateRelation(otherId,{keyboard:event.detail===0}));
+   }else{
+    item.className='relation-unplaced';
+    item.title='No spatial position in this reading';
+   }
    li.append(item);
+   if(!locatable){const note=document.createElement('small');note.className='relation-location-note';note.textContent=' · not positioned';li.append(note);}
    if(relationCount>1){const note=document.createElement('small');note.textContent=` · ${relationCount} relations`;li.append(note);}
    list.append(li);
   }
@@ -726,7 +776,7 @@ function renderCardRelations(id,actual,keepOpen=false){
  details.append(body);details.open=keepOpen;host.replaceChildren(details);
  if(keepOpen)body.scrollTop=oldScroll;
 }
-function showCard(id){if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;$('cardConnected').replaceChildren();$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
+function showCard(id){if(id!==relationFocusId)relationFocusId=null;if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;relationFocusId=null;$('cardConnected').replaceChildren();$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
  const keepRelationsOpen=selected===id&&Boolean($('cardConnected').querySelector('details[open]'));
  selected=id;const n=nodeMap.get(id)||{id,record:currentResearch?.records.get(id)};
  const r=(sourceView?sourceView.structure.sourceRecords.get(id):null)||
@@ -743,6 +793,7 @@ function showCard(id){if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&
  $('card').style.display='block';document.body.classList.toggle('deep',zoom>=2);saveMemory();
 }
 function selectAndFollow(id,{magnify=true}={}){
+ relationFocusId=null;
  if(!id||(!nodeMap.has(id)&&!currentRest(id))){showCard(null);return;}
  showCard(id);
  if(magnify&&zoom<1.65){
@@ -784,7 +835,7 @@ function setZoom(value,anchor=anchorPoint(),{persist=true}={}){
 function requestZoom(value,anchor=anchorPoint(),{keepFollow=false}={}){
  zoomGoal=cl(value,ZOOM_MIN,ZOOM_MAX);zoomAnchor=[...anchor];
  velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
- if(!keepFollow)followSelected=false;
+ if(!keepFollow){followSelected=false;relationFocusId=null;}
  if(isMobileOverview(zoomGoal)||(!MOBILE_HOME&&zoomGoal<=1))userFramedPan=false;
 }
 function syncZoomDisplay(){
@@ -941,7 +992,7 @@ async function loadVerifiedSourceEntry(entry){
  return result.navigation;
 }
 function exitSourceReading(){
- versionRequest++;sourceView=null;
+ versionRequest++;sourceView=null;relationFocusId=null;
  $('sourceReadingBadge').hidden=true;
  document.body.classList.remove('source-reading');
  if(selected)showCard(selected);
@@ -957,7 +1008,7 @@ async function enterSourceReading(checkpointId,action){
   const structure=sourceStructure(current,nodes.map(n=>n.id),previous);
   validateStructureCounts(structure,entry);
   if(request!==versionRequest)return;
-  exitLifePreview();sourceView={entry,structure};followSelected=false;
+  exitLifePreview();sourceView={entry,structure};followSelected=false;relationFocusId=null;
   activeHistoryContext=null;
   if(selected&&!structure.projectedIds.has(selected))showCard(null);
   else if(selected)showCard(selected);
@@ -1110,6 +1161,7 @@ function activateLifeState(state){
  lifeActiveState=state;lifeFields=lifeRecordMap(state);
 }
 function exitLifePreview(){
+ if(lifePreviewEvent)relationFocusId=null;
  lifeCheckpointRequest++;lifePreviewEvent=null;lifePreviewAsOf=null;
  activateLifeState(lifeNowState);$('lifeModelBadge').hidden=true;
  if(historyOpen&&historyTab==='life')renderLifeReadings();
@@ -1245,6 +1297,7 @@ function initUI(){
  canvas.addEventListener('pointerdown',e=>{
   if(e.pointerType==='mouse'&&e.button!==0&&e.button!==2)return;
   if(e.pointerType==='touch'&&activePointers.size>=2)return;
+  if(relationFocusId){relationFocusId=null;followSelected=false;zoomGoal=null;zoomAnchor=null;}
   const local=pointerHere(e);lastPointer=local;pointerType=e.pointerType;
   gestureHintDismiss();cancelMomentum();touchOrbitTarget=null;zoomGoal=null;zoomAnchor=null;
   activePointers.set(e.pointerId,{local,client:[e.clientX,e.clientY]});
