@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 import { currentProjection, placeCurrentResearch, readCurrentResearch } from '../public/murmurgrove/organism/research-current-overlay.mjs';
 import { buildGraph } from '../murmurgrove-editor/research-core.mjs';
@@ -25,8 +26,9 @@ test('published Paik, WATARI-UM and exhibition extend the baseline only through 
     assert.notDeepEqual(layer.additions.get(id).rest, layer.additions.get(exhibition).rest);
   }
   assert.deepEqual([...anchors], original);
-  assert.equal(currentProjection(layer, point => point, 0, false).get(person).growth, 0);
-  assert.equal(currentProjection(layer, point => point, 5000, false).get(person).growth, 1);
+  assert.equal(currentProjection(layer, point => point, 0, false).get(person).growth, 1);
+  assert.equal(currentProjection(layer, point => point, 0, false, {animate: true}).get(person).growth, 0);
+  assert.equal(currentProjection(layer, point => point, 5000, false, {animate: true}).get(person).growth, 1);
 });
 
 test('a public record with a source but no evidenced path stays searchable and unpositioned', () => {
@@ -40,7 +42,7 @@ test('a public record with a source but no evidenced path stays searchable and u
 });
 
 test('public projection carries already registered readings without modifying archive hashes', async () => {
-  const generated = await buildGraph(new URL('..', import.meta.url).pathname);
+  const generated = await buildGraph(fileURLToPath(new URL('..', import.meta.url)));
   const key = 'people:yamashiro-chikako';
   assert(graph.records.find(record => record.key === key).aliases.includes('やましろちかこ'));
   assert.deepEqual(generated.records.find(record => record.key === key).aliases, graph.records.find(record => record.key === key).aliases);

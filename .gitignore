@@ -4,3 +4,9 @@ dist/
 .DS_Store
 .env
 .env.*
+
+# Local generated Python caches and consolidation launchers
+__pycache__/
+*.pyc
+/CONSOLIDATE.cmd
+/consolidate.mjs

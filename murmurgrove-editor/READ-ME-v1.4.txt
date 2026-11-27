@@ -1,6 +1,0 @@
-murmurgrove editor v1.4 · Exhibition period / Section layout
-关闭旧 Editor；解压，把 murmurgrove-editor 合并覆盖原文件夹，不要删除 .private；双击 START-EDITOR.bat（macOS: bash START-EDITOR.command）。首次启动自动备份并升级，支持已安装 v1.1/v1.2/v1.3。
-
-Capture：实际参观日期仍为原有必填字段；Exhibition period 包含可选开始、结束日期（均可空，只填一端也可以）。开始晚于结束会标红并阻止发布；参观日在会期外仅提醒，不阻止特殊场合。草稿和公开 Markdown 会保存 exhibitionStart/exhibitionEnd；现有网站 schema 仅支持结束日期，开始日期暂不显示于公开网页。本升级不修改网站 schema、模板或历史资料。
-Capture、Connect、Publish 使用独立边框；研究正文及关联区域分组。概念默认全量显示功能保留。仅 Editor 使用边框，不改变公开网站样式。
-私人草稿、原文、生命体、IndexNow 不受安装影响。旧程序备份在 .private/editor-upgrade-backups。先用私人草稿试用；发布仍须审核并经 GitHub Desktop Commit / Push。实际 Windows 和完整 Astro build 未验证。
