@@ -321,5 +321,61 @@
     "edgeCount": 253,
     "priorHash": "7005cc7fec95d23e3e380a2de9abe648cc0da6d75ed6b52c72eff8d53fc58e32",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T01-56-25-457Z-49a0daf41525.json",
+    "graphHash": "49a0daf4152510f9afecef60ed8c2805fb7fb9de3add9175e4a2a746767bfaee",
+    "at": "2026-11-27T01:56:25.446Z",
+    "added": [],
+    "changed": [
+      "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+    ],
+    "removed": [],
+    "recordCount": 229,
+    "edgeCount": 254,
+    "priorHash": "9767c01f0ef317f937280890132cf5c26027a153587902f385a6f7ddb3c1f6f9",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T01-57-44-614Z-843062561a2d.json",
+    "graphHash": "843062561a2d15d710af6be4bc58d8f114197654bf71887815bf9406640f681c",
+    "at": "2026-11-27T01:57:44.601Z",
+    "added": [],
+    "changed": [
+      "institutions:arts-council-tokyo"
+    ],
+    "removed": [],
+    "recordCount": 229,
+    "edgeCount": 254,
+    "priorHash": "49a0daf4152510f9afecef60ed8c2805fb7fb9de3add9175e4a2a746767bfaee",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T01-58-49-551Z-734ccda63c16.json",
+    "graphHash": "734ccda63c169c55752517936aa1ec50e1004217898d9c0708c06630761bb98f",
+    "at": "2026-11-27T01:58:49.536Z",
+    "added": [],
+    "changed": [
+      "institutions:watari-um-the-watari-museum-of-contemporary-art"
+    ],
+    "removed": [],
+    "recordCount": 229,
+    "edgeCount": 254,
+    "priorHash": "843062561a2d15d710af6be4bc58d8f114197654bf71887815bf9406640f681c",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T01-59-48-127Z-7ed90366424c.json",
+    "graphHash": "7ed90366424c67634838b69582d205c7606ded3df41365ee82224db8a38d1b54",
+    "at": "2026-11-27T01:59:48.108Z",
+    "added": [],
+    "changed": [
+      "institutions:factory-international"
+    ],
+    "removed": [],
+    "recordCount": 229,
+    "edgeCount": 254,
+    "priorHash": "734ccda63c169c55752517936aa1ec50e1004217898d9c0708c06630761bb98f",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]

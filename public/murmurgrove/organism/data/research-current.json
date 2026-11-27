@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "9767c01f0ef317f937280890132cf5c26027a153587902f385a6f7ddb3c1f6f9",
-  "generatedAt": "2026-11-27T01:31:10.609Z",
+  "graphHash": "7ed90366424c67634838b69582d205c7606ded3df41365ee82224db8a38d1b54",
+  "generatedAt": "2026-11-27T01:59:48.108Z",
   "links": [
     {
       "source": "exhibitions:2026-01-07-02",
@@ -1116,6 +1116,11 @@
     },
     {
       "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:luke-kemp",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
       "target": "people:max-cooper",
       "kind": "recorded-link"
     },
@@ -1454,7 +1459,7 @@
     "institutions:arts-council-tokyo": 1,
     "institutions:watari-um-the-watari-museum-of-contemporary-art": 1,
     "people:nam-june-paik": 1,
-    "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 38,
+    "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 39,
     "institutions:barbican-centre": 2,
     "institutions:british-council": 2,
     "institutions:mon-takanawa-the-museum-of-narratives": 2,
@@ -1473,6 +1478,7 @@
     "people:itti-haioka": 1,
     "people:jan-st-werner": 1,
     "people:kinda-studios": 1,
+    "people:luke-kemp": 2,
     "people:max-cooper": 1,
     "people:miyu-hosoi": 1,
     "people:mutek-sarah-mackenzie": 1,
@@ -1494,7 +1500,6 @@
     "institutions:somerset-house-studios": 1,
     "people:atsushi-wakimoto": 1,
     "people:jacob-silkin": 1,
-    "people:luke-kemp": 1,
     "people:marie-mcpartlin": 1,
     "people:rivca-burns": 1
   }

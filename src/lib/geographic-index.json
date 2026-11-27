@@ -98,5 +98,15 @@
     "lon": 4.63,
     "lat": 43.68,
     "country": "France"
+  },
+  "Manchester": {
+    "lon": -2.2426,
+    "lat": 53.4808,
+    "country": "United Kingdom",
+    "aliases": [
+      "曼彻斯特",
+      "曼徹斯特",
+      "マンチェスター"
+    ]
   }
 }

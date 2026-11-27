@@ -1,7 +1,11 @@
 ---
 name: "Factory International"
 city: "Manchester"
+linkedPeople: []
+linkedExhibitions: []
+linkedConcepts: []
 ---
+
 
 Factory International 是位于英国曼彻斯特的独立非营利性文化艺术机构，其前身为曼彻斯特国际艺术节（Manchester International Festival，简称 MIF）的运营组织。自2007年首届艺术节举办以来，该机构以原创艺术作品的委托、制作及国际合作为核心。2023年，机构正式更名为 Factory International，名称致敬曼彻斯特具有代表性的独立音乐厂牌 Factory Records，并随着永久性文化设施 Aviva Studios 的开放，从周期性的艺术节运营组织发展为全年开展文化艺术活动的综合性艺术生产机构。
 Factory International+1
