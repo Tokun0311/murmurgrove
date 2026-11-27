@@ -1,7 +1,7 @@
 ---
 name: "Yuki Anai"
 kind: "artist"
-nativeName: "穴井 佑樹"
+nativeName: "穴井佑樹"
 alternativeNames: []
 linkedInstitutions: ["barbican-centre","mon-takanawa-the-museum-of-narratives"]
 ---

@@ -1,7 +1,7 @@
 ---
 name: "Keiichi Tanaami"
 kind: "artist"
-nativeName: "田名網 敬一"
+nativeName: "田名網敬一"
 alternativeNames: []
 linkedInstitutions: []
 birthYear: "1936"

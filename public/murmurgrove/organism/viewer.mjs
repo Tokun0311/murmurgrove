@@ -479,7 +479,7 @@ function drawBackground(time,pos){
  // Optical density derived from nodes only. No line may appear without a real relation.
  for(let i=0;i<pos.length;i++){
   const n=nodes[i],point=pos[i],centerMember=mainIds.has(n.id);
-  if(!centerMember||mergedMotHidden(n.id))continue;
+  if(!centerMember||mergedMotHidden(n.id)||mergedGwangjuHidden(n.id))continue;
   const d=neighborData[i].density;if(d<.8)continue;
   const spread=(mode==='Growth'?20:mode==='Movement'?23:19)*Math.sqrt(zoom/ZOOM_BASE);
   const radius=cl(spread*(.75+Math.min(2.8,d*.13)),9,160);
@@ -493,6 +493,7 @@ function drawBackground(time,pos){
  }
 }
 function mergedMotHidden(id){return id==='institution:mot'&&!sourceView&&!lifePreviewEvent&&!activeHistoryContext&&Boolean(currentResearch?.records.has('institution:museum-of-contemporary-art-tokyo-mot')&&!currentResearch.records.has(id));}
+function mergedGwangjuHidden(id){return id==='institution:gwangju-biennale'&&!sourceView&&!lifePreviewEvent&&!activeHistoryContext&&Boolean(currentResearch?.records.has('institution:gwangju-biennale-foundation')&&!currentResearch.records.has(id));}
 function currentBaselineVisible(link){return Boolean(sourceView||lifePreviewEvent||activeHistoryContext||!currentResearch||currentResearch.pairKeys.has(edgeKey(link.from,link.to)));}
 function drawLinks(pos,time){
  const breathClock=breathingTime(time,mode);
@@ -629,7 +630,7 @@ function datedLocalPulse(n,time){
 function drawNodes(pos,time){
  for(let i=0;i<nodes.length;i++){
   const n=nodes[i],p=pos[i],r=n.record,island=isolated.has(n.id),d=neighborData[i].density;
-  if(mergedMotHidden(n.id)||p[0]<-50||p[0]>W+50||p[1]<-50||p[1]>H+50)continue;
+  if(mergedGwangjuHidden(n.id)||mergedMotHidden(n.id)||p[0]<-50||p[0]>W+50||p[1]<-50||p[1]>H+50)continue;
   ctx.globalAlpha=nodeOptics(n.id,p);
   const glow=exhibitionGlow(n),pulse=glow*(mode==='Movement'?1.55:mode==='Growth'?.27:.78);
   const aged=mode==='Growth'&&n.kind==='exhibition'?daySpan(n.record?.occurredOn):null;
@@ -771,7 +772,7 @@ function renderFrame(now){const time=(lifePreviewEvent||reducedMotionMedia.match
 function chooseMode(next){if(!['Whole','Growth','Movement'].includes(next))return;mode=next;
  for(const b of document.querySelectorAll('#mode button'))b.setAttribute('aria-pressed',String(b.dataset.mode===mode));saveMemory();updateDebug();}
 function nearest(x,y){if(!ready)return null;const pos=sourceView?viewPositions.map(coords):positions(Date.now()/1000);let min=Infinity,best=null;
- for(let i=0;i<pos.length;i++){if(mergedMotHidden(nodes[i].id)||sourceView&&!sourceView.structure.projectedIds.has(nodes[i].id))continue;const p=pos[i],d=Math.hypot(p[0]-x,p[1]-y);if(d<min){min=d;best=nodes[i];}}
+ for(let i=0;i<pos.length;i++){if(mergedGwangjuHidden(nodes[i].id)||mergedMotHidden(nodes[i].id)||sourceView&&!sourceView.structure.projectedIds.has(nodes[i].id))continue;const p=pos[i],d=Math.hypot(p[0]-x,p[1]-y);if(d<min){min=d;best=nodes[i];}}
  if(!sourceView&&!lifePreviewEvent)for(const [id,{point,growth}] of currentPoints){
   if(growth<.25)continue;
   const distance=Math.hypot(point[0]-x,point[1]-y);
@@ -784,7 +785,7 @@ function locatorSVG(n){const position=viewPositions[nodeIndex.get(n.id)]||curren
 // Show every related record, grouped by its actual archive kind. No graph
 // mutation, new links, or current-data substitutions in historical readings.
 function canLocateRelation(id){
- if(!id||mergedMotHidden(id))return false;
+ if(mergedGwangjuHidden(id)||!id||mergedMotHidden(id))return false;
  if(sourceView)return nodeMap.has(id)&&sourceView.structure.projectedIds.has(id);
  if(lifePreviewEvent)return nodeMap.has(id);
  return nodeMap.has(id)||Boolean(currentRest(id));
@@ -899,7 +900,7 @@ function renderCardRelations(id,actual,keepOpen=false){
  details.append(body);details.open=keepOpen;host.replaceChildren(details);
  if(keepOpen)body.scrollTop=oldScroll;
 }
-function showCard(id){if(mergedMotHidden(id))id=null;if(relationJourney)cancelRelationJourney();if(id!==relationFocusId){$('card').classList.remove('relation-travelling');relationJourneySerial++;}if(id!==relationFocusId)relationFocusId=null;if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;relationFocusId=null;$('cardConnected').replaceChildren();$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
+function showCard(id){if(mergedGwangjuHidden(id))id=null;if(mergedMotHidden(id))id=null;if(relationJourney)cancelRelationJourney();if(id!==relationFocusId){$('card').classList.remove('relation-travelling');relationJourneySerial++;}if(id!==relationFocusId)relationFocusId=null;if(!id||(!nodeMap.has(id)&&!currentRest(id))||(sourceView&&!sourceView.structure.projectedIds.has(id))){selected=null;followSelected=false;relationFocusId=null;$('cardConnected').replaceChildren();$('card').style.display='none';document.body.classList.remove('deep');saveMemory();return;}
  const keepRelationsOpen=selected===id&&Boolean($('cardConnected').querySelector('details[open]'));
  selected=id;const n=nodeMap.get(id)||{id,record:currentResearch?.records.get(id)};
  const r=(sourceView?sourceView.structure.sourceRecords.get(id):null)||

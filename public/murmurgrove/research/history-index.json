@@ -758,5 +758,27 @@
     "edgeCount": 389,
     "priorHash": "b03719996135cfe5a1d3ec8259d0d408937caf62bfc321916c854300f6121475",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T08-53-41-325Z-86cb47127b93.json",
+    "graphHash": "86cb47127b932458d6c4338c7b2c702b6deac15dd79dcae3ea6892dcce18334f",
+    "at": "2026-11-27T08:53:41.321Z",
+    "added": [],
+    "changed": [
+      "people:atsushi-yamamoto",
+      "people:he-xiangyu",
+      "people:hiroyuki-oki",
+      "people:ho-tzu-nyen",
+      "people:keiichi-tanaami",
+      "people:yuki-anai",
+      "institutions:gwangju-biennale-foundation"
+    ],
+    "removed": [
+      "institutions:gwangju-biennale"
+    ],
+    "recordCount": 343,
+    "edgeCount": 389,
+    "priorHash": "b26fb2909e501c19098edb6be203a00164c8b7c042aed2a110e003f7fc7bba64",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]

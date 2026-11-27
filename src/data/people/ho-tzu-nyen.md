@@ -1,7 +1,7 @@
 ---
 name: "Ho Tzu Nyen"
 kind: "artist"
-nativeName: "何 子彦"
+nativeName: "何子彦"
 alternativeNames: ["ホー・ツーニェン"]
 linkedInstitutions: ["yamaguchi-center-for-arts-and-media-ycam","singapore-art-museum"]
 birthYear: "1976"

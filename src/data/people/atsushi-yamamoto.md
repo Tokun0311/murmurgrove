@@ -1,7 +1,7 @@
 ---
 name: "Atsushi Yamamoto"
 kind: "artist"
-nativeName: "山本 篤"
+nativeName: "山本篤"
 alternativeNames: []
 linkedInstitutions: ["shugoarts"]
 birthYear: "1980"

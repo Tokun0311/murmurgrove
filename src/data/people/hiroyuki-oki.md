@@ -1,7 +1,7 @@
 ---
 name: "Hiroyuki Oki"
 kind: "artist"
-nativeName: "大木 裕之"
+nativeName: "大木裕之"
 alternativeNames: []
 linkedInstitutions: ["anomaly"]
 birthYear: "1964"

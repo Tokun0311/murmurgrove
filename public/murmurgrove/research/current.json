@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-27T08:45:03.886Z",
-  "sourceDigest": "110d24a838fd7c30008f529ae7296cd332225a38e535c199ff233a51adea9004",
+  "generatedAt": "2026-11-27T08:53:41.321Z",
+  "sourceDigest": "91b272f3e73ca23b8e5a4b14fdb45b1901ddb0e9848a083534b6d636fcb4b881",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "b26fb2909e501c19098edb6be203a00164c8b7c042aed2a110e003f7fc7bba64",
+  "graphHash": "86cb47127b932458d6c4338c7b2c702b6deac15dd79dcae3ea6892dcce18334f",
   "records": [
     {
       "type": "exhibitions",
@@ -1370,13 +1370,13 @@
       "key": "people:atsushi-yamamoto",
       "title": "Atsushi Yamamoto",
       "path": "/people/atsushi-yamamoto/",
-      "contentHash": "d86c918e93ac2000077255ca27c09b5df4722b21a485bb48f932a8cc710eb4ef",
+      "contentHash": "10d700385f83c5195254b74faad5be9e0d87103bfa1ef542c0b9da7e5f5088eb",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [
-        "山本 篤"
+        "山本篤"
       ],
       "conceptReading": "",
       "mergedInto": null
@@ -1919,13 +1919,13 @@
       "key": "people:he-xiangyu",
       "title": "He Xiangyu",
       "path": "/people/he-xiangyu/",
-      "contentHash": "8ddd0f95f0a87ce38daed6174ffefcbf77ac43a278b6c6e001b85a6bcfa0ed75",
+      "contentHash": "754878540943a834f07848b34d4a42b7d73093ef4e20cee26d747e53d8117c33",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [
-        "何 翔宇"
+        "何翔宇"
       ],
       "conceptReading": "",
       "mergedInto": null
@@ -1981,13 +1981,13 @@
       "key": "people:hiroyuki-oki",
       "title": "Hiroyuki Oki",
       "path": "/people/hiroyuki-oki/",
-      "contentHash": "e50bfd4a7738c5be66318d74a43ab2d176ba4e73428387fde6c73e524ff68e95",
+      "contentHash": "179cb3a733acebb7d68bbc800773bc1f0ea084290cb806cabef5f514062b1a15",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [
-        "大木 裕之"
+        "大木裕之"
       ],
       "conceptReading": "",
       "mergedInto": null
@@ -1998,13 +1998,13 @@
       "key": "people:ho-tzu-nyen",
       "title": "Ho Tzu Nyen",
       "path": "/people/ho-tzu-nyen/",
-      "contentHash": "535b9c9fec84e6dfd6a42673a72c19bfc93709a448c216d132d70641b2044ec5",
+      "contentHash": "a71de06b6eb1c4e3d31c105c3738a98eddd6720e57be9f89d9a0a065cf478899",
       "summary": "何子彥（1976年生）是新加坡当代艺术家、电影创作者及策展人，也是东南亚极具代表性的研究型艺术家之一。 他的创作横跨活动影像、多屏幕装置、声音、动画、戏剧与数字技术，长期关注历史叙事、殖民主义、神话、政治身份以及知识生产机制。 他并不单纯试图还原历史，而是追问：历史是如何被制造、书写、传播，并最终成为我们理解世界的框架的？",
       "text": "何子彥（1976年生）是新加坡当代艺术家、电影创作者及策展人，也是东南亚极具代表性的研究型艺术家之一。\n\n他的创作横跨活动影像、多屏幕装置、声音、动画、戏剧与数字技术，长期关注历史叙事、殖民主义、神话、政治身份以及知识生产机制。\n\n他并不单纯试图还原历史，而是追问：历史是如何被制造、书写、传播，并最终成为我们理解世界的框架的？",
       "date": "",
       "conceptStage": null,
       "aliases": [
-        "何 子彦",
+        "何子彦",
         "ホー・ツーニェン"
       ],
       "conceptReading": "",
@@ -2416,13 +2416,13 @@
       "key": "people:keiichi-tanaami",
       "title": "Keiichi Tanaami",
       "path": "/people/keiichi-tanaami/",
-      "contentHash": "2f8f8df6baf5e9d5ad52df98ef105fb2cfde441e804f56b6e10b28ffd5ec806f",
+      "contentHash": "130698efb03686e704b544ba81530a34a9de6addeb13e6f4b5fc5522c4969fb3",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [
-        "田名網 敬一"
+        "田名網敬一"
       ],
       "conceptReading": "",
       "mergedInto": null
@@ -3919,13 +3919,13 @@
       "key": "people:yuki-anai",
       "title": "Yuki Anai",
       "path": "/people/yuki-anai/",
-      "contentHash": "93487f5d23541c357f003907aed8a4b91ad28f69b662494a4c3bd70693bea168",
+      "contentHash": "b673d0a4fdd193acc5af1640423da6e8f54201cad1467a6f6ad893d0801fb6ab",
       "summary": "Yuki Anai is the founder and CEO of non-classic and a media artist. Born in Oita, Japan, he earned a Master's degree from Keio University Graduate School of Media Design. While still a student, he launched a digital art team at teamLab and directed live productions for established artists. In 2016 he founded non-classic, creating large-scale spatial productions such as Yorunoyo (Yokohama), the autumn illumination at Nikko Toshogu Shrine, and Meyameya (Kobe",
       "text": "Yuki Anai is the founder and CEO of non-classic and a media artist. Born in Oita, Japan, he earned a Master's degree from Keio University Graduate School of Media Design. While still a student, he launched a digital art team at teamLab and directed live productions for established artists.\n\nIn 2016 he founded non-classic, creating large-scale spatial productions such as Yorunoyo (Yokohama), the autumn illumination at Nikko Toshogu Shrine, and Meyameya (Kobe). His work has been presented at Ars Electronica (Austria) and the Athens Digital Arts Festival (Greece). In 2026, his new work “Passage of Time” was permanently installed in the atrium of the Oita Prefectural Art Museum (OPAM) to mark the museum’s 10th anniversary.",
       "date": "",
       "conceptStage": null,
       "aliases": [
-        "穴井 佑樹"
+        "穴井佑樹"
       ],
       "conceptReading": "",
       "mergedInto": null
@@ -4369,27 +4369,14 @@
       "key": "institutions:gwangju-biennale-foundation",
       "title": "Gwangju Biennale Foundation",
       "path": "/institutions/gwangju-biennale-foundation/",
-      "contentHash": "48b1632a0d024e5a1c721bc6e169f2c0a17b31353b65b1e3335b220105c3cd12",
-      "summary": "光州双年展基金会是韩国光州以当代艺术展览、策展研究、国际文化交流及公共教育为主要活动的非营利艺术机构，也是亚洲历史最悠久的当代艺术双年展的组织者。 其成立背景与1980年五一八光州民主化运动密切相关，旨在通过艺术回应历史创伤、延续民主精神，并建立连接地方社会与国际当代艺术网络的文化平台。 基金会通过双年展、国际合作、研究论坛、公共教育及档案建设，持续探索艺术与历史记忆、民主、人权、社会变革及全球文化交流之间的关系。",
-      "text": "光州双年展基金会是韩国光州以当代艺术展览、策展研究、国际文化交流及公共教育为主要活动的非营利艺术机构，也是亚洲历史最悠久的当代艺术双年展的组织者。\n\n其成立背景与1980年五一八光州民主化运动密切相关，旨在通过艺术回应历史创伤、延续民主精神，并建立连接地方社会与国际当代艺术网络的文化平台。\n\n基金会通过双年展、国际合作、研究论坛、公共教育及档案建设，持续探索艺术与历史记忆、民主、人权、社会变革及全球文化交流之间的关系。",
+      "contentHash": "018e94893c6b600ecb769d19de8ff63e2d721634a23134898aa56fe8ce399807",
+      "summary": "光州双年展基金会是韩国光州以当代艺术展览、策展研究、国际文化交流及公共教育为主要活动的非营利艺术机构，也是亚洲历史最悠久的当代艺术双年展的组织者。 其成立背景与1980年五一八光州民主化运动密切相关，旨在通过艺术回应历史创伤、延续民主精神，并建立连接地方社会与国际当代艺术网络的文化平台。 基金会通过双年展、国际合作、研究论坛、公共教育及档案建设，持续探索艺术与历史记忆、民主、人权、社会变革及全球文化交流之间的关系。 以韩国光州为中心举行的国际当代艺术双年展，活动可能涉及多处展览场地。 ### 关联场馆 **场馆地址：** 111 Biennale-ro, Buk-gu, Gwangju 61104, Republic of Korea **地址说明：** 这是与该项目相关的场馆信息，不代表活动仅在此处举行；具体到访地点尚未核实。",
+      "text": "光州双年展基金会是韩国光州以当代艺术展览、策展研究、国际文化交流及公共教育为主要活动的非营利艺术机构，也是亚洲历史最悠久的当代艺术双年展的组织者。\n\n其成立背景与1980年五一八光州民主化运动密切相关，旨在通过艺术回应历史创伤、延续民主精神，并建立连接地方社会与国际当代艺术网络的文化平台。\n\n基金会通过双年展、国际合作、研究论坛、公共教育及档案建设，持续探索艺术与历史记忆、民主、人权、社会变革及全球文化交流之间的关系。\n\n以韩国光州为中心举行的国际当代艺术双年展，活动可能涉及多处展览场地。\n\n### 关联场馆\n\n**场馆地址：** 111 Biennale-ro, Buk-gu, Gwangju 61104, Republic of Korea  \n**地址说明：** 这是与该项目相关的场馆信息，不代表活动仅在此处举行；具体到访地点尚未核实。",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
-      "conceptReading": "",
-      "mergedInto": null
-    },
-    {
-      "type": "institutions",
-      "id": "gwangju-biennale",
-      "key": "institutions:gwangju-biennale",
-      "title": "Gwangju Biennale",
-      "path": "/institutions/gwangju-biennale/",
-      "contentHash": "62598f60e4790267169de0b5c6c8fcc95f2e499574625e55ca3f02c77aec6822",
-      "summary": "以韩国光州为中心举行的国际当代艺术双年展，活动可能涉及多处展览场地。 ### 关联场馆 **场馆地址：** 111 Biennale-ro, Buk-gu, Gwangju 61104, Republic of Korea **地址说明：** 这是与该项目相关的场馆信息，不代表活动仅在此处举行；具体到访地点尚未核实。",
-      "text": "以韩国光州为中心举行的国际当代艺术双年展，活动可能涉及多处展览场地。\n\n### 关联场馆\n\n**场馆地址：** 111 Biennale-ro, Buk-gu, Gwangju 61104, Republic of Korea  \n**地址说明：** 这是与该项目相关的场馆信息，不代表活动仅在此处举行；具体到访地点尚未核实。",
-      "date": "",
-      "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "Gwangju Biennale"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },

@@ -74,6 +74,14 @@ function renderValue(key,value){
   return JSON.stringify(String(value));
 }
 function own(o,k){return Object.prototype.hasOwnProperty.call(o,k);}
+function tidyPersonName(value,kind=''){
+  if(typeof value!=='string')return value;
+  let s=value.trim().replace(/[\t \u00a0\u3000]+/gu,' ');
+  const prefix=s.match(/^((?:zh|ja|en)\s*[:：]\s*)(.*)$/iu);
+  if(prefix)return prefix[1].replace(/\s*[:：]\s*$/u,': ')+tidyPersonName(prefix[2],kind);
+  if(!/collective|group|duo|organization|ensemble|team/i.test(kind)&&/^[\p{Script=Han}々]+ [\p{Script=Han}々]+$/u.test(s)&&[...s.replace(' ','')].length<=8)s=s.replace(' ','');
+  return s;
+ }
 function normalise(type,submitted,{strict=false}={}){
   requireType(type);const f=TYPE_FIELDS[type];const fields={};
   if(!submitted||typeof submitted!=='object'||Array.isArray(submitted))throw Object.assign(new Error('Invalid form data'),{status:400});
@@ -89,6 +97,7 @@ function normalise(type,submitted,{strict=false}={}){
       if(v.trim()!==''||f.required.includes(k))fields[k]=v.trim();
     }
   }
+  if(type==='people'){for(const k of ['name','nativeName','sortName','reading'])if(typeof fields[k]==='string')fields[k]=tidyPersonName(fields[k],fields.kind);if(Array.isArray(fields.alternativeNames))fields.alternativeNames=[...new Set(fields.alternativeNames.map(x=>tidyPersonName(x,fields.kind)))];}
   if(strict){
     if(fields.website&&!/^https?:\/\/[^\s]+$/i.test(fields.website))throw apiError(422,'Website must be an http(s) URL');
     for(const k of ['birthYear','deathYear','foundedYear','closedYear'])if(fields[k]&&!/^\d{4}$/.test(fields[k]))throw apiError(422,'Use a four-digit year: '+k);

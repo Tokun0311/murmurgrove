@@ -1,7 +1,7 @@
 ---
 name: "He Xiangyu"
 kind: "artist"
-nativeName: "何 翔宇"
+nativeName: "何翔宇"
 alternativeNames: []
 linkedInstitutions: []
 birthYear: "1986"
