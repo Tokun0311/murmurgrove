@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-26T09:38:27.581Z",
-  "sourceDigest": "301d1aeb72ba0ee7e592990e56baa182233654474d8155bf62c2492da08b73a8",
+  "generatedAt": "2026-11-27T01:31:10.609Z",
+  "sourceDigest": "bc6df7a507dc4aaff08141ded7f4a964a71b58014ff56f7ae0b86464696a82a2",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "0d53bb8f6a440720486f3224078310d25d3461f10a1c5cdd48d9b47e139c4d55",
+  "graphHash": "9767c01f0ef317f937280890132cf5c26027a153587902f385a6f7ddb3c1f6f9",
   "records": [
     {
       "type": "exhibitions",
@@ -982,6 +982,51 @@
       "mergedInto": null
     },
     {
+      "type": "exhibitions",
+      "id": "2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "key": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "title": "Feel the Sound Sound: reaches the body before it reaches the ear",
+      "path": "/exhibitions/2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear/",
+      "contentHash": "3f96cd851ca239b5cde592ad9c816cb7ce6fe257402cedd378e6c6f045b4dd87",
+      "summary": "",
+      "text": "",
+      "date": "2026-11-22",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "exhibitions",
+      "id": "2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "key": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "title": "Where Art and Music Meet Technology: New Possibilities for Creative Collaboration",
+      "path": "/exhibitions/2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor/",
+      "contentHash": "4af07393259b7fce666d888eb883b993cdd74beec81de40e2c6b816651850de0",
+      "summary": "14:00–14:50 MUTEK.JP Pro Conference Exploring New Possibilities for Creative Collaboration and International Cultural Exchange at the Intersection of Art, Music, and Technology: This special session brings together leading cultural professionals from the UK to explore how technology is transforming music and visual art, and the new creative possibilities emerging when artists engage with technology. The discussion will also examine opportunities for cross-",
+      "text": "14:00–14:50   MUTEK.JP Pro Conference\n\nExploring New Possibilities for Creative Collaboration and International Cultural Exchange at the Intersection of Art, Music, and Technology: This special session brings together leading cultural professionals from the UK to explore how technology is transforming music and visual art, and the new creative possibilities emerging when artists engage with technology.\n\nThe discussion will also examine opportunities for cross-border collaboration, the development of artist communities, and how international networks can support the future of arts and culture.",
+      "date": "2026-11-22",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "alejandra-cardenas",
+      "key": "people:alejandra-cardenas",
+      "title": "Alejandra Cárdenas",
+      "path": "/people/alejandra-cardenas/",
+      "contentHash": "4a6f1c812f425aa1fb28142ed89122021607249a931e4ed39988640bbaf32b5d",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
       "type": "people",
       "id": "alfredo-jaar",
       "key": "people:alfredo-jaar",
@@ -990,6 +1035,21 @@
       "contentHash": "c9685c1eda52772430d2ee947fa36fc951bdab12cff2a4a0aa54a00b1c21b15c",
       "summary": "智利出生的艺术家、建筑师和电影创作者，长期以摄影、装置与公共项目讨论新闻图像的传播、政治暴力以及观看者的伦理责任。",
       "text": "智利出生的艺术家、建筑师和电影创作者，长期以摄影、装置与公共项目讨论新闻图像的传播、政治暴力以及观看者的伦理责任。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "atsushi-wakimoto",
+      "key": "people:atsushi-wakimoto",
+      "title": "Atsushi Wakimoto",
+      "path": "/people/atsushi-wakimoto/",
+      "contentHash": "ff5baef32c38a030c66082ccf487572af49facbf54325b8a073657d01a4b7337",
+      "summary": "Head of Curatorial Affairs MoN Takanawa: The Museum of Narratives (JP)",
+      "text": "Head of Curatorial Affairs MoN Takanawa: The Museum of Narratives (JP)",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1043,6 +1103,21 @@
     },
     {
       "type": "people",
+      "id": "daito-manabe",
+      "key": "people:daito-manabe",
+      "title": "Daito Manabe",
+      "path": "/people/daito-manabe/",
+      "contentHash": "cb1d4cd0de8a09cc651a00f9dbaa36a76101bc16c7bbb6f1a6cced75b43cd42d",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "do-ho-suh",
       "key": "people:do-ho-suh",
       "title": "Do Ho Suh",
@@ -1058,6 +1133,36 @@
     },
     {
       "type": "people",
+      "id": "domestic-data-streamers",
+      "key": "people:domestic-data-streamers",
+      "title": "Domestic Data Streamers",
+      "path": "/people/domestic-data-streamers/",
+      "contentHash": "512daf928190d0b48b215a9b8cba0391215abf02a6688b1ead736f390b3e10ad",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "ei-wada",
+      "key": "people:ei-wada",
+      "title": "Ei Wada",
+      "path": "/people/ei-wada/",
+      "contentHash": "5eec7155428a1c03c102252baa431ec719a2e7c50d5a6a1289b2a9090ec60716",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "elia-nurvista",
       "key": "people:elia-nurvista",
       "title": "Elia Nurvista",
@@ -1065,6 +1170,51 @@
       "contentHash": "ab8f3433b335cb4a102fa1b1ccfe3ba35217cab7d34a3343adb21d7d0e5a283b",
       "summary": "印度尼西亚艺术家，使用食物、影像和社会参与式实践，讨论劳动、贸易及全球生产与消费体系。",
       "text": "印度尼西亚艺术家，使用食物、影像和社会参与式实践，讨论劳动、贸易及全球生产与消费体系。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "elsewhere-in-india",
+      "key": "people:elsewhere-in-india",
+      "title": "​ ​Elsewhere in India",
+      "path": "/people/elsewhere-in-india/",
+      "contentHash": "30a4ade7d59d8b2bcfcf25550cf5cbda01489c96742f7947b9edd63016d812a6",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "evan-ifekoya",
+      "key": "people:evan-ifekoya",
+      "title": "Evan Ifekoya",
+      "path": "/people/evan-ifekoya/",
+      "contentHash": "7b4f45868d9607976ed056ca21103ee4102464e21292490529474f01d375d2c5",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "evelyn-glennie",
+      "key": "people:evelyn-glennie",
+      "title": "​ ​Evelyn Glennie",
+      "path": "/people/evelyn-glennie/",
+      "contentHash": "1b1e75348708b7b0f3ac54c6cf48bab974772f4c4ea19befcfa2737e8e7634cb",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1091,6 +1241,36 @@
     },
     {
       "type": "people",
+      "id": "giacomo-lepri",
+      "key": "people:giacomo-lepri",
+      "title": "Giacomo Lepri",
+      "path": "/people/giacomo-lepri/",
+      "contentHash": "84e3b979645a66537df4001f4f203b53a4aef807aa14008e1b87313a82f18d9e",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "harry-yeff-reeps100-trung-bao",
+      "key": "people:harry-yeff-reeps100-trung-bao",
+      "title": "​ ​Harry Yeff (Reeps100) & Trung Bao",
+      "path": "/people/harry-yeff-reeps100-trung-bao/",
+      "contentHash": "3ca3a1bd30184d7ade756b74a045e96d32e386a09447a34fc9a65a1ccf921a73",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "henry-moore",
       "key": "people:henry-moore",
       "title": "Henry Moore",
@@ -1098,6 +1278,96 @@
       "contentHash": "a99a5fe77acb0d463756cf4d1dfe7be2bd191269981a2b10f47223e1c301ccd1",
       "summary": "英国雕塑家，因以人体和自然形态为主题的现代雕塑而知名，其作品也经常出现在公共空间。 ### 相关记录 雕塑家。广岛市现代美术馆周边公共艺术参观时提及。",
       "text": "英国雕塑家，因以人体和自然形态为主题的现代雕塑而知名，其作品也经常出现在公共空间。\n\n### 相关记录\n\n雕塑家。广岛市现代美术馆周边公共艺术参观时提及。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "holly-herndon",
+      "key": "people:holly-herndon",
+      "title": "Holly Herndon",
+      "path": "/people/holly-herndon/",
+      "contentHash": "6f52c7c678db57658cbd1f7729d8ecefe743a4239aaa460358bc0250105dc614",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "ila-monom",
+      "key": "people:ila-monom",
+      "title": "​ ​ILĀ & MONOM",
+      "path": "/people/ila-monom/",
+      "contentHash": "a84c300469afd042838f8ad717ec9468e9fd7f87f6e3cbec838b5f31aeba7e1f",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "intelligent-instruments-lab",
+      "key": "people:intelligent-instruments-lab",
+      "title": "Intelligent Instruments Lab",
+      "path": "/people/intelligent-instruments-lab/",
+      "contentHash": "e333e4b4cf9b3819877771c7f524b26f9de37fcc4e0d50e9e2febad40851d3f7",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "itti-haioka",
+      "key": "people:itti-haioka",
+      "title": "Itti & HAIOKA",
+      "path": "/people/itti-haioka/",
+      "contentHash": "1d945fd7a3376dd8a1205a2464e344d46c9c8e77d106b7e27f1d60211b2ffd45",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "jacob-silkin",
+      "key": "people:jacob-silkin",
+      "title": "Jacob Silkin",
+      "path": "/people/jacob-silkin/",
+      "contentHash": "8fdbcdaf78ce87c26985763269f4170265dfd7093e3b013d2c7444cfe9b2832e",
+      "summary": "Music Programmer, Institute of Contemporary Arts (ICA) (UK)",
+      "text": "Music Programmer, Institute of Contemporary Arts (ICA) (UK)",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "jan-st-werner",
+      "key": "people:jan-st-werner",
+      "title": "Jan St. Werner",
+      "path": "/people/jan-st-werner/",
+      "contentHash": "6817aca4f3522926631f8f609b2fc24f3d931ae1e57e8ceed757a88d5ea5dbe0",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1175,6 +1445,36 @@
     },
     {
       "type": "people",
+      "id": "kinda-studios",
+      "key": "people:kinda-studios",
+      "title": "Kinda Studios",
+      "path": "/people/kinda-studios/",
+      "contentHash": "318b1d40617fe8f497cd08fc8858a4fbbe1a5530e27ddea4db008a68e1304cca",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "luke-kemp",
+      "key": "people:luke-kemp",
+      "title": "Luke Kemp",
+      "path": "/people/luke-kemp/",
+      "contentHash": "0476ac238cb635ec8901cc5608b9efb4020109899f1d1f11bbb93a7ad4a621c9",
+      "summary": "Curator of Feel The Sound (UK)",
+      "text": "Curator of Feel The Sound (UK)",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "lynn-hershman-leeson",
       "key": "people:lynn-hershman-leeson",
       "title": "Lynn Hershman Leeson",
@@ -1190,6 +1490,21 @@
     },
     {
       "type": "people",
+      "id": "marie-mcpartlin",
+      "key": "people:marie-mcpartlin",
+      "title": "Marie McPartlin",
+      "path": "/people/marie-mcpartlin/",
+      "contentHash": "7e94b7159ce885ed8f8babb0e908e0b79903ff97f8166610621419cbfe229f77",
+      "summary": "Director, Somerset House Studios (UK)",
+      "text": "Director, Somerset House Studios (UK)",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "marina-abramovic",
       "key": "people:marina-abramovic",
       "title": "Marina Abramović",
@@ -1197,6 +1512,21 @@
       "contentHash": "78a3256ae7b7038aa9dda5ae05153bb00371643dc83436ca09195e1280274a7e",
       "summary": "出生于贝尔格莱德的行为艺术家，以身体、持续时间、观众参与和耐力为核心展开创作。",
       "text": "出生于贝尔格莱德的行为艺术家，以身体、持续时间、观众参与和耐力为核心展开创作。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "max-cooper",
+      "key": "people:max-cooper",
+      "title": "Max Cooper",
+      "path": "/people/max-cooper/",
+      "contentHash": "70e0199f1508a664a00e7aa6804deffff6dfbec17711b5b99e06110ad7a6a30c",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1253,6 +1583,36 @@
     },
     {
       "type": "people",
+      "id": "miyu-hosoi",
+      "key": "people:miyu-hosoi",
+      "title": "Miyu Hosoi",
+      "path": "/people/miyu-hosoi/",
+      "contentHash": "4bc6fad76a2ee65d4ec6e3be394424434d95630ebdea51eb531f81bcfd71eb0d",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "mutek-sarah-mackenzie",
+      "key": "people:mutek-sarah-mackenzie",
+      "title": "MUTEK (Sarah Mackenzie)",
+      "path": "/people/mutek-sarah-mackenzie/",
+      "contentHash": "d0f27d780045d59912ee358ff7f15b8c8f75889a5793529f6235b1152f67c792",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "nam-june-paik",
       "key": "people:nam-june-paik",
       "title": "Nam June Paik",
@@ -1281,6 +1641,51 @@
         "なわこうへい",
         "Nawa Kohei"
       ],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "nexus-studios",
+      "key": "people:nexus-studios",
+      "title": "Nexus Studios",
+      "path": "/people/nexus-studios/",
+      "contentHash": "8a11bd7d2fd93cf39536a423ba75d5a1b6c339fae43462a875b1395c3a79149e",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "nicola-privato",
+      "key": "people:nicola-privato",
+      "title": "​ ​Nicola Privato",
+      "path": "/people/nicola-privato/",
+      "contentHash": "f7a5ad7c1ddbe62b53281f7fc46e61347f7fdcf9ea86065cd941cc657280b629",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "nicole-l-huillier",
+      "key": "people:nicole-l-huillier",
+      "title": "Nicole L'Huillier",
+      "path": "/people/nicole-l-huillier/",
+      "contentHash": "8f7203e4e89735cfd484231ba0e34d5ca85b5685ed720c107febde5106dfaf45",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -1319,6 +1724,66 @@
     },
     {
       "type": "people",
+      "id": "patty-ayukawa",
+      "key": "people:patty-ayukawa",
+      "title": "Patty Ayukawa",
+      "path": "/people/patty-ayukawa/",
+      "contentHash": "f62b4b6bfa18f71141d45b945efe4bf33774d82d5d57e8699776351c75ddbc16",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "pixie-dust-technologies",
+      "key": "people:pixie-dust-technologies",
+      "title": "​ ​Pixie Dust Technologies",
+      "path": "/people/pixie-dust-technologies/",
+      "contentHash": "44fc429a66f985ff8a3f1e98d6c857b620f320049299091b0b08b977ff924476",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "raymond-antrobus",
+      "key": "people:raymond-antrobus",
+      "title": "​ ​Raymond Antrobus",
+      "path": "/people/raymond-antrobus/",
+      "contentHash": "c332c5c93ecfb1c661e7911a4c2d72893590937326e2b4fff5cdd9f825eac51c",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "rivca-burns",
+      "key": "people:rivca-burns",
+      "title": "Rivca Burns",
+      "path": "/people/rivca-burns/",
+      "contentHash": "2f5f68927f60ca368e1ea2fbe39b2d0963894129a308b492fed5a9ab306f1018",
+      "summary": "Head of Music, Factory International (UK)",
+      "text": "Head of Music, Factory International (UK)",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "ruangrupa",
       "key": "people:ruangrupa",
       "title": "ruangrupa",
@@ -1326,6 +1791,21 @@
       "contentHash": "3e87dae9cdce118241053a6044d88e6176eaac7390494da5061ef811d0cd70fd",
       "summary": "成立于印度尼西亚雅加达的艺术家集体，以协作、知识共享和社区网络为核心，曾担任 documenta fifteen 的艺术总监。",
       "text": "成立于印度尼西亚雅加达的艺术家集体，以协作、知识共享和社区网络为核心，曾担任 documenta fifteen 的艺术总监。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "ryuichi-sakamoto",
+      "key": "people:ryuichi-sakamoto",
+      "title": "Ryuichi Sakamoto",
+      "path": "/people/ryuichi-sakamoto/",
+      "contentHash": "9a967767791df37bce58f73555fe97401d0ce5ae80c6bab3d30f75171ffd6fb9",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1403,6 +1883,36 @@
     },
     {
       "type": "people",
+      "id": "tatiana-heuman",
+      "key": "people:tatiana-heuman",
+      "title": "Tatiana Heuman",
+      "path": "/people/tatiana-heuman/",
+      "contentHash": "e84641d7f0fa466cf6589476c47f45da7f40dfd0cb0569f9c37f55ce3443f667",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "temporary-pleasure",
+      "key": "people:temporary-pleasure",
+      "title": "​ ​Temporary Pleasure",
+      "path": "/people/temporary-pleasure/",
+      "contentHash": "32ad1bf728b3860c7e7f189e975728b2c7196089a63f1692ea597aa10fcef40c",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "theaster-gates",
       "key": "people:theaster-gates",
       "title": "Theaster Gates",
@@ -1410,6 +1920,21 @@
       "contentHash": "5786d6d8e73f70d04a6af8308a5aec44f9316ecb6a7950ff7e845b97b10ea1b2",
       "summary": "美国艺术家与社会实践者，结合陶艺、建筑、档案和城市空间再生，探索文化遗产与社区组织。 ### 相关记录 创作关注工艺、历史记忆与社会实践。相关记录比较京都 HOSOO GALLERY 与森美术馆的展览。",
       "text": "美国艺术家与社会实践者，结合陶艺、建筑、档案和城市空间再生，探索文化遗产与社区组织。\n\n### 相关记录\n\n创作关注工艺、历史记忆与社会实践。相关记录比较京都 HOSOO GALLERY 与森美术馆的展览。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "trans-voices",
+      "key": "people:trans-voices",
+      "title": "TRANS VOICES",
+      "path": "/people/trans-voices/",
+      "contentHash": "406f69c933c9ba19b1624b5ed2c2f3ed136a76ad7f6e735cdcc4ccec3bb1edea",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1568,6 +2093,21 @@
     },
     {
       "type": "people",
+      "id": "yuki-anai",
+      "key": "people:yuki-anai",
+      "title": "Yuki Anai",
+      "path": "/people/yuki-anai/",
+      "contentHash": "5362ac849ffbfaa80d5109349922033ecaef8ac56ba3cf796dbdb8ba337cfdb4",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "yukinori-yanagi",
       "key": "people:yukinori-yanagi",
       "title": "Yanagi Yukinori / 柳幸典",
@@ -1581,6 +2121,21 @@
         "やなぎゆきのり",
         "Yanagi Yukinori"
       ],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "yuri-suzuki",
+      "key": "people:yuri-suzuki",
+      "title": "​ ​Yuri Suzuki",
+      "path": "/people/yuri-suzuki/",
+      "contentHash": "e55ca8bba963248f8857ba6cf22267e1abe4becc80caf32eff6147b2a32450e9",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -1709,6 +2264,21 @@
     },
     {
       "type": "institutions",
+      "id": "barbican-centre",
+      "key": "institutions:barbican-centre",
+      "title": "Barbican Centre",
+      "path": "/institutions/barbican-centre/",
+      "contentHash": "034abc0df25e65af0984e06411bebf398dd2e116aed4267993ccd736034e035a",
+      "summary": "Barbican Centre（巴比肯艺术中心） 巴比肯艺术中心（Barbican Centre）是位于英国伦敦金融城的综合性文化艺术机构，于1982年3月3日正式开放，由伦敦金融城市法团（City of London Corporation）创立并提供主要资金支持。 巴比肯艺术中心是伦敦战后城市重建计划的一部分，由建筑事务所 Chamberlin, Powell and Bon 设计，以其代表性的粗野主义（Brutalism）建筑闻名。文化设施与住宅、公共空间及教育设施共同构成巴比肯建筑群（Barbican Estate），体现了战后英国将文化生产、公共生活与城市居住相结合的现代主义城市规划理念。 中心设有美术馆、音乐厅、剧场、电影院、图书馆及温室植物园等设施，长期开展视觉艺术、音乐、舞蹈、戏剧、电影、建筑与设计等跨学科文化项目。通过艺术委托、联合制作、国际机构合作及公共教育活动，推动不同艺术媒介之间的交流，并探索艺术与社会、城市及公众之间的关系。 Barbican+4 - 成立时间： 1982年3月3日",
+      "text": "Barbican Centre（巴比肯艺术中心）\n巴比肯艺术中心（Barbican Centre）是位于英国伦敦金融城的综合性文化艺术机构，于1982年3月3日正式开放，由伦敦金融城市法团（City of London Corporation）创立并提供主要资金支持。\n\n巴比肯艺术中心是伦敦战后城市重建计划的一部分，由建筑事务所 Chamberlin, Powell and Bon 设计，以其代表性的粗野主义（Brutalism）建筑闻名。文化设施与住宅、公共空间及教育设施共同构成巴比肯建筑群（Barbican Estate），体现了战后英国将文化生产、公共生活与城市居住相结合的现代主义城市规划理念。\n\n中心设有美术馆、音乐厅、剧场、电影院、图书馆及温室植物园等设施，长期开展视觉艺术、音乐、舞蹈、戏剧、电影、建筑与设计等跨学科文化项目。通过艺术委托、联合制作、国际机构合作及公共教育活动，推动不同艺术媒介之间的交流，并探索艺术与社会、城市及公众之间的关系。\nBarbican+4\n\n- 成立时间： 1982年3月3日（正式开放）\n- 所在地： 英国伦敦\n- 机构类型： 综合性公共文化艺术机构\n- 主要资助方： City of London Corporation\n- 官方网站： https://www.barbican.org.uk/",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
       "id": "biennale-jatim",
       "key": "institutions:biennale-jatim",
       "title": "Biennale Jatim / 東ジャワビエンナーレ",
@@ -1716,6 +2286,21 @@
       "contentHash": "6007d27136a9c0a8f2ff010f33c63b8c6655b54ad7062e4b293d61ccdb5566bf",
       "summary": "在印度尼西亚东爪哇开展的地区性艺术双年展项目，展览与活动可能分布于多个地点，并不对应单一常设场馆。 ### 相关记录 印度尼西亚东爪哇的双年展项目，相关笔记基于艺术家现场交流记录其分散式组织与资助条件。 ### 关联场馆 **关联场馆：** Pudak Galeri **场馆地址：** Jl. Pahlawan No. 26, Tlogobendung, Bedilan, Gresik, East Java 61113, Indonesia **地址说明：** 这是与该项目相关的场馆信息，不代表活动仅在此处举行；具体到访地点尚未核实。",
       "text": "在印度尼西亚东爪哇开展的地区性艺术双年展项目，展览与活动可能分布于多个地点，并不对应单一常设场馆。\n\n### 相关记录\n\n印度尼西亚东爪哇的双年展项目，相关笔记基于艺术家现场交流记录其分散式组织与资助条件。\n\n### 关联场馆\n\n**关联场馆：** Pudak Galeri  \n**场馆地址：** Jl. Pahlawan No. 26, Tlogobendung, Bedilan, Gresik, East Java 61113, Indonesia  \n**地址说明：** 这是与该项目相关的场馆信息，不代表活动仅在此处举行；具体到访地点尚未核实。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
+      "id": "british-council",
+      "key": "institutions:british-council",
+      "title": "British Council",
+      "path": "/institutions/british-council/",
+      "contentHash": "778911b23f1333c0c66643a178c1ae1b9b3bb3393fff2a7c9f54ef974d5203e6",
+      "summary": "British Council（英国文化教育协会） 英国文化教育协会（British Council）成立于1934年，总部位于英国伦敦，是英国负责国际文化交流与教育合作的公共机构。1940年获得皇家特许状（Royal Charter），具有注册慈善机构及非部门公共机构的双重身份，在运营上独立于英国政府，其主管政府部门为英国外交、联邦及发展事务部（FCDO）。 该机构成立于20世纪30年代全球政治与经济局势动荡的背景下，旨在通过文化、教育及语言交流增进英国与其他国家之间的相互理解，并建立长期的国际文化关系。目前，其业务覆盖全球200多个国家和地区，主要资金来源包括英国政府拨款、合作项目、英语教学、语言考试及慈善捐赠。 在艺术与文化领域，British Council 通过国际展览、艺术家交流、跨国联合制作、研究资助及文化机构之间的合作，推动英国艺术与全球文化网络之间的互动。其长期参与威尼斯双年展英国馆的组织工作，也是英国视觉艺术国际传播的重要机构之一。 从文化政策与机构研究的角度来看，British Cou",
+      "text": "British Council（英国文化教育协会）\n英国文化教育协会（British Council）成立于1934年，总部位于英国伦敦，是英国负责国际文化交流与教育合作的公共机构。1940年获得皇家特许状（Royal Charter），具有注册慈善机构及非部门公共机构的双重身份，在运营上独立于英国政府，其主管政府部门为英国外交、联邦及发展事务部（FCDO）。\n\n该机构成立于20世纪30年代全球政治与经济局势动荡的背景下，旨在通过文化、教育及语言交流增进英国与其他国家之间的相互理解，并建立长期的国际文化关系。目前，其业务覆盖全球200多个国家和地区，主要资金来源包括英国政府拨款、合作项目、英语教学、语言考试及慈善捐赠。\n\n在艺术与文化领域，British Council 通过国际展览、艺术家交流、跨国联合制作、研究资助及文化机构之间的合作，推动英国艺术与全球文化网络之间的互动。其长期参与威尼斯双年展英国馆的组织工作，也是英国视觉艺术国际传播的重要机构之一。\n\n从文化政策与机构研究的角度来看，British Council 是理解国家文化外交（Cultural Diplomacy）、软实力（Soft Power）、跨国文化流通及公共文化机构治理机制的重要案例。\nBritish Council+4\n\n- 成立时间： 1934年\n- 总部所在地： 英国伦敦\n- 机构类型： 国际文化交流机构、非部门公共机构、注册慈善机构\n- 官方网站： https://www.britishcouncil.org/\n- 相关研究概念： Cultural Diplomacy、Soft Power、Cultural Relations、Transnational Cultural Circulation、Institutional Governance",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1836,6 +2421,21 @@
       "contentHash": "9a7d82635aade06ff05d1fc8bc8120c0b6d629ba4b2854123c9e8700a5ce9893",
       "summary": "位于新潟县十日町的奴奈川校园，是越后妻有地区艺术活动与空间再利用的相关场所。",
       "text": "位于新潟县十日町的奴奈川校园，是越后妻有地区艺术活动与空间再利用的相关场所。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
+      "id": "factory-international",
+      "key": "institutions:factory-international",
+      "title": "Factory International",
+      "path": "/institutions/factory-international/",
+      "contentHash": "eb6a015e3791af4b0cb99e8f955114be76806f28c83ebbad1eaae240612a6e22",
+      "summary": "Factory International 是位于英国曼彻斯特的独立非营利性文化艺术机构，其前身为曼彻斯特国际艺术节（Manchester International Festival，简称 MIF）的运营组织。自2007年首届艺术节举办以来，该机构以原创艺术作品的委托、制作及国际合作为核心。2023年，机构正式更名为 Factory International，名称致敬曼彻斯特具有代表性的独立音乐厂牌 Factory Records，并随着永久性文化设施 Aviva Studios 的开放，从周期性的艺术节运营组织发展为全年开展文化艺术活动的综合性艺术生产机构。 Factory International+1 其主要活动场所 Aviva Studios 于2023年10月正式开放，由大都会建筑事务所（Office for Metropolitan Architecture，OMA）的 Ellen van Loon 主导设计。该设施由曼彻斯特市议会主导开发，并获得英国政府及英格兰艺术委员会（Arts Cou",
+      "text": "Factory International 是位于英国曼彻斯特的独立非营利性文化艺术机构，其前身为曼彻斯特国际艺术节（Manchester International Festival，简称 MIF）的运营组织。自2007年首届艺术节举办以来，该机构以原创艺术作品的委托、制作及国际合作为核心。2023年，机构正式更名为 Factory International，名称致敬曼彻斯特具有代表性的独立音乐厂牌 Factory Records，并随着永久性文化设施 Aviva Studios 的开放，从周期性的艺术节运营组织发展为全年开展文化艺术活动的综合性艺术生产机构。\nFactory International+1\n\n\n其主要活动场所 Aviva Studios 于2023年10月正式开放，由大都会建筑事务所（Office for Metropolitan Architecture，OMA）的 Ellen van Loon 主导设计。该设施由曼彻斯特市议会主导开发，并获得英国政府及英格兰艺术委员会（Arts Council England）的支持。建筑采用高度灵活的空间结构，能够容纳大型艺术装置、实验性表演、音乐演出及多媒体艺术项目。\nFactory International+1\n\n\nFactory International 的艺术实践涵盖视觉艺术、音乐、舞蹈、戏剧、数字艺术及跨学科创作，尤其强调新作品的委托与生产。除运营双年举办的曼彻斯特国际艺术节外，机构还通过国际联合制作、作品巡演、艺术家发展计划、社区合作及 Factory Academy 职业培训项目，连接地方文化社群与全球艺术生产网络。其运营资金来自公共拨款、企业赞助、慈善捐赠及商业收入等多种渠道。\nFactory International+2\n\n\n从机构研究的角度来看，Factory International 是考察艺术节制度转型、后工业城市文化再生、艺术生产基础设施，以及地方文化政策与全球艺术流通之间关系的重要案例。其发展体现了周期性文化事件向常设文化机构转型的过程，也提供了观察公共文化投资、私人资本与艺术机构自主性之间关系的研究对象。\n- 历史起点： 2007年（首届 Manchester International Festival）\n- 现机构名称启用： 2023年\n- 所在地： Manchester, United Kingdom\n- 主要设施： Aviva Studios\n- 机构类型： 非营利性综合艺术机构、艺术生产平台、国际艺术节运营机构\n- 官方网站： https://factoryinternational.org/\n- 相关研究概念： Cultural Infrastructure（文化基础设施）、Urban Regeneration（城市再生）、Post-industrial City（后工业城市）、Festivalisation（节庆化）、Artistic Production（艺术生产）、Cultural Policy（文化政策）、Public–Private Partnership（公私合作）、Transnational Cultural Circulation（跨国文化流通）",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -2024,6 +2624,21 @@
     },
     {
       "type": "institutions",
+      "id": "institute-of-contemporary-arts-ica",
+      "key": "institutions:institute-of-contemporary-arts-ica",
+      "title": "Institute of Contemporary Arts (ICA)",
+      "path": "/institutions/institute-of-contemporary-arts-ica/",
+      "contentHash": "bcac03f1f5a0c29cc2d8caec40dd253aee7b5ceb1bec5b999ad71804ae324231",
+      "summary": "Institute of Contemporary Arts（ICA）是位于英国伦敦的独立非营利性当代艺术机构，由艺术家、诗人、批评家及文化界人士于1946年发起成立，主要创始人包括艺术家 Roland Penrose、艺术批评家 Herbert Read 等。1968年迁至伦敦 The Mall 的现址。机构诞生于英国战后文化重建的背景下，旨在为先锋艺术实践与实验性思想提供独立的公共空间。 ica.art+2 20世纪50年代，ICA 成为 Independent Group（独立小组）的重要活动基地，对英国波普艺术（Pop Art）的形成产生了深远影响。此后，机构持续参与行为艺术、实验电影、朋克文化及跨学科艺术实践的发展，并为 Francis Bacon、Jean-Michel Basquiat、Cindy Sherman、Tacita Dean 等艺术家提供早期的机构性展示机会。 ICA 的文化项目涵盖当代艺术展览、独立电影、现场表演、实验音乐、出版及公共讨论。不同于以永久收藏为核心的传统美术馆，IC",
+      "text": "Institute of Contemporary Arts（ICA）是位于英国伦敦的独立非营利性当代艺术机构，由艺术家、诗人、批评家及文化界人士于1946年发起成立，主要创始人包括艺术家 Roland Penrose、艺术批评家 Herbert Read 等。1968年迁至伦敦 The Mall 的现址。机构诞生于英国战后文化重建的背景下，旨在为先锋艺术实践与实验性思想提供独立的公共空间。\nica.art+2\n\n\n20世纪50年代，ICA 成为 Independent Group（独立小组）的重要活动基地，对英国波普艺术（Pop Art）的形成产生了深远影响。此后，机构持续参与行为艺术、实验电影、朋克文化及跨学科艺术实践的发展，并为 Francis Bacon、Jean-Michel Basquiat、Cindy Sherman、Tacita Dean 等艺术家提供早期的机构性展示机会。\n\nICA 的文化项目涵盖当代艺术展览、独立电影、现场表演、实验音乐、出版及公共讨论。不同于以永久收藏为核心的传统美术馆，ICA 更强调对新兴艺术实践的支持、批判性思想的传播以及不同文化生产形式之间的交流。其运营资金来自公共艺术资助、慈善捐赠、会员制度及商业合作等渠道。\nAbout+2\n\n\n从机构研究的角度来看，ICA 是考察先锋艺术的制度化、艺术机构与亚文化之间的关系，以及非收藏型艺术机构如何参与艺术史叙事与批判性公共领域建构的重要案例。其历史也体现了实验性艺术实践从非主流文化进入主流艺术制度的复杂过程。此段为分析性定位，而非机构官方定义。\n- 成立时间： 1946年（部分官方治理文件记载为1947年）\n- 所在地： 英国伦敦\n- 机构类型： 独立非营利性艺术机构、注册慈善机构、跨学科文化中心\n- 官方网站： https://www.ica.art/\n- 相关研究概念： Avant-garde（先锋艺术）、Institutionalisation（制度化）、Counterculture（反主流文化）、Critical Public Sphere（批判性公共领域）、Experimental Art（实验艺术）、Art Historiography（艺术史书写）、Non-collecting Institution（非收藏型艺术机构）",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
       "id": "international-house-of-japan",
       "key": "institutions:international-house-of-japan",
       "title": "国際文化会館（International House of Japan）",
@@ -2151,6 +2766,21 @@
       "contentHash": "890e8a2fa13c5a6f0ee3b780a2ece409d5c94b96f1a3326126f9d53bdb4fc1ad",
       "summary": "韩国国立现代美术馆（MMCA）的首尔馆，聚焦韩国与国际现代、当代艺术。",
       "text": "韩国国立现代美术馆（MMCA）的首尔馆，聚焦韩国与国际现代、当代艺术。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
+      "id": "mon-takanawa-the-museum-of-narratives",
+      "key": "institutions:mon-takanawa-the-museum-of-narratives",
+      "title": "MoN Takanawa:The Museum of Narratives",
+      "path": "/institutions/mon-takanawa-the-museum-of-narratives/",
+      "contentHash": "2fa79525fb88158171ddf8fb34f65bfec7e6f4456690aa123a348d316f92d4e2",
+      "summary": "MoN Takanawa（モン タカナワ）は、2026年3月28日に東京都港区のTAKANAWA GATEWAY CITY内に開館した複合型文化施設である。一般財団法人JR東日本文化創造財団が企画・運営を担い、日本の文化を100年先の未来へと継承するとともに、新たな文化の創造と発信を目指している。 地上6階・地下3階からなる施設には、展示空間、パフォーマンスホール、ライブラリー、屋上ファームなどが設けられている。現代美術、音楽、舞台芸術、伝統文化、テクノロジーなど、既存のジャンルを横断する実験的なプログラムを展開し、多様な文化や人々が交差する場として構想されている。 一般財団法人JR東日本文化創造財団のプレスリリース+3 - 開館： 2026年3月28日 - 運営： 一般財団法人JR東日本文化創造財団 - 所在地： 東京都港区・TAKANAWA GATEWAY CITY - 公式サイト： https://montakanawa.jp/",
+      "text": "MoN Takanawa（モン タカナワ）は、2026年3月28日に東京都港区のTAKANAWA GATEWAY CITY内に開館した複合型文化施設である。一般財団法人JR東日本文化創造財団が企画・運営を担い、日本の文化を100年先の未来へと継承するとともに、新たな文化の創造と発信を目指している。\n\n地上6階・地下3階からなる施設には、展示空間、パフォーマンスホール、ライブラリー、屋上ファームなどが設けられている。現代美術、音楽、舞台芸術、伝統文化、テクノロジーなど、既存のジャンルを横断する実験的なプログラムを展開し、多様な文化や人々が交差する場として構想されている。\n一般財団法人JR東日本文化創造財団のプレスリリース+3\n\n- 開館： 2026年3月28日\n- 運営： 一般財団法人JR東日本文化創造財団\n- 所在地： 東京都港区・TAKANAWA GATEWAY CITY\n- 公式サイト： https://montakanawa.jp/",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -2331,6 +2961,21 @@
       "contentHash": "0f165e93d559980c10e2971158f900ad7a0cad75d94d21adfcf56c168dc09187",
       "summary": "SKWAT 是东京的文化及艺术空间项目，涉及书籍、艺术、设计和空间再利用。 SKWAT在东京多个场地开展项目，包括位于亀有的 SKAC；不同活动可能发生于不同场地，所列地址不代表项目的全部地点。 ### 关联场馆 **关联场馆：** SKAC (SKWAT KAMEARI ART CENTRE) **场馆地址：** 東京都葛飾区西亀有3-26-4 **地址说明：** 这是与该项目相关的场馆信息，不代表活动仅在此处举行；具体到访地点尚未核实。",
       "text": "SKWAT 是东京的文化及艺术空间项目，涉及书籍、艺术、设计和空间再利用。\n\nSKWAT在东京多个场地开展项目，包括位于亀有的 SKAC；不同活动可能发生于不同场地，所列地址不代表项目的全部地点。\n\n### 关联场馆\n\n**关联场馆：** SKAC (SKWAT KAMEARI ART CENTRE)  \n**场馆地址：** 東京都葛飾区西亀有3-26-4  \n**地址说明：** 这是与该项目相关的场馆信息，不代表活动仅在此处举行；具体到访地点尚未核实。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
+      "id": "somerset-house-studios",
+      "key": "institutions:somerset-house-studios",
+      "title": "Somerset House Studios",
+      "path": "/institutions/somerset-house-studios/",
+      "contentHash": "2d4b8bd82bdec24d65e7cff7951a04bc698c91a17e4570437132da457c787ad8",
+      "summary": "Somerset House Studios 成立于2016年10月，位于英国伦敦市中心的 Somerset House，由 Somerset House Trust 设立，是一个以跨学科艺术实践、实验性创作及艺术家发展为核心的文化平台。其空间由原英国税务部门办公场所改造而成，设立背景与伦敦艺术家面临的工作空间短缺及租金上涨问题密切相关。 media.somersethouse.org.uk+2 该平台通过提供补贴性工作室、长期创作支持、艺术家驻留、专业咨询、作品委托及跨机构合作，构建由艺术家、音乐家、表演者、作家、研究者及技术实践者组成的跨学科创作社群。其项目尤其关注新兴技术与艺术实践的结合，并鼓励不同专业领域之间的知识交流与实验性合作。 除支持艺术生产外，Somerset House Studios 还通过展览、现场表演、放映、公共讨论及线上平台 Channel，将艺术研究与创作过程向公众开放。截至2026年成立十周年，该平台已支持超过200位来自不同文化背景的艺术家。 somersethouse.or",
+      "text": "Somerset House Studios 成立于2016年10月，位于英国伦敦市中心的 Somerset House，由 Somerset House Trust 设立，是一个以跨学科艺术实践、实验性创作及艺术家发展为核心的文化平台。其空间由原英国税务部门办公场所改造而成，设立背景与伦敦艺术家面临的工作空间短缺及租金上涨问题密切相关。\nmedia.somersethouse.org.uk+2\n\n\n该平台通过提供补贴性工作室、长期创作支持、艺术家驻留、专业咨询、作品委托及跨机构合作，构建由艺术家、音乐家、表演者、作家、研究者及技术实践者组成的跨学科创作社群。其项目尤其关注新兴技术与艺术实践的结合，并鼓励不同专业领域之间的知识交流与实验性合作。\n\n除支持艺术生产外，Somerset House Studios 还通过展览、现场表演、放映、公共讨论及线上平台 Channel，将艺术研究与创作过程向公众开放。截至2026年成立十周年，该平台已支持超过200位来自不同文化背景的艺术家。\nsomersethouse.org.uk+2\n\n\n从机构研究的角度来看，Somerset House Studios 的特点在于将艺术机构的职能从作品展示延伸至艺术生产条件的建设。其运作模式为研究艺术劳动、文化基础设施、跨学科知识生产，以及艺术机构在城市空间与创作社群之间扮演的角色提供了一个重要案例。此段为分析性定位，而非官方定义。\n- 成立时间： 2016年10月\n- 所在地： 英国伦敦\n- 所属机构： Somerset House Trust\n- 机构类型： 实验性艺术生产平台、艺术家驻留及跨学科创作中心\n- 官方网站： Somerset House Studios\n- 相关研究概念： Cultural Infrastructure（文化基础设施）、Artistic Labour（艺术劳动）、Artistic Production（艺术生产）、Interdisciplinarity（跨学科性）、Artist Residency（艺术家驻留）、Knowledge Production（知识生产）、Adaptive Reuse（建筑适应性再利用）",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -5041,12 +5686,606 @@
           "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
         }
       ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:technology-and-body",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:barbican-centre",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:british-council",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:mon-takanawa-the-museum-of-narratives",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:alejandra-cardenas",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:daito-manabe",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:domestic-data-streamers",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ei-wada",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:elsewhere-in-india",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:evan-ifekoya",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:evelyn-glennie",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:giacomo-lepri",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:harry-yeff-reeps100-trung-bao",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:holly-herndon",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ila-monom",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:intelligent-instruments-lab",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:itti-haioka",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:jan-st-werner",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:kinda-studios",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:max-cooper",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:miyu-hosoi",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:mutek-sarah-mackenzie",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nexus-studios",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nicola-privato",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nicole-l-huillier",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:patty-ayukawa",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:pixie-dust-technologies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:raymond-antrobus",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ryuichi-sakamoto",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:tatiana-heuman",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:temporary-pleasure",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:trans-voices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:yuki-anai",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:yuri-suzuki",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:barbican-centre",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:british-council",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:factory-international",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:institute-of-contemporary-arts-ica",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:mon-takanawa-the-museum-of-narratives",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:somerset-house-studios",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:atsushi-wakimoto",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:jacob-silkin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:luke-kemp",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:marie-mcpartlin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:rivca-burns",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
     }
   ],
   "concepts": {},
   "activity": {
     "exhibitions:2026-01-07-02": 3,
-    "concepts:sound-and-technology": 6,
+    "concepts:sound-and-technology": 8,
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
@@ -5055,11 +6294,11 @@
     "people:shiga-lieko": 1,
     "people:yamashiro-chikako": 1,
     "exhibitions:2026-01-11-04": 3,
-    "concepts:technology-and-body": 4,
+    "concepts:technology-and-body": 5,
     "institutions:icc": 2,
     "people:mikami-seiko": 1,
     "exhibitions:2026-01-24-05": 2,
-    "concepts:curatorial-practices": 11,
+    "concepts:curatorial-practices": 13,
     "institutions:curation-fair": 1,
     "exhibitions:2026-01-24-06": 2,
     "concepts:identity-and-representation": 2,
@@ -5072,14 +6311,14 @@
     "concepts:moving-image": 3,
     "institutions:tokyo-photographic-art-museum": 3,
     "exhibitions:2026-02-13-09": 3,
-    "concepts:performance": 7,
+    "concepts:performance": 8,
     "institutions:tokyo-metropolitan-theatre": 2,
     "people:saeborg": 1,
     "exhibitions:2026-02-14-10": 2,
-    "concepts:transcultural-studies": 5,
+    "concepts:transcultural-studies": 7,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 15,
+    "concepts:institutional-studies": 17,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -5227,7 +6466,50 @@
     "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing": 8,
     "institutions:arts-council-tokyo": 1,
     "institutions:watari-um-the-watari-museum-of-contemporary-art": 1,
-    "people:nam-june-paik": 1
+    "people:nam-june-paik": 1,
+    "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 38,
+    "institutions:barbican-centre": 2,
+    "institutions:british-council": 2,
+    "institutions:mon-takanawa-the-museum-of-narratives": 2,
+    "people:alejandra-cardenas": 1,
+    "people:daito-manabe": 1,
+    "people:domestic-data-streamers": 1,
+    "people:ei-wada": 1,
+    "people:elsewhere-in-india": 1,
+    "people:evan-ifekoya": 1,
+    "people:evelyn-glennie": 1,
+    "people:giacomo-lepri": 1,
+    "people:harry-yeff-reeps100-trung-bao": 1,
+    "people:holly-herndon": 1,
+    "people:ila-monom": 1,
+    "people:intelligent-instruments-lab": 1,
+    "people:itti-haioka": 1,
+    "people:jan-st-werner": 1,
+    "people:kinda-studios": 1,
+    "people:max-cooper": 1,
+    "people:miyu-hosoi": 1,
+    "people:mutek-sarah-mackenzie": 1,
+    "people:nexus-studios": 1,
+    "people:nicola-privato": 1,
+    "people:nicole-l-huillier": 1,
+    "people:patty-ayukawa": 1,
+    "people:pixie-dust-technologies": 1,
+    "people:raymond-antrobus": 1,
+    "people:ryuichi-sakamoto": 1,
+    "people:tatiana-heuman": 1,
+    "people:temporary-pleasure": 1,
+    "people:trans-voices": 1,
+    "people:yuki-anai": 1,
+    "people:yuri-suzuki": 1,
+    "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor": 16,
+    "institutions:factory-international": 1,
+    "institutions:institute-of-contemporary-arts-ica": 1,
+    "institutions:somerset-house-studios": 1,
+    "people:atsushi-wakimoto": 1,
+    "people:jacob-silkin": 1,
+    "people:luke-kemp": 1,
+    "people:marie-mcpartlin": 1,
+    "people:rivca-burns": 1
   },
   "claims": []
 }

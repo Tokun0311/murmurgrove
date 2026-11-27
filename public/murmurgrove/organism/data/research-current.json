@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "0d53bb8f6a440720486f3224078310d25d3461f10a1c5cdd48d9b47e139c4d55",
-  "generatedAt": "2026-11-26T09:38:27.581Z",
+  "graphHash": "9767c01f0ef317f937280890132cf5c26027a153587902f385a6f7ddb3c1f6f9",
+  "generatedAt": "2026-11-27T01:31:10.609Z",
   "links": [
     {
       "source": "exhibitions:2026-01-07-02",
@@ -998,11 +998,281 @@
       "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
       "target": "people:nam-june-paik",
       "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:technology-and-body",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:barbican-centre",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:british-council",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:mon-takanawa-the-museum-of-narratives",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:alejandra-cardenas",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:daito-manabe",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:domestic-data-streamers",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ei-wada",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:elsewhere-in-india",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:evan-ifekoya",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:evelyn-glennie",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:giacomo-lepri",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:harry-yeff-reeps100-trung-bao",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:holly-herndon",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ila-monom",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:intelligent-instruments-lab",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:itti-haioka",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:jan-st-werner",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:kinda-studios",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:max-cooper",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:miyu-hosoi",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:mutek-sarah-mackenzie",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nexus-studios",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nicola-privato",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nicole-l-huillier",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:patty-ayukawa",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:pixie-dust-technologies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:raymond-antrobus",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ryuichi-sakamoto",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:tatiana-heuman",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:temporary-pleasure",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:trans-voices",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:yuki-anai",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:yuri-suzuki",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:performance",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:barbican-centre",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:british-council",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:factory-international",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:institute-of-contemporary-arts-ica",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:mon-takanawa-the-museum-of-narratives",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:somerset-house-studios",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:atsushi-wakimoto",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:jacob-silkin",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:luke-kemp",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:marie-mcpartlin",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:rivca-burns",
+      "kind": "recorded-link"
     }
   ],
   "activity": {
     "exhibitions:2026-01-07-02": 3,
-    "concepts:sound-and-technology": 6,
+    "concepts:sound-and-technology": 8,
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
@@ -1011,11 +1281,11 @@
     "people:shiga-lieko": 1,
     "people:yamashiro-chikako": 1,
     "exhibitions:2026-01-11-04": 3,
-    "concepts:technology-and-body": 4,
+    "concepts:technology-and-body": 5,
     "institutions:icc": 2,
     "people:mikami-seiko": 1,
     "exhibitions:2026-01-24-05": 2,
-    "concepts:curatorial-practices": 11,
+    "concepts:curatorial-practices": 13,
     "institutions:curation-fair": 1,
     "exhibitions:2026-01-24-06": 2,
     "concepts:identity-and-representation": 2,
@@ -1028,14 +1298,14 @@
     "concepts:moving-image": 3,
     "institutions:tokyo-photographic-art-museum": 3,
     "exhibitions:2026-02-13-09": 3,
-    "concepts:performance": 7,
+    "concepts:performance": 8,
     "institutions:tokyo-metropolitan-theatre": 2,
     "people:saeborg": 1,
     "exhibitions:2026-02-14-10": 2,
-    "concepts:transcultural-studies": 5,
+    "concepts:transcultural-studies": 7,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 15,
+    "concepts:institutional-studies": 17,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -1183,6 +1453,49 @@
     "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing": 8,
     "institutions:arts-council-tokyo": 1,
     "institutions:watari-um-the-watari-museum-of-contemporary-art": 1,
-    "people:nam-june-paik": 1
+    "people:nam-june-paik": 1,
+    "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 38,
+    "institutions:barbican-centre": 2,
+    "institutions:british-council": 2,
+    "institutions:mon-takanawa-the-museum-of-narratives": 2,
+    "people:alejandra-cardenas": 1,
+    "people:daito-manabe": 1,
+    "people:domestic-data-streamers": 1,
+    "people:ei-wada": 1,
+    "people:elsewhere-in-india": 1,
+    "people:evan-ifekoya": 1,
+    "people:evelyn-glennie": 1,
+    "people:giacomo-lepri": 1,
+    "people:harry-yeff-reeps100-trung-bao": 1,
+    "people:holly-herndon": 1,
+    "people:ila-monom": 1,
+    "people:intelligent-instruments-lab": 1,
+    "people:itti-haioka": 1,
+    "people:jan-st-werner": 1,
+    "people:kinda-studios": 1,
+    "people:max-cooper": 1,
+    "people:miyu-hosoi": 1,
+    "people:mutek-sarah-mackenzie": 1,
+    "people:nexus-studios": 1,
+    "people:nicola-privato": 1,
+    "people:nicole-l-huillier": 1,
+    "people:patty-ayukawa": 1,
+    "people:pixie-dust-technologies": 1,
+    "people:raymond-antrobus": 1,
+    "people:ryuichi-sakamoto": 1,
+    "people:tatiana-heuman": 1,
+    "people:temporary-pleasure": 1,
+    "people:trans-voices": 1,
+    "people:yuki-anai": 1,
+    "people:yuri-suzuki": 1,
+    "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor": 16,
+    "institutions:factory-international": 1,
+    "institutions:institute-of-contemporary-arts-ica": 1,
+    "institutions:somerset-house-studios": 1,
+    "people:atsushi-wakimoto": 1,
+    "people:jacob-silkin": 1,
+    "people:luke-kemp": 1,
+    "people:marie-mcpartlin": 1,
+    "people:rivca-burns": 1
   }
 }
