@@ -28,7 +28,8 @@
   </aside>
   <section class="main-panel">
     <nav class="editor-switch" aria-label="Editor workspace"><button type="button" id="switch-record" aria-pressed="true">Records</button><button type="button" id="switch-research" aria-pressed="false">Research</button></nav>
-    <div id="record-workspace"><section id="recovery-panel" hidden><strong>Private recovery / 未完成的编辑</strong><div id="recovery-list"></div></section>
+    <div id="record-workspace"><details id="archive-tasks"><summary>Research inbox / 研究待办 <span id="archive-task-count" aria-live="polite">尚未扫描</span></summary>
+<div class="archive-task-toolbar"><label for="archive-task-filter" class="sr-only">待办分类</label><select id="archive-task-filter"><option value="all">全部建议</option><option value="integrity">关联与资料</option><option value="duplicate">疑似重复</option><option value="draft">私人草稿</option><option value="location">地点索引</option><option value="review">待核实</option><option value="connections">研究关联</option><option value="names">原文名称</option></select><button id="archive-task-refresh" class="action-link" type="button">重新扫描</button><button id="archive-task-reset" class="action-link" type="button" hidden>恢复跳过</button></div><p id="archive-task-note" class="micro-copy" role="status"></p><div id="archive-task-list"></div><button id="archive-task-more" class="action-link" type="button" hidden>显示更多</button></details><section id="recovery-panel" hidden><strong>Private recovery / 未完成的编辑</strong><div id="recovery-list"></div></section>
     <div class="panel-top"><span class="eyebrow" id="record-mode">03 / NEW RECORD</span><span class="tiny" id="dirty-indicator">NOT SAVED</span><a class="editor-review-jump" href="#publish-phase">Review &amp; save / 审核保存 ↓</a></div>
     <div class="intro">
       <button type="button" id="link-current-question" class="action-link" hidden>Link to research question</button><h1 id="editor-title">A new record</h1>
