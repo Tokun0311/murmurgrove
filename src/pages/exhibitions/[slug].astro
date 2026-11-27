@@ -1,4 +1,5 @@
 ---
+import {archiveDay,engagementOf,engagementLabel} from '../../lib/exhibition-engagement.mjs';
 import Base from '../../layouts/Base.astro';
 import OrganismLink from '../../components/OrganismLink.astro';
 import ResearchContinuity from '../../components/ResearchContinuity.astro';
@@ -18,16 +19,21 @@ const artistLinks=item.data.artists.map(id=>personById.get(id)).filter(Boolean);
 const activeConceptIds=currentConceptIds(item.id);
 const conceptLinks=activeConceptIds.map(id=>conceptById.get(id)).filter(Boolean);
 const earlierConcepts=item.data.concepts.filter(id=>!activeConceptIds.includes(id)).map(id=>conceptById.get(id)).filter(Boolean);
-const visitDate=item.data.visitedOn.toISOString().slice(0,10);
-const visitYear=visitDate.slice(0,4);
+const mode=engagementOf(item.data);
+const day=archiveDay(item.data);
 ---
-<Base title={`${item.data.title} | murmurgrove`} description={`Murmurgrove exhibition record for ${item.data.title} in ${item.data.location}, visited on ${item.data.visitedOn.toISOString().slice(0, 10)}.`}>
+<Base title={`${item.data.title} | murmurgrove`} description={`Murmurgrove exhibition record for ${item.data.title} in ${item.data.location}. ${engagementLabel(item.data)}.`}>
   <article class="article">
     <nav class="record-nav" aria-label="Record navigation"><a class="eyebrow" href="/exhibitions/">← Exhibitions</a><OrganismLink path={`/exhibitions/${item.id}/`}/></nav>
     <h1>{item.data.title}</h1>
     <p class="lead">{[item.data.region,item.data.location!==inst?.data.name?item.data.location:null,item.data.kind].filter(Boolean).join(' · ')}</p>
     <dl class="record-meta">
-      <div><dt>Visited</dt><dd><time datetime={visitDate}>{item.data.dateLabel.replaceAll('-','.')}.{visitYear}</time></dd></div>
+      <div><dt>Engagement</dt><dd>{engagementLabel(item.data)}</dd></div>
+      {mode!=='planned'&&day&&<div><dt>{mode==='visited'?'Visited':'Research date'}</dt><dd><time datetime={day}>{day}</time></dd></div>}
+      {mode==='visited'&&item.data.researchOn&&<div><dt>Research date</dt><dd>{item.data.researchOn.toISOString().slice(0,10)}</dd></div>}
+      {item.data.plannedOn&&<div><dt>Expected visit</dt><dd>{item.data.plannedOn.toISOString().slice(0,10)}</dd></div>}
+      {item.data.recordedOn&&<div><dt>Record date</dt><dd>{item.data.recordedOn.toISOString().slice(0,10)}</dd></div>}
+      {item.data.researchSources&&<div><dt>Research sources</dt><dd>{item.data.researchSources}</dd></div>
       {(item.data.exhibitionStart || item.data.exhibitionEnd) && <div><dt>{item.data.exhibitionStart && item.data.exhibitionEnd ? 'Exhibition period' : item.data.exhibitionStart ? 'Exhibition start' : 'Exhibition end'}</dt><dd>{[item.data.exhibitionStart,item.data.exhibitionEnd].filter(Boolean).map(d=>d!.toISOString().slice(0,10)).join(' – ')}</dd></div>}
       {item.data.verification==='needs-review' && <div><dt>Archive status</dt><dd>Details to verify</dd></div>}
       {inst && <div><dt>Institution</dt><dd><a href={`/institutions/${inst.id}/`}>{inst.data.name}</a></dd></div>}
@@ -38,7 +44,7 @@ const visitYear=visitDate.slice(0,4);
     {earlierConcepts.length>0 && <details class="record-relations"><summary class="note">Earlier recorded classification</summary><div class="tags">{earlierConcepts.map(c=><a class="tag" href={`/concepts/${c.id}/`}>{c.data.title}</a>)}</div></details>}
     <div class="prose"><Content/></div>
     {item.data.verification==='recorded' && <p class="note">Reviewed archive entry.</p>}
-    <p class="note">Editorial note: visit dates and first-person observations come from personal records. Refer to the source links in each entry for independently documented programme details.</p>
+    <p class="note">{mode==='visited'?'Editorial note: visit dates and first-person observations come from personal records.':mode==='researched'?'Editorial note: this record is based on research, not a personal visit.':'Editorial note: this is a plan, not a completed visit or research activity.'} Refer to the source links for independently documented programme details.</p>
   <ResearchContinuity type="exhibitions" id={item.id}/></article>
 </Base>
 

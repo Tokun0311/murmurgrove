@@ -27,3 +27,14 @@ export function calmMagnifiedMotion(rest,moving,zoom){
  const gain=(maxPx*Math.tanh(distance/maxPx))/distance;
  return [rest[0]+dx*gain,rest[1]+dy*gain,moving[2]];
 }
+
+/** Continuous screen-space bounds for mobile exploration. Empty interior
+ * space is intentional: sparse nodes must not create disconnected pan zones. */
+export function mobilePanBounds(requested,points,width,height){
+ if(!points.length)return [...requested];
+ const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
+ const cx=width*.5,cy=height*.48;
+ const marginX=width*.12,marginY=height*.12;
+ return [clamp(requested[0],Math.min(0,cx-Math.max(...xs))-marginX,Math.max(0,cx-Math.min(...xs))+marginX),
+         clamp(requested[1],Math.min(0,cy-Math.max(...ys))-marginY,Math.max(0,cy-Math.min(...ys))+marginY)];
+}

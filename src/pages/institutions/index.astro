@@ -1,10 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
-const items=await getCollection('institutions');
+const sourceItems=await getCollection('institutions');
 
 import cityRegistry from '../../lib/geographic-index.json';
-const cityMeta: Record<string,{lon:number;lat:number;country:string}> = cityRegistry;
+const cityMeta: Record<string,{lon:number;lat:number;country:string;aliases?:string[]}> = cityRegistry;
+const cityKey=(s:string)=>s.normalize('NFKC').trim().toLowerCase();
+const names=new Map(Object.entries(cityMeta).flatMap(([city,meta])=>[city,...(meta.aliases||[])].map(alias=>[cityKey(alias),city] as const)));
+const items=sourceItems.map(item=>({...item,data:{...item.data,city:item.data.city?(names.get(cityKey(item.data.city))||item.data.city):item.data.city}}));
 
 const countryOrder = ['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand','Germany','Denmark','United Kingdom','France'];
 const cityOrder = Object.keys(cityMeta);

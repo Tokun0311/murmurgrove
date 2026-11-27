@@ -1,4 +1,5 @@
 ---
+import {archiveDay,engagementLabel} from '../../lib/exhibition-engagement.mjs';
 import Base from '../../layouts/Base.astro';
 import OrganismLink from '../../components/OrganismLink.astro';
 import ResearchContinuity from '../../components/ResearchContinuity.astro';
@@ -8,6 +9,6 @@ export async function getStaticPaths(){return (await getCollection('people')).ma
 const {item}=Astro.props;
 const {Content}=await render(item);
 const relatedIds=currentExhibitionIds('people:'+item.id);
-const exhibitions=(await getCollection('exhibitions')).filter(e=>relatedIds.has(e.id)).sort((a,b)=>b.data.visitedOn.valueOf()-a.data.visitedOn.valueOf());
+const exhibitions=(await getCollection('exhibitions')).filter(e=>relatedIds.has(e.id)).sort((a,b)=>archiveDay(b.data).localeCompare(archiveDay(a.data)));
 ---
-<Base title={`${item.data.name} | murmurgrove`} description={`Archive notes and related exhibitions for ${item.data.name} in murmurgrove.`}><article class="article"><nav class="record-nav" aria-label="Record navigation"><a class="eyebrow" href="/people/">← People & Collectives</a><OrganismLink path={`/people/${item.id}/`}/></nav><h1>{item.data.name}</h1><div class="prose"><Content/></div>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{e.data.visitedOn.toISOString().slice(0,10)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}<ResearchContinuity type="people" id={item.id}/></article></Base>
+<Base title={`${item.data.name} | murmurgrove`} description={`Archive notes and related exhibitions for ${item.data.name} in murmurgrove.`}><article class="article"><nav class="record-nav" aria-label="Record navigation"><a class="eyebrow" href="/people/">← People & Collectives</a><OrganismLink path={`/people/${item.id}/`}/></nav><h1>{item.data.name}</h1><div class="prose"><Content/></div>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{archiveDay(e.data)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}<ResearchContinuity type="people" id={item.id}/></article></Base>

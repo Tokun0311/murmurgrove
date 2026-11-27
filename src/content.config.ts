@@ -12,7 +12,8 @@ const photographs = defineCollection({
 const exhibitions = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/exhibitions' }),
   schema: z.object({
-    title: z.string(), visitedOn: z.coerce.date(), dateLabel: z.string(),
+    title: z.string(), visitedOn: z.coerce.date().optional(), dateLabel: z.string().optional(),
+    engagement: z.enum(['visited','researched','planned']).default('visited'), researchOn: z.coerce.date().optional(), plannedOn: z.coerce.date().optional(), recordedOn: z.coerce.date().optional(), researchSources: z.string().optional(),
     region: z.string(), location: z.string(), kind: z.string(),
     artists: z.array(z.string()).default([]),
     concepts: z.array(z.string()).default([]),
@@ -26,11 +27,11 @@ const exhibitions = defineCollection({
 });
 const people = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/people' }),
-  schema: z.object({ name: z.string(), kind: z.string().default('artist'), reading: z.string().optional(), sortName: z.string().optional() })
+  schema: z.object({ name: z.string(), kind: z.string().default('artist'), reading: z.string().optional(), sortName: z.string().optional(), linkedInstitutions: z.array(z.string()).default([]) })
 });
 const institutions = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/institutions' }),
-  schema: z.object({ name: z.string(), city: z.string().optional(), longitude: z.number().optional(), latitude: z.number().optional(), locationType: z.enum(['site','city','variable']).optional(), address: z.string().optional(), addressStatus: z.enum(['verified','needs-review']).optional(), addressSource: z.string().url().optional(), venueName: z.string().optional(), venueAddress: z.string().optional(), venueStatus: z.enum(['user-supplied','reference']).optional(), associatedProject: z.string().optional() })
+  schema: z.object({ name: z.string(), city: z.string().optional(), longitude: z.number().optional(), latitude: z.number().optional(), locationType: z.enum(['site','city','variable']).optional(), address: z.string().optional(), addressStatus: z.enum(['verified','needs-review']).optional(), addressSource: z.string().url().optional(), venueName: z.string().optional(), venueAddress: z.string().optional(), venueStatus: z.enum(['user-supplied','reference']).optional(), associatedProject: z.string().optional(), linkedPeople: z.array(z.string()).default([]), linkedExhibitions: z.array(z.string()).default([]), linkedConcepts: z.array(z.string()).default([]) })
 });
 const concepts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/data/concepts' }),

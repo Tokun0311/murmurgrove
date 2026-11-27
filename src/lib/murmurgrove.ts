@@ -16,12 +16,12 @@ const DAY=86400000;
 const normalize=(s:string)=>s.normalize('NFKC').toLocaleLowerCase().replace(/[\s_\-]+/g,'').replace(/[^\p{L}\p{N}]/gu,'');
 const dateActivity=(when:number,reference:number)=>when&&reference?Math.exp(-Math.max(0,reference-when)/(DAY*365*2)):0;
 export function createMurmurgrove(input:GroveInput){
- const exhibitions=input.exhibitions.filter(e=>e.data?.verification!=='draft');
+ const exhibitions=input.exhibitions.filter(e=>e.data?.verification!=='draft'&&e.data?.engagement!=='planned');
  const people=input.people,institutions=input.institutions,concepts=input.concepts;
  const writing=(input.writing||[]).filter(e=>!e.data?.draft);
  const photography=(input.photography||[]).filter(e=>!e.data?.draft);
  const all=[...exhibitions,...writing,...photography];
- const reference=Math.max(...exhibitions.map(e=>toDate(e.data.visitedOn)),...writing.map(e=>toDate(e.data.date)),...photography.map(e=>toDate(e.data.date)),0);
+ const reference=Math.max(...exhibitions.map(e=>toDate(e.data.engagement==='researched'?e.data.researchOn:e.data.visitedOn)),...writing.map(e=>toDate(e.data.date)),...photography.map(e=>toDate(e.data.date)),0);
  const conceptKeys=new Set(concepts.map(c=>c.id));
  const conceptsByAlias=new Map<string,string>();
  concepts.forEach(c=>{conceptsByAlias.set(normalize(c.id),c.id);conceptsByAlias.set(normalize(String(c.data.title||'')),c.id)});
@@ -54,7 +54,7 @@ export function createMurmurgrove(input:GroveInput){
    const id=`${section}:${item.id}`,d=item.data;
    const directions=weightsFor(item,section);
    associations.set(id,directions);
-   const date=toDate(section==='exhibitions'?d.visitedOn:d.date);
+   const date=toDate(section==='exhibitions'?(d.engagement==='researched'?d.researchOn:d.visitedOn):d.date);
    recordData.push({id,section,item,directions,date});
    const connected:string[]=[];
    for(const [concept,w] of directions){const to=`concepts:${concept}`;push(id,to,section==='writing'?w*1.35:w);connected.push(to);lastActivity.set(to,Math.max(lastActivity.get(to)||0,date))}

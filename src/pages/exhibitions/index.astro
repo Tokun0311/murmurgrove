@@ -1,10 +1,11 @@
 ---
+import {archiveDay,engagementOf,engagementLabel} from '../../lib/exhibition-engagement.mjs';
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
-const items = (await getCollection('exhibitions')).sort((a,b)=>b.data.visitedOn.valueOf()-a.data.visitedOn.valueOf());
+const items = (await getCollection('exhibitions')).sort((a,b)=>archiveDay(b.data).localeCompare(archiveDay(a.data)));
 const regions = [...new Set(items.map(x=>x.data.region))].sort((a,b)=>a.localeCompare(b));
 const isoDay = (d: Date) => d.toISOString().slice(0,10);
-const calendarDates = items.map(item=>isoDay(item.data.visitedOn));
+const calendarDates = items.filter(item=>engagementOf(item.data)!=='planned').map(item=>archiveDay(item.data)).filter(Boolean);
 const firstDate = calendarDates.at(-1) || '2026-01-01';
 const lastDate = calendarDates[0] || '2026-01-01';
 ---
@@ -51,9 +52,9 @@ const lastDate = calendarDates[0] || '2026-01-01';
       </div>
       <p id="exhibition-preview-count" class="exhibition-preview-count" aria-live="polite"></p>
       <ol id="exhibition-preview-list" class="exhibition-preview-list">
-        {items.map(item=><li class="exhibition-preview-entry" data-preview-date={isoDay(item.data.visitedOn)} hidden>
+        {items.filter(item=>engagementOf(item.data)!=='planned').map(item=><li class="exhibition-preview-entry" data-preview-date={archiveDay(item.data)} hidden>
           <a href={`/exhibitions/${item.id}/`}>{item.data.title}</a>
-          <span>{item.data.region}</span>
+          <span>{item.data.region} · {engagementLabel(item.data)}</span>
         </li>)}
       </ol>
       <p id="exhibition-preview-empty" class="exhibition-preview-empty" hidden>Choose a highlighted date in the calendar to see its exhibitions here.</p>
@@ -66,11 +67,12 @@ const lastDate = calendarDates[0] || '2026-01-01';
         <button type="button" data-region="all" aria-pressed="true">All</button>
         {regions.map(r=><button type="button" data-region={r} aria-pressed="false">{r}</button>)}
       </div>
-      <label class="sort-label"><span class="sr-only">Sort by visit date</span><select id="date-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
+      <label class="sort-label"><span class="sr-only">Engagement</span><select id="engagement-filter"><option value="all">All engagement</option><option value="visited">Visited</option><option value="researched">Researched</option><option value="planned">Planned</option></select></label>
+      <label class="sort-label"><span class="sr-only">Sort by archive date</span><select id="date-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
     </div>
     <p class="exhibition-result-count" id="exhibition-result-count" aria-live="polite"></p>
     <ol class="archive-list" id="archive-list">
-      {items.map(item=><li class="archive-entry" data-region={item.data.region} data-date={isoDay(item.data.visitedOn)}><time datetime={isoDay(item.data.visitedOn)}>{item.data.dateLabel.replaceAll('-', '.')}</time><a href={`/exhibitions/${item.id}/`}>{item.data.title}</a><span class="entry-type">{item.data.region}</span></li>)}
+      {items.map(item=><li class="archive-entry" data-region={item.data.region} data-engagement={engagementOf(item.data)} data-date={archiveDay(item.data)}><time datetime={archiveDay(item.data)}>{archiveDay(item.data).slice(5).replaceAll('-', '.')}</time><a href={`/exhibitions/${item.id}/`}>{item.data.title}{engagementOf(item.data)!=='visited'&&<small class="engagement-label"> · {engagementLabel(item.data)}</small>}</a><span class="entry-type">{item.data.region}</span></li>)}
     </ol>
     <p id="empty-message" class="empty-message" hidden>No matching entries. Try another date or region.</p>
   </section>
@@ -226,7 +228,8 @@ const lastDate = calendarDates[0] || '2026-01-01';
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`;
   };
   function updateList(){
-    const visible=rows.filter(row=>selectedRegion==='all'||row.dataset.region===selectedRegion);
+    const engagement=(document.getElementById('engagement-filter') as HTMLSelectElement)?.value||'all';
+    const visible=rows.filter(row=>(selectedRegion==='all'||row.dataset.region===selectedRegion)&&(engagement==='all'||row.dataset.engagement===engagement));
     document.querySelectorAll(".archive-year-divider").forEach(el=>el.remove());
     list?.classList.toggle("region-selected",selectedRegion!=="all");
     rows.forEach(row=>{row.hidden=!visible.includes(row)});
@@ -305,6 +308,7 @@ const lastDate = calendarDates[0] || '2026-01-01';
     updateList();
   }));
   sorter?.addEventListener('change',updateList);
+  document.getElementById('engagement-filter')?.addEventListener('change',updateList);
   renderCalendar();updateList();updatePreview();
   if(saved&&Number.isFinite(saved.scroll))requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,saved.scroll)));
 </script>
@@ -327,6 +331,7 @@ const lastDate = calendarDates[0] || '2026-01-01';
 </script>
 
 <style is:global>
+  .exhibition-index .engagement-label{font-size:.75em;color:var(--quiet);font-weight:400}
   .exhibition-index #archive-list.region-selected .entry-type{display:none}
   .exhibition-index #archive-list.region-selected .archive-entry{grid-template-columns:118px minmax(0,1fr)}
   .exhibition-index .archive-year-divider{list-style:none;color:var(--quiet);font-size:13px;letter-spacing:.04em;padding:24px 0 9px}

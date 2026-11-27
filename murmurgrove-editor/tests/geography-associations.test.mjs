@@ -1,0 +1,41 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {createEditor} from '../server.mjs';
+import {buildGraph} from '../research-core.mjs';
+import {readCurrentResearch,edgeKey} from '../../public/murmurgrove/organism/research-current-overlay.mjs';
+const md=(yaml)=>`---\n${yaml}\n---\n\nArchive note.\n`;
+test('geography is persistent, duplicate-safe; explicit archive associations publish, deduplicate, and project without inference',async()=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'mg-assoc-'));let app;
+ try{
+  for(const t of ['people','institutions','exhibitions','concepts','writing'])await fs.mkdir(path.join(root,'src/data',t),{recursive:true});
+  await fs.mkdir(path.join(root,'src/lib'),{recursive:true});await fs.writeFile(path.join(root,'src/content.config.ts'),'// fixture');
+  await fs.writeFile(path.join(root,'src/lib/geographic-index.json'),JSON.stringify({London:{country:'United Kingdom',lat:51.5,lon:-.12}}));
+  await fs.writeFile(path.join(root,'src/data/people/person.md'),md('name: Person'));
+  await fs.writeFile(path.join(root,'src/data/concepts/concept.md'),md('title: Concept'));
+  await fs.writeFile(path.join(root,'src/data/exhibitions/event.md'),md('title: Event\nvisitedOn: 2026-11-27\nregion: London\nlocation: Venue\nkind: event'));
+  app=await createEditor({root,port:0,privateRoot:path.join(root,'.private')});const base=app.address;
+  const get=async route=>{const r=await fetch(base+route);return r.json()};const token=(await get('/api/bootstrap')).token;
+  const post=async(route,p)=>{const r=await fetch(base+route,{method:'POST',headers:{'content-type':'application/json',origin:base,'x-editor-token':token},body:JSON.stringify(p)});return {status:r.status,data:await r.json()}};
+  const city={name:'Manchester',country:'United Kingdom',lat:53.4808,lon:-2.2426,aliases:['曼彻斯特','マンチェスター']};
+  assert.equal((await post('/api/geography-add',{...city,lat:100})).status,422);
+  assert.equal((await post('/api/geography-add',city)).status,200);
+  assert.deepEqual((await get('/api/geography')).cities.Manchester,{lon:city.lon,lat:city.lat,country:city.country,aliases:city.aliases});
+  assert.equal((await post('/api/geography-add',{...city,name:'manchester'})).status,409);
+  assert.equal((await post('/api/geography-add',{...city,name:'曼彻斯特',aliases:[]})).status,409);
+  const inst={type:'institutions',slug:'factory',fields:{name:'Factory',city:'Manchester',linkedPeople:['person'],linkedExhibitions:['event'],linkedConcepts:['concept']},body:'Confirmed archive links.',confirmPublic:true};
+  assert.equal((await post('/api/draft',inst)).status,200);assert.equal((await buildGraph(root)).relations.length,0);
+  assert.equal((await post('/api/publish',{...inst,fields:{...inst.fields,linkedPeople:['missing']}})).status,422);
+  assert.equal((await post('/api/publish',inst)).status,200);
+  const person=await get('/api/record?type=people&slug=person');
+  assert.equal((await post('/api/publish',{type:'people',slug:'person',fields:{...person.fields,linkedInstitutions:['factory']},body:person.body,hash:person.hash,confirmPublic:true})).status,200);
+  let g=await buildGraph(root);assert.equal(g.relations.length,3);assert.ok(g.relations.every(e=>e.kind==='archive-association'));
+  let overlay=readCurrentResearch(g);for(const id of ['person:person','exhibition:event','concept:concept'])assert.ok(overlay.pairKeys.has(edgeKey(id,'institution:factory')));
+  const bundle={type:'exhibitions',slug:'bundle-event',fields:{title:'Bundle',visitedOn:'2026-11-27',region:'Manchester',location:'Venue',kind:'event',artists:['new-person'],institution:'new-institution'},body:'Reviewed bundle.',confirmPublic:true,bundle:[{type:'people',slug:'new-person',name:'New Person',kind:'curator',body:'Reviewed affiliation.',linkedInstitutions:['new-institution'],reviewed:true},{type:'institutions',slug:'new-institution',name:'New Institution',city:'Manchester',body:'Reviewed.',linkedPeople:['new-person'],linkedConcepts:['concept'],reviewed:true}]};
+  assert.equal((await post('/api/draft',bundle)).status,200);
+  assert.equal((await post('/api/bundle-publish',{...bundle,bundle:[{...bundle.bundle[0],linkedInstitutions:['missing']},bundle.bundle[1]]})).status,422);
+  const result=await post('/api/bundle-publish',bundle);assert.equal(result.status,200,JSON.stringify(result));g=await buildGraph(root);assert.equal(g.relations.filter(e=>e.kind==='archive-association'&&[e.source,e.target].includes('people:new-person')&&[e.source,e.target].includes('institutions:new-institution')).length,1);
+ }finally{await app?.close();await fs.rm(root,{recursive:true,force:true});}
+});

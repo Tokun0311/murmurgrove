@@ -7,7 +7,7 @@ import {mangroveControls,panForCursorZoom,easePanHome} from './organic-interacti
 import {EMERALD} from './emerald-palette.mjs';
 import {cubicBezierAt,flowSamplesForRelation} from './relation-flow.mjs';
 import {deriveInteriorQuietPositions,quietParticlePosition} from './quiet-particles.mjs';
-import {viewDrag,calmMagnifiedMotion} from './camera-gestures.mjs';
+import {viewDrag,calmMagnifiedMotion,mobilePanBounds} from './camera-gestures.mjs';
 import {wheelFactor,easeAmount,momentumStep,gestureKind,pinchState,boundedVelocity,classifyTouchPair} from './camera-easing.mjs';
 import {MOVEMENT_RATE,BREATH_RATE,opticalTime,breathingTime,visibleOverviewMotion} from './movement-pacing.mjs';
 import {datedExhibitionLedger,observationMonthGroups,monthObservationContext} from './observation-history.mjs';
@@ -174,15 +174,15 @@ function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)
  if(['visits','versions','frames','acts','life'].includes(s.historyTab))historyTab=s.historyTab;
  historyOpen=Boolean(s.historyOpen);
  followSelected=Boolean(selected&&s.followSelected&&zoom>1);
- userFramedPan=!isMobileOverview()&&Boolean(s.userFramedPan);
- if(isMobileOverview()){pan=[0,0];pendingPanNorm=null;}
+ userFramedPan=Boolean(s.userFramedPan);
+ if(isMobileOverview()&&!userFramedPan){pan=[0,0];pendingPanNorm=null;}
  else if(Array.isArray(s.panNorm)&&s.panNorm.length===2&&s.panNorm.every(x=>Number.isFinite(x)&&Math.abs(x)<20)){
   pendingPanNorm=s.panNorm; if(W>1&&H>1){pan=[s.panNorm[0]*W,s.panNorm[1]*H];pendingPanNorm=null;}
  }
  return true;
 }catch{return false;}}
 function saveMemory(){if(relationJourney)return;try{
- const storedPan=ready&&!isMobileOverview()?boundPanToOrganism(pan):pan;
+ const storedPan=ready?boundPanToOrganism(pan):pan;
  sessionStorage.setItem(memoryKey,JSON.stringify({sourceHash:BASELINE_HASH,angle,elevation,zoom,mode,selected:selected||pendingSelection,followSelected:selected?followSelected:pendingFollow,relationFocusId,userFramedPan,historyMonth,historyTab,historyOpen,panNorm:[storedPan[0]/Math.max(W,1),storedPan[1]/Math.max(H,1)]}));
  }catch{}}
 function preprocess(){
@@ -311,10 +311,17 @@ function coords(p){const a=project(p),scale=baseScale*zoom/ZOOM_BASE;
  * The check uses stable rest positions, not animated pixels or invented links.
  */
 function boundPanToOrganism(requested,previous=lastSafePan){
- if(!ready||W<30||H<30||!viewPositions.length||isMobileOverview())return requested;
+ if(!ready||W<30||H<30||!viewPositions.length )return requested;
  // Explicit navigation may visit a genuine peripheral node even when the
  // normal free-pan density constraint would hold the camera in the main body.
  if(relationFocusId===selected&&followSelected&&canLocateRelation(selected)&&!activeGesture&&!touchPair)return requested;
+ if(MOBILE_HOME){
+  const scale=baseScale*zoom/ZOOM_BASE;
+  const screen=p=>{const a=project(p);return [W*.5+(a[0]-center[0])*scale,H*.48-(a[1]-center[1])*scale];};
+  const points=viewPositions.filter((p,i)=>!sourceView||sourceView.structure.projectedIds.has(nodes[i].id)).map(screen);
+  if(!sourceView&&!lifePreviewEvent&&currentLayer)for(const {rest} of currentLayer.additions.values())points.push(screen(rest));
+  return mobilePanBounds(requested,points,W,H);
+ }
  const selectedComponent=selected&&componentById.has(selected)?componentById.get(selected):null;
  const focusIds=sourceView?.structure?.projectedIds ||
    (selectedComponent!==null&&zoom>=4?new Set(components[selectedComponent]):mainIds);
@@ -623,7 +630,7 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
    elevation+=(touchOrbitTarget.elevation-elevation)*k;
    if(Math.abs(touchOrbitTarget.angle-angle)<.00015&&Math.abs(touchOrbitTarget.elevation-elevation)<.00015)touchOrbitTarget=null;
   }
-  if(isMobileOverview()){
+  if(isMobileOverview()&&!userFramedPan&&!activeGesture&&!touchPair){
    // At full view, neither one nor two fingers can move the specimen offscreen.
    // Returning from a pan eases back to its center instead of snapping.
    if(!relationFocusId&&!relationJourney){followSelected=false;userFramedPan=false;}
@@ -647,7 +654,7 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
   // During a drag the *raw intent* is elastic; release springs back rather
   // than stopping sharply. Everything below is optical, not archival data.
   if(relationJourney){lastSafePan=[...pan];panIntent=null;edgeReturnVelocity=[0,0];}
-  else if(!isMobileOverview()){
+  else if(MOBILE_HOME||!isMobileOverview()){
    if(panIntent){
     const safe=boundPanToOrganism(panIntent);
     const radius=elasticLimit();
@@ -1279,7 +1286,7 @@ function resize(){if(relationJourney)cancelRelationJourney({dismiss:true});const
  currentCanvas.width=canvas.width;currentCanvas.height=canvas.height;currentContext?.setTransform(dpr,0,0,dpr,0,0);
  if(pendingPanNorm){pan=[pendingPanNorm[0]*W,pendingPanNorm[1]*H];pendingPanNorm=null;}
  else if(oldW>1&&oldH>1)pan=[pan[0]*W/oldW,pan[1]*H/oldH];
- if(isMobileOverview())pan=[0,0];
+ if(isMobileOverview()&&!userFramedPan)pan=[0,0];
  panIntent=null;edgeReturnVelocity=[0,0];
  if(ready)reframe();}
 function initUI(){
@@ -1293,7 +1300,7 @@ function initUI(){
  window.addEventListener('wheel',cancelEntrance,{capture:true,passive:true});
  window.addEventListener('keydown',cancelEntrance,true);
  window.addEventListener('click',cancelEntrance,true);
- if(MOBILE_HOME){const hint=document.querySelector('#hint .touch-hint');if(hint)hint.textContent='One finger to orbit · Pinch to zoom · Zoom in to pan';}
+ if(MOBILE_HOME){const hint=document.querySelector('#hint .touch-hint');if(hint)hint.textContent='One finger to pan · Pinch to zoom · Two fingers to orbit';}
  document.querySelectorAll('#mode button').forEach(b=>b.addEventListener('click',()=>chooseMode(b.dataset.mode)));
  $('minus').addEventListener('click',()=>requestZoom((zoomGoal??zoom)/1.35,controlAnchor()));
  $('plus').addEventListener('click',()=>requestZoom((zoomGoal??zoom)*1.35,controlAnchor()));
@@ -1347,7 +1354,7 @@ function initUI(){
    touchPair={start:pair.map(p=>[...p]),prev:pair.map(p=>[...p]),kind:'undecided',startedAt:performance.now()};
    pinchGesture=pinchState(pair);activeGesture=null;followSelected=false;
   }else{
-   const kind=e.pointerType==='touch'&&MOBILE_HOME?(isMobileOverview()?'rotate':'pan'):gestureKind(zoom,{shift:e.shiftKey,button:e.button,pointerType:e.pointerType});
+   const kind=e.pointerType==='touch'&&MOBILE_HOME?'pan':gestureKind(zoom,{shift:e.shiftKey,button:e.button,pointerType:e.pointerType});
    activeGesture={pointerId:e.pointerId,position:[e.clientX,e.clientY],pan:[...pan],angle,elevation,
     zoomAtStart:zoom,shift:e.shiftKey,rightButton:e.button===2,kind,moved:false,
     history:[{x:e.clientX,y:e.clientY,t:performance.now()}]};
@@ -1431,7 +1438,7 @@ function initUI(){
    touchPair=null;pinchGesture=null;
    const [id,p]=[...activePointers.entries()][0];
    activeGesture={pointerId:id,position:[...p.client],pan:[...pan],angle,elevation,zoomAtStart:zoom,
-     shift:false,rightButton:false,kind:MOBILE_HOME&&isMobileOverview()?'rotate':'pan',moved:true,
+     shift:false,rightButton:false,kind:'pan',moved:true,
      history:[{x:p.client[0],y:p.client[1],t:performance.now()}]};
   }else {touchPair=null;pinchGesture=null;panIntent=null;}
   if(activePointers.size===1)panIntent=[...pan];

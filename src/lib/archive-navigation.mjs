@@ -1,3 +1,10 @@
+function validAssociationProof(edge,proof){
+  if(proof.method!=='frontmatter'||![edge.source,edge.target].includes(proof.source))return false;
+  const other=proof.source===edge.source?edge.target:edge.source;
+  const allowed={linkedInstitutions:['people','institutions'],linkedPeople:['institutions','people'],linkedExhibitions:['institutions','exhibitions'],linkedConcepts:['institutions','concepts']};
+  const pair=Object.hasOwn(allowed,proof.field)?allowed[proof.field]:null;
+  return !!pair&&proof.source.startsWith(pair[0]+':')&&other.startsWith(pair[1]+':');
+}
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { currentGraph } from './current-research.mjs';
@@ -24,7 +31,8 @@ export function buildArchiveNavigation(graph, nav, snapshot) {
   for(const edge of graph.relations){
     const from=keys.get(edge.source),to=keys.get(edge.target);
     const primary=edge.kind==='recorded-link'&&edge.source?.startsWith('exhibitions:');
-    const evidenced=Array.isArray(edge.provenance)&&edge.provenance.some(proof=>primary?proof.method==='frontmatter'&&keys.has(proof.source):proof.method==='reviewed-claim'&&proof.claimId&&proof.evidence&&proof.reason);
+    const association=edge.kind==='archive-association';
+    const evidenced=Array.isArray(edge.provenance)&&edge.provenance.some(proof=>primary?proof.method==='frontmatter'&&keys.has(proof.source):association?validAssociationProof(edge,proof):proof.method==='reviewed-claim'&&proof.claimId&&proof.evidence&&proof.reason);
     if(from&&to&&from!==to&&evidenced&&!quarantined.has(from)&&!quarantined.has(to))edges.push([from,to]);
   }
   let changed=true;

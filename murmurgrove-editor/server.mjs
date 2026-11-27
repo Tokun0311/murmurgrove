@@ -15,14 +15,14 @@ import {assessClaims,readArchive,buildGraph,answerQuestion,groundedPrompt,readEv
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const TYPE_FIELDS = {
-  exhibitions: { required: ['title','visitedOn','region','location','kind'], optional: ['dateLabel','artists','concepts','institution','relatedInstitutions','exhibitionStart','exhibitionEnd','verification'] },
-  people: { required: ['name'], optional: ['kind','reading','sortName'] },
-  institutions: { required: ['name'], optional: ['city','longitude','latitude','locationType','address','addressStatus','addressSource','venueName','venueAddress','venueStatus','associatedProject'] },
+  exhibitions: { required: ['title','region','location','kind'], optional: ['visitedOn','engagement','researchOn','plannedOn','recordedOn','researchSources','dateLabel','artists','concepts','institution','relatedInstitutions','exhibitionStart','exhibitionEnd','verification'] },
+  people: { required: ['name'], optional: ['kind','reading','sortName','linkedInstitutions'] },
+  institutions: { required: ['name'], optional: ['city','longitude','latitude','locationType','address','addressStatus','addressSource','venueName','venueAddress','venueStatus','associatedProject','linkedPeople','linkedExhibitions','linkedConcepts'] },
   concepts: { required: ['title'], optional: [] },
   writing: { required: ['title','date','description'], optional: ['type','language','tags','draft'] }
 };
-const RELATIONS = {artists:'people',concepts:'concepts',institution:'institutions',relatedInstitutions:'institutions'};
-const ARRAY_KEYS = new Set(['artists','concepts','relatedInstitutions','tags']);
+const RELATIONS = {artists:'people',concepts:'concepts',institution:'institutions',relatedInstitutions:'institutions',linkedInstitutions:'institutions',linkedPeople:'people',linkedExhibitions:'exhibitions',linkedConcepts:'concepts'};
+const ARRAY_KEYS = new Set(['artists','concepts','relatedInstitutions','tags','linkedInstitutions','linkedPeople','linkedExhibitions','linkedConcepts']);
 const BOOL_KEYS = new Set(['draft']);
 const NUMBER_KEYS = new Set(['latitude','longitude']);
 const ALLOWED_TYPES = new Set(Object.keys(TYPE_FIELDS));
@@ -89,8 +89,15 @@ function normalise(type,submitted,{strict=false}={}){
   if(strict){
     for(const k of f.required)if(!fields[k])throw Object.assign(new Error('Required: '+k),{status:422});
     if(type==='exhibitions'){
-      if(!isDate(fields.visitedOn))throw Object.assign(new Error('Use an ISO visit date, YYYY-MM-DD'),{status:422});
-      fields.dateLabel=fields.visitedOn.slice(5);
+      fields.engagement ||= 'visited';
+      if(!['visited','researched','planned'].includes(fields.engagement))throw apiError(422,'Invalid engagement');
+      for(const k of ['visitedOn','researchOn','plannedOn','recordedOn'])if(fields[k]&&!isDate(fields[k]))throw apiError(422,'Invalid '+k);
+      if(fields.engagement==='visited'&&!fields.visitedOn)throw apiError(422,'Visit date required');
+      if(fields.engagement==='researched'&&!fields.researchOn)throw apiError(422,'Research date required');
+      if(fields.engagement!=='visited'&&fields.visitedOn)throw apiError(422,'Only visited records may contain a visit date');
+      if(fields.engagement==='planned'&&fields.researchOn)throw apiError(422,'Use researched for completed research');
+      if(fields.engagement==='planned'&&!fields.recordedOn)fields.recordedOn=new Date().toISOString().slice(0,10);
+      if(fields.visitedOn)fields.dateLabel=fields.visitedOn.slice(5);else delete fields.dateLabel;
       // MURMURGROVE_EDITOR_V14: optional dates, validated for both single and bundle publication.
       if(fields.exhibitionStart && !isDate(fields.exhibitionStart))throw apiError(422,'Invalid exhibition start date');
       if(fields.exhibitionEnd && !isDate(fields.exhibitionEnd))throw apiError(422,'Invalid exhibition end date');
@@ -137,8 +144,8 @@ async function recordList(root,type){
   const dir=path.join(root,'src/data',typeName(requireType(type)));
   const names=(await fsp.readdir(dir)).filter(x=>x.endsWith('.md') && slugOk(x.slice(0,-3)));
   const items=[];
-  for(const name of names){try{const raw=await fsp.readFile(path.join(dir,name),'utf8');const fields=readFields(splitMd(raw).yaml);items.push({slug:name.slice(0,-3),title:String(fields.title||fields.name||name),hasBody:Boolean(splitMd(raw).body.trim()),subtitle:type==='exhibitions'?`${fields.visitedOn||''} · ${fields.location||''}`:String(fields.city||fields.kind||''),fields});}catch{items.push({slug:name.slice(0,-3),title:name,subtitle:'Unable to read frontmatter',fields:{}});}}
-  items.sort((a,b)=>type==='exhibitions'?String(b.fields.visitedOn||'').localeCompare(String(a.fields.visitedOn||'')):a.title.localeCompare(b.title));return items;
+  for(const name of names){try{const raw=await fsp.readFile(path.join(dir,name),'utf8');const fields=readFields(splitMd(raw).yaml);items.push({slug:name.slice(0,-3),title:String(fields.title||fields.name||name),hasBody:Boolean(splitMd(raw).body.trim()),subtitle:type==='exhibitions'?`${fields.visitedOn||fields.researchOn||fields.recordedOn||''} · ${fields.engagement||'visited'} · ${fields.location||''}`:String(fields.city||fields.kind||''),fields});}catch{items.push({slug:name.slice(0,-3),title:name,subtitle:'Unable to read frontmatter',fields:{}});}}
+  items.sort((a,b)=>type==='exhibitions'?String(b.fields.visitedOn||b.fields.researchOn||b.fields.recordedOn||'').localeCompare(String(a.fields.visitedOn||a.fields.researchOn||a.fields.recordedOn||'')):a.title.localeCompare(b.title));return items;
 }
 async function checkRelations(root,fields){
   for(const [field,type] of Object.entries(RELATIONS)){
@@ -210,10 +217,21 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug'));
         const file=path.join(draftDir,type,`${slug}.json`);if(!await exists(file))throw apiError(404,'Draft not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
       }
-      if(req.method==='POST'&&['/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
+      if(req.method==='POST'&&['/api/geography-add','/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
         const expectedOrigin=`http://127.0.0.1:${server.address().port}`;
         if(req.headers.origin!==expectedOrigin||req.headers['x-editor-token']!==token)throw apiError(403,'Untrusted request');
         const p=await readJSON(req,u.pathname==='/api/import-word'?12*1024*1024:1024*1024);
+        if(u.pathname==='/api/geography-add')return await serializeWrite(async()=>{
+          const name=typeof p.name==='string'?p.name.trim().normalize('NFKC'):'',country=typeof p.country==='string'?p.country.trim():'',lat=p.lat,lon=p.lon;
+          const aliases=Array.isArray(p.aliases)?p.aliases.map(x=>typeof x==='string'?x.trim():'').filter(Boolean):[];
+          const key=x=>x.normalize('NFKC').trim().toLowerCase();
+          if(!name||name.length>120||!country||country.length>120||/[\r\n]/.test(name+country)||['__proto__','constructor','prototype'].includes(key(name))||typeof lat!=='number'||typeof lon!=='number'||!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180||aliases.length>20||aliases.some(x=>x.length>120||/[\r\n]/.test(x)))throw apiError(422,'Enter city, country and valid latitude/longitude.');
+          const cities=await exists(citiesFile)?JSON.parse(await fsp.readFile(citiesFile,'utf8')):{};
+          const existing=new Set(Object.entries(cities).flatMap(([n,v])=>[n,...(v.aliases||[])]).map(key));
+          if([name,...aliases].some(n=>existing.has(key(n)))||new Set([name,...aliases].map(key)).size!==1+aliases.length)throw apiError(409,'City or alias already exists. Use its existing canonical name.');
+          cities[name]={lon,lat,country,...(aliases.length?{aliases}:{})};
+          await saveAtomic(citiesFile,JSON.stringify(cities,null,2)+'\n');return json(res,200,{cities});
+        });
         if(u.pathname==='/api/questions-list')return json(res,200,{questions:await listQuestions(privateDir)});
         if(u.pathname==='/api/question-create')return await serializeWrite(async()=>json(res,200,{question:await createQuestion(root,privateDir,p)}));
         if(u.pathname==='/api/question-append')return await serializeWrite(async()=>json(res,200,{question:await appendQuestion(root,privateDir,p)}));
@@ -352,7 +370,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         if(p.bundle?.length)throw apiError(422,'Use grouped publication for staged linked records.');
         if(type==='writing' && fields.draft===true)throw apiError(422,'Writing must be public to publish');
         await checkRelations(root,fields);
-        if(type==='exhibitions' && !fields.visitedOn.startsWith('2026-')){
+        if(type==='exhibitions' && fields.visitedOn&&!fields.visitedOn.startsWith('2026-')){
           const pageFile=path.join(root,'src/pages/exhibitions/[slug].astro');
           if(await exists(pageFile) && (await fsp.readFile(pageFile,'utf8')).includes("dateLabel.replaceAll('-','.')}.2026"))throw apiError(422,'Your public exhibition page still hardcodes year 2026. Fix its Visited date template before publishing a record from another year.');
         }

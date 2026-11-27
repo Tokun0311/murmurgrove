@@ -132,6 +132,15 @@ function relationEdges(records,approved,conceptMeta={}){const byKey=new Map(reco
    for(const id of ids)if(slugValid(id))add(r.key,recordKey(type,id),'recorded-link',{method:'frontmatter',source:r.key});
   }
  }
+ // Explicit editor-selected associations, not inferred employment or participation.
+ for(const r of records){
+  const fields=r.type==='people'?[['linkedInstitutions','institutions']]:r.type==='institutions'?[['linkedPeople','people'],['linkedExhibitions','exhibitions'],['linkedConcepts','concepts']]:[];
+  for(const [field,type] of fields)for(const id of Array.isArray(r.fields[field])?r.fields[field]:[]){
+   if(!slugValid(id))continue;const target=recordKey(type,id);
+   if(type==='exhibitions'&&edges.has(`${target}|${r.key}|recorded-link`))continue;
+   const [a,b]=[r.key,target].sort();add(a,b,'archive-association',{method:'frontmatter',source:r.key,field});
+  }
+ }
  for(const c of approved)add(recordKey(c.source.type,c.source.id),recordKey(c.target.type,c.target.id),c.kind,{method:'reviewed-claim',claimId:c.id,evidence:c.evidence,reason:c.reason});
  return [...edges.values()].sort((a,b)=>(a.source+a.target+a.kind).localeCompare(b.source+b.target+b.kind));
 }
@@ -141,7 +150,7 @@ function publishedAliases(fields, concept){
   .filter(value=>typeof value==='string'&&value.trim()).map(value=>value.trim()))];
 }
 export async function buildGraph(root){const records=await readArchive(root),events=await readEvents(root),assessed=assessClaims(records,activeRelations(events)),claims=assessed.filter(c=>c.reviewStatus==='current'),conceptMeta=await readConceptMeta(root),edges=relationEdges(records,claims,conceptMeta);
- const rec=records.map(({type,id,key,title,body,fields,path,contentHash})=>({type,id,key,title,path,contentHash,summary:body.replace(/\s+/g,' ').slice(0,460),text:body.slice(0,18000),date:String(fields.visitedOn||fields.date||''),conceptStage:type==='concepts'?(conceptMeta[id]?.status||'unclassified'):null,aliases:publishedAliases(fields,type==='concepts'?conceptMeta[id]:null),conceptReading:type==='concepts'?[conceptMeta[id]?.definition||'',conceptMeta[id]?.interpretation||'',conceptMeta[id]?.development||''].filter(Boolean).join('\n'):'',mergedInto:type==='concepts'?(conceptMeta[id]?.mergedInto||null):null}));
+ const rec=records.map(({type,id,key,title,body,fields,path,contentHash})=>({type,id,key,title,path,contentHash,summary:body.replace(/\s+/g,' ').slice(0,460),text:body.slice(0,18000),date:String(type==='exhibitions'?(fields.engagement==='researched'?fields.researchOn:fields.engagement==='planned'?fields.recordedOn:fields.visitedOn)||'':fields.date||''),...(type==='exhibitions'?{engagement:fields.engagement||'visited',visitedOn:fields.visitedOn||null,researchOn:fields.researchOn||null}:{}),conceptStage:type==='concepts'?(conceptMeta[id]?.status||'unclassified'):null,aliases:publishedAliases(fields,type==='concepts'?conceptMeta[id]:null),conceptReading:type==='concepts'?[conceptMeta[id]?.definition||'',conceptMeta[id]?.interpretation||'',conceptMeta[id]?.development||''].filter(Boolean).join('\n'):'',mergedInto:type==='concepts'?(conceptMeta[id]?.mergedInto||null):null}));
  const sourceDigest=hash(records.map(r=>[r.key,r.contentHash]));const relationDigest=hash(events.map(e=>e.sha256));
  const graphHash=hash({sourceDigest,relationDigest,conceptMeta,edges});
  const activity={};for(const e of edges){activity[e.source]=(activity[e.source]||0)+1;activity[e.target]=(activity[e.target]||0)+1;}

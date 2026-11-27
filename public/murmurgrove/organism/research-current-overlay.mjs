@@ -1,3 +1,10 @@
+function validAssociationProof(edge,proof){
+  if(proof.method!=='frontmatter'||![edge.source,edge.target].includes(proof.source))return false;
+  const other=proof.source===edge.source?edge.target:edge.source;
+  const allowed={linkedInstitutions:['people','institutions'],linkedPeople:['institutions','people'],linkedExhibitions:['institutions','exhibitions'],linkedConcepts:['institutions','concepts']};
+  const pair=Object.hasOwn(allowed,proof.field)?allowed[proof.field]:null;
+  return !!pair&&proof.source.startsWith(pair[0]+':')&&other.startsWith(pair[1]+':');
+}
 import { EMERALD } from './emerald-palette.mjs';
 import { cubicBezierAt } from './relation-flow.mjs';
 
@@ -19,9 +26,9 @@ export function readCurrentResearch(graph, {excludedIds=new Set()}={}) {
         typeof row.title !== 'string' || !row.title.trim() || !/^[a-f0-9]{64}$/.test(row.contentHash) ||
         records.has(kind + ':' + row.id)) throw new Error('Invalid public research record');
     const id = kind + ':' + row.id;
-    if(excludedIds.has(id))continue; // Frozen quarantine is not promoted by current metadata.
+    if(excludedIds.has(id)||row.engagement==='planned')continue; // Frozen quarantine is not promoted by current metadata.
     keys.set(row.key, id);
-    records.set(id, { id, kind, title: row.title, path: row.path, occurredOn: row.date,
+    records.set(id, { id, kind, title: row.title, path: row.path, occurredOn: row.engagement==='researched'?null:row.date, researchOn:row.researchOn||null, engagement:row.engagement||null,
       aliases: Array.isArray(row.aliases) ? row.aliases.filter(alias => typeof alias === 'string') : [] });
   }
   if (!records.size) throw new Error('Empty public research projection');
@@ -30,8 +37,9 @@ export function readCurrentResearch(graph, {excludedIds=new Set()}={}) {
   for (const edge of graph.relations) {
     const from = keys.get(edge.source), to = keys.get(edge.target);
     const primary = edge.kind === 'recorded-link' && edge.source?.startsWith('exhibitions:');
+    const association=edge.kind==='archive-association';
     const evidenced = Array.isArray(edge.provenance) && edge.provenance.some(proof =>
-      primary ? proof.method === 'frontmatter' && keys.has(proof.source) :
+      primary ? proof.method === 'frontmatter' && keys.has(proof.source) : association ? validAssociationProof(edge,proof) :
         proof.method === 'reviewed-claim' && proof.claimId && proof.evidence && proof.reason);
     if (!from || !to || from === to || !evidenced) continue;
     const key = from + '|' + to + '|' + edge.kind;
