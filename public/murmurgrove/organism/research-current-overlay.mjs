@@ -114,7 +114,7 @@ export function placeCurrentResearch({records, relations}, anchors, baselineLink
           let nearest=span;
           for(const p of occupied)nearest=Math.min(nearest,Math.hypot(...p.map((v,k)=>v-candidate[k])));
           const distance=Math.hypot(...candidate.map((v,k)=>v-origin[k]));
-          const score=Math.min(nearest,span*.055)-distance*.065+span*.008*unit(id+'|candidate'+j);
+          const score=Math.min(nearest,span*.085)-distance*.052+span*.008*unit(id+'|candidate'+j);
           if(score>best){best=score;rest=candidate;}
         }
         occupied.push(rest);additions.set(id,{origin,rest,wave});
@@ -165,12 +165,12 @@ export function currentProjection(layer, coords, elapsed, reduced, {animate=fals
     const growth = (previous?.growth || 0) + (1 - (previous?.growth || 0)) * blend;
     const p=rest.map((value,i)=>from[i]+(value-from[i])*blend);
     const moving=reduced?p:organicPosition(p,time,mode,field||{tangent:[1,0,0],density:0});
-    points.set(id,{point:motion&&!reduced?motion(coords(p),coords(moving)):coords(p),growth});
+    points.set(id,{point:motion&&!reduced?motion(coords(p),coords(moving),id):coords(p),growth});
   }
   return points;
 }
 
-export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, zoom, clock, time=0, reduced, selected, field=()=>[0,0] }) {
+export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, zoom, clock, time=0, reduced, selected, nodeOptics=()=>1, edgeOptics=()=>1, field=()=>[0,0] }) {
   // MURMURGROVE_STABILITY_20261127
   const transform=ctx.getTransform();
   const w=ctx.canvas.width/Math.max(.01,transform.a),h=ctx.canvas.height/Math.max(.01,transform.d);
@@ -181,7 +181,7 @@ export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, z
     const flowIndex=index++;
     const a = points.get(from) || {point: baselinePoint(from), growth: 1};
     const b = points.get(to) || {point: baselinePoint(to), growth: 1};
-    const opacity = Math.min(a.growth, b.growth);
+    const opacity = Math.min(a.growth, b.growth) * (a.point&&b.point?edgeOptics(from,to,a.point,b.point):1);
     if (!a.point || !b.point || !opacity) continue;
     const p = a.point, q = b.point;
     const [c1,c2]=mangroveControls(p,q,field(from),field(to),1,mode,breathingTime(time,mode));
@@ -207,7 +207,7 @@ export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, z
     if(off(point[0],point[1],radius+7))continue;
     ctx.beginPath();
     ctx.arc(point[0], point[1], radius, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(' + (EMERALD.nodes[kind] || EMERALD.nodes.person) + ',' + growth * .55 + ')';
+    ctx.fillStyle = 'rgba(' + (EMERALD.nodes[kind] || EMERALD.nodes.person) + ',' + growth * .55 * nodeOptics(id,point) + ')';
     ctx.fill();
     if (id === selected) {
       ctx.beginPath();
@@ -225,7 +225,7 @@ export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, z
     const radius = 2.2 * Math.min(17, 4 + Math.log1p(count) * 3.1);
     if(off(x,y,radius))continue;
     const ebb = reduced ? 1 : .9 + .1 * Math.sin(clock / 11000 + x * .001);
-    const alpha = (.014 + Math.min(.042, count * .004)) * ebb * (current?.growth ?? 1);
+    const alpha = (.014 + Math.min(.042, count * .004)) * ebb * (current?.growth ?? 1) * nodeOptics(id,point) * (mode==='Whole'?.65:1);
     const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
     gradient.addColorStop(0, 'rgba(0,136,78,' + alpha + ')');
     gradient.addColorStop(1, 'rgba(0,136,78,0)');

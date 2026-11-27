@@ -19,7 +19,7 @@ import {LIVED_KINDS,makeLivedDraft,validateSealedLivedEvidence,verifyLivedIndex,
 import {LIFE_RULE_VERSION,deriveLifeMorphology,lifeRecordMap,applyLifeOffset,eventReconstructionTimes} from './life-morphology.mjs';
 import {verifyLifeStateIndex,verifyLifeCapture} from './life-checkpoints.mjs';
 import {verifyWithdrawalIndex,withdrawalSet,filterWithdrawnEvidence,lifeCaptureIncludesWithdrawal} from './withdrawals.mjs';
-import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch,edgeKey,organicPosition} from './research-current-overlay.mjs?unified=1';
+import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch,edgeKey,organicPosition} from './research-current-overlay.mjs?legibility=1';
 const $=id=>document.getElementById(id);
 const canvas=$('stage'),ctx=canvas.getContext('2d',{alpha:false}),roles={
  concept:['Direction field',EMERALD.roles.concept],exhibition:['Observation chamber',EMERALD.roles.exhibition],
@@ -45,6 +45,20 @@ const memoryKey='murmurgrove.phase2.6.readonly.session'+(MOBILE_HOME?'.compact-o
 const entranceVisitKey='murmurgrove.organism.entrance.seen.v1';
 function hasSeenEntrance(){try{return sessionStorage.getItem(entranceVisitKey)==='1';}catch{return false;}}
 function markEntranceSeen(){try{sessionStorage.setItem(entranceVisitKey,'1');}catch{}}
+function shouldPlayEntrance(){
+ try{
+  const owner=window.parent!==window&&new URLSearchParams(location.search).has('embedded')?window.parent:window;
+  const navEntry=owner.performance.getEntriesByType('navigation')[0];
+  if(navEntry?.type==='reload')return true;
+  if(navEntry?.type==='back_forward')return false;
+  const ref=owner.document.referrer;
+  if(!ref)return true;
+  const previous=new URL(ref),here=new URL(owner.location.href);
+  if(previous.origin!==here.origin)return true;
+  if(previous.pathname!==here.pathname)return !hasSeenEntrance();
+  return true;
+ }catch{return !hasSeenEntrance();}
+}
 
 let records=[],links=[],nodes=[],nodeMap=new Map(),nodeIndex=new Map(),neighborData=[],pulseNeighbors=[],components=[],mainIds=new Set(),isolated=new Set(),viewPositions=[],componentById=new Map();
 let manifest,baseline,nav,snapshot,ready=false,angle=.63,elevation=.20,zoom=DEFAULT_ZOOM,mode='Whole',selected=null,followSelected=false,viewHash='';
@@ -86,6 +100,7 @@ function prepareEntrance(){
  edgeReturnVelocity=[0,0];velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
  followSelected=false;userFramedPan=false;touchOrbitTarget=null;
  mode='Whole';selected=null;
+ pendingSelection=null;pendingFollow=false;relationFocusId=null;
  if(reducedMotionMedia.matches){
   zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;elevation=ENTRANCE_TARGET_ELEVATION;
   return;
@@ -271,9 +286,9 @@ function drawCurrentLayer(now,basePositions){
   return;
  }
  const reduced=reducedMotionMedia.matches;
- currentPoints=currentProjection(currentLayer,coords,now-currentStart,reduced,{animate:currentAnimate,time:Date.now()/1000,mode,motion:(rest,moving)=>visibleOverviewMotion(rest,calmMagnifiedMotion(rest,moving,zoom),zoom,mode)});
+ currentPoints=currentProjection(currentLayer,coords,now-currentStart,reduced,{animate:currentAnimate,time:Date.now()/1000,mode,motion:(rest,moving,id)=>readingMotion(id,rest,visibleOverviewMotion(rest,calmMagnifiedMotion(rest,moving,zoom),zoom,mode))});
  drawCurrentResearch(currentContext,currentLayer,currentPoints,id=>basePositions[nodeIndex.get(id)],
-  {mode,zoom,clock:now-currentStart,time:reduced?0:Date.now()/1000,reduced,selected,field:id=>{const i=nodeIndex.get(id);const t=i===undefined?currentLayer.additions.get(id)?.field?.tangent:neighborData[i]?.tangent;const p=project(t||[0,0,0]);return [p[0],-p[1]];}});
+  {mode,zoom,clock:now-currentStart,time:reduced?0:Date.now()/1000,reduced,selected,nodeOptics,edgeOptics,field:id=>{const i=nodeIndex.get(id);const t=i===undefined?currentLayer.additions.get(id)?.field?.tangent:neighborData[i]?.tangent;const p=project(t||[0,0,0]);return [p[0],-p[1]];}});
 }
 function currentRest(id){
  return sourceView||lifePreviewEvent?null:currentLayer?.additions.get(id)?.rest;
@@ -414,8 +429,47 @@ function positions(time){return nodes.map((n,i)=>{
  const recordState=lifeFields.get(n.id);
  const lived=applyLifeOffset(viewPositions[i],recordState);
  const rest=coords(lived),moving=coords(gaussian(i,lived,time));
- return visibleOverviewMotion(rest,calmMagnifiedMotion(rest,moving,zoom),zoom,mode);
+ return readingMotion(n.id,rest,visibleOverviewMotion(rest,calmMagnifiedMotion(rest,moving,zoom),zoom,mode));
  });}
+let readingBlend=0,readingId=null,readingNeighbors=new Set(),lensDepth=0,depthSpan=1,detailBlend=0;
+function updateReadingLens(dt){
+ const enabled=!sourceView&&!lifePreviewEvent&&!activeHistoryContext&&mode==='Whole';
+ const next=enabled?selected:null;
+ if(next&&next!==readingId){readingId=next;readingNeighbors=new Set([next]);
+  for(const e of links)if(currentBaselineVisible(e)){if(e.from===next)readingNeighbors.add(e.to);if(e.to===next)readingNeighbors.add(e.from);}
+  for(const e of currentLayer?.edges||[]){if(e.from===next)readingNeighbors.add(e.to);if(e.to===next)readingNeighbors.add(e.from);}
+ }
+ const gain=1-Math.exp(-dt/180);
+ readingBlend+=((next?1:0)-readingBlend)*gain;
+ if(!next&&readingBlend<.005){readingBlend=0;readingId=null;readingNeighbors.clear();}
+ detailBlend=enabled?cl((zoom-1.1)/3.4,0,1):0;
+ let lo=Infinity,hi=-Infinity;
+ for(const p of viewPositions){const z=project(p)[2];lo=Math.min(lo,z);hi=Math.max(hi,z);}
+ depthSpan=Math.max(.3,hi-lo);
+ const rest=readingId?(currentRest(readingId)||viewPositions[nodeIndex.get(readingId)]):null;
+ const target=rest?project(rest)[2]:(lo+hi)*.5;
+ lensDepth+=(target-lensDepth)*gain;
+}
+function nodeOptics(id,p){
+ if(sourceView||lifePreviewEvent||activeHistoryContext||mode!=='Whole')return 1;
+ if(id===selected)return 1;
+ const focus=readingNeighbors.has(id)?1:1-.78*readingBlend;
+ const depth=Number.isFinite(p[2])?Math.abs(p[2]-lensDepth)/depthSpan:0;
+ const space=1-.54*detailBlend*cl(depth*1.8,0,1);
+ return focus*space;
+}
+function edgeOptics(from,to,p,q){
+ if(sourceView||lifePreviewEvent||activeHistoryContext||mode!=='Whole')return 1;
+ const direct=readingId&&(from===readingId||to===readingId);
+ const overview=.40+.42*cl((zoom-.65)/3.1,0,1);
+ const depth=(nodeOptics(from,p)+nodeOptics(to,q))*.5;
+ return direct?overview*(1-readingBlend)+readingBlend:overview*depth*(1-.47*readingBlend);
+}
+function readingMotion(id,rest,moving){
+ const focus=readingNeighbors.has(id)?readingBlend:0;
+ const amount=1-.58*focus-.19*detailBlend*(1-focus);
+ return [rest[0]+(moving[0]-rest[0])*amount,rest[1]+(moving[1]-rest[1])*amount,moving[2]];
+}
 function avgColor(a,b){return a;} // no blending of identities, relation style expresses evidence only
 function drawBackground(time,pos){
  ctx.fillStyle=EMERALD.paper;ctx.fillRect(0,0,W,H);
@@ -428,7 +482,7 @@ function drawBackground(time,pos){
   const radius=cl(spread*(.75+Math.min(2.8,d*.13)),9,160);
   const gradient=ctx.createRadialGradient(point[0],point[1],1,point[0],point[1],radius);
   const quietLens=selected&&isolated.has(selected)&&zoom>=8?.16:1;
-  const power=(mode==='Movement'?.022:mode==='Growth'?.026:.023)*Math.min(1.25,d/3)*quietLens;
+  const power=(mode==='Movement'?.022:mode==='Growth'?.026:.023)*Math.min(1.25,d/3)*quietLens*nodeOptics(n.id,point)*(mode==='Whole'?.72:1);
   gradient.addColorStop(0,`rgba(${EMERALD.veil.center},${power})`);gradient.addColorStop(.54,`rgba(${EMERALD.veil.mid},${power*.35})`);gradient.addColorStop(1,`rgba(${EMERALD.veil.edge},0)`);
   ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(point[0],point[1],radius,0,Math.PI*2);ctx.fill();
  }
@@ -447,10 +501,11 @@ function drawLinks(pos,time){
   const p=pos[ai],q=pos[bi],ageA=daySpan(a.record?.occurredOn),ageB=daySpan(b.record?.occurredOn),age=ageA??ageB??0;
   const old=mode==='Growth'&&age>90;
   const historyAlpha=activeHistoryContext?(activeHistoryContext.linkIndices.has(index)?2.5:.22):1;
-  const sourceAlpha=(mode==='Growth'?.34:mode==='Movement'?.14:.21)*quietLens*historyAlpha;
+  const sourceAlpha=(mode==='Growth'?.34:mode==='Movement'?.14:.21)*quietLens*historyAlpha*edgeOptics(l.from,l.to,p,q);
   const ebb=.91+.09*Math.sin(breathClock*.27+index*.14);
   // Only visual thickness changes, NEVER mechanical tension. Writing is silent.
   for(let k=0;k<(smallTouchViewport?2:3);k++){
+   if(mode==='Whole'&&!activeHistoryContext&&zoom<1.25&&k!==1)continue;
    const [p1,p2]=mangroveControls(p,q,fieldScreen[ai],fieldScreen[bi],k,mode,time);
    const alpha=sourceAlpha*(k===1?.52:.20)*ebb;
    ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.bezierCurveTo(p1[0],p1[1],p2[0],p2[1],q[0],q[1]);
@@ -474,6 +529,7 @@ function drawRelationFlow(pos,time){
   const ai=nodeIndex.get(link.from),bi=nodeIndex.get(link.to);
   if(ai===undefined||bi===undefined)return;
   const a=pos[ai],b=pos[bi];
+  const opticalWeight=edgeOptics(link.from,link.to,a,b);
   // Both the moving light and its trail are sampled ON this one verified link.
   const [c1,c2]=mangroveControls(a,b,fieldScreen[ai],fieldScreen[bi],1,mode,strandTime);
   const recent=Math.max(exhibitionGlow(nodes[ai]),exhibitionGlow(nodes[bi]),
@@ -502,7 +558,7 @@ function drawRelationFlow(pos,time){
     }
    }
    ctx.beginPath();ctx.arc(x,y,sample.radius*Math.pow(zoom/ZOOM_BASE,.12),0,Math.PI*2);
-   ctx.fillStyle=`rgba(${color},${sample.alpha})`;ctx.fill();
+   ctx.fillStyle=`rgba(${color},${sample.alpha*opticalWeight})`;ctx.fill();
   }
  });
 }
@@ -556,6 +612,7 @@ function drawNodes(pos,time){
  for(let i=0;i<nodes.length;i++){
   const n=nodes[i],p=pos[i],r=n.record,island=isolated.has(n.id),d=neighborData[i].density;
   if(p[0]<-50||p[0]>W+50||p[1]<-50||p[1]>H+50)continue;
+  ctx.globalAlpha=nodeOptics(n.id,p);
   const glow=exhibitionGlow(n),pulse=glow*(mode==='Movement'?1.55:mode==='Growth'?.27:.78);
   const aged=daySpan(n.record?.occurredOn);
   if(mode==='Growth'&&n.kind==='exhibition'&&aged!==null&&aged>90){
@@ -578,8 +635,9 @@ function drawNodes(pos,time){
   ctx.beginPath();ctx.arc(p[0],p[1],rad,0,Math.PI*2);
   ctx.fillStyle=r?.kind==='concept'?`rgba(${EMERALD.nodes.concept},.61)`:r?.kind==='exhibition'?`rgba(${EMERALD.nodes.exhibition},${.28+.55*glow})`:
     r?.kind==='writing'?`rgba(${EMERALD.nodes.writing},.75)`:r?.kind==='person'?`rgba(${EMERALD.nodes.person},.48)`:`rgba(${EMERALD.nodes.institution},.48)`;ctx.fill();
-  if(selectedHere){ctx.strokeStyle=`rgba(${EMERALD.nodes.selected},.76)`;ctx.lineWidth=1.0;ctx.beginPath();ctx.arc(p[0],p[1],rad+5.5,0,Math.PI*2);ctx.stroke();}
+  if(selectedHere){ctx.globalAlpha=1;ctx.strokeStyle=`rgba(${EMERALD.nodes.selected},.76)`;ctx.lineWidth=1.0;ctx.beginPath();ctx.arc(p[0],p[1],rad+5.5,0,Math.PI*2);ctx.stroke();}
  }
+ ctx.globalAlpha=1;
 }
 /** Only after author attestation AND local source/checksum verification. These are
  * optical evidence markers, not activated fibers or a reconstructed physiology. */
@@ -683,7 +741,7 @@ function renderFrame(now){const time=(lifePreviewEvent||reducedMotionMedia.match
    lastFrameScreenNodes=null;
    const pos=viewPositions.map(coords);drawSourceReading();drawCurrentLayer(now,pos);if(selected)positionCard(pos);
   }else{
-   const pos=positions(time);drawBackground(time,pos);drawLinks(pos,time);drawRelationFlow(pos,time);drawNodes(pos,time);drawLivedEvidenceMarks(pos,time);drawCurrentLayer(now,pos);if(selected)positionCard(pos);
+   updateReadingLens(dt);const pos=positions(time);drawBackground(time,pos);drawLinks(pos,time);drawRelationFlow(pos,time);drawNodes(pos,time);drawLivedEvidenceMarks(pos,time);drawCurrentLayer(now,pos);if(selected)positionCard(pos);
    lastFrameScreenNodes=pos;
   }
   lastFrameRenderedAt=new Date().toISOString();lastFrameCamera={mode,angle,elevation,zoom,pan:[...pan],selectedId:nodeMap.has(selected)?selected:null};
@@ -1497,7 +1555,7 @@ async function init(){
   // Read the last view BEFORE chooseMode/setZoom can save and overwrite it.
   // On the very first entry, play the guided overview once, even if a stale
   // camera happened to be stored by an earlier version of the site.
-  const locate=requestedLocation(),firstVisit=!hasSeenEntrance();
+  const locate=requestedLocation(),firstVisit=shouldPlayEntrance();
   if(firstVisit&&!locate){
    prepareEntrance();markEntranceSeen();
   }else if(!storedMemory()){
@@ -1515,7 +1573,8 @@ async function init(){
   const livedSelect=$('livedRecord');
  for(const r of records)livedSelect.append(new Option(r.kind+' · '+r.title,r.id));
  fillFinder(new Map(records.map(record=>[record.id,record])));
- refreshCurrentResearch().then(()=>{
+ const initialResearch=refreshCurrentResearch();
+ initialResearch.then(()=>{
   if(locate&&(nodeMap.has(locate.id)||currentRest(locate.id))){
    pendingSelection=null;pendingFollow=false;cancelEntrance();
    if(historyOpen)setHistoryOpen(false);
@@ -1536,6 +1595,7 @@ async function init(){
  });
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshCurrentResearch();});
  setInterval(()=>{if(!document.hidden)refreshCurrentResearch();},60_000);
+  await Promise.race([initialResearch,new Promise(resolve=>setTimeout(resolve,1400))]);
   $('loading').style.display='none';lastFpsAt=performance.now();requestAnimationFrame(render);
   if(firstVisit&&!locate&&!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
   window.__MURMUR_REAL__={baselineHash:BASELINE_HASH,nodes:174,metadataLinks:158,isolatedRecords:20,interiorQuietDisplayPositions:20,zoomMaximum:ZOOM_MAX,zoomMinimum:ZOOM_MIN,zoomDefault:DEFAULT_ZOOM,get entrance(){return {active:!!entrance,holdMs:ENTRANCE_HOLD_MS,durationMs:ENTRANCE_MOVE_MS};},get isMobileOverview(){return isMobileOverview();},
