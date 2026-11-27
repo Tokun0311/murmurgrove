@@ -174,3 +174,8 @@ body[data-workspace=research] .sidebar{opacity:.85}.maintenance-label{font-size:
 #connections-fold .association-editor{margin-top:12px}#connections-fold .relation-field{margin:10px 0;padding:8px 0;border:0;border-top:1px solid rgba(24,103,72,.16)}
 #source-fields textarea{width:100%;resize:vertical}#profile-extract{margin:8px 16px 4px 0}
 #connect-phase.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+/* Concept metadata: small, optional language fields, no new storage schema. */
+.concept-language-fields{grid-column:1/-1;gap:6px;min-width:0;}
+.concept-language-row{display:grid;grid-template-columns:minmax(76px,1fr) minmax(0,3fr);align-items:center;gap:10px;min-width:0;}
+.concept-language-row input{width:100%;min-width:0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;padding:7px 0;color:var(--ink);}

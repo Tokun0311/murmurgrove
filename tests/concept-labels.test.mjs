@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {conceptLabels} from '../src/lib/concept-labels.mjs';
+test('postcolonialism uses title and native name, not internal ID',()=>assert.deepEqual(conceptLabels({title:'后殖民主义',nativeName:'Postcolonialism'}),{zh:'后殖民主义',en:'Postcolonialism',ja:'ポストコロニアリズム'}));
+test('archival practices reads combined aliases',()=>assert.deepEqual(conceptLabels({title:'Archival Practices',alternativeNames:['档案实践 / アーカイブ実践']}),{zh:'档案实践',en:'Archival Practices',ja:'アーカイブ実践'}));
+test('queer',()=>assert.deepEqual(conceptLabels({title:'Queer',alternativeNames:['酷儿 / クィア']}),{zh:'酷儿',en:'Queer',ja:'クィア'}));
+test('sustainability',()=>assert.deepEqual(conceptLabels({title:'Sustainability'}),{zh:'可持续性',en:'Sustainability',ja:'持続可能性'}));
+test('future concept reads existing fields, tagged Han aliases',()=>assert.deepEqual(conceptLabels({title:'Care Ethics',alternativeNames:['zh: 照护伦理','ja: ケアの倫理']}),{zh:'照护伦理',en:'Care Ethics',ja:'ケアの倫理'}));
+test('Japanese Han-only label can be explicitly identified',()=>assert.equal(conceptLabels({title:'Social Practice',alternativeNames:['zh: 社会实践','ja: 社会実践']}).ja,'社会実践'));
+test('missing languages remain missing',()=>assert.deepEqual(conceptLabels({title:'New concept'}),{zh:'',en:'New concept',ja:''}));
+test('legacy names remain unchanged',()=>assert.deepEqual(conceptLabels({title:'场域特定性'},{en:'Site-Specificity',ja:'サイト・スペシフィシティ'}),{zh:'场域特定性',en:'Site-Specificity',ja:'サイト・スペシフィシティ'}));

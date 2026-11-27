@@ -18,3 +18,12 @@ export function externalBundleRefs(type,slug,fields,nodes){
  const internal=new Set([refKey({type,slug}),...nodes.map(refKey)]);
  return [...new Map([...recordRefs(type,fields),...nodes.flatMap(n=>recordRefs(n.type,n))].filter(r=>!internal.has(refKey(r))).map(r=>[refKey(r),r])).values()];
 }
+// Language tags are encoded in existing alternativeNames; no schema migration.
+export const conceptLanguageTag = value => String(value??'').trim().match(/^(zh|en|ja)\s*[:：]\s*(.+)$/i);
+export function conceptNameVariants(values){
+ return values.flatMap(value=>String(value??'').split(/\s+[\/／]\s+|\s*／\s*/u)).map(s=>s.trim()).filter(Boolean).map(s=>conceptLanguageTag(s)?.[2].trim()||s);
+}
+export function setConceptLanguage(aliases,lang,value){
+ const next=(aliases||[]).filter(a=>conceptLanguageTag(a)?.[1].toLowerCase()!==lang);
+ const clean=String(value??'').trim();if(clean)next.push(`${lang}: ${clean}`);return next;
+}

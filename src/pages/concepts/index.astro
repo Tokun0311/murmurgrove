@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { edgeKey, overviewEdges, mobileConceptLayout } from '../../lib/concept-graph.mjs';
+import { conceptLabels } from '../../lib/concept-labels.mjs';
 import {currentConcept,currentConceptIds} from '../../lib/current-research.mjs';
 const items = (await getCollection('concepts')).filter(item=>!currentConcept(item.id)?.mergedInto).sort((a,b)=>a.data.title.localeCompare(b.data.title));
 const exhibitions = await getCollection('exhibitions');
@@ -50,8 +52,8 @@ const translations:Record<string,{en:string,ja:string}> = {
   'moving-image': {en:'Moving Image',ja:'映像表現'},
 };
 const nodes = items.map(item => {
- const position = locations[item.id] ?? [130 + (extra % 5)*205, 620 + Math.floor(extra++/5)*105];
- return {id:item.id, title:item.data.title, en:translations[item.id]?.en ?? item.id.replaceAll('-',' '), ja:translations[item.id]?.ja ?? item.data.title, x:position[0], y:position[1], count:frequency.get(item.id) ?? 0};
+ const position = locations[item.id] ?? [130 + (extra % 3)*360, 650 + Math.floor(extra++/3)*115];
+ return {id:item.id, title:item.data.title, ...conceptLabels({...item.data,alternativeNames:[...(currentConcept(item.id)?.aliases||[]),...(item.data.alternativeNames||[])]},translations[item.id]), x:position[0], y:position[1], count:frequency.get(item.id) ?? 0};
 });
 const positionById = new Map(nodes.map(node=>[node.id,node]));
 const edges = [...connections].map(([key,count])=>{
@@ -94,25 +96,13 @@ const mobileFieldLayout:Record<string,[number,number,number,number]> = {
   'postwar-art':[81,87,13,10],
   'printmaking':[48,95,13,10],
 };
-const mobileFieldNodes = mobileSorted.map((node, index) => {
-  const fallbackX = index % 3 === 0 ? 18 : index % 3 === 1 ? 50 : 82;
-  const fallbackY = 12 + Math.floor(index / 3) * 12.5;
-  const [mx,my,ampX,ampY] = mobileFieldLayout[node.id] ?? [fallbackX, fallbackY, 13, 10];
-  return {...node, mx:Math.max(24,Math.min(76,mx)), my:Math.min(91,my), ampX, ampY, drift:index % 7};
-});
+const mobileLayout = mobileConceptLayout(mobileSorted.filter(Boolean),mobileFieldLayout);
+const mobileFieldNodes = mobileLayout.nodes;
 const mobileLocationById = new Map(mobileFieldNodes.map(node => [node.id,node]));
-// Keep the strongest legible relationships on a phone, rather than drawing
-// the entire desktop web of intersecting lines at reduced scale.
-const mobileEdgeCounts=new Map<string,number>();
-const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
-  const n1=mobileEdgeCounts.get(edge.a)||0,n2=mobileEdgeCounts.get(edge.b)||0;
-  if(n1>=3||n2>=3)return false;
-  mobileEdgeCounts.set(edge.a,n1+1);mobileEdgeCounts.set(edge.b,n2+1);
-  return true;
-}).map(edge=>({
-  a:edge.a,b:edge.b,count:edge.count,
-  from:mobileLocationById.get(edge.a),to:mobileLocationById.get(edge.b)
-})).filter(edge=>edge.from&&edge.to);
+const desktopOverview=overviewEdges(edges,2,2);
+const mobileOverview=overviewEdges(edges,1,2);
+const mobileEdges=edges.map(edge=>({...edge,from:mobileLocationById.get(edge.a),to:mobileLocationById.get(edge.b)})).filter(edge=>edge.from&&edge.to);
+
 ---
 <Base title="Themes & Concepts | murmurgrove" description="Browse the themes and concepts that connect contemporary art exhibitions, people and places in the murmurgrove research archive.">
   <section class="archive concept-archive">
@@ -120,12 +110,12 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
     <div class="concept-map-scroll" aria-label="Concept network">
       <svg class="concept-map concept-map-desktop" viewBox={`0 0 1120 ${maxY}`} role="group" aria-label="Interactive concept network" xmlns="http://www.w3.org/2000/svg">
         <g class="concept-links" aria-hidden="true">
-          {edges.map(edge=><line class="concept-link" data-a={edge.a} data-b={edge.b} x1={edge.from.x} y1={edge.from.y} x2={edge.to.x} y2={edge.to.y} stroke-width={Math.min(2.2, .65 + .55*edge.count)}/>) }
+          {edges.map(edge=><line class:list={["concept-link",desktopOverview.has(edgeKey(edge))&&"is-overview"]} data-overview={desktopOverview.has(edgeKey(edge))?"yes":"no"} data-a={edge.a} data-b={edge.b} x1={edge.from.x} y1={edge.from.y} x2={edge.to.x} y2={edge.to.y} stroke-width={Math.min(1.6, .55 + .18*edge.count)}/>) }
         </g>
         <g class="concept-nodes">
-          {nodes.map(node=><a class="concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} data-x={node.x} data-y={node.y} aria-label={`${node.title} / ${node.en} / ${node.ja}`}>
+          {nodes.map(node=><a class="concept-node" href={`/concepts/${node.id}/`} data-concept={node.id} data-x={node.x} data-y={node.y} aria-label={[...new Set([node.title,node.zh,node.en,node.ja].filter(Boolean))].join(' / ')}>
             <circle cx={node.x} cy={node.y} r="3.2" />
-            <text x={node.x>=900?node.x-10:node.x+10} y={node.y+5} text-anchor={node.x>=900?'end':'start'} class={node.count>=5?'concept-term concept-term-major concept-cycle':'concept-term concept-cycle'} data-zh={node.title} data-en={node.en} data-ja={node.ja}>{node.title}</text>
+            <text x={node.x>=900?node.x-10:node.x+10} y={node.y+5} text-anchor={node.x>=900?'end':'start'} class={node.count>=5?'concept-term concept-term-major concept-cycle':'concept-term concept-cycle'} data-zh={node.zh} data-en={node.en} data-ja={node.ja}>{node.title}</text>
           </a>)}
         </g>
       </svg>
@@ -133,23 +123,24 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
       <div class="concept-mobile-explorer" aria-label="Mobile concept field">
         <div class="concept-mobile-stage-shell">
           <div class="concept-mobile-stage-head">
-            <p>CONCEPT FIELD</p>
+            <p>CONCEPT FIELD</p><span>Tap to explore · Tap again to read</span>
           </div>
-          <div class="concept-mobile-stage" id="concept-mobile-stage">
+          <div class="concept-mobile-stage" id="concept-mobile-stage" style={`--extra-height:${mobileLayout.height-1180}px`}>
             <svg class="concept-mobile-links" id="concept-mobile-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               {mobileEdges.map(edge => <line
+                class:list={["concept-link",mobileOverview.has(edgeKey(edge))&&"is-overview"]} data-overview={mobileOverview.has(edgeKey(edge))?"yes":"no"}
                 data-a={edge.a} data-b={edge.b}
                 x1={edge.from.mx} y1={edge.from.my}
                 x2={edge.to.mx} y2={edge.to.my}
-                opacity={Math.min(.65,.36 + edge.count*.04)}
+                stroke-width={Math.min(1.4,.55+edge.count*.13)}
               />)}
             </svg>
             {mobileFieldNodes.map((node) => (
               <a
                 href={`/concepts/${node.id}/`}
-                class={`concept-mobile-orbit concept-cycle ${node.mx<=32?'drift-from-left':node.mx>=68?'drift-from-right':'drift-from-middle'}`}
+                class={`concept-mobile-orbit concept-cycle ${node.mx<=32?'drift-from-left':node.mx>=68?'drift-from-right':'drift-from-middle'} ${node.extra?'concept-extra':''}`}
                 data-concept={node.id}
-                data-zh={node.title}
+                data-zh={node.zh}
                 data-en={node.en}
                 data-ja={node.ja}
                 data-base-x={node.mx}
@@ -164,7 +155,7 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
         </div>
       </div>
     </div>
-    <p class="concept-note">Lines · Shared exhibition records<br />Size · Frequency in the archive</p>
+    <p class="concept-note">Lines · Shared exhibition records (overview: repeated co-occurrences)<br />Focus a concept to reveal all its shared-exhibition links. Size · Frequency in the archive</p>
   </section>
 </Base>
 <style>
@@ -172,7 +163,7 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
   .concept-map-scroll { width:100%; overflow:hidden; border-bottom:1px solid var(--rule); }
   .concept-map { display:block; width:100%; height:auto; overflow:visible; }
   .concept-map-desktop { display:none; min-width:0; }
-  .concept-link { stroke:var(--ink); opacity:.18; vector-effect:non-scaling-stroke; transition:opacity .16s ease; }
+  .concept-link { stroke:var(--ink); opacity:0; vector-effect:non-scaling-stroke; transition:opacity .16s ease; }
   .concept-node { color:var(--ink); text-decoration:none; outline:none; }
   .concept-node circle { fill:var(--ink); opacity:.55; }
   .concept-term { fill:var(--ink); font-family:inherit; font-weight:400; font-size:15px; letter-spacing:-.025em; }
@@ -182,8 +173,10 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
   .concept-node:hover .concept-term, .concept-node:focus-visible .concept-term { fill:#005b3b; text-decoration:underline; stroke:none; paint-order:normal; }
   .concept-node:focus-visible .concept-term { text-decoration:underline; }
   .concept-node:hover circle, .concept-node:focus-visible circle { opacity:1; r:5; }
-  .concept-link.is-related { opacity:.63; }
-  .concept-link.is-muted { opacity:.06; }
+  .concept-link.is-overview { opacity:.15; }
+  .concept-link.is-related { opacity:.53; }
+  .concept-link.is-muted { opacity:0; }
+  .concept-link:not(.is-overview):not(.is-related),.concept-link.is-muted { visibility:hidden; }
   .concept-note { color:var(--quiet); font-size:12px; line-height:1.7; margin:16px 0 0; }
 
   .concept-mobile-explorer{display:none;}
@@ -191,10 +184,10 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
   .concept-mobile-stage-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:0 0 12px;}
   .concept-mobile-stage-head p{margin:0;font-size:10px;letter-spacing:.12em;color:#7b9788;}
   .concept-mobile-stage-head span{display:block;max-width:22ch;color:var(--quiet);font-size:11px;line-height:1.5;text-align:right;}
-  .concept-mobile-stage{position:relative;height:1180px;border:0;border-radius:0;background:radial-gradient(ellipse 55% 35% at 26% 24%,rgba(173,215,188,.11),transparent 100%),radial-gradient(ellipse 47% 39% at 76% 62%,rgba(150,211,174,.1),transparent 100%);overflow:hidden;}
+  .concept-mobile-stage{position:relative;height:calc(1180px + var(--extra-height,0px));border:0;border-radius:0;background:radial-gradient(ellipse 55% 35% at 26% 24%,rgba(173,215,188,.11),transparent 100%),radial-gradient(ellipse 47% 39% at 76% 62%,rgba(150,211,174,.1),transparent 100%);overflow:hidden;}
   .concept-mobile-stage::before{content:"";position:absolute;inset:8px;background:radial-gradient(ellipse at 50% 50%,rgba(154,207,169,.03),transparent 72%);pointer-events:none;}
   .concept-mobile-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;}
-  .concept-mobile-links line{stroke:rgba(41,117,79,.25);stroke-width:1.1;vector-effect:non-scaling-stroke;}
+  .concept-mobile-links line{stroke:var(--ink);vector-effect:non-scaling-stroke;}
   .concept-mobile-orbit{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);display:block;border:0;background:none;color:var(--ink);font-family:inherit;font-weight:400;font-size:clamp(16px,4.5vw,19px);line-height:1.28;letter-spacing:-.022em;padding:8px 5px;border-radius:10px;cursor:pointer;width:40%;max-width:40%;text-align:center;text-decoration:none;overflow-wrap:anywhere;opacity:.96;z-index:1;touch-action:manipulation;will-change:transform;}
   .concept-mobile-orbit[style*="--weight:1"]{font-weight:500;}
   .concept-mobile-orbit:hover,.concept-mobile-orbit:focus-visible{text-decoration:underline;text-underline-offset:4px;}
@@ -211,10 +204,10 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
     .concept-archive .concept-note{display:block;}
   }
   @media(max-width:650px){
-    .concept-mobile-stage{height:1180px;}
+    .concept-mobile-stage{height:calc(1180px + var(--extra-height,0px));}
   }
   @media(max-width:380px){
-    .concept-mobile-stage{height:1260px;}
+    .concept-mobile-stage{height:calc(1260px + var(--extra-height,0px));}
     .concept-mobile-orbit{font-size:clamp(16px,4.5vw,18px);width:40%;max-width:40%;padding:7px 4px;}
   }
 
@@ -257,6 +250,8 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
     .concept-mobile-orbit.drift-from-right{animation-name:concept-right-cross;animation-duration:21s;}
     .concept-mobile-orbit.drift-from-middle{animation-name:concept-middle-cross;animation-duration:17s;}
   }
+  @media(max-width:900px) and (prefers-reduced-motion:no-preference){.concept-mobile-orbit.concept-extra{animation-name:concept-extra-drift;animation-duration:21s;}}
+  @keyframes concept-extra-drift{0%,100%{transform:translate(calc(-50% - 6px),calc(-50% + 11px))}50%{transform:translate(calc(-50% + 6px),calc(-50% - 11px))}}
   @keyframes concept-left-cross{
     0%,100%{transform:translate(calc(-50% + 21px),calc(-50% - 29px))}
     28%{transform:translate(calc(-50% + 82px),calc(-50% + 22px))}
@@ -279,18 +274,19 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
 <script>
   const reducedLanguages=window.matchMedia('(prefers-reduced-motion: reduce)');
   const languageNodes=Array.from(document.querySelectorAll<SVGTextElement|HTMLElement>('.concept-cycle'));
-  type CyclingLabel={el:SVGTextElement|HTMLElement; words:string[];current:number;changing:boolean;switchAt:number;next:number};
+  type CyclingLabel={el:SVGTextElement|HTMLElement; words:{text:string;lang:string}[];current:number;changing:boolean;switchAt:number;next:number};
   const seededRandom=(seed:number)=>{
     let n=seed>>>0;
     return ()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};
   };
   const rng=seededRandom(1172026);
   const labels:CyclingLabel[]=languageNodes.map((el,i)=>{
-    const words=[el.dataset.zh||'',el.dataset.en||'',el.dataset.ja||''];
-    const current=(i*7+Math.floor(i/3))%3;
+    const words=[{text:el.dataset.zh||'',lang:'zh'},{text:el.dataset.en||'',lang:'en'},{text:el.dataset.ja||'',lang:'ja'}].filter(word=>word.text.trim());
+    if(!words.length)words.push({text:el.textContent||'',lang:''});
+    const current=(i*7+Math.floor(i/3))%words.length;
     const next=performance.now()+1300+rng()*4700+i*95;
-    el.textContent=words[current];
-    el.setAttribute('lang',['zh','en','ja'][current]);
+    el.textContent=words[current].text;
+    if(words[current].lang)el.setAttribute('lang',words[current].lang);
     return {el,words,current,next,changing:false,switchAt:0};
   });
   let labelTimer=0;
@@ -298,15 +294,16 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
     if(document.hidden||reducedLanguages.matches)return;
     const now=performance.now();
     for(const label of labels){
+      if(label.words.length<2)continue;
       if(!label.changing&&now>=label.next){
         label.changing=true;
         label.switchAt=now+320;
         label.el.classList.add('is-changing');
       }else if(label.changing&&now>=label.switchAt){
-        const shift=1+Math.floor(rng()*2);
-        label.current=(label.current+shift)%3;
-        label.el.textContent=label.words[label.current];
-        label.el.setAttribute('lang',['zh','en','ja'][label.current]);
+        const shift=1+Math.floor(rng()*(label.words.length-1));
+        label.current=(label.current+shift)%label.words.length;
+        label.el.textContent=label.words[label.current].text;
+        label.el.setAttribute('lang',label.words[label.current].lang);
         label.el.classList.remove('is-changing');
         label.changing=false;
         label.next=now+3300+rng()*5800;
@@ -344,15 +341,34 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
     const reduced=window.matchMedia('(prefers-reduced-motion:reduce)');
     let mobileRaf=0;
     let mobileVisible=false;
+    let focusedId:string|null=null;
+    let activeConnections=connections.filter(item=>item.line.dataset.overview==='yes');
+    const selectMobile=(id:string|null)=>{
+      focusedId=id;
+      const neighbors=new Set(id?[id]:[]);
+      activeConnections=connections.filter(item=>{
+        const related=Boolean(id&&(item.line.dataset.a===id||item.line.dataset.b===id));
+        item.line.classList.toggle('is-related',related);
+        item.line.classList.toggle('is-muted',Boolean(id&&!related));
+        if(related){neighbors.add(item.line.dataset.a||'');neighbors.add(item.line.dataset.b||'');}
+        return id?related:item.line.dataset.overview==='yes';
+      });
+      for(const el of mobileLinks){el.classList.toggle('is-muted',Boolean(id&&!neighbors.has(el.dataset.concept||'')));el.classList.toggle('is-selected',el.dataset.concept===id);}
+      syncMobile();
+    };
     const renderMobileLines=()=>{
       mobileRaf=0;
       if(document.hidden || !mobileVisible) return;
       const r=mobileStage.getBoundingClientRect();
       if(!r.width || !r.height)return;
       mobileLinksSvg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);
-      for(const item of connections){
-        const a=item.a!.getBoundingClientRect();
-        const b=item.b!.getBoundingClientRect();
+      const rects=new Map<Element,DOMRect>();
+      for(const item of activeConnections){
+        for(const el of [item.a!,item.b!])if(!rects.has(el))rects.set(el,el.getBoundingClientRect());
+      }
+      for(const item of activeConnections){
+        const a=rects.get(item.a!)!;
+        const b=rects.get(item.b!)!;
         item.line.setAttribute('x1',String(a.left+a.width/2-r.left));
         item.line.setAttribute('y1',String(a.top+a.height/2-r.top));
         item.line.setAttribute('x2',String(b.left+b.width/2-r.left));
@@ -361,9 +377,18 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
       if(!reduced.matches)mobileRaf=requestAnimationFrame(renderMobileLines);
     };
     const syncMobile=()=>{
-      if(mobileVisible && !mobileRaf)mobileRaf=requestAnimationFrame(renderMobileLines);
-      if(!mobileVisible && mobileRaf){cancelAnimationFrame(mobileRaf);mobileRaf=0;}
+      if(mobileVisible && !document.hidden && !mobileRaf)mobileRaf=requestAnimationFrame(renderMobileLines);
+      if((!mobileVisible||document.hidden) && mobileRaf){cancelAnimationFrame(mobileRaf);mobileRaf=0;}
     };
+    for(const el of mobileLinks){
+      el.addEventListener('click',event=>{
+        // Keyboard and modified clicks keep native navigation.
+        if(event.detail===0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+        const id=el.dataset.concept||'';
+        if(focusedId!==id){event.preventDefault();selectMobile(id);}
+      });
+    }
+    mobileStage.addEventListener('click',event=>{if(!(event.target as Element).closest('.concept-mobile-orbit'))selectMobile(null);});
     const mobileObserver=new IntersectionObserver(entries=>{
       mobileVisible=entries[0]?.isIntersecting ?? false;
       syncMobile();
@@ -388,12 +413,21 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
     const byId=new Map(nodes.map(n=>[n.id,n]));
     const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
     let visible=false, raf=0, start=0;
+    let activeEdges=edgeEls.filter(edge=>edge.dataset.overview==='yes');
+    const positionEdge=(edge:SVGLineElement)=>{
+      const a=byId.get(edge.dataset.a||''),b=byId.get(edge.dataset.b||'');
+      if(!a||!b)return;
+      edge.setAttribute('x1',String(a.x+a.dx));edge.setAttribute('y1',String(a.y+a.dy));
+      edge.setAttribute('x2',String(b.x+b.dx));edge.setAttribute('y2',String(b.y+b.dy));
+    };
     const updateFocus=(id:string|null)=>{
       for(const edge of edgeEls){
         const related=Boolean(id&&(edge.dataset.a===id||edge.dataset.b===id));
         edge.classList.toggle('is-related',related);
         edge.classList.toggle('is-muted',Boolean(id&&!related));
       }
+      activeEdges=edgeEls.filter(edge=>id?edge.classList.contains('is-related'):edge.dataset.overview==='yes');
+      activeEdges.forEach(positionEdge);
       const relatedIds=new Set(id?[id]:[]);
       for(const edge of edgeEls)if(id&&edge.dataset.a===id&&edge.dataset.b)relatedIds.add(edge.dataset.b);else if(id&&edge.dataset.b===id&&edge.dataset.a)relatedIds.add(edge.dataset.a);
       for(const node of nodes)node.el.classList.toggle('is-muted',Boolean(id&&!relatedIds.has(node.id)));
@@ -423,12 +457,7 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
         }
         node.el.setAttribute('transform',`translate(${node.dx.toFixed(2)} ${node.dy.toFixed(2)})`);
       }
-      for(const edge of edgeEls){
-        const a=byId.get(edge.dataset.a||'');const b=byId.get(edge.dataset.b||'');
-        if(!a||!b)continue;
-        edge.setAttribute('x1',String(a.x+a.dx));edge.setAttribute('y1',String(a.y+a.dy));
-        edge.setAttribute('x2',String(b.x+b.dx));edge.setAttribute('y2',String(b.y+b.dy));
-      }
+      activeEdges.forEach(positionEdge);
       raf=requestAnimationFrame(tick);
     };
     const sync=()=>{
@@ -443,6 +472,7 @@ const mobileEdges=edges.slice().sort((a,b)=>b.count-a.count).filter(edge=>{
 </script>
 
 <style>
-.concept-node.is-muted{opacity:.32}
+.concept-node.is-muted,.concept-mobile-orbit.is-muted{opacity:.32}
+.concept-mobile-orbit.is-selected{animation-play-state:paused;text-decoration:underline;text-underline-offset:4px;opacity:1}
 .concept-mobile-orbit:focus,.concept-mobile-orbit:active{animation-play-state:paused}
 </style>
