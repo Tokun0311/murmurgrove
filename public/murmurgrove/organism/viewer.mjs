@@ -165,7 +165,8 @@ function componentGroups(allNodes,edges){const ids=new Set(allNodes.map(n=>n.id)
  return groups.sort((a,b)=>b.length-a.length||a[0].localeCompare(b[0]));}
 function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)||'null');
  if(!s||s.sourceHash!==BASELINE_HASH||!Number.isFinite(s.zoom)||s.zoom<ZOOM_MIN||s.zoom>ZOOM_MAX||!['Whole','Growth','Movement'].includes(s.mode))return false;
- if(Number.isFinite(s.angle))angle=s.angle;if(Number.isFinite(s.elevation))elevation=cl(s.elevation,-1.2,1.2);
+ if(!Number.isFinite(s.angle)||!Number.isFinite(s.elevation))return false;
+ angle=s.angle%(2*Math.PI);elevation=cl(s.elevation,-1.2,1.2);
  zoom=s.zoom;mode=s.mode;selected=s.selected&&nodeMap.has(s.selected)?s.selected:null;
  pendingSelection=!selected&&typeof s.selected==='string'?s.selected:null;
  pendingFollow=Boolean(pendingSelection&&s.followSelected);
@@ -1513,15 +1514,15 @@ async function init(){
   // On the very first entry, play the guided overview once, even if a stale
   // camera happened to be stored by an earlier version of the site.
   const locate=requestedLocation(),firstVisit=!hasSeenEntrance();
-  let desktopReload=false;
-  try{const owner=window.parent!==window?window.parent:window;desktopReload=!MOBILE_HOME&&owner.performance.getEntriesByType('navigation')[0]?.type==='reload';}catch{}
+  // CAMERA_MEMORY_RESTORED_20261127
   if(firstVisit&&!locate){
    prepareEntrance();markEntranceSeen();
-  }else if(desktopReload||!storedMemory()){
+  }else if(!storedMemory()){
    // A return without a valid saved view gets a steady centered view, NOT
    // another introductory animation (e.g. archive data/version migration).
-   entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
-   elevation=ENTRANCE_TARGET_ELEVATION;pan=[0,0];mode='Whole';
+   if(!locate){prepareEntrance();markEntranceSeen();}
+   else {entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
+    elevation=ENTRANCE_TARGET_ELEVATION;pan=[0,0];mode='Whole';}
   }
   if(firstVisit)markEntranceSeen();
   // A panel opened during loading takes priority over remembered mobile history.
