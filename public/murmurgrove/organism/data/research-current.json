@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "0d3bc52c274bd01f86dc43f7144a691b421a53b9b838dda1671876a47eedbd75",
-  "generatedAt": "2026-11-27T07:37:51.855Z",
+  "graphHash": "b03719996135cfe5a1d3ec8259d0d408937caf62bfc321916c854300f6121475",
+  "generatedAt": "2026-11-27T08:36:36.526Z",
   "links": [
     {
       "source": "concepts:archival-practices",
@@ -161,7 +161,7 @@
     },
     {
       "source": "exhibitions:2026-03-04-12",
-      "target": "institutions:mot",
+      "target": "institutions:museum-of-contemporary-art-tokyo-mot",
       "kind": "recorded-link"
     },
     {
@@ -351,7 +351,7 @@
     },
     {
       "source": "exhibitions:2026-05-06-27",
-      "target": "institutions:mot",
+      "target": "institutions:museum-of-contemporary-art-tokyo-mot",
       "kind": "recorded-link"
     },
     {
@@ -1995,7 +1995,7 @@
     "concepts:institutional-studies": 18,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
-    "institutions:mot": 2,
+    "institutions:museum-of-contemporary-art-tokyo-mot": 3,
     "people:umeda-tetsuya": 1,
     "people:wu-xiazhi": 1,
     "exhibitions:2026-03-14-13": 3,
@@ -2288,7 +2288,6 @@
     "institutions:anomaly": 1,
     "institutions:art-basel": 1,
     "institutions:take-ninagawa": 1,
-    "institutions:museum-of-contemporary-art-tokyo-mot": 1,
     "institutions:rockbund-art-museum": 1,
     "institutions:shugoarts": 1,
     "institutions:waitingroom": 1,

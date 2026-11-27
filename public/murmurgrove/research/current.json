@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-27T07:37:51.855Z",
-  "sourceDigest": "67101b2a0aa97185e75e2f2594e378ef16bf31cf225a54df095ab21201a6303d",
+  "generatedAt": "2026-11-27T08:36:36.526Z",
+  "sourceDigest": "1087ef73f29337e5f4e8ac7ebe1a275158aaece67b58ed7bbb291b8e4c408a8f",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "0d3bc52c274bd01f86dc43f7144a691b421a53b9b838dda1671876a47eedbd75",
+  "graphHash": "b03719996135cfe5a1d3ec8259d0d408937caf62bfc321916c854300f6121475",
   "records": [
     {
       "type": "exhibitions",
@@ -210,7 +210,7 @@
       "key": "exhibitions:2026-03-04-12",
       "title": "TCAA 2024–2026 受賞記念展《湿地》",
       "path": "/exhibitions/2026-03-04-12/",
-      "contentHash": "e4dc051abc92b4a61a173a7b4f60f3c401a977cdbee269d3d938d85c60b80eee",
+      "contentHash": "e1c8c0899cd6fac929da6fd4b3d2b4ceaeb4e2f38c3c1c8f4ed3297ae277b770",
       "summary": "*Tokyo Contemporary Art Award 2024–2026 Exhibition* ## Programme details - **Artists:** Natsue O, Tetsuya Umeda - **Exhibition:** 2025.12.25–2026.03.29 ## Exhibition Overview 《湿地》是Tokyo Contemporary Art Award 2024–2026两位获奖艺术家呉夏枝与梅田哲也的获奖纪念展。 展览将呉夏枝围绕岛屿、迁移及跨世代记忆展开的艺术研究，与梅田哲也通过装置、声音及空间动线进行的介入结合起来。 两位艺术家的实践并非被简单并列，而是在展览空间中形成相互交叠的关系。展览以「湿地」作为隐喻，探索记忆、地理、身体与空间感知之间不稳定的边界。 ## Personal Observation 2026年3月4日，我在東京都現代美術館参加了Tokyo Contemporary Art Award 2026–2028的颁奖典礼及相关",
       "text": "*Tokyo Contemporary Art Award 2024–2026 Exhibition*\n\n## Programme details\n\n- **Artists:** Natsue O, Tetsuya Umeda\n- **Exhibition:** 2025.12.25–2026.03.29\n\n## Exhibition Overview\n\n《湿地》是Tokyo Contemporary Art Award 2024–2026两位获奖艺术家呉夏枝与梅田哲也的获奖纪念展。\n\n展览将呉夏枝围绕岛屿、迁移及跨世代记忆展开的艺术研究，与梅田哲也通过装置、声音及空间动线进行的介入结合起来。\n\n两位艺术家的实践并非被简单并列，而是在展览空间中形成相互交叠的关系。展览以「湿地」作为隐喻，探索记忆、地理、身体与空间感知之间不稳定的边界。\n\n## Personal Observation\n\n2026年3月4日，我在東京都現代美術館参加了Tokyo Contemporary Art Award 2026–2028的颁奖典礼及相关活动，并为获奖艺术家潘逸舟和やんツー的活动承担同声传译工作。\n\n活动结束后，我参观了上一届TCAA获奖艺术家呉夏枝和梅田哲也的展览《湿地》。\n\n总体而言，我对展览的印象很好。两位艺术家的不同创作方法通过展览空间产生联系，提供了多层次的观看经验。\n\n不过，我记得现场的照明设计有一些让我不太满意的地方。由于目前已记不清具体问题，因此暂时不进一步评价照明对作品呈现造成了怎样的影响。\n\n## Institutional Observation\n\n这次经历也使我从两个不同角度接触了TCAA：一方面是在颁奖活动中参与艺术家、评审与机构之间的语言交流；另一方面则是通过《湿地》观察长期艺术支持项目最终如何转化为公开展览。\n\nTCAA的制度设计值得进一步研究。它并非仅以一次性的奖金认可艺术家，而是通过海外活动支持、长期发展资源和最终成果展，持续参与艺术家职业发展的不同阶段。\n\n## Research Connections\n\n- Institutional Studies\n- Artist Support Systems\n- Art Funding and Cultural Policy\n- Exhibition Design & Lighting\n- Translation and Cultural Mediation\n- Site-specificity\n- Artistic Research\n\n## Research Question\n\n长期艺术支持项目如何在资金、国际交流、艺术家自主性与最终展览之间建立关系？当艺术机构将资助成果转化为展览时，又如何平衡作品的独立性与整体空间设计？",
       "date": "2026-03-04",
@@ -480,7 +480,7 @@
       "key": "exhibitions:2026-05-06-27",
       "title": "ミッション∞インフィニティ｜宇宙＋量子＋芸術 / MOTコレクション",
       "path": "/exhibitions/2026-05-06-27/",
-      "contentHash": "833e15cb669080e0a60316bdfadbbd66208a926af10f0ea349a7048231e6432a",
+      "contentHash": "927bcbfb8c41214d2241a54b58accead7998c3035989285d1ed749795b195ec2",
       "summary": "*ミッション∞インフィニティ｜宇宙＋量子＋芸術 / はじめて、びじゅつ* ## Exhibitions Visited **ミッション∞インフィニティ｜宇宙＋量子＋芸術** 2026.01.31–05.06 本展以宇宙科学与量子研究为主题，邀请艺术家、科学家及研究机构共同参与，通过装置、影像、数字技术和XR展示，探索艺术如何回应科学研究中不可见的世界。 **MOTコレクション はじめて、びじゅつ** 2026.04.28–08.16 本期馆藏展以「初次观看」与「重新开始认识艺术」为线索，通过战后及当代美术作品，探索感知、观看及艺术创作的起点。其中包括中西夏之等艺术家的新入藏作品。 ## Personal Observation 2026年5月6日，我在量子主题展的闭幕当天来到東京都現代美術館，同时参观了当期馆藏展。 《ミッション∞インフィニティ》让我对MOT作为当代艺术美术馆的策展研究与展示能力产生了怀疑。 展览试图将宇宙、量子物理学与艺术结合起来，但实际观看体验非常不理想。 我记得入场时就收到了一张写满专",
       "text": "*ミッション∞インフィニティ｜宇宙＋量子＋芸術 / はじめて、びじゅつ*\n\n## Exhibitions Visited\n\n**ミッション∞インフィニティ｜宇宙＋量子＋芸術**  \n2026.01.31–05.06\n\n本展以宇宙科学与量子研究为主题，邀请艺术家、科学家及研究机构共同参与，通过装置、影像、数字技术和XR展示，探索艺术如何回应科学研究中不可见的世界。\n\n**MOTコレクション はじめて、びじゅつ**  \n2026.04.28–08.16\n\n本期馆藏展以「初次观看」与「重新开始认识艺术」为线索，通过战后及当代美术作品，探索感知、观看及艺术创作的起点。其中包括中西夏之等艺术家的新入藏作品。\n\n## Personal Observation\n\n2026年5月6日，我在量子主题展的闭幕当天来到東京都現代美術館，同时参观了当期馆藏展。\n\n《ミッション∞インフィニティ》让我对MOT作为当代艺术美术馆的策展研究与展示能力产生了怀疑。\n\n展览试图将宇宙、量子物理学与艺术结合起来，但实际观看体验非常不理想。\n\n我记得入场时就收到了一张写满专业术语介绍的A3资料。展览中的大部分时间似乎都需要阅读墙面上的说明文字。\n\n对我而言，这种展示方式几乎没有形成令人投入的艺术观看体验。\n\n作品似乎只是为了使科学研究能够进入美术馆空间，而被象征性地陈列出来。\n\n艺术并没有有效地将复杂的科学概念转化为可以被感知、体验或进一步思考的形式。\n\n我认为这是一场在跨学科策展与知识传达方面存在明显问题的展览。\n\n相比之下，当天参观的MOT馆藏展却给我留下了更积极的印象。\n\n其中，中西夏之绘画作品的陈列空间尤其出色。\n\n作品在空间中的呈现方式，使我能够集中注意力观看绘画本身，并重新感受到中西夏之绘画语言的魅力。\n\n同一家美术馆中这两种截然不同的体验，让我进一步思考策展在作品与观众之间究竟应该发挥怎样的作用。\n\n## Curatorial Observation\n\n《ミッション∞インフィニティ》与中西夏之馆藏展示形成了一个值得比较的案例。\n\n前者拥有复杂而宏大的跨学科主题，却未能在我的观看经验中建立充分的艺术与科学之间的联系。\n\n后者则通过相对明确的作品陈列，使艺术家的绘画获得了充分的观看空间。\n\n这让我意识到，策展并不一定需要不断增加概念、理论或解释。\n\n有时，策展真正重要的工作，是理解作品的语言，并创造能够让作品自身力量被感知的展示条件。\n\n## Research Connections\n\n- Institutional Studies\n- Art and Science\n- Interdisciplinary Curating\n- Knowledge Production\n- Exhibition Interpretation\n- Collection Display\n- Painting and Spatial Presentation\n- Spectatorship\n\n## Research Questions\n\n1. 当科学知识进入当代艺术美术馆时，艺术作品如何避免沦为研究成果的辅助展示？\n2. 跨学科展览应如何将复杂的知识转化为具有独立审美价值的观看经验？\n3. 何时需要通过解释文本帮助观众理解作品，何时又应该让作品本身发挥更大的表达力量？\n4. 为什么同一家美术馆中，不同的策展方式会产生如此不同的观看体验？",
       "date": "2026-05-06",
@@ -4657,35 +4657,21 @@
     },
     {
       "type": "institutions",
-      "id": "mot",
-      "key": "institutions:mot",
-      "title": "東京都現代美術館 (MOT)",
-      "path": "/institutions/mot/",
-      "contentHash": "2dcb0f19e5c191f6b5b0e2ec14600c5455a78dc915300fdf4461c42a8ae22f22",
-      "summary": "东京都现代美术馆位于东京清澄白河附近，收藏与呈现日本及国际现代、当代艺术。",
-      "text": "东京都现代美术馆位于东京清澄白河附近，收藏与呈现日本及国际现代、当代艺术。",
-      "date": "",
-      "conceptStage": null,
-      "aliases": [],
-      "conceptReading": "",
-      "mergedInto": null
-    },
-    {
-      "type": "institutions",
       "id": "museum-of-contemporary-art-tokyo-mot",
       "key": "institutions:museum-of-contemporary-art-tokyo-mot",
       "title": "Museum of Contemporary Art Tokyo（MOT）",
       "path": "/institutions/museum-of-contemporary-art-tokyo-mot/",
-      "contentHash": "a9ea6eae1af537af039b8fba69aa976ae17c6ea090e80c116a0cf2de15df5ede",
-      "summary": "东京都现代美术馆是日本规模最大的公立当代艺术美术馆之一，以日本战后艺术为核心，开展国内外现代及当代艺术的收藏、保存、研究、展示与公共教育活动。 其收藏体系继承了东京都美术馆约3,000件作品，并自1988年起建立独立的收藏机制，通过系统性收藏国际艺术作品，将日本战后艺术置于全球现代与当代艺术史的语境中。 除绘画、雕塑及装置艺术外，其展览亦涵盖影像、建筑、设计、时尚及跨学科艺术实践。",
-      "text": "东京都现代美术馆是日本规模最大的公立当代艺术美术馆之一，以日本战后艺术为核心，开展国内外现代及当代艺术的收藏、保存、研究、展示与公共教育活动。\n\n其收藏体系继承了东京都美术馆约3,000件作品，并自1988年起建立独立的收藏机制，通过系统性收藏国际艺术作品，将日本战后艺术置于全球现代与当代艺术史的语境中。\n\n除绘画、雕塑及装置艺术外，其展览亦涵盖影像、建筑、设计、时尚及跨学科艺术实践。",
+      "contentHash": "d989fe8e5c2e558ac79b81f756c823f8373022c6d3dfd3e2b8432be03befaafb",
+      "summary": "东京都现代美术馆是日本规模最大的公立当代艺术美术馆之一，以日本战后艺术为核心，开展国内外现代及当代艺术的收藏、保存、研究、展示与公共教育活动。 其收藏体系继承了东京都美术馆约3,000件作品，并自1988年起建立独立的收藏机制，通过系统性收藏国际艺术作品，将日本战后艺术置于全球现代与当代艺术史的语境中。 除绘画、雕塑及装置艺术外，其展览亦涵盖影像、建筑、设计、时尚及跨学科艺术实践。 东京都现代美术馆位于东京清澄白河附近，收藏与呈现日本及国际现代、当代艺术。",
+      "text": "东京都现代美术馆是日本规模最大的公立当代艺术美术馆之一，以日本战后艺术为核心，开展国内外现代及当代艺术的收藏、保存、研究、展示与公共教育活动。\n\n其收藏体系继承了东京都美术馆约3,000件作品，并自1988年起建立独立的收藏机制，通过系统性收藏国际艺术作品，将日本战后艺术置于全球现代与当代艺术史的语境中。\n\n除绘画、雕塑及装置艺术外，其展览亦涵盖影像、建筑、设计、时尚及跨学科艺术实践。\n\n东京都现代美术馆位于东京清澄白河附近，收藏与呈现日本及国际现代、当代艺术。",
       "date": "",
       "conceptStage": null,
       "aliases": [
         "東京都現代美術館",
         "MOT",
         "东京都现代美术馆",
-        "도쿄도 현대미술관"
+        "도쿄도 현대미술관",
+        "東京都現代美術館 (MOT)"
       ],
       "conceptReading": "",
       "mergedInto": null
@@ -5847,7 +5833,7 @@
     },
     {
       "source": "exhibitions:2026-03-04-12",
-      "target": "institutions:mot",
+      "target": "institutions:museum-of-contemporary-art-tokyo-mot",
       "kind": "recorded-link",
       "provenance": [
         {
@@ -6265,7 +6251,7 @@
     },
     {
       "source": "exhibitions:2026-05-06-27",
-      "target": "institutions:mot",
+      "target": "institutions:museum-of-contemporary-art-tokyo-mot",
       "kind": "recorded-link",
       "provenance": [
         {
@@ -9855,7 +9841,7 @@
     "concepts:institutional-studies": 18,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
-    "institutions:mot": 2,
+    "institutions:museum-of-contemporary-art-tokyo-mot": 3,
     "people:umeda-tetsuya": 1,
     "people:wu-xiazhi": 1,
     "exhibitions:2026-03-14-13": 3,
@@ -10148,7 +10134,6 @@
     "institutions:anomaly": 1,
     "institutions:art-basel": 1,
     "institutions:take-ninagawa": 1,
-    "institutions:museum-of-contemporary-art-tokyo-mot": 1,
     "institutions:rockbund-art-museum": 1,
     "institutions:shugoarts": 1,
     "institutions:waitingroom": 1,

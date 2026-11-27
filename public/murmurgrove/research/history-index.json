@@ -708,5 +708,23 @@
     "edgeCount": 389,
     "priorHash": "69726b4f74194be15e04c0aa1750e3b15e63cbac3fe944ba9f23a63c090f22bf",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T08-36-36-531Z-b03719996135.json",
+    "graphHash": "b03719996135cfe5a1d3ec8259d0d408937caf62bfc321916c854300f6121475",
+    "at": "2026-11-27T08:36:36.526Z",
+    "added": [],
+    "changed": [
+      "exhibitions:2026-03-04-12",
+      "exhibitions:2026-05-06-27",
+      "institutions:museum-of-contemporary-art-tokyo-mot"
+    ],
+    "removed": [
+      "institutions:mot"
+    ],
+    "recordCount": 344,
+    "edgeCount": 389,
+    "priorHash": "0d3bc52c274bd01f86dc43f7144a691b421a53b9b838dda1671876a47eedbd75",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]

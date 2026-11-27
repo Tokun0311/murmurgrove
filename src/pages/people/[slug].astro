@@ -1,4 +1,5 @@
 ---
+import {recordNames} from '../../lib/record-names.mjs';
 import ArchiveProfile from "../../components/ArchiveProfile.astro";
 import ArchiveSources from "../../components/ArchiveSources.astro";
 import {archiveDay,engagementLabel} from '../../lib/exhibition-engagement.mjs';
@@ -9,8 +10,9 @@ import { getCollection, render } from 'astro:content';
 import {currentExhibitionIds} from '../../lib/current-research.mjs';
 export async function getStaticPaths(){return (await getCollection('people')).map(item=>({params:{slug:item.id},props:{item}}));}
 const {item}=Astro.props;
+const names=recordNames(item.data,'people',item.id);
 const {Content}=await render(item);
 const relatedIds=currentExhibitionIds('people:'+item.id);
 const exhibitions=(await getCollection('exhibitions')).filter(e=>relatedIds.has(e.id)).sort((a,b)=>archiveDay(b.data).localeCompare(archiveDay(a.data)));
 ---
-<Base title={`${item.data.name} | murmurgrove`} description={`Archive notes and related exhibitions for ${item.data.name} in murmurgrove.`}><article class="article"><nav class="record-nav" aria-label="Record navigation"><a class="eyebrow" href="/people/">← People & Collectives</a><OrganismLink path={`/people/${item.id}/`}/></nav><h1>{item.data.name.split(" / ")[0]}</h1>{(item.data.nativeName||item.data.name.includes(" / ")) && <p class="lead">{item.data.nativeName||item.data.name.split(" / ").slice(1).join(" / ")}</p>}{item.data.alternativeNames.length>0 && <p class="note">{item.data.alternativeNames.join(" · ")}</p>}<ArchiveProfile data={item.data} type="people"/><div class="prose"><Content/></div><ArchiveSources sources={item.data.sources}/>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{archiveDay(e.data)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}<ResearchContinuity type="people" id={item.id}/></article></Base>
+<Base title={`${names.primary} | murmurgrove`} description={`Archive notes and related exhibitions for ${names.primary} in murmurgrove.`}><article class="article"><nav class="record-nav" aria-label="Record navigation"><a class="eyebrow" href="/people/">← People & Collectives</a><OrganismLink path={`/people/${item.id}/`}/></nav><h1>{names.primary}</h1>{names.native && <p class="lead">{names.native}</p>}{names.aliases.length>0 && <p class="note">{names.aliases.join(" · ")}</p>}<ArchiveProfile data={item.data} type="people"/><div class="prose"><Content/></div><ArchiveSources sources={item.data.sources}/>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{archiveDay(e.data)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}<ResearchContinuity type="people" id={item.id}/></article></Base>

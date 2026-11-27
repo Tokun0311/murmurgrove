@@ -1,12 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
+import {recordNames} from '../../lib/record-names.mjs';
 import {aliasesForPath} from '../../lib/archive-navigation.mjs';
 const [exhibitions,people,institutions,concepts]=await Promise.all([getCollection('exhibitions'),getCollection('people'),getCollection('institutions'),getCollection('concepts')]);
 const records=[
   ...exhibitions.map(r=>({type:'Exhibitions',path:'/exhibitions/'+r.id+'/',title:r.data.title,terms:[r.id,r.data.region,r.data.location]})),
-  ...people.map(r=>({type:'People',path:'/people/'+r.id+'/',title:r.data.name,terms:[r.id,r.data.sortName||'',r.data.reading||'',r.data.nativeName||'',...r.data.alternativeNames,...r.data.practiceFields,...r.data.roles,r.data.birthplace||'',r.data.basedIn||'']})),
-  ...institutions.map(r=>({type:'Institutions',path:'/institutions/'+r.id+'/',title:r.data.name,terms:[r.id,r.data.city||'',r.data.venueName||'',r.data.nativeName||'',...r.data.alternativeNames,...r.data.institutionTypes,r.data.country||'']})),
+  ...people.map(r=>({type:'People',path:'/people/'+r.id+'/',title:recordNames(r.data,'people',r.id).primary,terms:[...recordNames(r.data,'people',r.id).terms,r.id,r.data.sortName||'',r.data.reading||'',r.data.nativeName||'',...r.data.alternativeNames,...r.data.practiceFields,...r.data.roles,r.data.birthplace||'',r.data.basedIn||'']})),
+  ...institutions.map(r=>({type:'Institutions',path:'/institutions/'+r.id+'/',title:recordNames(r.data,'institutions',r.id).primary,terms:[...recordNames(r.data,'institutions',r.id).terms,r.id,r.data.city||'',r.data.venueName||'',r.data.nativeName||'',...r.data.alternativeNames,...r.data.institutionTypes,r.data.country||'']})),
   ...concepts.map(r=>({type:'Concepts',path:'/concepts/'+r.id+'/',title:r.data.title,terms:[r.id,r.data.nativeName||'',...r.data.alternativeNames]})),
 ].sort((a,b)=>a.title.localeCompare(b.title));
 ---
