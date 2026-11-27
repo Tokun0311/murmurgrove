@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>murmurgrove / editor 2.1 · Research Continuity (local)</title>
+<link rel="stylesheet" href="/assets/editor.css">
+<script type="module" src="/assets/editor.js"></script>
+<script type="module" src="/assets/research.js"></script>
+</head>
+<body>
+<header class="masthead">
+  <div><div class="site-name">murmurgrove</div><div class="site-sub">RESEARCH ATELIER / LOCAL</div></div>
+  <nav class="workspaces" aria-label="Workspace"><button id="workspace-capture" type="button" aria-pressed="true">Capture</button><button id="workspace-archive" type="button" aria-pressed="false">Archive</button><button id="workspace-research" type="button" aria-pressed="false">Research</button></nav><div class="session"><span class="pulse" aria-hidden="true"></span> <span>LOCAL ONLY</span></div>
+</header>
+<main class="workspace">
+  <aside class="sidebar">
+    <div class="eyebrow">Collection</div>
+    <nav class="collections" id="collection-tabs" aria-label="Record collections"></nav>
+    <div class="side-rule"></div>
+    <div class="side-actions"><div class="eyebrow">Records</div><button id="new-record" class="action-link" type="button">+ New record</button></div>
+    <label for="filter-records" class="sr-only">Filter records</label>
+    <input id="filter-records" type="search" placeholder="Search records…" autocomplete="off">
+    <div class="side-toggle"><button class="link selected" id="show-published" type="button">Published</button><button class="link" id="show-drafts" type="button">Private drafts</button></div>
+    <details id="archive-tools"><summary>Archive tools / 档案整理</summary><details id="withdrawn-panel"><summary>Withdrawn records / 已撤回档案</summary><button type="button" id="load-withdrawn" class="action-link">Refresh / 刷新</button><div id="withdrawn-list"></div></details><label class="maintenance-label" for="archive-maintenance">整理筛选</label><select id="archive-maintenance"><option value="all">All records</option><option value="minimal">Name-only records</option><option value="city">Missing / unindexed city</option><option value="duplicate">Possible duplicates</option></select></details><div class="side-list" id="record-list" aria-label="Records"><div class="hint">Loading records…</div></div>
+    <div class="privacy-side">Drafts stay only in this computer's <code>.private</code> folder. They are not sent to GitHub or Cloudflare.</div>
+  </aside>
+  <section class="main-panel">
+    <nav class="editor-switch" aria-label="Editor workspace"><button type="button" id="switch-record" aria-pressed="true">Records</button><button type="button" id="switch-research" aria-pressed="false">Research</button></nav>
+    <div id="record-workspace"><details id="archive-tasks"><summary>Research inbox / 研究待办 <span id="archive-task-count" aria-live="polite">尚未扫描</span></summary>
+<div class="archive-task-toolbar"><label for="archive-task-filter" class="sr-only">待办分类</label><select id="archive-task-filter"><option value="all">全部建议</option><option value="integrity">关联与资料</option><option value="duplicate">疑似重复</option><option value="draft">私人草稿</option><option value="location">地点索引</option><option value="review">待核实</option><option value="connections">研究关联</option><option value="names">原文名称</option></select><button id="archive-task-refresh" class="action-link" type="button">重新扫描</button><button id="archive-task-reset" class="action-link" type="button" hidden>恢复跳过</button></div><p id="archive-task-note" class="micro-copy" role="status"></p><div id="archive-task-list"></div><button id="archive-task-more" class="action-link" type="button" hidden>显示更多</button></details><section id="recovery-panel" hidden><strong>Private recovery / 未完成的编辑</strong><div id="recovery-list"></div></section>
+    <div class="panel-top"><span class="eyebrow" id="record-mode">03 / NEW RECORD</span><span class="tiny" id="dirty-indicator">NOT SAVED</span><a class="editor-review-jump" href="#publish-phase">Review &amp; save / 审核保存 ↓</a></div>
+    <div class="intro">
+      <button type="button" id="link-current-question" class="action-link" hidden>Link to research question</button><h1 id="editor-title">A new record</h1>
+      <p id="intro-note">Choose a collection, then describe what you want to keep.</p>
+    </div>
+    <nav id="editor-stepnav" class="v13-stepnav" aria-label="Record sections"><button type="button" data-editor-jump="capture-phase">01 记录 / Capture</button><button type="button" data-editor-jump="connect-workspace">02 关联 / Connect</button><button type="button" data-editor-jump="publish-phase">03 发布 / Publish</button></nav>
+    <details id="record-id-wrap"><summary>Record ID / URL (advanced)</summary><div class="form-field slug-field"><label for="slug">Record ID <span class="small-note">(used in page URL)</span></label><input id="slug" autocapitalize="off" spellcheck="false" placeholder="example-exhibition-2026" maxlength="100"><div class="field-help">Use lowercase English letters, numbers and hyphens only. IDs cannot be renamed when editing an existing record.</div></div></details>
+    <form id="edit-form" autocomplete="off"><section class="v14-section v14-capture" aria-labelledby="capture-phase"><div class="bundle-phase" id="capture-phase">01 / Identity & research</div><div id="typed-fields"></div><p id="name-match" class="micro-copy" role="status"></p>
+      <div class="form-field body-field"><label for="body">Research text / Paste here</label><textarea id="body" rows="14" placeholder="Write or paste your research notes… / 撰写或粘贴研究记录"></textarea><details class="text-tools"><summary>Text tools / 文字工具</summary><div class="atelier-actions"><button type="button" id="profile-extract" class="action-link">Extract labelled details / 提取已标注资料</button><button type="button" id="body-outline" class="action-link outline-btn">Insert a note outline</button></div></details></div>
+      <details id="advanced-fields-wrap"><summary>Additional details / 补充资料（选填）</summary><div id="advanced-fields"></div></details><details id="profile-sources"><summary>Sources / 资料来源（选填）</summary><div id="source-fields"></div></details><details class="research-atelier source-import" aria-labelledby="original-title"><summary id="original-title">Original sources &amp; Word import</summary>
+        <p class="micro-copy">The first paste into an empty new record is preserved privately. Manual snapshots remain available.</p>
+        <div class="atelier-actions"><button id="capture-original" type="button" class="action-link">Preserve original text</button><span id="original-message" class="micro-copy" role="status" aria-live="polite">No original text snapshot captured in this session.</span></div>
+        <details class="ai-assist optional-import"><summary>Optional / Import a .docx file instead</summary>
+          <p class="micro-copy">Only if you already have a Word file. Copy-and-paste is the default and works across operating systems.</p>
+          <div class="atelier-actions"><input id="word-file" type="file" accept=".docx" aria-label="Choose optional Word docx"><button id="import-word" type="button" class="action-link">Import .docx text</button></div><p id="word-message" class="micro-copy" role="status"></p>
+        </details>
+      </details>
+      </section><section id="connect-workspace" class="v14-section" aria-labelledby="connect-phase"><details id="connections-fold"><summary>Connections / 档案关联</summary><div class="sr-only" id="connect-phase">Connections</div><p class="micro-copy" id="connect-count"></p><div id="connect-fields"></div></details></section>
+      <details id="analysis-fold"><summary>Suggestions / 关联建议（选填）</summary><section class="analysis-section" id="analysis-section" aria-labelledby="analysis-heading">
+        <div class="analysis-head"><span class="eyebrow" id="analysis-heading">04 / RELATIONSHIP ANALYSIS</span><span class="tiny" id="analysis-status">READY TO SCAN</span></div>
+        <div class="analysis-intro">Local analysis suggests existing records from your writing. Nothing is linked without your review.</div>
+        <div class="analysis-actions"><button type="button" class="analyse-trigger" id="run-analysis">Analyze record</button><span class="analysis-note">Local analysis · no network AI</span></div>
+        <div id="analysis-results" aria-live="polite" class="analysis-results"><p class="analysis-placeholder">Write or open an exhibition record to see candidates and evidence.</p></div>
+        <div class="analysis-footer"><button class="publish" type="button" id="apply-analysis" disabled>Apply approved relations to form</button><span class="analysis-note">Only changes form fields. Publishing remains separate.</span></div>
+        <section class="new-node-review" id="new-node-review" aria-labelledby="new-node-heading">
+          <div class="analysis-group-heading" id="new-node-heading">NEW / PEOPLE · INSTITUTIONS · CONCEPTS</div>
+          <p class="analysis-note">New names and concepts are unverified proposals. Add them to this Exhibition, review the linked records in Publish, and save or publish the group together.</p>
+          <div id="new-node-list" aria-live="polite"></div>
+          <details class="manual-proposal">
+            <summary>Propose another new person, institution or concept</summary>
+            <div class="form-field"><label for="manual-group">Record type</label><select id="manual-group"><option value="people">Person</option><option value="institutions">Institution</option><option value="concepts">Concept</option></select></div>
+            <div class="form-field"><label for="manual-name">New name / concept</label><input id="manual-name" placeholder="e.g. Lee Chang-dong"></div>
+            <div class="form-field"><label for="manual-evidence">Exact quote from the current record</label><input id="manual-evidence" placeholder="Paste a verbatim phrase from your record"></div>
+            <div class="form-field"><label for="manual-reason">Why propose this record? (unverified)</label><textarea id="manual-reason" rows="2" placeholder="Explain whether it is explicit evidence or a research inference"></textarea></div>
+            <button type="button" class="action-link" id="check-manual-new">Check and add proposal</button>
+          </details>
+        </section>
+        <details class="ai-assist" id="ai-assist"><summary>Optional / Deeper analysis with ChatGPT</summary>
+          <p>Copy a structured prompt, paste it into ChatGPT, then paste its JSON reply back here. Your entire record will be included in the prompt: never copy confidential notes from a work computer.</p>
+          <button type="button" id="copy-ai-prompt" class="action-link">Copy AI analysis prompt</button>
+          <textarea id="ai-json" rows="5" placeholder='Paste JSON: {"suggestions":[...]}' aria-label="AI suggestions JSON"></textarea>
+          <button type="button" class="action-link" id="import-ai">Validate proposed AI links</button>
+          <p class="analysis-note">AI can now propose NEW people, institutions and concepts as well as existing links. Every new proposal requires an exact quote and duplicate check. Review each staged record and its link before grouped publication. The analysis itself never publishes.</p>
+        </details>
+      </section>
+      </details><section class="v14-section v14-publish" aria-labelledby="publish-phase"><div class="bundle-phase" id="publish-phase">Review &amp; publish</div><div id="publication-summary" class="publication-summary" aria-live="polite"></div><div id="bundle-review" hidden></div><div class="preview-title"><button id="toggle-preview" type="button" class="action-link">Preview / 预览</button></div>
+      <div id="preview" class="preview" hidden></div>
+      <div id="editor-review-status" role="status" aria-live="polite"></div><div id="alert" hidden></div><div class="public-warning"><p>Local publication becomes public after Push. Check names, links and confidential information.</p><label class="confirmation"><input id="confirm-public" type="checkbox"> I reviewed this record and any new linked records for public publication.</label></div>
+      <div class="action-row"><button type="button" id="save-draft" class="primary-quiet">Save draft / 存草稿</button><button type="submit" id="publish" class="publish">Save for publication / 保存公开档案</button></div><details id="record-management" hidden><summary>Record maintenance / 档案管理</summary><p class="micro-copy">Withdraw / 撤回：移出公开档案并保留本地恢复副本。Delete / 删除：移除本地正式记录及结构化关联，不保留撤回副本。均在 Push 后影响网站；不会抹除历史、Git 或外部缓存。</p><div class="atelier-actions"><button type="button" id="withdraw-record" class="action-link">Withdraw / 撤回</button><button type="button" id="delete-record" class="danger-link">Delete / 删除</button></div></details><details id="draft-maintenance" hidden><summary>Draft maintenance / 草稿管理</summary><button type="button" id="delete-draft" class="danger-link" hidden>Delete private draft / 删除私人草稿</button></details>
+    </section>
+    </form>
+    </div>
+    <section hidden class="research-atelier" id="research-workspace" aria-labelledby="research-head">
+      <div class="eyebrow" id="research-head">RESEARCH WORKSPACE / SOURCE-BACKED</div>
+      <section class="continuity-section" aria-labelledby="questions-title">
+        <div class="continuity-heading"><h2 id="questions-title">Research questions</h2><span class="tiny">PRIVATE · LOCAL</span></div>
+        <div class="atelier-actions"><select id="question-select" aria-label="Saved research questions"><option value="">Choose a question</option></select><button type="button" id="question-new">+ New question</button></div>
+        <div id="question-create" hidden><label for="question-title">Question</label><textarea id="question-title" rows="2" placeholder="What do I want to understand?"></textarea><label for="question-origin">Origin / optional public record</label><select id="question-origin"></select><button type="button" id="question-save">Create privately</button></div>
+        <div id="question-detail" hidden><h3 id="question-current"></h3><p class="micro-copy" id="question-state"></p><div id="question-timeline" class="source-results"></div>
+          <label for="question-kind">Continue the question</label><select id="question-kind"><option value="reflection">Add reflection</option><option value="revision">Revise question</option><option value="link">Link a record</option><option value="status">Change status</option></select>
+          <div id="question-status-wrap" hidden><label for="question-status">Status</label><select id="question-status"><option>ongoing</option><option>paused</option><option>resolved</option></select></div>
+          <label for="question-note">New reflection / reason</label><textarea id="question-note" rows="3"></textarea><label for="question-record">Related public record (optional)</label><select id="question-record"></select><div class="atelier-actions"><button type="button" id="question-append">Save privately</button><button type="button" id="question-search" class="action-link">Search archive with this question</button></div>
+        </div><p id="question-message" class="micro-copy" role="status">Questions and reflections never enter the public graph.</p>
+      </section><div class="atelier-divider"></div>
+      <h2>Ask the archive</h2>
+      <p class="micro-copy">Questions search the <strong>published archive only</strong>. Results cite exact record excerpts and open their full original pages. Local retrieval is not a generative AI answer.</p>
+      <label for="research-question">Question or topic</label>
+      <textarea id="research-question" rows="3" placeholder="Which exhibitions changed my understanding of site-specificity? / 不同展览如何讨论记忆与场所？"></textarea>
+      <div class="atelier-actions"><button type="button" id="ask-archive">Search &amp; synthesize sources</button><button type="button" class="action-link" id="copy-grounded-prompt">Copy grounded AI research prompt</button></div>
+      <details class="ai-assist"><summary>Optional / One-click local AI synthesis (Ollama)</summary><p>Uses only published archive excerpts. Requires Ollama and an already downloaded model on THIS computer. Does not send notes to a cloud API. AI conclusions still need verification.</p><label for="local-ai-model">Installed Ollama model name</label><input id="local-ai-model" value="qwen2.5:7b" spellcheck="false" placeholder="e.g. a model already installed on your computer" style="width:100%;border:0;border-bottom:1px solid #a7c7ae;background:transparent;padding:10px 0;color:#176647"><button type="button" id="run-local-ai">Generate local research analysis</button><div id="local-ai-output" class="source-results" aria-live="polite"></div></details>
+      <div id="research-answers" aria-live="polite" class="source-results"></div>
+      <div class="atelier-divider"></div>
+      <h2>Review a research relationship</h2>
+      <p class="micro-copy">New evidence may change the <em>current classification</em> of older records, without silently editing their original text. Only reviewed, quoted claims enter the public research layer.</p>
+      <div class="two-fields"><div><label for="link-source">Source record</label><select id="link-source"></select></div><div><label for="link-target">Related record</label><select id="link-target"></select></div></div>
+      <label for="link-kind">Type of relationship</label><select id="link-kind"><option value="documented">Documented relationship (source-backed fact)</option><option value="interpretive">Interpretive link (researcher's reading)</option><option value="comparison">Comparative relation</option><option value="revision">Revises a previous understanding</option></select>
+      <label for="link-evidence">Exact quote in the PUBLISHED source record</label><textarea id="link-evidence" rows="2" placeholder="Copy a short exact passage from the source article"></textarea>
+      <label for="link-reason">Why does this link matter?</label><textarea id="link-reason" rows="3" placeholder="Explain the evidence, your inference, or an unresolved issue. Minimum 15 characters."></textarea>
+      <div class="atelier-actions"><button type="button" id="check-relation" class="action-link">Check evidence</button><button type="button" id="approve-relation">Approve relationship</button></div>
+      <div id="relation-message" class="micro-copy" role="status"></div>
+      <div class="atelier-actions"><button type="button" id="cancel-rereview" hidden>Cancel re-review</button></div>
+      <h3>Reviewed relationships</h3><div id="active-relations" class="source-results"></div>
+      <div class="atelier-divider"></div>
+      <h2>Concept memory</h2>
+      <p class="micro-copy">A concept can be provisional or mature. Aliases prevent duplicate Chinese, Japanese and English labels. Definition, Interpretation and Development remain distinct.</p>
+      <label for="concept-pick">Existing published concept</label><select id="concept-pick"></select>
+      <div class="two-fields"><div><label for="concept-stage">Status</label><select id="concept-stage"><option value="provisional">Provisional / emerging</option><option value="mature">Mature / reviewed</option></select></div><div><label for="concept-aliases">Alternative names, one per line</label><textarea id="concept-aliases" rows="3" placeholder="site-specificity
+场域特定性
+サイト・スペシフィシティ"></textarea></div></div>
+      <label for="concept-definition">01 / Definition</label><textarea id="concept-definition" rows="3"></textarea>
+      <label for="concept-interpretation">02 / Interpretation</label><textarea id="concept-interpretation" rows="3"></textarea>
+      <label for="concept-development">03 / Development / revisions over time</label><textarea id="concept-development" rows="3" placeholder="What changed in your thinking? Preserve dated revisions in this note."></textarea>
+      <div class="atelier-actions"><button type="button" id="save-concept-meta">Save reviewed concept memory</button></div>
+      <div id="concept-message" class="micro-copy" role="status"></div>
+      <details class="manual-proposal"><summary>Merge duplicate Concepts (manual, non-destructive)</summary>
+        <p class="micro-copy">Preserve both source records and their history. Only the CURRENT classification resolves the old ID to the selected canonical Concept; no deletion or rewriting of old notes.</p>
+        <div class="two-fields"><div><label for="concept-merge-from">Earlier / duplicate Concept</label><select id="concept-merge-from"></select></div><div><label for="concept-merge-to">Canonical Concept to retain</label><select id="concept-merge-to"></select></div></div>
+        <label for="concept-merge-reason">Explain why they are equivalent</label><textarea id="concept-merge-reason" rows="2"></textarea>
+        <button type="button" id="apply-concept-merge">Review and merge without deletion</button>
+      </details>
+      <div class="atelier-divider"></div>
+      <details class="continuity-section" id="revision-notes"><summary>Research history / annotate a revision</summary>
+        <p class="micro-copy">Record a dated explanation of a published record’s revision. Only this explanation is public; private originals and old text are not copied. Withdrawal is an annotation, not a deletion command.</p>
+        <label for="revision-record">Public record</label><select id="revision-record"></select>
+        <label for="revision-kind">Revision kind</label><select id="revision-kind"><option value="correction">Correction</option><option value="addition">Addition</option><option value="reinterpretation">Reinterpretation</option><option value="withdrawal">Withdrawal</option></select>
+        <label for="revision-note">Public explanation</label><textarea id="revision-note" rows="3"></textarea><div class="atelier-actions"><button type="button" id="revision-read">Read current source</button><button type="button" id="revision-save">Review &amp; save annotation</button></div><p id="revision-message" class="micro-copy" role="status"></p><div id="revision-source" class="source-results"></div><div id="revision-list" class="source-results"></div>
+      </details><div class="atelier-divider"></div>
+      <h2>Sync &amp; source history</h2>
+      <p class="micro-copy">Rebuild the derived current research network after confirmed changes. Preserves the frozen T₀ organism baseline and all prior source versions. Then review the generated files in GitHub Desktop before Push.</p>
+      <div class="atelier-actions"><button type="button" id="sync-research">Regenerate current research layer</button><button type="button" class="action-link" id="load-research-history">Inspect source versions</button></div>
+      <div id="sync-message" class="micro-copy" role="status"></div><div id="source-history" class="source-results"></div>
+    </section>
+    <div class="afterword" id="publication-progress"><span class="eyebrow">NEXT STEP</span><p>Build → review changes → Commit &amp; Push in GitHub Desktop. Online status is not verified here.</p></div>
+  </section>
+</main>
+<footer>murmurgrove / editor 2.0 · Research Atelier · no cloud editor account · no external dependencies</footer>
+<div id="editor-toast" role="status" aria-live="polite" hidden><span id="editor-toast-text"></span><button type="button" id="editor-toast-close" aria-label="Dismiss notification">×</button></div>
+</body>
+</html>

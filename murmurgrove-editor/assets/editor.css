@@ -204,3 +204,27 @@ body[data-workspace=research] .sidebar{opacity:.85}.maintenance-label{font-size:
 #archive-tasks>summary{cursor:pointer;color:var(--green);font-size:14px;font-weight:600}#archive-task-count{margin-left:12px;color:var(--muted);font-size:12px;font-weight:400}
 .archive-task-toolbar,.archive-task-actions{display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;margin:10px 0}.archive-task-toolbar select{width:auto;max-width:100%;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;padding:6px 0;color:var(--ink)}
 .archive-task-row{padding:12px 0;border-top:1px solid var(--line);overflow-wrap:anywhere}.archive-task-kind{color:var(--muted);font-size:11px;margin-bottom:4px}.archive-task-title{font-size:15px;font-weight:500;color:var(--green)}.archive-task-row p{margin:5px 0}.archive-task-actions{margin:5px 0 0}.archive-task-actions button,#archive-task-refresh,#archive-task-reset,#archive-task-more{border:0;border-bottom:1px solid currentColor;border-radius:0;background:transparent;color:var(--green);font-size:12px;padding:4px 0;min-height:0;width:auto;box-shadow:none}.archive-task-actions button:last-child{color:var(--muted)}
+
+/* Research focus: two primary tools, four optional disclosures, open typography. */
+#research-workspace{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;max-width:850px;margin:0 auto}
+#research-workspace .research-primary{margin:22px 0 30px;min-width:0}
+#research-workspace .research-primary+.research-primary{border-top:1px solid var(--line);padding-top:20px}
+#research-workspace h2{font-size:21px;font-weight:500;margin:0 0 8px;color:var(--green)}
+#research-workspace .continuity-heading h2{margin:0}
+#research-workspace .atelier-actions{gap:8px 18px;margin:10px 0 13px}
+#research-workspace button{background:transparent;border:0;border-bottom:1px solid currentColor;border-radius:0;box-shadow:none;width:auto;min-width:0;padding:6px 0;font-size:12px;font-weight:500;line-height:1.5;color:var(--green)}
+#research-workspace button.action-link{color:var(--muted)}
+#research-workspace #question-select{flex:1 1 200px;width:auto;max-width:100%}
+#research-workspace textarea{font-size:14px}
+#research-workspace .research-tools{border-top:1px solid var(--line);margin-top:32px;padding-top:15px}
+#research-workspace .research-tools-label{margin-bottom:10px;color:var(--muted);font-weight:500}
+#research-workspace .research-tool,#research-workspace .research-local-ai,#research-workspace .manual-proposal{margin:0;padding:9px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none;min-width:0}
+#research-workspace .research-tool>summary,#research-workspace .research-local-ai>summary,#research-workspace .manual-proposal>summary{font-size:13px;font-weight:500;cursor:pointer;color:var(--green);padding:4px 0;line-height:1.55;overflow-wrap:anywhere}
+#research-workspace .research-tool>summary span{font-size:11px;color:var(--muted);margin-left:10px;font-weight:400}
+#research-workspace .research-tool[open]{padding-bottom:20px}
+#research-workspace .research-local-ai{border-bottom:0;margin:8px 0;padding:5px 0}
+#research-workspace .research-local-ai>summary{color:var(--muted);font-size:12px}
+#research-workspace :is(summary,button,select,textarea,input,a):focus-visible{outline:2px solid var(--green);outline-offset:3px}
+#research-workspace #archive-search-message:empty,#research-workspace #research-workspace-message:empty{display:none}
+body[data-workspace=research] #publication-progress{display:none}
+@media(max-width:680px){#research-workspace h2{font-size:19px}#research-workspace .research-primary{margin:18px 0 23px}#research-workspace .research-tool>summary span{margin-left:5px}}
