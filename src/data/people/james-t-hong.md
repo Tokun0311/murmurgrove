@@ -5,11 +5,12 @@ alternativeNames: []
 linkedInstitutions: []
 practiceFields: []
 roles: []
-sources: []
+sources: ["https://emptygallery.com/artists/james-t-hong/?lang=zh"]
 linkedPeople: []
 linkedExhibitions: []
 linkedConcepts: []
 linkedWriting: []
+nativeName: "洪子健"
 ---
 
 

@@ -5,11 +5,12 @@ alternativeNames: []
 linkedInstitutions: []
 practiceFields: []
 roles: []
-sources: []
+sources: ["https://www.mplus.org.hk/sc/collection/makers/wang-tuo/"]
 linkedPeople: []
 linkedExhibitions: []
 linkedConcepts: []
 linkedWriting: []
+nativeName: "王拓"
 ---
 
 

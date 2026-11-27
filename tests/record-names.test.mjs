@@ -20,8 +20,13 @@ test('new records use same language rules; absent English preserves original ins
  const n=recordNames({name:'新機関',alternativeNames:['en: New Institute','ja: 新機関','zh: 新机构']},'institutions','new');assert.equal(n.primary,'New Institute');assert.equal(n.native,'新機関');assert.ok(n.terms.includes('新机构'));
  assert.equal(recordNames({name:'新機関'},'institutions','new').primary,'新機関');
 });
-test('site labels are retained only for non-reference venues',()=>{
- assert.equal(institutionListNames({name:'SKWAT',venueName:'SKAC',venueStatus:'user-supplied'}).related,'SKWAT');assert.equal(institutionListNames({name:'SKWAT',venueName:'SKAC',venueStatus:'reference'}).display,'SKWAT');
+test('record identity takes precedence over associated venue',()=>{
+ const n=institutionListNames({name:'SKWAT',venueName:'SKAC',venueStatus:'user-supplied'});assert.equal(n.display,'SKWAT');assert.equal(n.related,'Associated venue: SKAC');
+ assert.equal(institutionListNames({name:'SKWAT',venueName:'SKAC',venueStatus:'reference'}).related,'Reference venue: SKAC');
+ assert.equal(institutionListNames({name:'北九州国際ビエンナーレ',venueName:'GALLERY SOAP'},'kitakyushu-international-biennial').display,'Kitakyushu International Biennial');
+ assert.equal(institutionListNames({name:'ヒロシマ賞 / Hiroshima Art Prize',venueName:'Hiroshima City Museum of Contemporary Art'},'hiroshima-art-prize').display,'Hiroshima Art Prize');
+ assert.equal(institutionListNames({name:'GALLERY SOAP',venueName:'GALLERY SOAP'}).related,'');
+ assert.equal(institutionListNames({name:'kudan house',venueName:'kudan house',associatedProject:'CURATION⇄FAIR Tokyo 2026'}).related,'Related programme: CURATION⇄FAIR Tokyo 2026');
 });
 test('no loss of existing aliases when adding or clearing translated field',()=>{
  const a=setConceptLanguage(['alias','ja: 原名','en: old'],'en','New name');assert.deepEqual(a,['alias','ja: 原名','en: New name']);assert.deepEqual(setConceptLanguage(a,'en',''),['alias','ja: 原名']);

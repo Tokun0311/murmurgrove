@@ -726,5 +726,37 @@
     "edgeCount": 389,
     "priorHash": "0d3bc52c274bd01f86dc43f7144a691b421a53b9b838dda1671876a47eedbd75",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T08-45-03-891Z-b26fb2909e50.json",
+    "graphHash": "b26fb2909e501c19098edb6be203a00164c8b7c042aed2a110e003f7fc7bba64",
+    "at": "2026-11-27T08:45:03.886Z",
+    "added": [],
+    "changed": [
+      "people:atsushi-wakimoto",
+      "people:cici-wu",
+      "people:daisuke-kosugi",
+      "people:daito-manabe",
+      "people:ei-wada",
+      "people:james-t-hong",
+      "people:lu-yang",
+      "people:miyu-hosoi",
+      "people:ryuichi-sakamoto",
+      "people:sasaki-ken",
+      "people:shuang-li",
+      "people:suzuki-akio",
+      "people:tehching-hsieh",
+      "people:tianzhuo-chen",
+      "people:umi-ishihara",
+      "people:wang-jiahao",
+      "people:wang-tuo",
+      "people:yuan-fangzhou",
+      "people:yuri-suzuki"
+    ],
+    "removed": [],
+    "recordCount": 344,
+    "edgeCount": 389,
+    "priorHash": "b03719996135cfe5a1d3ec8259d0d408937caf62bfc321916c854300f6121475",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]

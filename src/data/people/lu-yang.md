@@ -5,11 +5,12 @@ alternativeNames: []
 linkedInstitutions: []
 practiceFields: []
 roles: []
-sources: []
+sources: ["https://whiterabbitcollection.org/artist/lu-yang/"]
 linkedPeople: []
 linkedExhibitions: []
 linkedConcepts: []
 linkedWriting: []
+nativeName: "陆扬"
 ---
 
 

@@ -43,6 +43,10 @@ export function recordNames(data={},type='',id=''){
 }
 export function institutionListNames(data,id){
   const names=recordNames(data,'institutions',id);
-  const venue=data.venueStatus!=='reference'?parts(data.venueName).find(latin):'';
-  return {...names,display:venue||names.primary,related:venue&&norm(venue)!==norm(names.primary)?names.primary:''};
+  const venue=parts(data.venueName).find(latin)||clean(data.venueName);
+  const notes=[];
+  if(venue&&norm(venue)!==norm(names.primary))notes.push(`${data.venueStatus==='reference'?'Reference venue':'Associated venue'}: ${venue}`);
+  const programme=clean(data.associatedProject);
+  if(programme&&norm(programme)!==norm(names.primary)&&norm(programme)!==norm(venue))notes.push(`Related programme: ${programme}`);
+  return {...names,display:names.primary,related:notes.join(' · ')};
 }

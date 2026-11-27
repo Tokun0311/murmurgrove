@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-27T08:36:36.526Z",
-  "sourceDigest": "1087ef73f29337e5f4e8ac7ebe1a275158aaece67b58ed7bbb291b8e4c408a8f",
+  "generatedAt": "2026-11-27T08:45:03.886Z",
+  "sourceDigest": "110d24a838fd7c30008f529ae7296cd332225a38e535c199ff233a51adea9004",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "b03719996135cfe5a1d3ec8259d0d408937caf62bfc321916c854300f6121475",
+  "graphHash": "b26fb2909e501c19098edb6be203a00164c8b7c042aed2a110e003f7fc7bba64",
   "records": [
     {
       "type": "exhibitions",
@@ -1353,12 +1353,14 @@
       "key": "people:atsushi-wakimoto",
       "title": "Atsushi Wakimoto",
       "path": "/people/atsushi-wakimoto/",
-      "contentHash": "ff5baef32c38a030c66082ccf487572af49facbf54325b8a073657d01a4b7337",
+      "contentHash": "789aee4aa589c163bcaf08b692157d23430f1f9b47fa1a516464e1d401d79f9f",
       "summary": "Head of Curatorial Affairs MoN Takanawa: The Museum of Narratives (JP)",
       "text": "Head of Curatorial Affairs MoN Takanawa: The Museum of Narratives (JP)",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "脇本厚司"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -1525,12 +1527,14 @@
       "key": "people:cici-wu",
       "title": "Cici Wu",
       "path": "/people/cici-wu/",
-      "contentHash": "c2233ef927111b258355f03267cf262677c0d814c2845695745cdcce37f0511d",
+      "contentHash": "ef277b30ee549291307ccb9ebdeac81d5e094fb5c9bb39bb8c3b4e119e1012f0",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "武雨濛"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -1540,12 +1544,14 @@
       "key": "people:daisuke-kosugi",
       "title": "Daisuke Kosugi",
       "path": "/people/daisuke-kosugi/",
-      "contentHash": "48cbb74b8f7cc4d59e090c16d5a93a0e305ef38eb9c459e27f450cdf7fee5f77",
+      "contentHash": "87317e39162fe5fe87df7c3903b56056e7f9ce18b3526c7c40e9ca6be78de867",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "小杉大介"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -1555,12 +1561,14 @@
       "key": "people:daito-manabe",
       "title": "Daito Manabe",
       "path": "/people/daito-manabe/",
-      "contentHash": "cb1d4cd0de8a09cc651a00f9dbaa36a76101bc16c7bbb6f1a6cced75b43cd42d",
+      "contentHash": "bd40f3fd7d66e728f6690f2ec81576cd2e6736ee6f22e30af543e42fad2b6cc0",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "真鍋大度"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -1645,12 +1653,14 @@
       "key": "people:ei-wada",
       "title": "Ei Wada",
       "path": "/people/ei-wada/",
-      "contentHash": "5eec7155428a1c03c102252baa431ec719a2e7c50d5a6a1289b2a9090ec60716",
+      "contentHash": "fb5d039b110932ce29ec9d92d3ef3928e8e4f534e1b9fc786a4902d50ae88a4e",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "和田永"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -2141,12 +2151,14 @@
       "key": "people:james-t-hong",
       "title": "James T. Hong",
       "path": "/people/james-t-hong/",
-      "contentHash": "1e263db24a6be127c7081a78b62bf77ee249b71994cf71e48c51168f860ec5cd",
+      "contentHash": "768119c73fc00a706ae7e49fc05b50bf2d5e2629d7a56f20eae1bec30fb7d68b",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "洪子健"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -2564,12 +2576,14 @@
       "key": "people:lu-yang",
       "title": "Lu Yang",
       "path": "/people/lu-yang/",
-      "contentHash": "82684f59de4a44640d3923c36de6626ce702cdb6d5245e493ff73c5ef40ead6d",
+      "contentHash": "539c8c5f568540586dbece30b9399110c455797f9219a0435e2763265b0bf5fd",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "陆扬"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -2823,12 +2837,14 @@
       "key": "people:miyu-hosoi",
       "title": "Miyu Hosoi",
       "path": "/people/miyu-hosoi/",
-      "contentHash": "4bc6fad76a2ee65d4ec6e3be394424434d95630ebdea51eb531f81bcfd71eb0d",
+      "contentHash": "e10ae16af6246bb9cb2a31cd34e2710ca6a081b71e805511b66e1a1124e05624",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "細井美裕"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3206,12 +3222,14 @@
       "key": "people:ryuichi-sakamoto",
       "title": "Ryuichi Sakamoto",
       "path": "/people/ryuichi-sakamoto/",
-      "contentHash": "9a967767791df37bce58f73555fe97401d0ce5ae80c6bab3d30f75171ffd6fb9",
+      "contentHash": "c0882014bd8483ca05950e7e2b40618e5af4ed01e77a056701ff0d68e568bf89",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "坂本龍一"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3251,12 +3269,14 @@
       "key": "people:sasaki-ken",
       "title": "Sasaki Ken",
       "path": "/people/sasaki-ken/",
-      "contentHash": "d8ab246d75d4a4736a4bfeb02ddb0a71f79b6e50040905cb64a31963115c4efe",
+      "contentHash": "4deee96b51c178fe59647c6b7242ad5663d4d1ce6685f42bc7bb64bebf5fadbb",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "佐々木健"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3285,12 +3305,14 @@
       "key": "people:shuang-li",
       "title": "Shuang Li",
       "path": "/people/shuang-li/",
-      "contentHash": "28bc5bb6185393deb7e4aa7432513e0964925d63bba9bd9113798a9c69e4d098",
+      "contentHash": "a7fb7fc5cfc67aa9a2b3240048e5aa6c5d0bf8f02890fe27cfea857c2c920467",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "李爽"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3405,12 +3427,14 @@
       "key": "people:suzuki-akio",
       "title": "Suzuki Akio",
       "path": "/people/suzuki-akio/",
-      "contentHash": "036fdd35a2907155fdda27e1b1b5f0da493c0393ead3bf317d10ad886c473e0f",
+      "contentHash": "7a4ec041d6d76a9fdc62ef54a3e130667757b7515ec4d6187af464b479108224",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "鈴木昭男"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3503,12 +3527,14 @@
       "key": "people:tehching-hsieh",
       "title": "Tehching Hsieh",
       "path": "/people/tehching-hsieh/",
-      "contentHash": "94abc751de126889a619f95992d95b98c49d3f846cf4ce1abe257c0154b5ff3b",
+      "contentHash": "d2fc033720614c1ef6818faf5d0d5ea1f56e959ff226f6f259f6df98244e4250",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "謝德慶"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3563,12 +3589,14 @@
       "key": "people:tianzhuo-chen",
       "title": "Tianzhuo Chen",
       "path": "/people/tianzhuo-chen/",
-      "contentHash": "ff8cb041514ec49491de0f7cba1b3a7bb6c573d5a0f08cf78578a1b2f25e2566",
+      "contentHash": "de9f25979d8399bbdcb21d1220b33e2cb2a85fbcc94fb57fa2ac6eed59bd7139",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "陈天灼"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3676,12 +3704,14 @@
       "key": "people:umi-ishihara",
       "title": "Umi Ishihara",
       "path": "/people/umi-ishihara/",
-      "contentHash": "746ed428d90a58bbdf177b2f834ff91b6717f2861b4685c2b71bd9e4f4fda96c",
+      "contentHash": "436cb078e3d468b5fe238f6e936eb6701f8849c9c95945b7bd55eab15466a976",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "石原海"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3721,12 +3751,14 @@
       "key": "people:wang-jiahao",
       "title": "Wang Jiahao",
       "path": "/people/wang-jiahao/",
-      "contentHash": "73ea1affa78ad970a8719aae067fa259a8dceb7c4b7ced541af02673d6163267",
+      "contentHash": "78c535755ebe532339434fb48eb5785f92b4db8010620b8287e88b91104427ff",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "王家豪"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3736,12 +3768,14 @@
       "key": "people:wang-tuo",
       "title": "Wang Tuo",
       "path": "/people/wang-tuo/",
-      "contentHash": "c529bc4f836b529374da7eea0d96ec741d2f16a77c4bc88fb6d4a32c5b796f27",
+      "contentHash": "c0d4b866f7e6c86646547de67e42814da487d0ace38e161fcb1e830f753f0d02",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "王拓"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3868,12 +3902,14 @@
       "key": "people:yuan-fangzhou",
       "title": "YUAN FANGZHOU",
       "path": "/people/yuan-fangzhou/",
-      "contentHash": "eca1e398d325871e0ff7c9c0d49201d7f53a3098dc692a41a3c76c14fe474f32",
+      "contentHash": "f9f8debdcfe12fbc8593d475db256e103eebaba08be13e3e50e148979d1fee99",
       "summary": "艺术家 YUAN FANGZHOU。这里收录其在东京相关展览与画廊活动的记录；详细履历待核实。",
       "text": "艺术家 YUAN FANGZHOU。这里收录其在东京相关展览与画廊活动的记录；详细履历待核实。",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "袁方洲"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -3919,12 +3955,14 @@
       "key": "people:yuri-suzuki",
       "title": "​ ​Yuri Suzuki",
       "path": "/people/yuri-suzuki/",
-      "contentHash": "e55ca8bba963248f8857ba6cf22267e1abe4becc80caf32eff6147b2a32450e9",
+      "contentHash": "e1961cda936b3f91ea2523e5780b5259b1cfc44f15ee7b31a5fd783db4bf81bc",
       "summary": "",
       "text": "",
       "date": "",
       "conceptStage": null,
-      "aliases": [],
+      "aliases": [
+        "スズキユウリ"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
