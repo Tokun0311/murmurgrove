@@ -1,0 +1,3780 @@
+{
+  "summary": {
+    "graphHash": "783c1310638249a6317ddf42461f2deda3df5c2277f78c54f234bbac2494ed31",
+    "at": "2026-11-27T02:47:31.803Z",
+    "added": [],
+    "changed": [
+      "people:fuse-rintaro",
+      "people:kataoka-mami",
+      "people:keiichi-sato",
+      "people:keiichiro-terae",
+      "people:mikami-seiko",
+      "people:nawa-kohei",
+      "people:noe-aoki",
+      "people:shiga-lieko",
+      "people:takagi-yuriko",
+      "people:tanaka-shintaro",
+      "people:ueda-kana",
+      "people:umeda-tetsuya",
+      "people:wu-xiazhi",
+      "people:yamashiro-chikako",
+      "people:yang02",
+      "people:yukinori-yanagi",
+      "people:yurie-nagashima",
+      "institutions:arts-council-tokyo",
+      "institutions:barbican-centre",
+      "institutions:british-council",
+      "institutions:factory-international",
+      "institutions:institute-of-contemporary-arts-ica",
+      "institutions:mon-takanawa-the-museum-of-narratives",
+      "institutions:somerset-house-studios",
+      "institutions:syndicate-takamatsu",
+      "institutions:watari-um-the-watari-museum-of-contemporary-art"
+    ],
+    "removed": [],
+    "recordCount": 228,
+    "edgeCount": 256,
+    "priorHash": "f5536abe70c93dee07c4e452f0cdd694a9ec77b46d0a69053b8051a74c821309",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  "sourceDigest": "0ee8af6995b649f04e4e573447efc37b66edfbb69a73b8552f16d6928a73ea75",
+  "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "records": [
+    {
+      "key": "exhibitions:2026-01-02-01",
+      "contentHash": "1086b9c8a092be2e768c36c0f61a5f1e059e51e1b37e1ca563a0e7f79a329e85"
+    },
+    {
+      "key": "exhibitions:2026-01-07-02",
+      "contentHash": "088d6a5e86526b9dc868b9404a392ac1ac88109856d0096e36a57d7858cbe2bc"
+    },
+    {
+      "key": "exhibitions:2026-01-08-03",
+      "contentHash": "78c4dabb0cedfd84b9b876f4a5b450293cfe26aa7e30ce29724131726764584c"
+    },
+    {
+      "key": "exhibitions:2026-01-11-04",
+      "contentHash": "272ede76e37ddb70a6d40c8085094fce85eee8d6301d8e5149c37522fc477dc0"
+    },
+    {
+      "key": "exhibitions:2026-01-24-05",
+      "contentHash": "2e618f8bea330301fb5ad484b4f5ad51876c4378028c4e70eada7bd0aa93d268"
+    },
+    {
+      "key": "exhibitions:2026-01-24-06",
+      "contentHash": "5262221bccfad99d59812737843e2aac9738186ad675338da6dda7517d90ca1e"
+    },
+    {
+      "key": "exhibitions:2026-02-01-07",
+      "contentHash": "0b0ae0b324cfcdd605240bd6d219fedf40b4dfe08582a407a8fc0340660a66c6"
+    },
+    {
+      "key": "exhibitions:2026-02-08-08",
+      "contentHash": "fc88624d961977fb3444d60fdd3399c7a959e36ac19e4b3e0d242247329d0117"
+    },
+    {
+      "key": "exhibitions:2026-02-13-09",
+      "contentHash": "23284deb806f70f1bd459d755ff31f4474affe6bab500cd0ed8401585f666637"
+    },
+    {
+      "key": "exhibitions:2026-02-14-10",
+      "contentHash": "737368f8dee028a0ae3fec1b5bdc57a6969b23415ad8328cd988f4acf886359c"
+    },
+    {
+      "key": "exhibitions:2026-03-04-11",
+      "contentHash": "ca86c51ec08c5980da3e76c2e2359306e45b2032e63a2780a759484ae13ee13f"
+    },
+    {
+      "key": "exhibitions:2026-03-04-12",
+      "contentHash": "e4dc051abc92b4a61a173a7b4f60f3c401a977cdbee269d3d938d85c60b80eee"
+    },
+    {
+      "key": "exhibitions:2026-03-14-13",
+      "contentHash": "9a3c7bd28f7b53c39f286bbae355ee099ae5ac1927f7f17627bf2e039342b9d4"
+    },
+    {
+      "key": "exhibitions:2026-03-14-14",
+      "contentHash": "64f0dbc4a787a6e851705bc4b2d883e8b21ee3b6d88149a6cb5e1d8e02c67a51"
+    },
+    {
+      "key": "exhibitions:2026-03-14-15",
+      "contentHash": "828a9e167536bff304d0131598936f967261514ccee64f06317352360b467bae"
+    },
+    {
+      "key": "exhibitions:2026-03-24-16",
+      "contentHash": "da102fe925df1219c34e52bdf7a914b89e7788ebe3994a5c22bb28337895c0cf"
+    },
+    {
+      "key": "exhibitions:2026-03-25-17",
+      "contentHash": "24f2768eb4d23087f5c9d48181456c0cded868947ad52810bdf972337cade946"
+    },
+    {
+      "key": "exhibitions:2026-03-25-18",
+      "contentHash": "0e2b345de67233e7c7cbf468cd2f22f9ae2a628dcac7db136500bd5abc8fb171"
+    },
+    {
+      "key": "exhibitions:2026-03-26-19",
+      "contentHash": "b9b8e50ce41425bbd434813b68b5b42f22b60db17e1f15ba15b4b62765ff267f"
+    },
+    {
+      "key": "exhibitions:2026-03-27-20",
+      "contentHash": "19c0e8be914dcbdadb2552e91b64d05929594f15291571efb97afa5a36cccf0a"
+    },
+    {
+      "key": "exhibitions:2026-03-27-21",
+      "contentHash": "0a5cacce40e8e0816bb4eb967d5308e3a12f243d61e16b80a8145c7e92a820a2"
+    },
+    {
+      "key": "exhibitions:2026-03-27-22",
+      "contentHash": "c84467ce3e529bddf4d775d85bcb5d7f7f1db69ff2364ec2776d085dbbd6b608"
+    },
+    {
+      "key": "exhibitions:2026-04-19-23",
+      "contentHash": "d58fca99be4d4ce604c66c50c6de8880d9b9d169c5db851d4665bf1b5b55e8d1"
+    },
+    {
+      "key": "exhibitions:2026-04-24-24",
+      "contentHash": "93704e3ca3a66622b98fde016ffa88788a6549464afcaf61b464cc97947e3672"
+    },
+    {
+      "key": "exhibitions:2026-04-26-25",
+      "contentHash": "c3198f9c42e39e57cc187cabe4dd68af4249d1018076475eac260775a87518f1"
+    },
+    {
+      "key": "exhibitions:2026-04-26-26",
+      "contentHash": "f3be24957f80ade2d78e30085bb6dca04e32e2301f760d5ed4be00cc47add00f"
+    },
+    {
+      "key": "exhibitions:2026-05-06-27",
+      "contentHash": "833e15cb669080e0a60316bdfadbbd66208a926af10f0ea349a7048231e6432a"
+    },
+    {
+      "key": "exhibitions:2026-05-16-28",
+      "contentHash": "e9a2f30396d4df590fe6557990654e5788feea5c69fa52b6b5dd42f7cabc579e"
+    },
+    {
+      "key": "exhibitions:2026-05-23-29",
+      "contentHash": "6cbdd45b112e7a989bcb2e2958796277708c981f251ad91f1e95a5352d2bf097"
+    },
+    {
+      "key": "exhibitions:2026-05-23-30",
+      "contentHash": "9ff889d04c3d99d97a46f9aaed63d7c65c4f16c72acf8a1e97c6e9979c0c7223"
+    },
+    {
+      "key": "exhibitions:2026-05-29-31",
+      "contentHash": "7eae89e7435e40f61bcd4e4e6235306837b60f61e44026f44594184122a8dd28"
+    },
+    {
+      "key": "exhibitions:2026-06-07-32",
+      "contentHash": "d1b4a0f20902d1c5049913381361e2c8678f18e57271c594192757c8a906e73d"
+    },
+    {
+      "key": "exhibitions:2026-06-13-33",
+      "contentHash": "a5a3f4c7f514f3d665ed647292f3d5baab4c3e09ffcc1365a4418032f211f5a6"
+    },
+    {
+      "key": "exhibitions:2026-06-27-34",
+      "contentHash": "0ee98f49c4b2e1ab263b70e94a9731aca4e1fbfc8fb83997f3081c8b830664b5"
+    },
+    {
+      "key": "exhibitions:2026-07-05-35",
+      "contentHash": "c9459631a949ca1b5dbcc7dc946dd9f3a99d05a1bd3960cdc490ba1f30d789b0"
+    },
+    {
+      "key": "exhibitions:2026-07-12-36",
+      "contentHash": "b7c4a67ea40375bb8cf1f62bc396dbaa82ecc75d0745834b155eaf9a46cd6c5d"
+    },
+    {
+      "key": "exhibitions:2026-07-12-37",
+      "contentHash": "2222dc1e2db15c28c3bf997ebdb2b1d2fe3a74b18695a4ea39753388f1f41260"
+    },
+    {
+      "key": "exhibitions:2026-07-31-37",
+      "contentHash": "a262c9bb1f324d103353e81395f1ed2db5efb18c41a6e617615375622da7df03"
+    },
+    {
+      "key": "exhibitions:2026-08-02-38",
+      "contentHash": "06a4a54645c4913723c569dea4c646c8c0cdee5795b8dc53b0fe5170add29d86"
+    },
+    {
+      "key": "exhibitions:2026-08-12-39",
+      "contentHash": "deb1cab5acc64f041a8d0eff46a6b00e5f7ac46be805c7b35817981cb74d9c06"
+    },
+    {
+      "key": "exhibitions:2026-08-13-40",
+      "contentHash": "832fd0c7807123b2d1e356b6192e1b5e01b8b44d7a3907a2a5992595c5aff8f0"
+    },
+    {
+      "key": "exhibitions:2026-09-10-41",
+      "contentHash": "e3c13c7ceb19caf4e239806311cea1f8db08385c638f3f3d93b217fe64cb3ee5"
+    },
+    {
+      "key": "exhibitions:2026-09-10-42",
+      "contentHash": "515fc9d7abb483fdbbcb34bc09a0fcad8d5098844c653c544b22c0732815d61c"
+    },
+    {
+      "key": "exhibitions:2026-09-12-43",
+      "contentHash": "22c3298bc9eed8fdcfaa4c4187414c6fdf13d9ed9da0e9e75c98069d812bde32"
+    },
+    {
+      "key": "exhibitions:2026-10-04-44",
+      "contentHash": "013325c4580ae6462c5c8d35fab2c50c36049e888050c4c27d349419fe37428c"
+    },
+    {
+      "key": "exhibitions:2026-10-05-45",
+      "contentHash": "ba512e3e88e2bca6011ff4db0cc00bc5669ef53f3b1af354ba347d4002463758"
+    },
+    {
+      "key": "exhibitions:2026-10-09-46",
+      "contentHash": "224211d7ad3d1323cc6a3d03a437b1dfbc4dc6b03b9476c7ad8ef4d7cee880d1"
+    },
+    {
+      "key": "exhibitions:2026-10-09-47",
+      "contentHash": "013076e25853a9d564786180a04de524cb42d4f12bc20350938eb338dc988a2a"
+    },
+    {
+      "key": "exhibitions:2026-10-12-48",
+      "contentHash": "0133f88b7b5a7f56a0cec3674fee52cc746480e43fc5bec0cb2c99c4fb75bdce"
+    },
+    {
+      "key": "exhibitions:2026-10-17-49",
+      "contentHash": "3fc1b2d0095005d81cb833972f854617cee1c1ecfb4e2c3beeb5d6f4e7934a3c"
+    },
+    {
+      "key": "exhibitions:2026-10-18-50",
+      "contentHash": "883495a3296eea31f9e8033b454a957122f80c3583f1a164729f7d5007badf9c"
+    },
+    {
+      "key": "exhibitions:2026-10-23-51",
+      "contentHash": "598532c034d9d8be4532798ced537926b921b4a05ea53fdb04c93a00268cc0ee"
+    },
+    {
+      "key": "exhibitions:2026-10-24-52",
+      "contentHash": "58caa079a68a24f7c2473d8f8c9316b7423c4d11ea8b23d785d0cad4332d76c4"
+    },
+    {
+      "key": "exhibitions:2026-10-25-53",
+      "contentHash": "cc5c6f3c8b2d62e2017ac42680728844af4cf025728a52efb6b586241dae7372"
+    },
+    {
+      "key": "exhibitions:2026-10-25-54",
+      "contentHash": "6cc576b0fd5ecb5d351d0de8c5417ae4fe8e914dc4a5f39fd7a756404f26d9e5"
+    },
+    {
+      "key": "exhibitions:2026-10-25-55",
+      "contentHash": "3dade7d025393b385aa32919bda6f9657258c3925be612d692b141fcdd68d060"
+    },
+    {
+      "key": "exhibitions:2026-10-26-56",
+      "contentHash": "f17ad5ee6576a1b7c1890eab40e6f986338ac8d2af9cb4d430cf2536b444cc67"
+    },
+    {
+      "key": "exhibitions:2026-10-27-57",
+      "contentHash": "78bc2660fb608199c9768d07b2005dfdf535b0c238c5b24e426e0e0b6f3a815a"
+    },
+    {
+      "key": "exhibitions:2026-10-28-58",
+      "contentHash": "9ce58cb32f8e5f0454ae1d724635faeafd6c8d52348211a5aefe0fc36c804fca"
+    },
+    {
+      "key": "exhibitions:2026-10-30-59",
+      "contentHash": "ff60dde7d79e1f8a352ee81d8ab9c0dededef85217bb11df9bb73027fec5061e"
+    },
+    {
+      "key": "exhibitions:2026-11-06-60",
+      "contentHash": "5d1b47cdbbb9270df773c6f57aecfa2860e620461e98a762cd2ac526722bf293"
+    },
+    {
+      "key": "exhibitions:2026-11-06-61",
+      "contentHash": "717bc68be8b6a1a610df7cc67c9c62fc69b9b903b39658928abf5e74c76c5135"
+    },
+    {
+      "key": "exhibitions:2026-11-08-62",
+      "contentHash": "728f6a22b5d280fd1d74100b77e787808d94bca6e2b4b9bfbd7c7f12747c76c7"
+    },
+    {
+      "key": "exhibitions:2026-11-08-63",
+      "contentHash": "06c55858d64f7fa5702c517d2aa5ec8e04c4b712bcdc5227ca5375c108956165"
+    },
+    {
+      "key": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "contentHash": "b453c9b3dd6a38f2dae9a55b6c01bf4c7b3be747673f7826547e184365a91a6c"
+    },
+    {
+      "key": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "contentHash": "2a6c7b9a9d5439156c03223d210f9a3f9f8a341385ff92c1477d3201dbe9b6dc"
+    },
+    {
+      "key": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "contentHash": "4af07393259b7fce666d888eb883b993cdd74beec81de40e2c6b816651850de0"
+    },
+    {
+      "key": "people:alejandra-cardenas",
+      "contentHash": "4a6f1c812f425aa1fb28142ed89122021607249a931e4ed39988640bbaf32b5d"
+    },
+    {
+      "key": "people:alfredo-jaar",
+      "contentHash": "c9685c1eda52772430d2ee947fa36fc951bdab12cff2a4a0aa54a00b1c21b15c"
+    },
+    {
+      "key": "people:atsushi-wakimoto",
+      "contentHash": "ff5baef32c38a030c66082ccf487572af49facbf54325b8a073657d01a4b7337"
+    },
+    {
+      "key": "people:bagus-pandega",
+      "contentHash": "0273165c701e561b1ca79ecf6fedde0e7689fd4f6358e6d08c0fe6010b12349f"
+    },
+    {
+      "key": "people:carsten-nicolai",
+      "contentHash": "308ae3cd2fd741d355b60a9c973b3a72350d3687066f08852293a5212bcc780e"
+    },
+    {
+      "key": "people:christopher-rueping",
+      "contentHash": "9e1871bb65459d4b4bee33163bdf3eeab460f48d4c1c44d2730765b15e4fa691"
+    },
+    {
+      "key": "people:daito-manabe",
+      "contentHash": "cb1d4cd0de8a09cc651a00f9dbaa36a76101bc16c7bbb6f1a6cced75b43cd42d"
+    },
+    {
+      "key": "people:do-ho-suh",
+      "contentHash": "7692d32ae0c5714dff5d9e17897f8b9b617ee7d8bfab160ed5ee47cf7c360595"
+    },
+    {
+      "key": "people:domestic-data-streamers",
+      "contentHash": "512daf928190d0b48b215a9b8cba0391215abf02a6688b1ead736f390b3e10ad"
+    },
+    {
+      "key": "people:ei-wada",
+      "contentHash": "5eec7155428a1c03c102252baa431ec719a2e7c50d5a6a1289b2a9090ec60716"
+    },
+    {
+      "key": "people:elia-nurvista",
+      "contentHash": "ab8f3433b335cb4a102fa1b1ccfe3ba35217cab7d34a3343adb21d7d0e5a283b"
+    },
+    {
+      "key": "people:elsewhere-in-india",
+      "contentHash": "30a4ade7d59d8b2bcfcf25550cf5cbda01489c96742f7947b9edd63016d812a6"
+    },
+    {
+      "key": "people:evan-ifekoya",
+      "contentHash": "7b4f45868d9607976ed056ca21103ee4102464e21292490529474f01d375d2c5"
+    },
+    {
+      "key": "people:evelyn-glennie",
+      "contentHash": "1b1e75348708b7b0f3ac54c6cf48bab974772f4c4ea19befcfa2737e8e7634cb"
+    },
+    {
+      "key": "people:fuse-rintaro",
+      "contentHash": "1772db6ad1c876153ed770b6aa91c58cf2b8d4cf29db7339505c64bc3bfd354a"
+    },
+    {
+      "key": "people:giacomo-lepri",
+      "contentHash": "84e3b979645a66537df4001f4f203b53a4aef807aa14008e1b87313a82f18d9e"
+    },
+    {
+      "key": "people:harry-yeff-reeps100-trung-bao",
+      "contentHash": "3ca3a1bd30184d7ade756b74a045e96d32e386a09447a34fc9a65a1ccf921a73"
+    },
+    {
+      "key": "people:henry-moore",
+      "contentHash": "a99a5fe77acb0d463756cf4d1dfe7be2bd191269981a2b10f47223e1c301ccd1"
+    },
+    {
+      "key": "people:holly-herndon",
+      "contentHash": "6f52c7c678db57658cbd1f7729d8ecefe743a4239aaa460358bc0250105dc614"
+    },
+    {
+      "key": "people:ila-monom",
+      "contentHash": "a84c300469afd042838f8ad717ec9468e9fd7f87f6e3cbec838b5f31aeba7e1f"
+    },
+    {
+      "key": "people:intelligent-instruments-lab",
+      "contentHash": "e333e4b4cf9b3819877771c7f524b26f9de37fcc4e0d50e9e2febad40851d3f7"
+    },
+    {
+      "key": "people:itti-haioka",
+      "contentHash": "1d945fd7a3376dd8a1205a2464e344d46c9c8e77d106b7e27f1d60211b2ffd45"
+    },
+    {
+      "key": "people:jacob-silkin",
+      "contentHash": "8fdbcdaf78ce87c26985763269f4170265dfd7093e3b013d2c7444cfe9b2832e"
+    },
+    {
+      "key": "people:jan-st-werner",
+      "contentHash": "6817aca4f3522926631f8f609b2fc24f3d931ae1e57e8ceed757a88d5ea5dbe0"
+    },
+    {
+      "key": "people:julianknxx",
+      "contentHash": "25e54a37ab0958257e4693a7f32e417b468875227f7ae4a7e62ccbd6f8eff5a2"
+    },
+    {
+      "key": "people:kataoka-mami",
+      "contentHash": "76448b567702154fc9307903d5c1ee48bdb063322657f87e358a678c4c5bd5a7"
+    },
+    {
+      "key": "people:keiichi-sato",
+      "contentHash": "ea591881ac131602a9bb99dcb36e7ac3ffece527bf8ea4e175b9a36bc57c2d64"
+    },
+    {
+      "key": "people:keiichiro-terae",
+      "contentHash": "0b41f3a58f7fcf341e2490170aa687a593c917f5e5fbe2800be7d622ca012635"
+    },
+    {
+      "key": "people:kinda-studios",
+      "contentHash": "318b1d40617fe8f497cd08fc8858a4fbbe1a5530e27ddea4db008a68e1304cca"
+    },
+    {
+      "key": "people:luke-kemp",
+      "contentHash": "0476ac238cb635ec8901cc5608b9efb4020109899f1d1f11bbb93a7ad4a621c9"
+    },
+    {
+      "key": "people:lynn-hershman-leeson",
+      "contentHash": "711bc3f252047c5b9dd55632a3c836d379985261410cf1c98be4897485022673"
+    },
+    {
+      "key": "people:marie-mcpartlin",
+      "contentHash": "7e94b7159ce885ed8f8babb0e908e0b79903ff97f8166610621419cbfe229f77"
+    },
+    {
+      "key": "people:marina-abramovic",
+      "contentHash": "78a3256ae7b7038aa9dda5ae05153bb00371643dc83436ca09195e1280274a7e"
+    },
+    {
+      "key": "people:max-cooper",
+      "contentHash": "70e0199f1508a664a00e7aa6804deffff6dfbec17711b5b99e06110ad7a6a30c"
+    },
+    {
+      "key": "people:mel-chin",
+      "contentHash": "b5efc04d78f6e70565ef908d5a4a90545582dea536d1bf2a2398155fabfc1c29"
+    },
+    {
+      "key": "people:miet-warlop",
+      "contentHash": "274908ea5213974f5081bf957261b58061b2aea957da1c37b039b8b2a49d5af9"
+    },
+    {
+      "key": "people:mikami-seiko",
+      "contentHash": "3bdf2e73bdcbc4db41756dc88c244d3f0e4c7a7bff09aa38290fc780f2f51e16"
+    },
+    {
+      "key": "people:miyu-hosoi",
+      "contentHash": "4bc6fad76a2ee65d4ec6e3be394424434d95630ebdea51eb531f81bcfd71eb0d"
+    },
+    {
+      "key": "people:mutek-sarah-mackenzie",
+      "contentHash": "d0f27d780045d59912ee358ff7f15b8c8f75889a5793529f6235b1152f67c792"
+    },
+    {
+      "key": "people:nam-june-paik",
+      "contentHash": "17b223615a71b0aee67f0571d2962c1f0d30932b45e7dfb2887d7b9d31f1add2"
+    },
+    {
+      "key": "people:nawa-kohei",
+      "contentHash": "fcdae455b3ba6fdbe2e1830fae2eb6b43a17b163f9e4b51053867a4c7dccda94"
+    },
+    {
+      "key": "people:nexus-studios",
+      "contentHash": "8a11bd7d2fd93cf39536a423ba75d5a1b6c339fae43462a875b1395c3a79149e"
+    },
+    {
+      "key": "people:nicola-privato",
+      "contentHash": "f7a5ad7c1ddbe62b53281f7fc46e61347f7fdcf9ea86065cd941cc657280b629"
+    },
+    {
+      "key": "people:nicole-l-huillier",
+      "contentHash": "8f7203e4e89735cfd484231ba0e34d5ca85b5685ed720c107febde5106dfaf45"
+    },
+    {
+      "key": "people:noe-aoki",
+      "contentHash": "3d0e3c68e30ff554cb31261d2586008abc1ede7fe52299d035df189412703260"
+    },
+    {
+      "key": "people:orm-project",
+      "contentHash": "182db51975ff9fd7e70b2e163aa65f0e2de393561ad4449e8db7a4ff3976fb7f"
+    },
+    {
+      "key": "people:patty-ayukawa",
+      "contentHash": "f62b4b6bfa18f71141d45b945efe4bf33774d82d5d57e8699776351c75ddbc16"
+    },
+    {
+      "key": "people:pixie-dust-technologies",
+      "contentHash": "44fc429a66f985ff8a3f1e98d6c857b620f320049299091b0b08b977ff924476"
+    },
+    {
+      "key": "people:raymond-antrobus",
+      "contentHash": "c332c5c93ecfb1c661e7911a4c2d72893590937326e2b4fff5cdd9f825eac51c"
+    },
+    {
+      "key": "people:rivca-burns",
+      "contentHash": "2f5f68927f60ca368e1ea2fbe39b2d0963894129a308b492fed5a9ab306f1018"
+    },
+    {
+      "key": "people:ruangrupa",
+      "contentHash": "3e87dae9cdce118241053a6044d88e6176eaac7390494da5061ef811d0cd70fd"
+    },
+    {
+      "key": "people:ryuichi-sakamoto",
+      "contentHash": "9a967767791df37bce58f73555fe97401d0ce5ae80c6bab3d30f75171ffd6fb9"
+    },
+    {
+      "key": "people:saeborg",
+      "contentHash": "fa1cf96fa1f016a0571c69889b7428944c35e31099f30b97fa37878b576727da"
+    },
+    {
+      "key": "people:shiga-lieko",
+      "contentHash": "4a82132111284f11e81e274b14713c4b6a0c434b30027fc34a066974eee63a5f"
+    },
+    {
+      "key": "people:takagi-yuriko",
+      "contentHash": "67ee76f8efe2bd5fff0097b9d3dbc7919c2b0fad4e5a02f26a12fdf7e84f3afb"
+    },
+    {
+      "key": "people:tanaka-shintaro",
+      "contentHash": "d4cc6c233fe11dfcb301be229341db681bac7da69ef4dfadc4a850aae8e6dbbe"
+    },
+    {
+      "key": "people:tatiana-heuman",
+      "contentHash": "e84641d7f0fa466cf6589476c47f45da7f40dfd0cb0569f9c37f55ce3443f667"
+    },
+    {
+      "key": "people:temporary-pleasure",
+      "contentHash": "32ad1bf728b3860c7e7f189e975728b2c7196089a63f1692ea597aa10fcef40c"
+    },
+    {
+      "key": "people:theaster-gates",
+      "contentHash": "5786d6d8e73f70d04a6af8308a5aec44f9316ecb6a7950ff7e845b97b10ea1b2"
+    },
+    {
+      "key": "people:trans-voices",
+      "contentHash": "406f69c933c9ba19b1624b5ed2c2f3ed136a76ad7f6e735cdcc4ccec3bb1edea"
+    },
+    {
+      "key": "people:ueda-kana",
+      "contentHash": "59d91dc0a3711c156335fd65fffb345084bad74e556a3e9eafd568e85609ec54"
+    },
+    {
+      "key": "people:umeda-tetsuya",
+      "contentHash": "74a8c235f8a6fa74a72406a528b32c37035bb08b0b7d3a399daf32214dcbeb6a"
+    },
+    {
+      "key": "people:wolfgang-tillmans",
+      "contentHash": "c0222cfd7a8f9d8490cf28711d0afa669577f1ea04fe41ee661cb9ce8bbd4204"
+    },
+    {
+      "key": "people:wu-xiazhi",
+      "contentHash": "3a04350e74ae70a32e5d225a7e0cf406fb1b6a324d66e208bec488d1e7b9f75a"
+    },
+    {
+      "key": "people:x-zhu-nowell",
+      "contentHash": "0751d36d637fdda90497b64f213713d7c7ed6447d6f8ab40a300066e2127aad5"
+    },
+    {
+      "key": "people:yamashiro-chikako",
+      "contentHash": "ade81ac34c65fe4d49dc938c118a3d1baba261879170c6e9475abfcdd455fab8"
+    },
+    {
+      "key": "people:yang02",
+      "contentHash": "d34e4facd04a86abe7337bb1389c8011969ad1c1bf7468782328365c450be9da"
+    },
+    {
+      "key": "people:young-boy-dance-group",
+      "contentHash": "82bdf512271ba69b94fad361cc29997cb6799ae4c4b6c05092e6801e3ae1ab28"
+    },
+    {
+      "key": "people:yuan-fangzhou",
+      "contentHash": "eca1e398d325871e0ff7c9c0d49201d7f53a3098dc692a41a3c76c14fe474f32"
+    },
+    {
+      "key": "people:yuki-anai",
+      "contentHash": "93487f5d23541c357f003907aed8a4b91ad28f69b662494a4c3bd70693bea168"
+    },
+    {
+      "key": "people:yukinori-yanagi",
+      "contentHash": "79645eb21334ea84fda674b0ec122e3fffb3bd042d36c3b46b4b30373611ddf1"
+    },
+    {
+      "key": "people:yuri-suzuki",
+      "contentHash": "e55ca8bba963248f8857ba6cf22267e1abe4becc80caf32eff6147b2a32450e9"
+    },
+    {
+      "key": "people:yurie-nagashima",
+      "contentHash": "5b566b94287cc99918b040e87ca473b1ce8ecbd995135f39d729961c53fbeade"
+    },
+    {
+      "key": "people:zadok-ben-david",
+      "contentHash": "ae91b6562000743de999288d123f3b4f75c43c940fc1a2597b46288b33892ab4"
+    },
+    {
+      "key": "institutions:2121-design-sight",
+      "contentHash": "bf44924ef8ebdb2d66b5c7273025a6953323b0cdb7a7cb9df35571f1f7f6dfe1"
+    },
+    {
+      "key": "institutions:acc",
+      "contentHash": "a2ff6f88ce6734325f08d1fcadd0e25ad3bd7e3b88c3b18af50fcd93454f75af"
+    },
+    {
+      "key": "institutions:art-fair-tokyo",
+      "contentHash": "db643ca8bccf6329a02c1abd55037a6f9e4e54c70e091efad7d00ad0c86972bd"
+    },
+    {
+      "key": "institutions:art-week-tokyo",
+      "contentHash": "5d360c7c3460deec63b3223c9672353739542b7d45cbaecb73e8798df5ce39d3"
+    },
+    {
+      "key": "institutions:artizon-museum",
+      "contentHash": "5e6649d22cad8d343b9c82a4e13afd3e90a0714da515325eab9b29b95107eb19"
+    },
+    {
+      "key": "institutions:arts-council-tokyo",
+      "contentHash": "f94248747b0e6b38ac7f3e7e2ff55099d60b91f3b7b9950bec5c5b63e4a233e9"
+    },
+    {
+      "key": "institutions:barbican-centre",
+      "contentHash": "c7a07faa8da3c0a774da4f9e0a25f1dffd96724c4dd3202ea725f79029094f73"
+    },
+    {
+      "key": "institutions:biennale-jatim",
+      "contentHash": "6007d27136a9c0a8f2ff010f33c63b8c6655b54ad7062e4b293d61ccdb5566bf"
+    },
+    {
+      "key": "institutions:british-council",
+      "contentHash": "9989ee3967e35013e234f28028bdedbd89f1ac0e6ce09eb69e02fb64fff65d80"
+    },
+    {
+      "key": "institutions:bug",
+      "contentHash": "3df66d2c0e268f3f341849ce3818095ca0727331c69f8ddb33399f0df41f7f04"
+    },
+    {
+      "key": "institutions:busan-biennale",
+      "contentHash": "00580b572965a7223ad8ed376a40070fddc754bb61163acfa0333036c670e6c9"
+    },
+    {
+      "key": "institutions:cisternerne",
+      "contentHash": "3cce658c38734a8d0e3ea5530f8cc30919bbb9c1aaaea12f50b56bbed552198e"
+    },
+    {
+      "key": "institutions:co-berlin",
+      "contentHash": "d880cc148267a7160def1bc490c4af6cc40d54a69e97f66f5779b7fdb47524a2"
+    },
+    {
+      "key": "institutions:culture-station-seoul-284",
+      "contentHash": "053e57a34a1bf5de92fc977160ddb42a2a50fa76225e3d7ccf63974c56d6b7de"
+    },
+    {
+      "key": "institutions:curation-fair",
+      "contentHash": "ecc70d7464dc15673ee8b8cef17cf9ece3977c1162b7ccd7578c6c2e8a668a9b"
+    },
+    {
+      "key": "institutions:design-museum-london",
+      "contentHash": "30d5f302b9defeccd2bd5c359a015fe2ba83833f7386d570d9d1f20b719e86fd"
+    },
+    {
+      "key": "institutions:echigo-tsumari",
+      "contentHash": "9a7d82635aade06ff05d1fc8bc8120c0b6d629ba4b2854123c9e8700a5ce9893"
+    },
+    {
+      "key": "institutions:factory-international",
+      "contentHash": "bfbfc0c7e78ec7177243ff10aa74e584f8dee11b2a9dcb246623f3d681b27c29"
+    },
+    {
+      "key": "institutions:fukuoka-asian-art-museum",
+      "contentHash": "645efb2f7d86f89b8fca465b2fd92a1212e739c3715a65ea33cd32dc7065051a"
+    },
+    {
+      "key": "institutions:gallery-soap",
+      "contentHash": "2af9085255191bf33875ed0304101c1c193dca694a6e345408819dca8e4bfe28"
+    },
+    {
+      "key": "institutions:gero-art-discovery",
+      "contentHash": "7d2b1386ae481c5e2c235a648d27c5f6630b21a9d693b6155f3121514b38f817"
+    },
+    {
+      "key": "institutions:gwangju-biennale",
+      "contentHash": "62598f60e4790267169de0b5c6c8fcc95f2e499574625e55ca3f02c77aec6822"
+    },
+    {
+      "key": "institutions:gyre-gallery",
+      "contentHash": "9c92af2a9d5409c6704298058c05dd59eb35daad13e08b11342f37ae012a7719"
+    },
+    {
+      "key": "institutions:hamburger-bahnhof",
+      "contentHash": "e3d2408a49772cf203e31ce1316728f389454fe05b76155bf4b2c689c1d503ff"
+    },
+    {
+      "key": "institutions:hinodecho-waikiki-studio",
+      "contentHash": "5801e0a3d187f25c3714654b6aa0ea21da36d13a6f4687d66330ef726030837f"
+    },
+    {
+      "key": "institutions:hiroshima-art-prize",
+      "contentHash": "76ff95a5de0f77ea2db0fdad57de5ee4b8ea7b521b501203fa73703a3d3e3598"
+    },
+    {
+      "key": "institutions:hiroshima-moca",
+      "contentHash": "5ede4e079bd820e7c8eb477a17eeb280005764633a185e24dbe96ba19f2de913"
+    },
+    {
+      "key": "institutions:hosoo-gallery",
+      "contentHash": "9d99c2334384deea7611b8770a5da85d4e8c87a95ac21560e9026890a413ce77"
+    },
+    {
+      "key": "institutions:iaf-shop",
+      "contentHash": "2294a496e2fd766e28b25cda82d054e9a4ef45abf5d4905948f077b127228d43"
+    },
+    {
+      "key": "institutions:icc",
+      "contentHash": "69f88a0c91bdec5159f995b6f0964f826892d66709b24f1e3ff4bf8582206ece"
+    },
+    {
+      "key": "institutions:institute-of-contemporary-arts-ica",
+      "contentHash": "6f0a3867b282c6cffdecdcbf99787f77219eac15d4c3744ebda8c8a352b4b4b5"
+    },
+    {
+      "key": "institutions:international-house-of-japan",
+      "contentHash": "93e831536076328b0396328acc542cfc1e2c665ffe30c9424c8804bda7ca5829"
+    },
+    {
+      "key": "institutions:jewish-museum-berlin",
+      "contentHash": "b2e4ed92ceee5f851790a2cd6bb14d353bbfda0df95c2a4e24742b9d51ecdd0f"
+    },
+    {
+      "key": "institutions:kitakyushu-international-biennial",
+      "contentHash": "71203264fbeeb15c9e9f7c84e3c93a39b322ac5a6c0f2d224ca4d8dbadec9905"
+    },
+    {
+      "key": "institutions:kw",
+      "contentHash": "1623ce71fa4cfdc22a0196c2e19177719170a687188f0e5cdedd57b7b5bb2f2c"
+    },
+    {
+      "key": "institutions:leeum",
+      "contentHash": "adcd0816f5659896d0cfef7945ff11755f63e38903f0c3b7fb0c5a5a1d0b3f22"
+    },
+    {
+      "key": "institutions:m-plus",
+      "contentHash": "70a46928cc0a88e74dbb40d25b61dc74a1347ab5a6ef8080530e347627baf6e6"
+    },
+    {
+      "key": "institutions:meet-your-art",
+      "contentHash": "f1b2fab833924f55674761e4d4c955ded789c38edcfb80efaeed4f5e7b9c481c"
+    },
+    {
+      "key": "institutions:midori-so",
+      "contentHash": "a664e3de32dc3f22cc1f5a9b71d7a503c01cc904444612c6e72a082056dcb291"
+    },
+    {
+      "key": "institutions:mmca",
+      "contentHash": "890e8a2fa13c5a6f0ee3b780a2ece409d5c94b96f1a3326126f9d53bdb4fc1ad"
+    },
+    {
+      "key": "institutions:mon-takanawa-the-museum-of-narratives",
+      "contentHash": "7230545cd974ec1be4bc86738bddb40a31bfc48738197818b05855973fb5dfdd"
+    },
+    {
+      "key": "institutions:mori-art-museum",
+      "contentHash": "2c15c980d6cd6dee5f33e22907a8c22f428d73071cd06e073a24b4abb2744010"
+    },
+    {
+      "key": "institutions:mot",
+      "contentHash": "2dcb0f19e5c191f6b5b0e2ec14600c5455a78dc915300fdf4461c42a8ae22f22"
+    },
+    {
+      "key": "institutions:national-art-center-tokyo",
+      "contentHash": "0491b37472b4a69370c9ced94d11e164820630db31a22cf34e5a157dd7ade869"
+    },
+    {
+      "key": "institutions:ota-fine-arts",
+      "contentHash": "5440d91017de8f2a8bf76088a1dc9ec3c64d3f853f3ee3ccdabce976a3e6160c"
+    },
+    {
+      "key": "institutions:rencontres-arles",
+      "contentHash": "610c73169e1248fe748098daf9397bd9d7260b7fa380270b2cf1a47b3df694dd"
+    },
+    {
+      "key": "institutions:schaubuehne",
+      "contentHash": "51302836eb247d18cc483e29f26a536494f42f5301417fe7e92797761f1558c4"
+    },
+    {
+      "key": "institutions:seeen",
+      "contentHash": "97b7988b42fadbbf9d25206a6c3b2adbe7c2fbb9d946582e7b990d326f50ca9f"
+    },
+    {
+      "key": "institutions:sema",
+      "contentHash": "cc1a638904bd504fc7bf64f29aab65d496a77f2f9a97e3ec8b4f2b4129f19933"
+    },
+    {
+      "key": "institutions:setagaya-art-museum",
+      "contentHash": "ac85b167ab57a8c57a38b35c8ca4987890dae580bbec03ac3d61f8a7394e8c26"
+    },
+    {
+      "key": "institutions:shibuya-hikarie",
+      "contentHash": "dfa452bfab40d0ecaca3f49cb85d27db8a9a4160ae333e363272450d589836aa"
+    },
+    {
+      "key": "institutions:singapore-art-museum",
+      "contentHash": "616f0f08d8c86551a4c4220e6d6a10108d4f198abe6f98788293b2cca150c2a4"
+    },
+    {
+      "key": "institutions:skwat",
+      "contentHash": "0f165e93d559980c10e2971158f900ad7a0cad75d94d21adfcf56c168dc09187"
+    },
+    {
+      "key": "institutions:somerset-house-studios",
+      "contentHash": "b50212837b0a04087baf4e60e209cfcb0f63d107ceb15653deea2606d8daf302"
+    },
+    {
+      "key": "institutions:space-un",
+      "contentHash": "9113e025ddfe7b47cfc0be2cd5f7c1938adf9a68544edebcdf8e394c31d65c53"
+    },
+    {
+      "key": "institutions:syndicate-takamatsu",
+      "contentHash": "2bc5ccb7175a2c78649a58fd1e89daa8c1174b5432701748572707b83438eba8"
+    },
+    {
+      "key": "institutions:thailand-biennale",
+      "contentHash": "cc8755b39680637d7a38f8cb7d82fe31b8ca9ffd71a9a969e3c3508313325de3"
+    },
+    {
+      "key": "institutions:tokas",
+      "contentHash": "f69bf24f0c43cc0f2e1a5334dc13e6751ad467860eef92e750c168c4243e3317"
+    },
+    {
+      "key": "institutions:tokyo-bunka-kaikan",
+      "contentHash": "4dfb6a37fd19b0a17110a71750ced8f2c05f683d5caa435cc579f03b2e5094fb"
+    },
+    {
+      "key": "institutions:tokyo-gendai",
+      "contentHash": "e6b26d0b18dc6e57fe6be3fe9bf481eb9999138eb67a593ae542de886a21140d"
+    },
+    {
+      "key": "institutions:tokyo-metropolitan-theatre",
+      "contentHash": "cc6bf78c3e00285e155351f0c7462f147e3ef2873a00a469da7ac8873c869dab"
+    },
+    {
+      "key": "institutions:tokyo-opera-city",
+      "contentHash": "d83991504f80e62ed8a1d1d9b3fcf87e536bed2d6cf885db00fe7dfdb388dc9f"
+    },
+    {
+      "key": "institutions:tokyo-photographic-art-museum",
+      "contentHash": "c807a870535d9af3d38b19f94b40c4befbc266442ec6190d9745c203224cba58"
+    },
+    {
+      "key": "institutions:victoria-and-albert-museum",
+      "contentHash": "8f4d236789168e42df8541bc4e49e378fd74f61ec9d3446d15a4613a189dc9a6"
+    },
+    {
+      "key": "institutions:waseda-library",
+      "contentHash": "9da4b81282ced8db4d7d01b053f95cd45c9cb8c08fb95cec598932f0f140feb7"
+    },
+    {
+      "key": "institutions:watari-um-the-watari-museum-of-contemporary-art",
+      "contentHash": "6e75b2dcb09fed75285548240f9cb39d59dec4d48ec334b5ea143fabc40f2c4a"
+    },
+    {
+      "key": "institutions:what-museum",
+      "contentHash": "a873b3e6d485467b9eb27d4dc9ee9c1b91f80fc93110cf750f8e63b1fc5a3ef0"
+    },
+    {
+      "key": "institutions:yokohama-museum",
+      "contentHash": "39542a9d4fdf738e5ed6b1de926e8f3f914af905bdbf5296313d1131840588ca"
+    },
+    {
+      "key": "concepts:artist-residency",
+      "contentHash": "9edb4133d4b74bf97486ccbdee25461fdc06431222306eb327b5561101e621e5"
+    },
+    {
+      "key": "concepts:care-and-design",
+      "contentHash": "1a392f51c63b42fffbf3a8679a181990788095ed74ecc22a08ae8fb55c3bf59d"
+    },
+    {
+      "key": "concepts:collective-practices",
+      "contentHash": "a2e52b89e3265c28d725bfe01258a0eae3df630e552e0879e0c0ab3b51433646"
+    },
+    {
+      "key": "concepts:curatorial-practices",
+      "contentHash": "425d914886d6e9867c4ae0f22afc1074c2a7fcb9f59cd628311ebd7f5eae91c3"
+    },
+    {
+      "key": "concepts:ecology",
+      "contentHash": "2006f38f53f5846d1499c29f20d4060950804edb0fc516be6ad8c320b5cfa1a6"
+    },
+    {
+      "key": "concepts:identity-and-representation",
+      "contentHash": "42eaa99f4e3396c7ccb62ef403c311a58be288ce46e7668c0a7a7aaf67067ec1"
+    },
+    {
+      "key": "concepts:institutional-studies",
+      "contentHash": "752b052de249f1fe8b3c8b7ba299d9db01e1e69a77cd51bac81d63d16d6fe52b"
+    },
+    {
+      "key": "concepts:material-and-memory",
+      "contentHash": "533aa9bd962dbf93ff08997901bc16803c42b3a89e0cafb3cd11f3f8ad82c21b"
+    },
+    {
+      "key": "concepts:memory-and-place",
+      "contentHash": "12649f53d45e998e0bec1ad6d610c505ebc9df243874fdce4a89b5643e2bd89c"
+    },
+    {
+      "key": "concepts:moving-image",
+      "contentHash": "4b6d2fc79386528f8362cbc233b44c94cf8cccf98e52a7d0dd3d22cb32b76c7b"
+    },
+    {
+      "key": "concepts:performance",
+      "contentHash": "bcb58141fc9857a236819689d883b354265dbdcb92b647661417db2daf874d37"
+    },
+    {
+      "key": "concepts:photography",
+      "contentHash": "0dfb16cbd6e852b7bb1edc16a0cb79116cd9ed8518775657e8bc49a492100f18"
+    },
+    {
+      "key": "concepts:politics-of-representation",
+      "contentHash": "8d343271da14e6981b7711b67d147b1823d65b5d5249d129c7bbb5c4c836e853"
+    },
+    {
+      "key": "concepts:postwar-art",
+      "contentHash": "059da7c890f024b619f555d0d6e3347f59b8c6d94d58dec4bf6023642fcd0f83"
+    },
+    {
+      "key": "concepts:printmaking",
+      "contentHash": "d5c9f2473614c5eaccef29057ebdaf26ff737e804dd84fe65913b3ecff5fdfe6"
+    },
+    {
+      "key": "concepts:site-specificity",
+      "contentHash": "fb174d3e9da3270ebf79ce346eeae68d32efc536084cf7fd2e372e5dd07c1bb3"
+    },
+    {
+      "key": "concepts:sound-and-technology",
+      "contentHash": "abff1b824590e2a336ece9186df60ad42b80973f2bbada1f0458641dca60b1dd"
+    },
+    {
+      "key": "concepts:technology-and-body",
+      "contentHash": "a950e5612cf0d43c50663c152a0cf5e21fb2118717acfc77f68bf6261a514c4e"
+    },
+    {
+      "key": "concepts:transcultural-studies",
+      "contentHash": "8d0fd942c19ab450c229474278a9da850aa1b1d18cb3713da94914d3818ed755"
+    }
+  ],
+  "relations": [
+    {
+      "source": "exhibitions:2026-01-07-02",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-07-02"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-07-02",
+      "target": "institutions:hosoo-gallery",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-07-02"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-07-02",
+      "target": "people:carsten-nicolai",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-07-02"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-08-03",
+      "target": "concepts:memory-and-place",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-08-03"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-08-03",
+      "target": "institutions:artizon-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-08-03"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-08-03",
+      "target": "people:shiga-lieko",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-08-03"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-08-03",
+      "target": "people:yamashiro-chikako",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-08-03"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-11-04",
+      "target": "concepts:technology-and-body",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-11-04"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-11-04",
+      "target": "institutions:icc",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-11-04"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-11-04",
+      "target": "people:mikami-seiko",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-11-04"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-24-05",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-24-05"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-24-05",
+      "target": "institutions:curation-fair",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-24-05"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-24-06",
+      "target": "concepts:identity-and-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-24-06"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-01-24-06",
+      "target": "institutions:ota-fine-arts",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-01-24-06"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-01-07",
+      "target": "concepts:photography",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-01-07"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-01-07",
+      "target": "institutions:skwat",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-01-07"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-01-07",
+      "target": "people:wolfgang-tillmans",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-01-07"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-08-08",
+      "target": "concepts:moving-image",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-08-08"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-08-08",
+      "target": "institutions:tokyo-photographic-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-08-08"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-13-09",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-13-09"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-13-09",
+      "target": "institutions:tokyo-metropolitan-theatre",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-13-09"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-13-09",
+      "target": "people:saeborg",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-13-09"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-14-10",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-14-10"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-02-14-10",
+      "target": "institutions:yokohama-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-02-14-10"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-04-11",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-04-11"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-04-11",
+      "target": "institutions:national-art-center-tokyo",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-04-11"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-04-12",
+      "target": "concepts:memory-and-place",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-04-12"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-04-12",
+      "target": "institutions:mot",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-04-12"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-04-12",
+      "target": "people:umeda-tetsuya",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-04-12"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-04-12",
+      "target": "people:wu-xiazhi",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-04-12"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-14-13",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-14-13"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-14-13",
+      "target": "institutions:bug",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-14-13"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-14-13",
+      "target": "people:yang02",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-14-13"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-14-14",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-14-14"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-14-14",
+      "target": "institutions:art-fair-tokyo",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-14-14"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-14-15",
+      "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-14-15"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-14-15",
+      "target": "institutions:tokyo-opera-city",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-14-15"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-14-15",
+      "target": "people:alfredo-jaar",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-14-15"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-24-16",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-24-16"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-24-16",
+      "target": "institutions:cisternerne",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-24-16"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-24-16",
+      "target": "people:marina-abramovic",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-24-16"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-25-17",
+      "target": "concepts:photography",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-25-17"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-25-17",
+      "target": "institutions:co-berlin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-25-17"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-25-18",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-25-18"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-25-18",
+      "target": "institutions:schaubuehne",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-25-18"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-26-19",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-26-19"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-26-19",
+      "target": "institutions:kw",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-26-19"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-27-20",
+      "target": "concepts:memory-and-place",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-27-20"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-27-20",
+      "target": "institutions:jewish-museum-berlin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-27-20"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-27-21",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-27-21"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-27-21",
+      "target": "institutions:hamburger-bahnhof",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-27-21"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-27-22",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-27-22"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-03-27-22",
+      "target": "people:miet-warlop",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-03-27-22"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-19-23",
+      "target": "concepts:ecology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-19-23"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-19-23",
+      "target": "institutions:gyre-gallery",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-19-23"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-19-23",
+      "target": "people:zadok-ben-david",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-19-23"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-24-24",
+      "target": "concepts:site-specificity",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-24-24"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-24-24",
+      "target": "institutions:thailand-biennale",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-24-24"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-26-25",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-26-25"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-26-25",
+      "target": "institutions:singapore-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-26-25"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-26-26",
+      "target": "concepts:ecology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-26-26"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-26-26",
+      "target": "institutions:singapore-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-26-26"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-26-26",
+      "target": "people:bagus-pandega",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-26-26"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-04-26-26",
+      "target": "people:elia-nurvista",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-04-26-26"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-06-27",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-06-27"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-06-27",
+      "target": "institutions:mot",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-06-27"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-16-28",
+      "target": "concepts:collective-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-16-28"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-16-28",
+      "target": "institutions:midori-so",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-16-28"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-16-28",
+      "target": "people:ruangrupa",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-16-28"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-23-29",
+      "target": "concepts:artist-residency",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-23-29"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-23-29",
+      "target": "institutions:tokas",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-23-29"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-23-30",
+      "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-23-30"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-23-30",
+      "target": "institutions:bug",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-23-30"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-29-31",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-29-31"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-29-31",
+      "target": "institutions:international-house-of-japan",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-29-31"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-05-29-31",
+      "target": "people:kataoka-mami",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-05-29-31"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-07-32",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-07-32"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-07-32",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-07-32"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-07-32",
+      "target": "institutions:hinodecho-waikiki-studio",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-07-32"
+        },
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-07-32"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-07-32",
+      "target": "people:fuse-rintaro",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-07-32"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-13-33",
+      "target": "concepts:material-and-memory",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-13-33"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-13-33",
+      "target": "concepts:site-specificity",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-13-33"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-13-33",
+      "target": "institutions:hosoo-gallery",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-13-33"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-13-33",
+      "target": "institutions:mori-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-13-33"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-13-33",
+      "target": "people:theaster-gates",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-13-33"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-27-34",
+      "target": "concepts:postwar-art",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-27-34"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-27-34",
+      "target": "institutions:setagaya-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-27-34"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-06-27-34",
+      "target": "people:tanaka-shintaro",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-06-27-34"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-05-35",
+      "target": "concepts:care-and-design",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-05-35"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-05-35",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-05-35"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-05-35",
+      "target": "institutions:2121-design-sight",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-05-35"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-05-35",
+      "target": "institutions:design-museum-london",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-05-35"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-05-35",
+      "target": "institutions:victoria-and-albert-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-05-35"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-36",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-36"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-36",
+      "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-36"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-36",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-36"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-36",
+      "target": "institutions:fukuoka-asian-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-36"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-36",
+      "target": "institutions:m-plus",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-36"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-36",
+      "target": "people:yukinori-yanagi",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-36"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "concepts:artist-residency",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "concepts:collective-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "institutions:biennale-jatim",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "institutions:fukuoka-asian-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "institutions:gallery-soap",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "institutions:iaf-shop",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "institutions:kitakyushu-international-biennial",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "institutions:syndicate-takamatsu",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "people:keiichi-sato",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "people:keiichiro-terae",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-12-37",
+      "target": "people:orm-project",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-12-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "concepts:ecology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "institutions:hiroshima-art-prize",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "institutions:hiroshima-moca",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "people:alfredo-jaar",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "people:henry-moore",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "people:mel-chin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-07-31-37",
+      "target": "people:noe-aoki",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-07-31-37"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-02-38",
+      "target": "concepts:artist-residency",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-02-38"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-02-38",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-02-38"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-02-38",
+      "target": "institutions:tokas",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-02-38"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-12-39",
+      "target": "concepts:identity-and-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-12-39"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-12-39",
+      "target": "concepts:photography",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-12-39"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-12-39",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-12-39"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-12-39",
+      "target": "institutions:rencontres-arles",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-12-39"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-12-39",
+      "target": "institutions:shibuya-hikarie",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-12-39"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-12-39",
+      "target": "people:yurie-nagashima",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-12-39"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-13-40",
+      "target": "concepts:photography",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-13-40"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-08-13-40",
+      "target": "institutions:tokyo-photographic-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-08-13-40"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-09-10-41",
+      "target": "concepts:site-specificity",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-09-10-41"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-09-10-41",
+      "target": "institutions:echigo-tsumari",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-09-10-41"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-09-10-42",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-09-10-42"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-09-10-42",
+      "target": "institutions:tokyo-gendai",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-09-10-42"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-09-12-43",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-09-12-43"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-09-12-43",
+      "target": "institutions:waseda-library",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-09-12-43"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-04-44",
+      "target": "concepts:technology-and-body",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-04-44"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-04-44",
+      "target": "institutions:icc",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-04-44"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-05-45",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-05-45"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-05-45",
+      "target": "people:yuan-fangzhou",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-05-45"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-09-46",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-09-46"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-09-46",
+      "target": "institutions:meet-your-art",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-09-46"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-09-47",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-09-47"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-09-47",
+      "target": "institutions:what-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-09-47"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-12-48",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-12-48"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-12-48",
+      "target": "institutions:tokyo-photographic-art-museum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-12-48"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-17-49",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-17-49"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-17-49",
+      "target": "institutions:tokyo-metropolitan-theatre",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-17-49"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-17-49",
+      "target": "people:christopher-rueping",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-17-49"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-18-50",
+      "target": "concepts:site-specificity",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-18-50"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-18-50",
+      "target": "institutions:gero-art-discovery",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-18-50"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-23-51",
+      "target": "concepts:printmaking",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-23-51"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-23-51",
+      "target": "people:ueda-kana",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-23-51"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-24-52",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-24-52"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-24-52",
+      "target": "people:young-boy-dance-group",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-24-52"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-25-53",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-25-53"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-25-53",
+      "target": "institutions:leeum",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-25-53"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-25-54",
+      "target": "concepts:technology-and-body",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-25-54"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-25-54",
+      "target": "institutions:sema",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-25-54"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-25-54",
+      "target": "people:lynn-hershman-leeson",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-25-54"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-25-55",
+      "target": "concepts:care-and-design",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-25-55"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-25-55",
+      "target": "institutions:culture-station-seoul-284",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-25-55"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-26-56",
+      "target": "concepts:memory-and-place",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-26-56"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-26-56",
+      "target": "institutions:mmca",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-26-56"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-26-56",
+      "target": "people:do-ho-suh",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-26-56"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "institutions:gwangju-biennale",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-28-58",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-28-58"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-28-58",
+      "target": "institutions:acc",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-28-58"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:site-specificity",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "institutions:busan-biennale",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-30-59"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-06-60",
+      "target": "concepts:photography",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-06-60"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-06-60",
+      "target": "institutions:gyre-gallery",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-06-60"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-06-60",
+      "target": "people:takagi-yuriko",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-06-60"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-06-61",
+      "target": "concepts:material-and-memory",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-06-61"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-06-61",
+      "target": "institutions:seeen",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-06-61"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-06-61",
+      "target": "people:nawa-kohei",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-06-61"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "institutions:space-un",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "people:julianknxx",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:moving-image",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "institutions:art-week-tokyo",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:x-zhu-nowell",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-63"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:moving-image",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "concepts:technology-and-body",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "institutions:arts-council-tokyo",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "institutions:watari-um-the-watari-museum-of-contemporary-art",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
+      "target": "people:nam-june-paik",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:technology-and-body",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:barbican-centre",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:british-council",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "institutions:mon-takanawa-the-museum-of-narratives",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:alejandra-cardenas",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:daito-manabe",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:domestic-data-streamers",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ei-wada",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:elsewhere-in-india",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:evan-ifekoya",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:evelyn-glennie",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:giacomo-lepri",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:harry-yeff-reeps100-trung-bao",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:holly-herndon",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ila-monom",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:intelligent-instruments-lab",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:itti-haioka",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:jan-st-werner",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:kinda-studios",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:luke-kemp",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:max-cooper",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:miyu-hosoi",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:mutek-sarah-mackenzie",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nexus-studios",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nicola-privato",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:nicole-l-huillier",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:patty-ayukawa",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:pixie-dust-technologies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:raymond-antrobus",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:ryuichi-sakamoto",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:tatiana-heuman",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:temporary-pleasure",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:trans-voices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:yuki-anai",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "people:yuri-suzuki",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:curatorial-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:sound-and-technology",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:barbican-centre",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:british-council",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:factory-international",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:institute-of-contemporary-arts-ica",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:mon-takanawa-the-museum-of-narratives",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "institutions:somerset-house-studios",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:atsushi-wakimoto",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:jacob-silkin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:luke-kemp",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:marie-mcpartlin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "target": "people:rivca-burns",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+        }
+      ]
+    },
+    {
+      "source": "institutions:barbican-centre",
+      "target": "people:yuki-anai",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "people:yuki-anai",
+          "field": "linkedInstitutions"
+        }
+      ]
+    },
+    {
+      "source": "institutions:mon-takanawa-the-museum-of-narratives",
+      "target": "people:yuki-anai",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "people:yuki-anai",
+          "field": "linkedInstitutions"
+        }
+      ]
+    }
+  ]
+}
