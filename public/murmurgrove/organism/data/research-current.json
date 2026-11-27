@@ -1,9 +1,24 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "0fef638d2c94411ff2b2a683ceca3f486d539b47f33578c0c685ada7c8efd8ce",
-  "generatedAt": "2026-11-27T04:27:20.353Z",
+  "graphHash": "70bc6b6d90ce2983d9a7dd508f65797b400ba5c6da2cbecd47bbe90fee87ce25",
+  "generatedAt": "2026-11-27T05:31:07.866Z",
   "links": [
+    {
+      "source": "concepts:archival-practices",
+      "target": "people:shubigi-rao",
+      "kind": "archive-association"
+    },
+    {
+      "source": "concepts:concepts-ec7c21229b78c3f0",
+      "target": "people:linda-iha",
+      "kind": "archive-association"
+    },
+    {
+      "source": "concepts:queer",
+      "target": "people:hiroyuki-oki",
+      "kind": "archive-association"
+    },
     {
       "source": "exhibitions:2026-01-07-02",
       "target": "concepts:sound-and-technology",
@@ -856,12 +871,22 @@
     },
     {
       "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:concepts-ec7c21229b78c3f0",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
       "target": "concepts:curatorial-practices",
       "kind": "recorded-link"
     },
     {
       "source": "exhibitions:2026-10-30-59",
       "target": "concepts:institutional-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "concepts:memory-and-place",
       "kind": "recorded-link"
     },
     {
@@ -882,6 +907,246 @@
     {
       "source": "exhibitions:2026-10-30-59",
       "target": "institutions:busan-biennale",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:5d-sammy-lee-mark-lowe-sarah-shin",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:aliaskar-abarkas",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:alison-nguyen",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:amal-khalaf",
+      "kind": "archive-association"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:bhenji-ra",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:brahim-tall",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:dew-kim",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:drexciya-abu-qadim-haqq",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:eric-baudelaire",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:eunji-cho",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:evelyn-simons",
+      "kind": "archive-association"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:fatima-kaleem-khan",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:guely-morato-loredo",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:heaven-baek",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:hyunsung-park",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:jantsankhorol-erdenebayar",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:joar-songcuya",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:joon-yoo",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:joshua-serafin",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:jota-mombaca",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:julian-abraham-togar",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:julien-creuzet",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:kamala-ibrahim-ishag",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:lala-rukh",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:lara-ogel",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:lee-dong-keun",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:luiz-roque",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:minouk-lim",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:mira-mann",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:moe-satt",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:natasha-tontey",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:nkisi",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:r-i-p-germain",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:shuang-li",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:sojung-jun",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:suki-seokyeong-kang",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:sungeun-kim",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:sungsil-ryu",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:tai-shani",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:tanat-teeradakorn",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:the-house-of-korean-protest-songs",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:tianzhuo-chen",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:tom-hallet",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:ultra-red",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:umi-ishihara",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:ursula-k-le-guin",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:yazan-khalili",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-30-59",
+      "target": "people:zahra-malkani",
       "kind": "recorded-link"
     },
     {
@@ -991,8 +1256,58 @@
     },
     {
       "source": "exhibitions:2026-11-08-63",
-      "target": "people:x-zhu-nowell",
+      "target": "people:atsushi-yamamoto",
       "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:cici-wu",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:fuyuhiko-takata",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:he-xiangyu",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:hiroyuki-oki",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:kandis-williams",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:keiichi-tanaami",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:ken-okiishi",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:linda-iha",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:shubigi-rao",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-63",
+      "target": "people:x-zhu-nowell",
+      "kind": "archive-association"
     },
     {
       "source": "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing",
@@ -1315,6 +1630,21 @@
       "kind": "recorded-link"
     },
     {
+      "source": "institutions:anomaly",
+      "target": "people:hiroyuki-oki",
+      "kind": "archive-association"
+    },
+    {
+      "source": "institutions:art-basel",
+      "target": "institutions:art-week-tokyo",
+      "kind": "archive-association"
+    },
+    {
+      "source": "institutions:art-week-tokyo",
+      "target": "institutions:take-ninagawa",
+      "kind": "archive-association"
+    },
+    {
       "source": "institutions:barbican-centre",
       "target": "people:yuki-anai",
       "kind": "archive-association"
@@ -1323,15 +1653,36 @@
       "source": "institutions:mon-takanawa-the-museum-of-narratives",
       "target": "people:yuki-anai",
       "kind": "archive-association"
+    },
+    {
+      "source": "institutions:rockbund-art-museum",
+      "target": "people:cici-wu",
+      "kind": "archive-association"
+    },
+    {
+      "source": "institutions:shugoarts",
+      "target": "people:atsushi-yamamoto",
+      "kind": "archive-association"
+    },
+    {
+      "source": "institutions:waitingroom",
+      "target": "people:fuyuhiko-takata",
+      "kind": "archive-association"
     }
   ],
   "activity": {
+    "concepts:archival-practices": 1,
+    "people:shubigi-rao": 2,
+    "concepts:concepts-ec7c21229b78c3f0": 3,
+    "people:linda-iha": 2,
+    "concepts:queer": 1,
+    "people:hiroyuki-oki": 3,
     "exhibitions:2026-01-07-02": 3,
     "concepts:sound-and-technology": 9,
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
-    "concepts:memory-and-place": 5,
+    "concepts:memory-and-place": 6,
     "institutions:artizon-museum": 1,
     "people:shiga-lieko": 1,
     "people:yamashiro-chikako": 1,
@@ -1492,20 +1843,74 @@
     "institutions:gwangju-biennale": 1,
     "exhibitions:2026-10-28-58": 2,
     "institutions:acc": 1,
-    "exhibitions:2026-10-30-59": 6,
+    "exhibitions:2026-10-30-59": 56,
     "institutions:busan-biennale": 1,
+    "people:5d-sammy-lee-mark-lowe-sarah-shin": 1,
+    "people:aliaskar-abarkas": 1,
+    "people:alison-nguyen": 1,
+    "people:amal-khalaf": 1,
+    "people:bhenji-ra": 1,
+    "people:brahim-tall": 1,
+    "people:dew-kim": 1,
+    "people:drexciya-abu-qadim-haqq": 1,
+    "people:eric-baudelaire": 1,
+    "people:eunji-cho": 1,
+    "people:evelyn-simons": 1,
+    "people:fatima-kaleem-khan": 1,
+    "people:guely-morato-loredo": 1,
+    "people:heaven-baek": 1,
+    "people:hyunsung-park": 1,
+    "people:jantsankhorol-erdenebayar": 1,
+    "people:joar-songcuya": 1,
+    "people:joon-yoo": 1,
+    "people:joshua-serafin": 1,
+    "people:jota-mombaca": 1,
+    "people:julian-abraham-togar": 1,
+    "people:julien-creuzet": 1,
+    "people:kamala-ibrahim-ishag": 1,
+    "people:lala-rukh": 1,
+    "people:lara-ogel": 1,
+    "people:lee-dong-keun": 1,
+    "people:luiz-roque": 1,
+    "people:minouk-lim": 1,
+    "people:mira-mann": 1,
+    "people:moe-satt": 1,
+    "people:natasha-tontey": 1,
+    "people:nkisi": 1,
+    "people:r-i-p-germain": 1,
+    "people:shuang-li": 1,
+    "people:sojung-jun": 1,
+    "people:suki-seokyeong-kang": 1,
+    "people:sungeun-kim": 1,
+    "people:sungsil-ryu": 1,
+    "people:tai-shani": 1,
+    "people:tanat-teeradakorn": 1,
+    "people:the-house-of-korean-protest-songs": 1,
+    "people:tianzhuo-chen": 1,
+    "people:tom-hallet": 1,
+    "people:ultra-red": 1,
+    "people:umi-ishihara": 1,
+    "people:ursula-k-le-guin": 1,
+    "people:yazan-khalili": 1,
+    "people:zahra-malkani": 1,
     "exhibitions:2026-11-06-60": 3,
     "people:takagi-yuriko": 1,
     "exhibitions:2026-11-06-61": 3,
     "institutions:seeen": 1,
     "people:nawa-kohei": 1,
     "exhibitions:2026-11-08-62": 10,
-    "concepts:concepts-ec7c21229b78c3f0": 1,
     "institutions:space-un": 1,
     "people:ekow-eshun": 1,
     "people:julianknxx": 1,
-    "exhibitions:2026-11-08-63": 6,
-    "institutions:art-week-tokyo": 1,
+    "exhibitions:2026-11-08-63": 16,
+    "institutions:art-week-tokyo": 3,
+    "people:atsushi-yamamoto": 2,
+    "people:cici-wu": 2,
+    "people:fuyuhiko-takata": 2,
+    "people:he-xiangyu": 1,
+    "people:kandis-williams": 1,
+    "people:keiichi-tanaami": 1,
+    "people:ken-okiishi": 1,
     "people:x-zhu-nowell": 1,
     "exhibitions:2026-11-26-nam-june-paik-the-20th-anniversary-of-his-passing": 8,
     "institutions:arts-council-tokyo": 1,
@@ -1553,6 +1958,12 @@
     "people:atsushi-wakimoto": 1,
     "people:jacob-silkin": 1,
     "people:marie-mcpartlin": 1,
-    "people:rivca-burns": 1
+    "people:rivca-burns": 1,
+    "institutions:anomaly": 1,
+    "institutions:art-basel": 1,
+    "institutions:take-ninagawa": 1,
+    "institutions:rockbund-art-museum": 1,
+    "institutions:shugoarts": 1,
+    "institutions:waitingroom": 1
   }
 }

@@ -108,5 +108,18 @@
       "曼徹斯特",
       "マンチェスター"
     ]
+  },
+  "Basel": {
+    "lon": 7.5886,
+    "lat": 47.5596,
+    "country": "Switzerland",
+    "aliases": [
+      "巴塞尔",
+      "巴塞爾",
+      "バーゼル",
+      "Bâle",
+      "Basilea",
+      "Basle"
+    ]
   }
 }

@@ -1,18 +1,21 @@
 ---
-city: Tokyo
-name: Art Week Tokyo · Otemachi
-addressStatus: needs-review
-locationType: variable
-venueName: SMBC East Tower (reference only)
-venueAddress: 〒100-0005 東京都千代田区丸の内1-3-2 三井住友銀行東館 1F アース・ガーデン
-venueStatus: reference
+city: "Tokyo"
+name: "Art Week Tokyo (AWT)"
+addressStatus: "needs-review"
+locationType: "city"
+linkedPeople: []
+linkedExhibitions: []
+linkedConcepts: []
+alternativeNames: ["アートウィーク東京","东京艺术周"]
+foundedYear: "2021"
+country: "Japan"
+institutionTypes: ["Art Platform / Annual Art Event"]
+website: "https://www.artweektokyo.com/"
+sources: []
+linkedInstitutions: ["take-ninagawa","art-basel"]
+linkedWriting: []
 ---
 
-东京大手町区域的艺术活动地点记录，涉及 Art Week Tokyo 相关项目；并非单一固定机构。
+Art Week Tokyo（AWT，东京艺术周）是以东京全城为场域的年度当代艺术活动，旨在连接日本首都的美术馆、商业画廊、艺术空间及国际艺术网络。2021年试行举办，2022年正式全面展开。
 
-### 关联场馆
-
-**关联场馆：** SMBC East Tower (reference only)  
-**场馆地址（参考）：** 〒100-0005 東京都千代田区丸の内1-3-2 三井住友銀行東館 1F アース・ガーデン  
-**地址说明：** 此处列出的地址仅供定位参考，不能据此确认具体活动的举办地点。
-
+不同于集中于单一会场的艺术博览会，AWT 通过分布式展览、专题策展、影像放映、公共讨论及免费接驳巴士，将城市中原本分散的艺术机构组织为临时性的文化网络，提升东京当代艺术生态的国际可见度与公共可达性。

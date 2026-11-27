@@ -503,5 +503,130 @@
     "edgeCount": 264,
     "priorHash": "4e493bd3039ab47a5e76d7c06dee859da4edaf10b82cfdac620c19b455585e18",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T05-16-40-395Z-eb86cd8ca273.json",
+    "graphHash": "eb86cd8ca27313f2a42c99a9bd9ae41ea3c2ffbf0f2d1c9fd581550fa6649838",
+    "at": "2026-11-27T05:16:40.387Z",
+    "added": [
+      "people:atsushi-yamamoto",
+      "people:cici-wu",
+      "people:fuyuhiko-takata",
+      "people:he-xiangyu",
+      "people:hiroyuki-oki",
+      "people:kandis-williams",
+      "people:keiichi-tanaami",
+      "people:ken-okiishi",
+      "people:linda-iha",
+      "people:shubigi-rao",
+      "institutions:anomaly",
+      "institutions:rockbund-art-museum",
+      "institutions:shugoarts",
+      "institutions:waitingroom",
+      "concepts:archival-practices",
+      "concepts:queer"
+    ],
+    "changed": [
+      "exhibitions:2026-11-08-63"
+    ],
+    "removed": [],
+    "recordCount": 246,
+    "edgeCount": 281,
+    "priorHash": "0fef638d2c94411ff2b2a683ceca3f486d539b47f33578c0c685ada7c8efd8ce",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T05-24-58-252Z-e5ffc4a5bc21.json",
+    "graphHash": "e5ffc4a5bc21fa0d07808b3e3d4de7d2d772033c02268e19331d3a4b9a2ad5bd",
+    "at": "2026-11-27T05:24:58.246Z",
+    "added": [
+      "institutions:art-basel",
+      "institutions:take-ninagawa"
+    ],
+    "changed": [
+      "institutions:art-week-tokyo"
+    ],
+    "removed": [],
+    "recordCount": 248,
+    "edgeCount": 283,
+    "priorHash": "eb86cd8ca27313f2a42c99a9bd9ae41ea3c2ffbf0f2d1c9fd581550fa6649838",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T05-27-58-793Z-1280db61f237.json",
+    "graphHash": "1280db61f237d968f4207c8d2a601c4707ac78c93ff94870a4edbe3a27567736",
+    "at": "2026-11-27T05:27:58.778Z",
+    "added": [],
+    "changed": [
+      "exhibitions:2026-11-06-60"
+    ],
+    "removed": [],
+    "recordCount": 248,
+    "edgeCount": 283,
+    "priorHash": "e5ffc4a5bc21fa0d07808b3e3d4de7d2d772033c02268e19331d3a4b9a2ad5bd",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T05-31-07-873Z-70bc6b6d90ce.json",
+    "graphHash": "70bc6b6d90ce2983d9a7dd508f65797b400ba5c6da2cbecd47bbe90fee87ce25",
+    "at": "2026-11-27T05:31:07.866Z",
+    "added": [
+      "people:5d-sammy-lee-mark-lowe-sarah-shin",
+      "people:aliaskar-abarkas",
+      "people:alison-nguyen",
+      "people:amal-khalaf",
+      "people:bhenji-ra",
+      "people:brahim-tall",
+      "people:dew-kim",
+      "people:drexciya-abu-qadim-haqq",
+      "people:eric-baudelaire",
+      "people:eunji-cho",
+      "people:evelyn-simons",
+      "people:fatima-kaleem-khan",
+      "people:guely-morato-loredo",
+      "people:heaven-baek",
+      "people:hyunsung-park",
+      "people:jantsankhorol-erdenebayar",
+      "people:joar-songcuya",
+      "people:joon-yoo",
+      "people:joshua-serafin",
+      "people:jota-mombaca",
+      "people:julian-abraham-togar",
+      "people:julien-creuzet",
+      "people:kamala-ibrahim-ishag",
+      "people:lala-rukh",
+      "people:lara-ogel",
+      "people:lee-dong-keun",
+      "people:luiz-roque",
+      "people:minouk-lim",
+      "people:mira-mann",
+      "people:moe-satt",
+      "people:natasha-tontey",
+      "people:nkisi",
+      "people:r-i-p-germain",
+      "people:shuang-li",
+      "people:sojung-jun",
+      "people:suki-seokyeong-kang",
+      "people:sungeun-kim",
+      "people:sungsil-ryu",
+      "people:tai-shani",
+      "people:tanat-teeradakorn",
+      "people:the-house-of-korean-protest-songs",
+      "people:tianzhuo-chen",
+      "people:tom-hallet",
+      "people:ultra-red",
+      "people:umi-ishihara",
+      "people:ursula-k-le-guin",
+      "people:yazan-khalili",
+      "people:zahra-malkani"
+    ],
+    "changed": [
+      "exhibitions:2026-10-30-59"
+    ],
+    "removed": [],
+    "recordCount": 296,
+    "edgeCount": 333,
+    "priorHash": "1280db61f237d968f4207c8d2a601c4707ac78c93ff94870a4edbe3a27567736",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]
