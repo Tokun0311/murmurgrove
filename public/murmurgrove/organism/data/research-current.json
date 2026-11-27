@@ -1,12 +1,17 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "70bc6b6d90ce2983d9a7dd508f65797b400ba5c6da2cbecd47bbe90fee87ce25",
-  "generatedAt": "2026-11-27T05:31:07.866Z",
+  "graphHash": "69726b4f74194be15e04c0aa1750e3b15e63cbac3fe944ba9f23a63c090f22bf",
+  "generatedAt": "2026-11-27T06:00:20.167Z",
   "links": [
     {
       "source": "concepts:archival-practices",
       "target": "people:shubigi-rao",
+      "kind": "archive-association"
+    },
+    {
+      "source": "concepts:concepts-ec7c21229b78c3f0",
+      "target": "people:ho-tzu-nyen",
       "kind": "archive-association"
     },
     {
@@ -851,12 +856,272 @@
     },
     {
       "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:archival-practices",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
       "target": "concepts:curatorial-practices",
       "kind": "recorded-link"
     },
     {
       "source": "exhibitions:2026-10-27-57",
-      "target": "institutions:gwangju-biennale",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:memory-and-place",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:politics-of-representation",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:sustainability",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "institutions:gwangju-biennale-foundation",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:a-k-dolven",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:amanda-heng",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:angela-goh",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:bhenji-ra",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:brian-kuan-wood",
+      "kind": "archive-association"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:camp",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:che-kyongfa",
+      "kind": "archive-association"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:christian-nyampeta",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:daisuke-kosugi",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:e-roon-kang",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:gahee-park",
+      "kind": "archive-association"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:goldin-senneby",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:heo-baekryeon-gwangju-agricultural-technical-high-school",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:ho-tzu-nyen",
+      "kind": "archive-association"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:inci-eviner",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:jacqueline-kiyomi-gork",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:james-benning",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:james-t-hong",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:jean-barth",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:jeong-geumhyung",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:julius-koller",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:kiri-dalena-ben-brix",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:kwon-byungjun-and-park-chan-kyong",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:lu-yang",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:lygia-clark",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:matthew-barney",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:may-mothers-house",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:maya-watanabe",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:melvin-moti",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:mona-benyamin",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:nam-hwayeon",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:nina-canell",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:rafik-greiss",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:rim-dong-sik-and-nature-artist-woo-pyongnam-jongsun",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:rossella-biscotti",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:ryu-hankil",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:saodat-ismailova",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:sasaki-ken",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:sohrab-hura",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:sunik-kim",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:suzuki-akio",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:tehching-hsieh",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:ullimsanbang-huh-ryeon-huh-hyeong-huh-geon-huh-lim-huh-moon-hur-jin",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:volcanoes-of-jeju-jeju-stone-park",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:wang-jiahao",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:wang-tuo",
       "kind": "recorded-link"
     },
     {
@@ -1655,6 +1920,11 @@
       "kind": "archive-association"
     },
     {
+      "source": "institutions:museum-of-contemporary-art-tokyo-mot",
+      "target": "people:che-kyongfa",
+      "kind": "archive-association"
+    },
+    {
       "source": "institutions:rockbund-art-museum",
       "target": "people:cici-wu",
       "kind": "archive-association"
@@ -1665,15 +1935,26 @@
       "kind": "archive-association"
     },
     {
+      "source": "institutions:singapore-art-museum",
+      "target": "people:ho-tzu-nyen",
+      "kind": "archive-association"
+    },
+    {
       "source": "institutions:waitingroom",
       "target": "people:fuyuhiko-takata",
+      "kind": "archive-association"
+    },
+    {
+      "source": "institutions:yamaguchi-center-for-arts-and-media-ycam",
+      "target": "people:ho-tzu-nyen",
       "kind": "archive-association"
     }
   ],
   "activity": {
-    "concepts:archival-practices": 1,
+    "concepts:archival-practices": 2,
     "people:shubigi-rao": 2,
-    "concepts:concepts-ec7c21229b78c3f0": 3,
+    "concepts:concepts-ec7c21229b78c3f0": 4,
+    "people:ho-tzu-nyen": 4,
     "people:linda-iha": 2,
     "concepts:queer": 1,
     "people:hiroyuki-oki": 3,
@@ -1682,7 +1963,7 @@
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
-    "concepts:memory-and-place": 6,
+    "concepts:memory-and-place": 7,
     "institutions:artizon-museum": 1,
     "people:shiga-lieko": 1,
     "people:yamashiro-chikako": 1,
@@ -1708,10 +1989,10 @@
     "institutions:tokyo-metropolitan-theatre": 2,
     "people:saeborg": 1,
     "exhibitions:2026-02-14-10": 2,
-    "concepts:transcultural-studies": 7,
+    "concepts:transcultural-studies": 8,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 17,
+    "concepts:institutional-studies": 18,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -1723,7 +2004,7 @@
     "exhibitions:2026-03-14-14": 2,
     "institutions:art-fair-tokyo": 1,
     "exhibitions:2026-03-14-15": 3,
-    "concepts:politics-of-representation": 6,
+    "concepts:politics-of-representation": 7,
     "institutions:tokyo-opera-city": 1,
     "people:alfredo-jaar": 2,
     "exhibitions:2026-03-24-16": 3,
@@ -1749,7 +2030,7 @@
     "concepts:site-specificity": 5,
     "institutions:thailand-biennale": 1,
     "exhibitions:2026-04-26-25": 2,
-    "institutions:singapore-art-museum": 2,
+    "institutions:singapore-art-museum": 3,
     "exhibitions:2026-04-26-26": 4,
     "people:bagus-pandega": 1,
     "people:elia-nurvista": 1,
@@ -1839,8 +2120,54 @@
     "exhibitions:2026-10-26-56": 3,
     "institutions:mmca": 1,
     "people:do-ho-suh": 1,
-    "exhibitions:2026-10-27-57": 2,
-    "institutions:gwangju-biennale": 1,
+    "exhibitions:2026-10-27-57": 54,
+    "concepts:sustainability": 1,
+    "institutions:gwangju-biennale-foundation": 1,
+    "people:a-k-dolven": 1,
+    "people:amanda-heng": 1,
+    "people:angela-goh": 1,
+    "people:bhenji-ra": 2,
+    "people:brian-kuan-wood": 1,
+    "people:camp": 1,
+    "people:che-kyongfa": 2,
+    "people:christian-nyampeta": 1,
+    "people:daisuke-kosugi": 1,
+    "people:e-roon-kang": 1,
+    "people:gahee-park": 1,
+    "people:goldin-senneby": 1,
+    "people:heo-baekryeon-gwangju-agricultural-technical-high-school": 1,
+    "people:inci-eviner": 1,
+    "people:jacqueline-kiyomi-gork": 1,
+    "people:james-benning": 1,
+    "people:james-t-hong": 1,
+    "people:jean-barth": 1,
+    "people:jeong-geumhyung": 1,
+    "people:julius-koller": 1,
+    "people:kiri-dalena-ben-brix": 1,
+    "people:kwon-byungjun-and-park-chan-kyong": 1,
+    "people:lu-yang": 1,
+    "people:lygia-clark": 1,
+    "people:matthew-barney": 1,
+    "people:may-mothers-house": 1,
+    "people:maya-watanabe": 1,
+    "people:melvin-moti": 1,
+    "people:mona-benyamin": 1,
+    "people:nam-hwayeon": 1,
+    "people:nina-canell": 1,
+    "people:rafik-greiss": 1,
+    "people:rim-dong-sik-and-nature-artist-woo-pyongnam-jongsun": 1,
+    "people:rossella-biscotti": 1,
+    "people:ryu-hankil": 1,
+    "people:saodat-ismailova": 1,
+    "people:sasaki-ken": 1,
+    "people:sohrab-hura": 1,
+    "people:sunik-kim": 1,
+    "people:suzuki-akio": 1,
+    "people:tehching-hsieh": 1,
+    "people:ullimsanbang-huh-ryeon-huh-hyeong-huh-geon-huh-lim-huh-moon-hur-jin": 1,
+    "people:volcanoes-of-jeju-jeju-stone-park": 1,
+    "people:wang-jiahao": 1,
+    "people:wang-tuo": 1,
     "exhibitions:2026-10-28-58": 2,
     "institutions:acc": 1,
     "exhibitions:2026-10-30-59": 56,
@@ -1849,7 +2176,6 @@
     "people:aliaskar-abarkas": 1,
     "people:alison-nguyen": 1,
     "people:amal-khalaf": 1,
-    "people:bhenji-ra": 1,
     "people:brahim-tall": 1,
     "people:dew-kim": 1,
     "people:drexciya-abu-qadim-haqq": 1,
@@ -1962,8 +2288,10 @@
     "institutions:anomaly": 1,
     "institutions:art-basel": 1,
     "institutions:take-ninagawa": 1,
+    "institutions:museum-of-contemporary-art-tokyo-mot": 1,
     "institutions:rockbund-art-museum": 1,
     "institutions:shugoarts": 1,
-    "institutions:waitingroom": 1
+    "institutions:waitingroom": 1,
+    "institutions:yamaguchi-center-for-arts-and-media-ycam": 1
   }
 }

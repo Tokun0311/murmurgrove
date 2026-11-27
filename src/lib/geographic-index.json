@@ -121,5 +121,17 @@
       "Basilea",
       "Basle"
     ]
+  },
+  "Yamaguchi": {
+    "lon": 131.47389,
+    "lat": 34.17806,
+    "country": "Japan",
+    "aliases": [
+      "山口",
+      "山口市",
+      "Yamaguchi City",
+      "Yamaguchi-shi",
+      "야마구치"
+    ]
   }
 }

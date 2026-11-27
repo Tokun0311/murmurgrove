@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-27T05:31:07.866Z",
-  "sourceDigest": "41fae94558480eed648138bf01a055d7e91de8b1dfccc4fe8336514bd4d1c54f",
+  "generatedAt": "2026-11-27T06:00:20.167Z",
+  "sourceDigest": "333e7a138b45406ddfda3a639fa4c4003ac1405280fed3dae11efb6763cf12dc",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "70bc6b6d90ce2983d9a7dd508f65797b400ba5c6da2cbecd47bbe90fee87ce25",
+  "graphHash": "69726b4f74194be15e04c0aa1750e3b15e63cbac3fe944ba9f23a63c090f22bf",
   "records": [
     {
       "type": "exhibitions",
@@ -1036,11 +1036,11 @@
       "type": "exhibitions",
       "id": "2026-10-27-57",
       "key": "exhibitions:2026-10-27-57",
-      "title": "Gwangju Biennale 2026《You Must Change Your Life》",
+      "title": "Gwangju Biennale 2026: You Must Change Your Life",
       "path": "/exhibitions/2026-10-27-57/",
-      "contentHash": "78bc2660fb608199c9768d07b2005dfdf535b0c238c5b24e426e0e0b6f3a815a",
-      "summary": "2026年参观记录。此页面保存观展时间、机构及关联研究对象。",
-      "text": "2026年参观记录。此页面保存观展时间、机构及关联研究对象。",
+      "contentHash": "3f2b6aed980ed30a2d1f28404c7fbcff3c535f44d454f6567505d772f149693f",
+      "summary": "展览标题取自奥地利诗人莱纳·马利亚·里尔克（Rainer Maria Rilke）1908年的诗歌《古代阿波罗的躯干》（Archaic Torso of Apollo）的最后一句： Du musst dein Leben ändern. 第16届光州双年展将艺术视为一种能够改变感知、身体、物质与社会关系的持续性实践。展览并不试图规定改变的方向，而是将改变本身理解为一种方法。 策展团队尤其关注日常行为、重复、仪式与长期实践所积累的转化力量。艺术不只是对变化的再现，也是一种实际生产变化的技术，能够重新组织个体与集体感知世界、建立关系和参与生活的方式。",
+      "text": "展览标题取自奥地利诗人莱纳·马利亚·里尔克（Rainer Maria Rilke）1908年的诗歌《古代阿波罗的躯干》（Archaic Torso of Apollo）的最后一句：\n\nDu musst dein Leben ändern.\n\n第16届光州双年展将艺术视为一种能够改变感知、身体、物质与社会关系的持续性实践。展览并不试图规定改变的方向，而是将改变本身理解为一种方法。\n\n策展团队尤其关注日常行为、重复、仪式与长期实践所积累的转化力量。艺术不只是对变化的再现，也是一种实际生产变化的技术，能够重新组织个体与集体感知世界、建立关系和参与生活的方式。",
       "date": "2026-10-27",
       "engagement": "visited",
       "visitedOn": "2026-10-27",
@@ -1229,6 +1229,21 @@
     },
     {
       "type": "people",
+      "id": "a-k-dolven",
+      "key": "people:a-k-dolven",
+      "title": "A K Dolven",
+      "path": "/people/a-k-dolven/",
+      "contentHash": "0cc68e6d17e579f4919a13bbcd2a575c3adaf89bdd81a9c32e0656302ae1d756",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "alejandra-cardenas",
       "key": "people:alejandra-cardenas",
       "title": "Alejandra Cárdenas",
@@ -1294,6 +1309,36 @@
       "title": "Amal Khalaf",
       "path": "/people/amal-khalaf/",
       "contentHash": "1f9b26dc22812d469a44df7f4a4f97cbd1521ec2fa8b18026f262aa99b9da6cd",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "amanda-heng",
+      "key": "people:amanda-heng",
+      "title": "Amanda Heng",
+      "path": "/people/amanda-heng/",
+      "contentHash": "752564174150ec5644aec8650e83e4187eddba6315c66fae1a91825dc049a6a8",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "angela-goh",
+      "key": "people:angela-goh",
+      "title": "Angela Goh",
+      "path": "/people/angela-goh/",
+      "contentHash": "61050f8deb65c6c736c84c55cc7c8b463098a6bbd98f850a6b03e24d2dd48f9b",
       "summary": "",
       "text": "",
       "date": "",
@@ -1381,6 +1426,38 @@
     },
     {
       "type": "people",
+      "id": "brian-kuan-wood",
+      "key": "people:brian-kuan-wood",
+      "title": "Brian Kuan Wood",
+      "path": "/people/brian-kuan-wood/",
+      "contentHash": "e4f8435fc0ba2c4934af599f26e632fe27270dd675e52c039943356b56c70a40",
+      "summary": "Brian Kuan Wood 是常驻纽约的艺术理论写作者、编辑、策展人及教育者，e-flux journal 的创刊编辑之一，2023年台北双年展联合策展人，以及2026年第16届光州双年展策展人。 相较于传统美术馆策展人，他的实践更多建立在写作、出版、批评理论与知识流通的基础上，并将这些经验延伸至展览制作与策展教育。",
+      "text": "Brian Kuan Wood 是常驻纽约的艺术理论写作者、编辑、策展人及教育者，e-flux journal 的创刊编辑之一，2023年台北双年展联合策展人，以及2026年第16届光州双年展策展人。\n\n相较于传统美术馆策展人，他的实践更多建立在写作、出版、批评理论与知识流通的基础上，并将这些经验延伸至展览制作与策展教育。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [
+        "穆 柏安 / ブライアン・クアン・ウッド"
+      ],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "camp",
+      "key": "people:camp",
+      "title": "CAMP",
+      "path": "/people/camp/",
+      "contentHash": "14a7c607b2d919aaaa1c37233e98500183857ab259e7f79f368add54ec49ed73",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "carsten-nicolai",
       "key": "people:carsten-nicolai",
       "title": "Carsten Nicolai",
@@ -1388,6 +1465,39 @@
       "contentHash": "308ae3cd2fd741d355b60a9c973b3a72350d3687066f08852293a5212bcc780e",
       "summary": "德国艺术家与音乐创作者，以声音、光学现象和数字技术为媒介，研究可感知与不可感知的物理结构。",
       "text": "德国艺术家与音乐创作者，以声音、光学现象和数字技术为媒介，研究可感知与不可感知的物理结构。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "che-kyongfa",
+      "key": "people:che-kyongfa",
+      "title": "Che Kyongfa",
+      "path": "/people/che-kyongfa/",
+      "contentHash": "3e42994f33382ff895bb0bcfad5a02c9b2c03a68345b3680d4a6391c62138258",
+      "summary": "崔敬華是长期活跃于亚洲及欧洲当代艺术网络的策展人，2013年加入东京都现代美术馆，并担任2026年第16届光州双年展的三位策展人之一。 她的策展实践主要关注人口迁移、跨国关系、亚洲历史及当代社会中的权力结构，尤其重视艺术家、机构与不同地域之间的协作关系，以及历史如何在当代艺术实践中被重新理解。",
+      "text": "崔敬華是长期活跃于亚洲及欧洲当代艺术网络的策展人，2013年加入东京都现代美术馆，并担任2026年第16届光州双年展的三位策展人之一。\n\n她的策展实践主要关注人口迁移、跨国关系、亚洲历史及当代社会中的权力结构，尤其重视艺术家、机构与不同地域之间的协作关系，以及历史如何在当代艺术实践中被重新理解。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [
+        "チェ・キョンファ",
+        "崔敬华（崔敬華）"
+      ],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "christian-nyampeta",
+      "key": "people:christian-nyampeta",
+      "title": "Christian Nyampeta",
+      "path": "/people/christian-nyampeta/",
+      "contentHash": "2874eab7b88b1f18414505e6f2a437856d26ffd2d45cce9eca9f085a0177ed2e",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -1416,6 +1526,21 @@
       "title": "Cici Wu",
       "path": "/people/cici-wu/",
       "contentHash": "c2233ef927111b258355f03267cf262677c0d814c2845695745cdcce37f0511d",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "daisuke-kosugi",
+      "key": "people:daisuke-kosugi",
+      "title": "Daisuke Kosugi",
+      "path": "/people/daisuke-kosugi/",
+      "contentHash": "48cbb74b8f7cc4d59e090c16d5a93a0e305ef38eb9c459e27f450cdf7fee5f77",
       "summary": "",
       "text": "",
       "date": "",
@@ -1491,6 +1616,21 @@
       "title": "Drexciya / Abu Qadim Haqq",
       "path": "/people/drexciya-abu-qadim-haqq/",
       "contentHash": "047882d7411fd7bc24f26e683a87dc8cdfcc3d9d7637d6ac0bb74a522d4c5955",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "e-roon-kang",
+      "key": "people:e-roon-kang",
+      "title": "E Roon Kang",
+      "path": "/people/e-roon-kang/",
+      "contentHash": "2fecf869dc28aeb68bcaf29b90855a1aa2ae3cca04f368da9b59fbdc63049861",
       "summary": "",
       "text": "",
       "date": "",
@@ -1687,11 +1827,44 @@
     },
     {
       "type": "people",
+      "id": "gahee-park",
+      "key": "people:gahee-park",
+      "title": "Gahee Park",
+      "path": "/people/gahee-park/",
+      "contentHash": "4a84021daacff80feede1dcd6d0e4d39cb6b1c7f43366fdf6a3f8ae7c0c99c97",
+      "summary": "Gahee Park 是常驻韩国首尔的当代艺术策展人，曾长期任职于首尔市立美术馆（SeMA），并负责国际交流相关策展工作。2026年，她与 Che Kyongfa、Brian Kuan Wood 共同担任第16届光州双年展策展人，协同艺术总监 Ho Tzu Nyen 展开策展实践。",
+      "text": "Gahee Park 是常驻韩国首尔的当代艺术策展人，曾长期任职于首尔市立美术馆（SeMA），并负责国际交流相关策展工作。2026年，她与 Che Kyongfa、Brian Kuan Wood 共同担任第16届光州双年展策展人，协同艺术总监 Ho Tzu Nyen 展开策展实践。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [
+        "박 가희",
+        "パク・ガヒ / 朴佳熙"
+      ],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "giacomo-lepri",
       "key": "people:giacomo-lepri",
       "title": "Giacomo Lepri",
       "path": "/people/giacomo-lepri/",
       "contentHash": "84e3b979645a66537df4001f4f203b53a4aef807aa14008e1b87313a82f18d9e",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "goldin-senneby",
+      "key": "people:goldin-senneby",
+      "title": "Goldin+Senneby",
+      "path": "/people/goldin-senneby/",
+      "contentHash": "abe6801f7d00fbf050a47b19135bb4dba5a132472c26f8040d7258b12fb35271",
       "summary": "",
       "text": "",
       "date": "",
@@ -1779,6 +1952,21 @@
     },
     {
       "type": "people",
+      "id": "heo-baekryeon-gwangju-agricultural-technical-high-school",
+      "key": "people:heo-baekryeon-gwangju-agricultural-technical-high-school",
+      "title": "Heo Baekryeon (Gwangju Agricultural Technical High School)",
+      "path": "/people/heo-baekryeon-gwangju-agricultural-technical-high-school/",
+      "contentHash": "4b003216dd64f4aaeddb110684c8f9dd316c67167cfd0c8952d8332f048ed073",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "hiroyuki-oki",
       "key": "people:hiroyuki-oki",
       "title": "Hiroyuki Oki",
@@ -1790,6 +1978,24 @@
       "conceptStage": null,
       "aliases": [
         "大木 裕之"
+      ],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "ho-tzu-nyen",
+      "key": "people:ho-tzu-nyen",
+      "title": "Ho Tzu Nyen",
+      "path": "/people/ho-tzu-nyen/",
+      "contentHash": "535b9c9fec84e6dfd6a42673a72c19bfc93709a448c216d132d70641b2044ec5",
+      "summary": "何子彥（1976年生）是新加坡当代艺术家、电影创作者及策展人，也是东南亚极具代表性的研究型艺术家之一。 他的创作横跨活动影像、多屏幕装置、声音、动画、戏剧与数字技术，长期关注历史叙事、殖民主义、神话、政治身份以及知识生产机制。 他并不单纯试图还原历史，而是追问：历史是如何被制造、书写、传播，并最终成为我们理解世界的框架的？",
+      "text": "何子彥（1976年生）是新加坡当代艺术家、电影创作者及策展人，也是东南亚极具代表性的研究型艺术家之一。\n\n他的创作横跨活动影像、多屏幕装置、声音、动画、戏剧与数字技术，长期关注历史叙事、殖民主义、神话、政治身份以及知识生产机制。\n\n他并不单纯试图还原历史，而是追问：历史是如何被制造、书写、传播，并最终成为我们理解世界的框架的？",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [
+        "何 子彦",
+        "ホー・ツーニェン"
       ],
       "conceptReading": "",
       "mergedInto": null
@@ -1831,6 +2037,21 @@
       "title": "​ ​ILĀ & MONOM",
       "path": "/people/ila-monom/",
       "contentHash": "a84c300469afd042838f8ad717ec9468e9fd7f87f6e3cbec838b5f31aeba7e1f",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "inci-eviner",
+      "key": "people:inci-eviner",
+      "title": "İnci Eviner",
+      "path": "/people/inci-eviner/",
+      "contentHash": "bf2d1b629efa4aaddd6d02bf875b6b8b597afb849dfb6841f4ae57772e9f02b2",
       "summary": "",
       "text": "",
       "date": "",
@@ -1886,6 +2107,51 @@
     },
     {
       "type": "people",
+      "id": "jacqueline-kiyomi-gork",
+      "key": "people:jacqueline-kiyomi-gork",
+      "title": "Jacqueline Kiyomi Gork",
+      "path": "/people/jacqueline-kiyomi-gork/",
+      "contentHash": "eba704e2b64c97c20a2c3cac8fe0eb86dea757e56e841a09319ed402f1af319e",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "james-benning",
+      "key": "people:james-benning",
+      "title": "James Benning",
+      "path": "/people/james-benning/",
+      "contentHash": "82b02bbf8a6fafe086f689a21f087de8d65b5b11e4c384970d16584b81dfa0c1",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "james-t-hong",
+      "key": "people:james-t-hong",
+      "title": "James T. Hong",
+      "path": "/people/james-t-hong/",
+      "contentHash": "1e263db24a6be127c7081a78b62bf77ee249b71994cf71e48c51168f860ec5cd",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "jan-st-werner",
       "key": "people:jan-st-werner",
       "title": "Jan St. Werner",
@@ -1906,6 +2172,36 @@
       "title": "Jantsankhorol Erdenebayar",
       "path": "/people/jantsankhorol-erdenebayar/",
       "contentHash": "5202588505f3dc289fb938deb06334783d8d784942087e40ccfe226e4d8244c0",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "jean-barth",
+      "key": "people:jean-barth",
+      "title": "Jean Barth",
+      "path": "/people/jean-barth/",
+      "contentHash": "66b35149cf09124d3757a99f2367054bab90e28c75a1ba60236421194907c30e",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "jeong-geumhyung",
+      "key": "people:jeong-geumhyung",
+      "title": "Jeong Geumhyung",
+      "path": "/people/jeong-geumhyung/",
+      "contentHash": "c95a942f10587341662ff23f19f7bfd3d7f789941ce896353760f0da12771a83",
       "summary": "",
       "text": "",
       "date": "",
@@ -2011,6 +2307,21 @@
       "title": "Julien Creuzet",
       "path": "/people/julien-creuzet/",
       "contentHash": "3d1863557518d076ee6b8d379e72f9063a75c3719f50f69d29c48789375132db",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "julius-koller",
+      "key": "people:julius-koller",
+      "title": "Július Koller",
+      "path": "/people/julius-koller/",
+      "contentHash": "e75d5c40adc2158f7dbe02cb0585ae4d95ae317cb7ea8becf860fefd982ac626",
       "summary": "",
       "text": "",
       "date": "",
@@ -2157,6 +2468,36 @@
     },
     {
       "type": "people",
+      "id": "kiri-dalena-ben-brix",
+      "key": "people:kiri-dalena-ben-brix",
+      "title": "Kiri Dalena & Ben Brix",
+      "path": "/people/kiri-dalena-ben-brix/",
+      "contentHash": "29080b8dec594cc16ece571d40776d213c4ddba603d45deb6b96917fb5981cee",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "kwon-byungjun-and-park-chan-kyong",
+      "key": "people:kwon-byungjun-and-park-chan-kyong",
+      "title": "Kwon Byungjun and Park Chan-kyong",
+      "path": "/people/kwon-byungjun-and-park-chan-kyong/",
+      "contentHash": "c0f4bfbadf301bcfcf78becb12846482468208ed3dc5c9aac4e4d0367c12abc8",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "lala-rukh",
       "key": "people:lala-rukh",
       "title": "Lala Rukh",
@@ -2219,6 +2560,21 @@
     },
     {
       "type": "people",
+      "id": "lu-yang",
+      "key": "people:lu-yang",
+      "title": "Lu Yang",
+      "path": "/people/lu-yang/",
+      "contentHash": "82684f59de4a44640d3923c36de6626ce702cdb6d5245e493ff73c5ef40ead6d",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "luiz-roque",
       "key": "people:luiz-roque",
       "title": "Luiz Roque",
@@ -2241,6 +2597,21 @@
       "contentHash": "0476ac238cb635ec8901cc5608b9efb4020109899f1d1f11bbb93a7ad4a621c9",
       "summary": "Curator of Feel The Sound (UK)",
       "text": "Curator of Feel The Sound (UK)",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "lygia-clark",
+      "key": "people:lygia-clark",
+      "title": "Lygia Clark",
+      "path": "/people/lygia-clark/",
+      "contentHash": "bdea60af12b2e4aa5792b2d523a7c9fc2e038b1f8bcf7737fc617e3262a31ec7",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -2294,11 +2665,56 @@
     },
     {
       "type": "people",
+      "id": "matthew-barney",
+      "key": "people:matthew-barney",
+      "title": "Matthew Barney",
+      "path": "/people/matthew-barney/",
+      "contentHash": "032ac5bc68a2a26c44886a8f3f7198ae65c0e6d27e923f37a999c9c6f5fd0b1b",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "max-cooper",
       "key": "people:max-cooper",
       "title": "Max Cooper",
       "path": "/people/max-cooper/",
       "contentHash": "70e0199f1508a664a00e7aa6804deffff6dfbec17711b5b99e06110ad7a6a30c",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "may-mothers-house",
+      "key": "people:may-mothers-house",
+      "title": "May Mothers House",
+      "path": "/people/may-mothers-house/",
+      "contentHash": "c60b824fa358d4ea7898379265d45df6a9aa94a1f5a39e05afded87c3628755e",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "maya-watanabe",
+      "key": "people:maya-watanabe",
+      "title": "Maya Watanabe",
+      "path": "/people/maya-watanabe/",
+      "contentHash": "c58839aac44af53c2e1b179b3fb11ffc07c292033a6101883f887a502fb3a9ec",
       "summary": "",
       "text": "",
       "date": "",
@@ -2316,6 +2732,21 @@
       "contentHash": "b5efc04d78f6e70565ef908d5a4a90545582dea536d1bf2a2398155fabfc1c29",
       "summary": "美国观念艺术家，实践横跨装置、公共项目与环境议题，关注政治历史、社会参与及生态修复。 ### 相关记录 跨媒介实践涉及环境、政治史与公共参与。2026年在广岛市现代美术馆举行获奖纪念展。",
       "text": "美国观念艺术家，实践横跨装置、公共项目与环境议题，关注政治历史、社会参与及生态修复。\n\n### 相关记录\n\n跨媒介实践涉及环境、政治史与公共参与。2026年在广岛市现代美术馆举行获奖纪念展。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "melvin-moti",
+      "key": "people:melvin-moti",
+      "title": "Melvin Moti",
+      "path": "/people/melvin-moti/",
+      "contentHash": "c3aef7ca48c0a5dc37d0fdf85c04b57c74b29343b005d62851df00f8b61a3e4e",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -2418,11 +2849,41 @@
     },
     {
       "type": "people",
+      "id": "mona-benyamin",
+      "key": "people:mona-benyamin",
+      "title": "Mona Benyamin",
+      "path": "/people/mona-benyamin/",
+      "contentHash": "fc3870c76291df65bb45ae87bcb243b4e2660482036ea8d1a9b1be8486550d45",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "mutek-sarah-mackenzie",
       "key": "people:mutek-sarah-mackenzie",
       "title": "MUTEK (Sarah Mackenzie)",
       "path": "/people/mutek-sarah-mackenzie/",
       "contentHash": "d0f27d780045d59912ee358ff7f15b8c8f75889a5793529f6235b1152f67c792",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "nam-hwayeon",
+      "key": "people:nam-hwayeon",
+      "title": "Nam Hwayeon",
+      "path": "/people/nam-hwayeon/",
+      "contentHash": "3f493cbbf959dd71a7551313644a485e2e3e0e6ec7f8cd38d78fe3298f7821c8",
       "summary": "",
       "text": "",
       "date": "",
@@ -2527,6 +2988,21 @@
     },
     {
       "type": "people",
+      "id": "nina-canell",
+      "key": "people:nina-canell",
+      "title": "Nina Canell",
+      "path": "/people/nina-canell/",
+      "contentHash": "6eaea6b437c8d278a38f95672ee82197823ffa7b76d6b73d44808e74bfd4e520",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "nkisi",
       "key": "people:nkisi",
       "title": "Nkisi",
@@ -2621,11 +3097,41 @@
     },
     {
       "type": "people",
+      "id": "rafik-greiss",
+      "key": "people:rafik-greiss",
+      "title": "Rafik Greiss",
+      "path": "/people/rafik-greiss/",
+      "contentHash": "1916dea86ce51d01bc824b9c9b67f8cc5717cabdd34b6527ac5a00b8f2a2f42f",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "raymond-antrobus",
       "key": "people:raymond-antrobus",
       "title": "​ ​Raymond Antrobus",
       "path": "/people/raymond-antrobus/",
       "contentHash": "c332c5c93ecfb1c661e7911a4c2d72893590937326e2b4fff5cdd9f825eac51c",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "rim-dong-sik-and-nature-artist-woo-pyongnam-jongsun",
+      "key": "people:rim-dong-sik-and-nature-artist-woo-pyongnam-jongsun",
+      "title": "Rim Dong Sik and Nature Artist Woo Pyongnam (Jongsun)",
+      "path": "/people/rim-dong-sik-and-nature-artist-woo-pyongnam-jongsun/",
+      "contentHash": "72ab97aced69c972eddccfa2899516b2c4c8024244ecad7b36d9758530e217b1",
       "summary": "",
       "text": "",
       "date": "",
@@ -2651,6 +3157,21 @@
     },
     {
       "type": "people",
+      "id": "rossella-biscotti",
+      "key": "people:rossella-biscotti",
+      "title": "Rossella Biscotti",
+      "path": "/people/rossella-biscotti/",
+      "contentHash": "4fac2e7a92f7c0e42c95191e89614d05cb43900ec87354040d8118f37197b31e",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "ruangrupa",
       "key": "people:ruangrupa",
       "title": "ruangrupa",
@@ -2658,6 +3179,21 @@
       "contentHash": "3e87dae9cdce118241053a6044d88e6176eaac7390494da5061ef811d0cd70fd",
       "summary": "成立于印度尼西亚雅加达的艺术家集体，以协作、知识共享和社区网络为核心，曾担任 documenta fifteen 的艺术总监。",
       "text": "成立于印度尼西亚雅加达的艺术家集体，以协作、知识共享和社区网络为核心，曾担任 documenta fifteen 的艺术总监。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "ryu-hankil",
+      "key": "people:ryu-hankil",
+      "title": "Ryu Hankil",
+      "path": "/people/ryu-hankil/",
+      "contentHash": "38a6ff492316ce811dfc9d25cbfe9334207306683b91456007f84e1718da0751",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -2688,6 +3224,36 @@
       "contentHash": "fa1cf96fa1f016a0571c69889b7428944c35e31099f30b97fa37878b576727da",
       "summary": "日本艺术家，以充气乳胶服装、角色扮演和表演构建跨越人类与非人类界限的世界。",
       "text": "日本艺术家，以充气乳胶服装、角色扮演和表演构建跨越人类与非人类界限的世界。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "saodat-ismailova",
+      "key": "people:saodat-ismailova",
+      "title": "Saodat Ismailova",
+      "path": "/people/saodat-ismailova/",
+      "contentHash": "cece3a5e3bd25d1074229c6f42d0e635db92d25775ccbcb0779856997b26de68",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "sasaki-ken",
+      "key": "people:sasaki-ken",
+      "title": "Sasaki Ken",
+      "path": "/people/sasaki-ken/",
+      "contentHash": "d8ab246d75d4a4736a4bfeb02ddb0a71f79b6e50040905cb64a31963115c4efe",
+      "summary": "",
+      "text": "",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -2735,6 +3301,21 @@
       "title": "Shubigi Rao",
       "path": "/people/shubigi-rao/",
       "contentHash": "cb2155b0585727685f3cfeae5696c052610197f4bc2052dedff3ddfb79ad84fd",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "sohrab-hura",
+      "key": "people:sohrab-hura",
+      "title": "Sohrab Hura",
+      "path": "/people/sohrab-hura/",
+      "contentHash": "6dee69ff7f935c9e0d4254d25fc1a72e6883d13dbd20c4e68f531a716bd15219",
       "summary": "",
       "text": "",
       "date": "",
@@ -2795,6 +3376,36 @@
       "title": "Sungsil Ryu",
       "path": "/people/sungsil-ryu/",
       "contentHash": "4f318fc7aac36bc448ccb3db25ac5288c271377eccccb8fa5414678769501b56",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "sunik-kim",
+      "key": "people:sunik-kim",
+      "title": "Sunik Kim",
+      "path": "/people/sunik-kim/",
+      "contentHash": "cfca0e2536a76c8bf61fcc4af861059359e89b32a8241548c65beff14c6a5202",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "suzuki-akio",
+      "key": "people:suzuki-akio",
+      "title": "Suzuki Akio",
+      "path": "/people/suzuki-akio/",
+      "contentHash": "036fdd35a2907155fdda27e1b1b5f0da493c0393ead3bf317d10ad886c473e0f",
       "summary": "",
       "text": "",
       "date": "",
@@ -2878,6 +3489,21 @@
       "title": "Tatiana Heuman",
       "path": "/people/tatiana-heuman/",
       "contentHash": "e84641d7f0fa466cf6589476c47f45da7f40dfd0cb0569f9c37f55ce3443f667",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "tehching-hsieh",
+      "key": "people:tehching-hsieh",
+      "title": "Tehching Hsieh",
+      "path": "/people/tehching-hsieh/",
+      "contentHash": "94abc751de126889a619f95992d95b98c49d3f846cf4ce1abe257c0154b5ff3b",
       "summary": "",
       "text": "",
       "date": "",
@@ -2997,6 +3623,21 @@
     },
     {
       "type": "people",
+      "id": "ullimsanbang-huh-ryeon-huh-hyeong-huh-geon-huh-lim-huh-moon-hur-jin",
+      "key": "people:ullimsanbang-huh-ryeon-huh-hyeong-huh-geon-huh-lim-huh-moon-hur-jin",
+      "title": "Ullimsanbang (Huh Ryeon, Huh Hyeong, Huh Geon, Huh Lim, Huh Moon, Hur Jin)",
+      "path": "/people/ullimsanbang-huh-ryeon-huh-hyeong-huh-geon-huh-lim-huh-moon-hur-jin/",
+      "contentHash": "c0928d45ec8b40cd6ae3bd21d2ecfc29f7859598bd648e09066bd9de2571805d",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
       "id": "ultra-red",
       "key": "people:ultra-red",
       "title": "Ultra-red",
@@ -3051,6 +3692,51 @@
       "title": "Ursula K. Le Guin",
       "path": "/people/ursula-k-le-guin/",
       "contentHash": "63d9e6ebb43b9e2321c470b94946a5bdcf84871e30f39f2640a9deb6c95d901e",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "volcanoes-of-jeju-jeju-stone-park",
+      "key": "people:volcanoes-of-jeju-jeju-stone-park",
+      "title": "Volcanoes of Jeju (Jeju Stone Park)",
+      "path": "/people/volcanoes-of-jeju-jeju-stone-park/",
+      "contentHash": "3246932adc19183012544a705b59c80d12ddc09846796ef2f4533aadab6d35a3",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "wang-jiahao",
+      "key": "people:wang-jiahao",
+      "title": "Wang Jiahao",
+      "path": "/people/wang-jiahao/",
+      "contentHash": "73ea1affa78ad970a8719aae067fa259a8dceb7c4b7ced541af02673d6163267",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "wang-tuo",
+      "key": "people:wang-tuo",
+      "title": "Wang Tuo",
+      "path": "/people/wang-tuo/",
+      "contentHash": "c529bc4f836b529374da7eea0d96ec741d2f16a77c4bc88fb6d4a32c5b796f27",
       "summary": "",
       "text": "",
       "date": "",
@@ -3641,6 +4327,21 @@
     },
     {
       "type": "institutions",
+      "id": "gwangju-biennale-foundation",
+      "key": "institutions:gwangju-biennale-foundation",
+      "title": "Gwangju Biennale Foundation",
+      "path": "/institutions/gwangju-biennale-foundation/",
+      "contentHash": "48b1632a0d024e5a1c721bc6e169f2c0a17b31353b65b1e3335b220105c3cd12",
+      "summary": "光州双年展基金会是韩国光州以当代艺术展览、策展研究、国际文化交流及公共教育为主要活动的非营利艺术机构，也是亚洲历史最悠久的当代艺术双年展的组织者。 其成立背景与1980年五一八光州民主化运动密切相关，旨在通过艺术回应历史创伤、延续民主精神，并建立连接地方社会与国际当代艺术网络的文化平台。 基金会通过双年展、国际合作、研究论坛、公共教育及档案建设，持续探索艺术与历史记忆、民主、人权、社会变革及全球文化交流之间的关系。",
+      "text": "光州双年展基金会是韩国光州以当代艺术展览、策展研究、国际文化交流及公共教育为主要活动的非营利艺术机构，也是亚洲历史最悠久的当代艺术双年展的组织者。\n\n其成立背景与1980年五一八光州民主化运动密切相关，旨在通过艺术回应历史创伤、延续民主精神，并建立连接地方社会与国际当代艺术网络的文化平台。\n\n基金会通过双年展、国际合作、研究论坛、公共教育及档案建设，持续探索艺术与历史记忆、民主、人权、社会变革及全球文化交流之间的关系。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
       "id": "gwangju-biennale",
       "key": "institutions:gwangju-biennale",
       "title": "Gwangju Biennale",
@@ -3966,6 +4667,26 @@
       "date": "",
       "conceptStage": null,
       "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
+      "id": "museum-of-contemporary-art-tokyo-mot",
+      "key": "institutions:museum-of-contemporary-art-tokyo-mot",
+      "title": "Museum of Contemporary Art Tokyo（MOT）",
+      "path": "/institutions/museum-of-contemporary-art-tokyo-mot/",
+      "contentHash": "a9ea6eae1af537af039b8fba69aa976ae17c6ea090e80c116a0cf2de15df5ede",
+      "summary": "东京都现代美术馆是日本规模最大的公立当代艺术美术馆之一，以日本战后艺术为核心，开展国内外现代及当代艺术的收藏、保存、研究、展示与公共教育活动。 其收藏体系继承了东京都美术馆约3,000件作品，并自1988年起建立独立的收藏机制，通过系统性收藏国际艺术作品，将日本战后艺术置于全球现代与当代艺术史的语境中。 除绘画、雕塑及装置艺术外，其展览亦涵盖影像、建筑、设计、时尚及跨学科艺术实践。",
+      "text": "东京都现代美术馆是日本规模最大的公立当代艺术美术馆之一，以日本战后艺术为核心，开展国内外现代及当代艺术的收藏、保存、研究、展示与公共教育活动。\n\n其收藏体系继承了东京都美术馆约3,000件作品，并自1988年起建立独立的收藏机制，通过系统性收藏国际艺术作品，将日本战后艺术置于全球现代与当代艺术史的语境中。\n\n除绘画、雕塑及装置艺术外，其展览亦涵盖影像、建筑、设计、时尚及跨学科艺术实践。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [
+        "東京都現代美術館",
+        "MOT",
+        "东京都现代美术馆",
+        "도쿄도 현대미술관"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -4393,6 +5114,26 @@
     },
     {
       "type": "institutions",
+      "id": "yamaguchi-center-for-arts-and-media-ycam",
+      "key": "institutions:yamaguchi-center-for-arts-and-media-ycam",
+      "title": "Yamaguchi Center for Arts and Media（YCAM）",
+      "path": "/institutions/yamaguchi-center-for-arts-and-media-ycam/",
+      "contentHash": "aa1d8177ce8b889df3bc936b83631f84eb97e7f02513aa4e6baa22a877c162c8",
+      "summary": "山口信息艺术中心是日本以媒体艺术、科技研究、跨学科协作及地方社会实践为核心的公共文化机构，集展览空间、剧场、电影院、图书馆和研究实验室于一体。 YCAM区别于传统美术馆的地方，在于其不仅展示艺术作品，也直接参与艺术作品的研究、开发与生产。通过内部研究开发团队 YCAM InterLab，与艺术家、工程师、研究者及地方居民展开长期合作，探索媒体技术在艺术、教育和社会中的应用。",
+      "text": "山口信息艺术中心是日本以媒体艺术、科技研究、跨学科协作及地方社会实践为核心的公共文化机构，集展览空间、剧场、电影院、图书馆和研究实验室于一体。\n\nYCAM区别于传统美术馆的地方，在于其不仅展示艺术作品，也直接参与艺术作品的研究、开发与生产。通过内部研究开发团队 YCAM InterLab，与艺术家、工程师、研究者及地方居民展开长期合作，探索媒体技术在艺术、教育和社会中的应用。",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [
+        "山口情報芸術センター［YCAM］",
+        "YCAM",
+        "山口信息艺术中心",
+        "山口資訊藝術中心"
+      ],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "institutions",
       "id": "yokohama-museum",
       "key": "institutions:yokohama-museum",
       "title": "横浜美術館",
@@ -4714,6 +5455,21 @@
     },
     {
       "type": "concepts",
+      "id": "sustainability",
+      "key": "concepts:sustainability",
+      "title": "Sustainability",
+      "path": "/concepts/sustainability/",
+      "contentHash": "c44776d06587afde14d558e4f88da99ae443a3a12342d7fd5ec333bcf844f383",
+      "summary": "",
+      "text": "",
+      "date": "",
+      "conceptStage": "unclassified",
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "concepts",
       "id": "technology-and-body",
       "key": "concepts:technology-and-body",
       "title": "技术与身体",
@@ -4752,6 +5508,18 @@
         {
           "method": "frontmatter",
           "source": "people:shubigi-rao",
+          "field": "linkedConcepts"
+        }
+      ]
+    },
+    {
+      "source": "concepts:concepts-ec7c21229b78c3f0",
+      "target": "people:ho-tzu-nyen",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "people:ho-tzu-nyen",
           "field": "linkedConcepts"
         }
       ]
@@ -6612,6 +7380,17 @@
     },
     {
       "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:archival-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
       "target": "concepts:curatorial-practices",
       "kind": "recorded-link",
       "provenance": [
@@ -6623,7 +7402,572 @@
     },
     {
       "source": "exhibitions:2026-10-27-57",
-      "target": "institutions:gwangju-biennale",
+      "target": "concepts:institutional-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:memory-and-place",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:sustainability",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "concepts:transcultural-studies",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "institutions:gwangju-biennale-foundation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:a-k-dolven",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:amanda-heng",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:angela-goh",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:bhenji-ra",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:brian-kuan-wood",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57",
+          "field": "curators"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:camp",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:che-kyongfa",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57",
+          "field": "curators"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:christian-nyampeta",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:daisuke-kosugi",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:e-roon-kang",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:gahee-park",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57",
+          "field": "curators"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:goldin-senneby",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:heo-baekryeon-gwangju-agricultural-technical-high-school",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:ho-tzu-nyen",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57",
+          "field": "curators"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:inci-eviner",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:jacqueline-kiyomi-gork",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:james-benning",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:james-t-hong",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:jean-barth",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:jeong-geumhyung",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:julius-koller",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:kiri-dalena-ben-brix",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:kwon-byungjun-and-park-chan-kyong",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:lu-yang",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:lygia-clark",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:matthew-barney",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:may-mothers-house",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:maya-watanabe",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:melvin-moti",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:mona-benyamin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:nam-hwayeon",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:nina-canell",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:rafik-greiss",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:rim-dong-sik-and-nature-artist-woo-pyongnam-jongsun",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:rossella-biscotti",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:ryu-hankil",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:saodat-ismailova",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:sasaki-ken",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:sohrab-hura",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:sunik-kim",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:suzuki-akio",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:tehching-hsieh",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:ullimsanbang-huh-ryeon-huh-hyeong-huh-geon-huh-lim-huh-moon-hur-jin",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:volcanoes-of-jeju-jeju-stone-park",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:wang-jiahao",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-10-27-57"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-10-27-57",
+      "target": "people:wang-tuo",
       "kind": "recorded-link",
       "provenance": [
         {
@@ -8393,6 +9737,18 @@
       ]
     },
     {
+      "source": "institutions:museum-of-contemporary-art-tokyo-mot",
+      "target": "people:che-kyongfa",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "people:che-kyongfa",
+          "field": "linkedInstitutions"
+        }
+      ]
+    },
+    {
       "source": "institutions:rockbund-art-museum",
       "target": "people:cici-wu",
       "kind": "archive-association",
@@ -8417,6 +9773,18 @@
       ]
     },
     {
+      "source": "institutions:singapore-art-museum",
+      "target": "people:ho-tzu-nyen",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "people:ho-tzu-nyen",
+          "field": "linkedInstitutions"
+        }
+      ]
+    },
+    {
       "source": "institutions:waitingroom",
       "target": "people:fuyuhiko-takata",
       "kind": "archive-association",
@@ -8427,13 +9795,26 @@
           "field": "linkedInstitutions"
         }
       ]
+    },
+    {
+      "source": "institutions:yamaguchi-center-for-arts-and-media-ycam",
+      "target": "people:ho-tzu-nyen",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "people:ho-tzu-nyen",
+          "field": "linkedInstitutions"
+        }
+      ]
     }
   ],
   "concepts": {},
   "activity": {
-    "concepts:archival-practices": 1,
+    "concepts:archival-practices": 2,
     "people:shubigi-rao": 2,
-    "concepts:concepts-ec7c21229b78c3f0": 3,
+    "concepts:concepts-ec7c21229b78c3f0": 4,
+    "people:ho-tzu-nyen": 4,
     "people:linda-iha": 2,
     "concepts:queer": 1,
     "people:hiroyuki-oki": 3,
@@ -8442,7 +9823,7 @@
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
-    "concepts:memory-and-place": 6,
+    "concepts:memory-and-place": 7,
     "institutions:artizon-museum": 1,
     "people:shiga-lieko": 1,
     "people:yamashiro-chikako": 1,
@@ -8468,10 +9849,10 @@
     "institutions:tokyo-metropolitan-theatre": 2,
     "people:saeborg": 1,
     "exhibitions:2026-02-14-10": 2,
-    "concepts:transcultural-studies": 7,
+    "concepts:transcultural-studies": 8,
     "institutions:yokohama-museum": 1,
     "exhibitions:2026-03-04-11": 2,
-    "concepts:institutional-studies": 17,
+    "concepts:institutional-studies": 18,
     "institutions:national-art-center-tokyo": 1,
     "exhibitions:2026-03-04-12": 4,
     "institutions:mot": 2,
@@ -8483,7 +9864,7 @@
     "exhibitions:2026-03-14-14": 2,
     "institutions:art-fair-tokyo": 1,
     "exhibitions:2026-03-14-15": 3,
-    "concepts:politics-of-representation": 6,
+    "concepts:politics-of-representation": 7,
     "institutions:tokyo-opera-city": 1,
     "people:alfredo-jaar": 2,
     "exhibitions:2026-03-24-16": 3,
@@ -8509,7 +9890,7 @@
     "concepts:site-specificity": 5,
     "institutions:thailand-biennale": 1,
     "exhibitions:2026-04-26-25": 2,
-    "institutions:singapore-art-museum": 2,
+    "institutions:singapore-art-museum": 3,
     "exhibitions:2026-04-26-26": 4,
     "people:bagus-pandega": 1,
     "people:elia-nurvista": 1,
@@ -8599,8 +9980,54 @@
     "exhibitions:2026-10-26-56": 3,
     "institutions:mmca": 1,
     "people:do-ho-suh": 1,
-    "exhibitions:2026-10-27-57": 2,
-    "institutions:gwangju-biennale": 1,
+    "exhibitions:2026-10-27-57": 54,
+    "concepts:sustainability": 1,
+    "institutions:gwangju-biennale-foundation": 1,
+    "people:a-k-dolven": 1,
+    "people:amanda-heng": 1,
+    "people:angela-goh": 1,
+    "people:bhenji-ra": 2,
+    "people:brian-kuan-wood": 1,
+    "people:camp": 1,
+    "people:che-kyongfa": 2,
+    "people:christian-nyampeta": 1,
+    "people:daisuke-kosugi": 1,
+    "people:e-roon-kang": 1,
+    "people:gahee-park": 1,
+    "people:goldin-senneby": 1,
+    "people:heo-baekryeon-gwangju-agricultural-technical-high-school": 1,
+    "people:inci-eviner": 1,
+    "people:jacqueline-kiyomi-gork": 1,
+    "people:james-benning": 1,
+    "people:james-t-hong": 1,
+    "people:jean-barth": 1,
+    "people:jeong-geumhyung": 1,
+    "people:julius-koller": 1,
+    "people:kiri-dalena-ben-brix": 1,
+    "people:kwon-byungjun-and-park-chan-kyong": 1,
+    "people:lu-yang": 1,
+    "people:lygia-clark": 1,
+    "people:matthew-barney": 1,
+    "people:may-mothers-house": 1,
+    "people:maya-watanabe": 1,
+    "people:melvin-moti": 1,
+    "people:mona-benyamin": 1,
+    "people:nam-hwayeon": 1,
+    "people:nina-canell": 1,
+    "people:rafik-greiss": 1,
+    "people:rim-dong-sik-and-nature-artist-woo-pyongnam-jongsun": 1,
+    "people:rossella-biscotti": 1,
+    "people:ryu-hankil": 1,
+    "people:saodat-ismailova": 1,
+    "people:sasaki-ken": 1,
+    "people:sohrab-hura": 1,
+    "people:sunik-kim": 1,
+    "people:suzuki-akio": 1,
+    "people:tehching-hsieh": 1,
+    "people:ullimsanbang-huh-ryeon-huh-hyeong-huh-geon-huh-lim-huh-moon-hur-jin": 1,
+    "people:volcanoes-of-jeju-jeju-stone-park": 1,
+    "people:wang-jiahao": 1,
+    "people:wang-tuo": 1,
     "exhibitions:2026-10-28-58": 2,
     "institutions:acc": 1,
     "exhibitions:2026-10-30-59": 56,
@@ -8609,7 +10036,6 @@
     "people:aliaskar-abarkas": 1,
     "people:alison-nguyen": 1,
     "people:amal-khalaf": 1,
-    "people:bhenji-ra": 1,
     "people:brahim-tall": 1,
     "people:dew-kim": 1,
     "people:drexciya-abu-qadim-haqq": 1,
@@ -8722,9 +10148,11 @@
     "institutions:anomaly": 1,
     "institutions:art-basel": 1,
     "institutions:take-ninagawa": 1,
+    "institutions:museum-of-contemporary-art-tokyo-mot": 1,
     "institutions:rockbund-art-museum": 1,
     "institutions:shugoarts": 1,
-    "institutions:waitingroom": 1
+    "institutions:waitingroom": 1,
+    "institutions:yamaguchi-center-for-arts-and-media-ycam": 1
   },
   "claims": []
 }
