@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "7ed90366424c67634838b69582d205c7606ded3df41365ee82224db8a38d1b54",
-  "generatedAt": "2026-11-27T01:59:48.108Z",
+  "graphHash": "f5536abe70c93dee07c4e452f0cdd694a9ec77b46d0a69053b8051a74c821309",
+  "generatedAt": "2026-11-27T02:14:46.946Z",
   "links": [
     {
       "source": "exhibitions:2026-01-07-02",
@@ -1273,6 +1273,16 @@
       "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
       "target": "people:rivca-burns",
       "kind": "recorded-link"
+    },
+    {
+      "source": "institutions:barbican-centre",
+      "target": "people:yuki-anai",
+      "kind": "archive-association"
+    },
+    {
+      "source": "institutions:mon-takanawa-the-museum-of-narratives",
+      "target": "people:yuki-anai",
+      "kind": "archive-association"
     }
   ],
   "activity": {
@@ -1460,9 +1470,9 @@
     "institutions:watari-um-the-watari-museum-of-contemporary-art": 1,
     "people:nam-june-paik": 1,
     "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 39,
-    "institutions:barbican-centre": 2,
+    "institutions:barbican-centre": 3,
     "institutions:british-council": 2,
-    "institutions:mon-takanawa-the-museum-of-narratives": 2,
+    "institutions:mon-takanawa-the-museum-of-narratives": 3,
     "people:alejandra-cardenas": 1,
     "people:daito-manabe": 1,
     "people:domestic-data-streamers": 1,
@@ -1492,7 +1502,7 @@
     "people:tatiana-heuman": 1,
     "people:temporary-pleasure": 1,
     "people:trans-voices": 1,
-    "people:yuki-anai": 1,
+    "people:yuki-anai": 3,
     "people:yuri-suzuki": 1,
     "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor": 16,
     "institutions:factory-international": 1,

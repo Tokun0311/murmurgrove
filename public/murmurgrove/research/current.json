@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-27T01:59:48.108Z",
-  "sourceDigest": "9cd7c90176de6c1c12241cf6e5a87dad29e5fc8e1273affb258954f08b2d6597",
+  "generatedAt": "2026-11-27T02:14:46.946Z",
+  "sourceDigest": "57115e8421d2b1afa8a77aba900f2308d7002bdefd6dd8b32878e75fbe13be9c",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "7ed90366424c67634838b69582d205c7606ded3df41365ee82224db8a38d1b54",
+  "graphHash": "f5536abe70c93dee07c4e452f0cdd694a9ec77b46d0a69053b8051a74c821309",
   "records": [
     {
       "type": "exhibitions",
@@ -2298,9 +2298,9 @@
       "key": "people:yuki-anai",
       "title": "Yuki Anai",
       "path": "/people/yuki-anai/",
-      "contentHash": "5362ac849ffbfaa80d5109349922033ecaef8ac56ba3cf796dbdb8ba337cfdb4",
-      "summary": "",
-      "text": "",
+      "contentHash": "93487f5d23541c357f003907aed8a4b91ad28f69b662494a4c3bd70693bea168",
+      "summary": "Yuki Anai is the founder and CEO of non-classic and a media artist. Born in Oita, Japan, he earned a Master's degree from Keio University Graduate School of Media Design. While still a student, he launched a digital art team at teamLab and directed live productions for established artists. In 2016 he founded non-classic, creating large-scale spatial productions such as Yorunoyo (Yokohama), the autumn illumination at Nikko Toshogu Shrine, and Meyameya (Kobe",
+      "text": "Yuki Anai is the founder and CEO of non-classic and a media artist. Born in Oita, Japan, he earned a Master's degree from Keio University Graduate School of Media Design. While still a student, he launched a digital art team at teamLab and directed live productions for established artists.\n\nIn 2016 he founded non-classic, creating large-scale spatial productions such as Yorunoyo (Yokohama), the autumn illumination at Nikko Toshogu Shrine, and Meyameya (Kobe). His work has been presented at Ars Electronica (Austria) and the Athens Digital Arts Festival (Greece). In 2026, his new work “Passage of Time” was permanently installed in the atrium of the Oita Prefectural Art Museum (OPAM) to mark the museum’s 10th anniversary.",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -3192,21 +3192,6 @@
       "contentHash": "9113e025ddfe7b47cfc0be2cd5f7c1938adf9a68544edebcdf8e394c31d65c53",
       "summary": "SPACE UN 是东京的展览空间，相关记录涉及其当代艺术展览活动。",
       "text": "SPACE UN 是东京的展览空间，相关记录涉及其当代艺术展览活动。",
-      "date": "",
-      "conceptStage": null,
-      "aliases": [],
-      "conceptReading": "",
-      "mergedInto": null
-    },
-    {
-      "type": "institutions",
-      "id": "syndicate-fukuoka",
-      "key": "institutions:syndicate-fukuoka",
-      "title": "SYNDICATE",
-      "path": "/institutions/syndicate-fukuoka/",
-      "contentHash": "2437469e567067c42a78c370cb45c22b675a1d774e861dd1ab16980a522f235d",
-      "summary": "SYNDICATE 是位于福冈的独立艺术空间，与艺术家协作及地方艺术交流相关。 ### 档案补充记录 福冈独立艺术空间，与艺术家组合 orm project 相关。",
-      "text": "SYNDICATE 是位于福冈的独立艺术空间，与艺术家协作及地方艺术交流相关。\n\n### 档案补充记录\n\n福冈独立艺术空间，与艺术家组合 orm project 相关。",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -6492,6 +6477,30 @@
           "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
         }
       ]
+    },
+    {
+      "source": "institutions:barbican-centre",
+      "target": "people:yuki-anai",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "people:yuki-anai",
+          "field": "linkedInstitutions"
+        }
+      ]
+    },
+    {
+      "source": "institutions:mon-takanawa-the-museum-of-narratives",
+      "target": "people:yuki-anai",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "people:yuki-anai",
+          "field": "linkedInstitutions"
+        }
+      ]
     }
   ],
   "concepts": {},
@@ -6680,9 +6689,9 @@
     "institutions:watari-um-the-watari-museum-of-contemporary-art": 1,
     "people:nam-june-paik": 1,
     "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 39,
-    "institutions:barbican-centre": 2,
+    "institutions:barbican-centre": 3,
     "institutions:british-council": 2,
-    "institutions:mon-takanawa-the-museum-of-narratives": 2,
+    "institutions:mon-takanawa-the-museum-of-narratives": 3,
     "people:alejandra-cardenas": 1,
     "people:daito-manabe": 1,
     "people:domestic-data-streamers": 1,
@@ -6712,7 +6721,7 @@
     "people:tatiana-heuman": 1,
     "people:temporary-pleasure": 1,
     "people:trans-voices": 1,
-    "people:yuki-anai": 1,
+    "people:yuki-anai": 3,
     "people:yuri-suzuki": 1,
     "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor": 16,
     "institutions:factory-international": 1,

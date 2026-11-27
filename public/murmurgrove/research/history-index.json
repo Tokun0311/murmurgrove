@@ -377,5 +377,47 @@
     "edgeCount": 254,
     "priorHash": "734ccda63c169c55752517936aa1ec50e1004217898d9c0708c06630761bb98f",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T02-12-08-293Z-b6e5a43d6ab5.json",
+    "graphHash": "b6e5a43d6ab564b389a9c5542f908aeb74be784fc0401b156bfdfffc47bdea0b",
+    "at": "2026-11-27T02:12:08.277Z",
+    "added": [],
+    "changed": [
+      "institutions:syndicate-fukuoka"
+    ],
+    "removed": [],
+    "recordCount": 229,
+    "edgeCount": 254,
+    "priorHash": "7ed90366424c67634838b69582d205c7606ded3df41365ee82224db8a38d1b54",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T02-12-26-006Z-c9aa44d057e9.json",
+    "graphHash": "c9aa44d057e9b71b620b880f3df3e8f688c7fe52a1868d2ad1a1ba172a61155e",
+    "at": "2026-11-27T02:12:25.990Z",
+    "added": [],
+    "changed": [],
+    "removed": [
+      "institutions:syndicate-fukuoka"
+    ],
+    "recordCount": 228,
+    "edgeCount": 254,
+    "priorHash": "b6e5a43d6ab564b389a9c5542f908aeb74be784fc0401b156bfdfffc47bdea0b",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T02-14-46-958Z-f5536abe70c9.json",
+    "graphHash": "f5536abe70c93dee07c4e452f0cdd694a9ec77b46d0a69053b8051a74c821309",
+    "at": "2026-11-27T02:14:46.946Z",
+    "added": [],
+    "changed": [
+      "people:yuki-anai"
+    ],
+    "removed": [],
+    "recordCount": 228,
+    "edgeCount": 256,
+    "priorHash": "c9aa44d057e9b71b620b880f3df3e8f688c7fe52a1868d2ad1a1ba172a61155e",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]
