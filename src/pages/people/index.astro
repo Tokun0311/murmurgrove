@@ -31,8 +31,8 @@ const usedLatin = new Set(indexed.map(x=>x.letter));
       <p id="people-result-count" class="people-result-count" role="status" aria-live="polite">{items.length} people &amp; collectives</p>
     </div>
     <ol class="archive-list" id="people-list">
-      {indexed.map(({item,letter})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''} ${item.id} ${aliasesForPath('/people/'+item.id+'/').join(' ')}`.toLocaleLowerCase()} data-letter={letter}>
-        <a href={`/people/${item.id}/`}>{item.data.name.includes(" / ") ? <><span class="person-latin">{item.data.name.split(" / ")[0]}</span><span class="person-native">{item.data.name.split(" / ").slice(1).join(" / ")}</span></> : <span class="person-latin">{item.data.name}</span>}</a>
+      {indexed.map(({item,letter})=><li class="archive-entry" data-people-name={`${item.data.name} ${item.data.sortName || ''} ${item.data.reading || ''} ${item.data.nativeName || ''} ${item.data.alternativeNames.join(' ')} ${item.id} ${aliasesForPath('/people/'+item.id+'/').join(' ')}`.toLocaleLowerCase()} data-letter={letter}>
+        <a href={`/people/${item.id}/`}>{item.data.name.includes(" / ") ? <><span class="person-latin">{item.data.name.split(" / ")[0]}</span><span class="person-native">{item.data.name.split(" / ").slice(1).join(" / ")}</span></> : <span class="person-latin">{item.data.name}</span>}{item.data.nativeName && !item.data.name.includes(item.data.nativeName) && <span class="person-native">{item.data.nativeName}</span>}</a>
       </li>)}
     </ol>
     <p id="people-empty" class="people-result-count" hidden>No matching people found.</p>

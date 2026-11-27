@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { analyzeExhibition, validateAiSuggestions, buildAiPrompt, validateNewRecordProposals } from './analyzer.mjs';
 import {extractDocx} from './word-import.mjs';
+import {createRecordManager} from './record-management.mjs';
 import {cleanBundle,publishBundle} from './bundle.mjs';
 // MURMURGROVE_EXHIBITION_FIRST_V12
 import {listQuestions,createQuestion,appendQuestion,annotateRevision,readRevisionNotes} from './research-continuity.mjs';
@@ -16,13 +17,13 @@ import {assessClaims,readArchive,buildGraph,answerQuestion,groundedPrompt,readEv
 const here = path.dirname(fileURLToPath(import.meta.url));
 const TYPE_FIELDS = {
   exhibitions: { required: ['title','region','location','kind'], optional: ['visitedOn','engagement','researchOn','plannedOn','recordedOn','researchSources','dateLabel','artists','concepts','institution','relatedInstitutions','exhibitionStart','exhibitionEnd','verification'] },
-  people: { required: ['name'], optional: ['kind','reading','sortName','linkedInstitutions'] },
+  people: { required: ['name'], optional: ['kind','reading','sortName','nativeName','alternativeNames','linkedInstitutions'] },
   institutions: { required: ['name'], optional: ['city','longitude','latitude','locationType','address','addressStatus','addressSource','venueName','venueAddress','venueStatus','associatedProject','linkedPeople','linkedExhibitions','linkedConcepts'] },
   concepts: { required: ['title'], optional: [] },
   writing: { required: ['title','date','description'], optional: ['type','language','tags','draft'] }
 };
 const RELATIONS = {artists:'people',concepts:'concepts',institution:'institutions',relatedInstitutions:'institutions',linkedInstitutions:'institutions',linkedPeople:'people',linkedExhibitions:'exhibitions',linkedConcepts:'concepts'};
-const ARRAY_KEYS = new Set(['artists','concepts','relatedInstitutions','tags','linkedInstitutions','linkedPeople','linkedExhibitions','linkedConcepts']);
+const ARRAY_KEYS = new Set(['artists','concepts','relatedInstitutions','tags','alternativeNames','linkedInstitutions','linkedPeople','linkedExhibitions','linkedConcepts']);
 const BOOL_KEYS = new Set(['draft']);
 const NUMBER_KEYS = new Set(['latitude','longitude']);
 const ALLOWED_TYPES = new Set(Object.keys(TYPE_FIELDS));
@@ -76,7 +77,7 @@ function normalise(type,submitted,{strict=false}={}){
   if(!submitted||typeof submitted!=='object'||Array.isArray(submitted))throw Object.assign(new Error('Invalid form data'),{status:400});
   for(const k of [...f.required,...f.optional]){
     let v=submitted[k];
-    if(ARRAY_KEYS.has(k)){if(v===undefined||v===null)v=[];if(!Array.isArray(v)||v.some(x=>typeof x!=='string'||!slugOk(x)&&k!=='tags'))throw Object.assign(new Error('Invalid '+k+' values'),{status:400});fields[k]=[...new Set(v.map(x=>x.trim()).filter(Boolean))];}
+    if(ARRAY_KEYS.has(k)){if(v===undefined||v===null)v=[];if(!Array.isArray(v)||v.some(x=>typeof x!=='string'||!slugOk(x)&&!['tags','alternativeNames'].includes(k)))throw Object.assign(new Error('Invalid '+k+' values'),{status:400});fields[k]=[...new Set(v.map(x=>x.trim()).filter(Boolean))];}
     else if(BOOL_KEYS.has(k)){fields[k]=v===true;}
     else if(NUMBER_KEYS.has(k)){
       if(v===''||v===null||v===undefined)continue;
@@ -165,6 +166,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
   const citiesFile=path.join(root,'src/lib/geographic-index.json');
   let updateQueue=Promise.resolve();
   async function serializeWrite(fn){const prior=updateQueue;let release;updateQueue=new Promise(resolve=>release=resolve);await prior;try{return await fn()}finally{release()}}
+  const manager=createRecordManager({root,privateDir,types:[...ALLOWED_TYPES],relations:RELATIONS,requireType,requireSlug,getPaths,splitMd,blocksOf,readFields,renderValue,exists,saveAtomic,sha,syncGraph,apiError});
   const files={'/':{file:'index.html',mime:'text/html; charset=utf-8'},'/assets/editor.css':{file:'assets/editor.css',mime:'text/css; charset=utf-8'},'/assets/editor.js':{file:'assets/editor.js',mime:'application/javascript; charset=utf-8'},'/assets/research.js':{file:'assets/research.js',mime:'application/javascript; charset=utf-8'}};
   async function readCatalog(){
     const entries=await Promise.all(['people','institutions','concepts','exhibitions'].map(t=>recordList(root,t)));
@@ -184,6 +186,8 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const asset=files[u.pathname];const bytes=await fsp.readFile(path.join(here,asset.file));res.writeHead(200,{'content-type':asset.mime,'cache-control':'no-store','x-content-type-options':'nosniff','content-security-policy':"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"});return res.end(bytes);
       }
       if(req.method==='GET'&&u.pathname==='/api/bootstrap')return json(res,200,{token,project:path.basename(root),collections:Object.keys(TYPE_FIELDS),writingRoute:await exists(path.join(root,'src/pages/writing/index.astro'))});
+      if(req.method==='GET'&&u.pathname==='/api/withdrawn-records')return json(res,200,{items:await manager.list()});
+      if(req.method==='GET'&&u.pathname==='/api/record-removal-preview')return json(res,200,await manager.preview(u.searchParams.get('type'),u.searchParams.get('slug')));
       if(req.method==='GET'&&u.pathname==='/api/geography')return json(res,200,{cities:await exists(citiesFile)?JSON.parse(await fsp.readFile(citiesFile,'utf8')):{}});
       if(req.method==='GET'&&u.pathname==='/api/recoveries'){
         const names=await exists(recoveryDir)?await fsp.readdir(recoveryDir):[];const items=[];
@@ -210,17 +214,18 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
       if(req.method==='GET'&&u.pathname==='/api/drafts'){
         const type=requireType(u.searchParams.get('type'));const dir=path.join(draftDir,type);
         const names=await exists(dir)?(await fsp.readdir(dir)).filter(x=>x.endsWith('.json')):[];
-        const items=[];for(const name of names){try{const x=JSON.parse(await fsp.readFile(path.join(dir,name),'utf8'));if(!slugOk(x.slug))continue;items.push({slug:x.slug,title:x.fields?.title||x.fields?.name||x.slug,updatedAt:x.updatedAt})}catch{}}
+        const items=[];for(const name of names){try{const x=JSON.parse(await fsp.readFile(path.join(dir,name),'utf8'));if(!slugOk(x.slug))continue;items.push({slug:x.slug,title:x.fields?.title||x.fields?.name||x.slug,fields:x.fields,updatedAt:x.updatedAt})}catch{}}
         return json(res,200,{items:items.sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''))});
       }
       if(req.method==='GET'&&u.pathname==='/api/draft'){
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug'));
         const file=path.join(draftDir,type,`${slug}.json`);if(!await exists(file))throw apiError(404,'Draft not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
       }
-      if(req.method==='POST'&&['/api/geography-add','/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
+      if(req.method==='POST'&&['/api/record-withdraw','/api/record-delete','/api/record-restore','/api/geography-add','/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
         const expectedOrigin=`http://127.0.0.1:${server.address().port}`;
         if(req.headers.origin!==expectedOrigin||req.headers['x-editor-token']!==token)throw apiError(403,'Untrusted request');
         const p=await readJSON(req,u.pathname==='/api/import-word'?12*1024*1024:1024*1024);
+        if(['/api/record-withdraw','/api/record-delete','/api/record-restore'].includes(u.pathname))return await serializeWrite(async()=>json(res,200,await manager.mutate(u.pathname.slice('/api/record-'.length),p)));
         if(u.pathname==='/api/geography-add')return await serializeWrite(async()=>{
           const name=typeof p.name==='string'?p.name.trim().normalize('NFKC'):'',country=typeof p.country==='string'?p.country.trim():'',lat=p.lat,lon=p.lon;
           const aliases=Array.isArray(p.aliases)?p.aliases.map(x=>typeof x==='string'?x.trim():'').filter(Boolean):[];
@@ -351,7 +356,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
           try{await fsp.writeFile(draft,JSON.stringify(doc,null,2)+'\n',{flag:'wx'});}catch(e){if(e.code==='EEXIST')throw apiError(409,'Private draft already exists');throw e;}
           return json(res,201,{ok:true,kind:'private-proposed-record',type,slug,relativePath:'murmurgrove-editor/.private/drafts/'+type+'/'+slug+'.json',warning:'Only a private draft was created. Review and publish separately, then link back to the exhibition.'});
         }
-        if(u.pathname==='/api/bundle-publish')return await serializeWrite(async()=>json(res,200,await publishBundle(p,{root,privateDir,draftDir,backupDir,normalise,getPaths,recordList,readCatalog,readConceptMeta,renderMd,saveAtomic,syncGraph,sha,exists})));
+        if(u.pathname==='/api/bundle-publish')return await serializeWrite(async()=>{await manager.assertAvailable(p.type,p.slug);for(const n of p.bundle||[])await manager.assertAvailable(n.type,n.slug);return json(res,200,await publishBundle(p,{root,privateDir,draftDir,backupDir,normalise,getPaths,recordList,readCatalog,readConceptMeta,renderMd,saveAtomic,syncGraph,sha,exists}));});
         return await serializeWrite(async()=>{
         const type=requireType(p.type),slug=requireSlug(p.slug),paths=getPaths(root,type,slug);
         if(u.pathname==='/api/delete-draft'){
@@ -366,6 +371,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
           const data={type,slug,fields,body,hash:p.hash||null,wordOriginalSha:typeof p.wordOriginalSha==='string'&&/^[a-f0-9]{64}$/.test(p.wordOriginalSha)?p.wordOriginalSha:null,originalTextSha,...(type==='exhibitions'?{bundle:cleanBundle(p.bundle)}:{}),updatedAt:new Date().toISOString()};
           await saveAtomic(file,JSON.stringify(data,null,2)+'\n');return json(res,200,{ok:true,kind:'draft',relativePath:'murmurgrove-editor/.private/drafts/'+type+'/'+slug+'.json'});
         }
+        await manager.assertAvailable(type,slug);
         if(p.confirmPublic!==true)throw apiError(422,'Please confirm public publication');
         if(p.bundle?.length)throw apiError(422,'Use grouped publication for staged linked records.');
         if(type==='writing' && fields.draft===true)throw apiError(422,'Writing must be public to publish');

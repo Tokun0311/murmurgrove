@@ -36,7 +36,7 @@ function findEvidence(source,phrases){const sorted=[...new Set(phrases.map(s=>St
   for(const phrase of sorted){for(const [label,text] of source){const offset=matchPhrase(text,phrase);if(offset>=0)return {quote:excerpt(text,offset,phrase.length),matched:text.slice(offset,offset+phrase.length),source:label};}}
   return null;
 }
-function labels(record,type){const f=record.fields||{};const names=type==='people'?[f.name,f.reading,f.sortName,record.title]:type==='institutions'?[f.name,f.venueName,record.title]:[f.title,record.title];
+function labels(record,type){const f=record.fields||{};const names=type==='people'?[f.name,f.nativeName,f.reading,f.sortName,record.title,...(f.alternativeNames||[])]:type==='institutions'?[f.name,f.venueName,record.title]:[f.title,record.title];
   // Short slugs and generic one-word names are intentionally excluded from direct entity matching.
   return [...new Set(names.map(x=>String(x||'').trim()).filter(x=>x.length>=3))];
 }
@@ -55,7 +55,7 @@ const GROUP_TO_COLLECTION={people:'people',institutions:'institutions',concepts:
 function compactName(s){return normalise(s).replace(/[\s\p{P}\p{S}]+/gu,'');}
 function sourceParts(record){return [['title',String(record.title||'')],['location',String(record.location||'')],['body',String(record.body||'')]];}
 function recordHasExactQuote(parts,quote){return parts.find(([label,s])=>s.includes(quote))?.[0]||null;}
-function existingNames(record,group){return [...new Set([record.title,record.fields?.name,record.fields?.title,record.fields?.reading,...(group==='concepts'?[...(ALIASES[record.slug]||[]),...(record.fields?.aliases||[])]:[])].filter(x=>typeof x==='string'&&x.trim()))];}
+function existingNames(record,group){return [...new Set([record.title,record.fields?.name,record.fields?.title,record.fields?.reading,record.fields?.nativeName,...(record.fields?.alternativeNames||[]),...(group==='concepts'?[...(ALIASES[record.slug]||[]),...(record.fields?.aliases||[])]:[])].filter(x=>typeof x==='string'&&x.trim()))];}
 function suggestSlug(name,group){
   const latin=String(name).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,70).replace(/-+$/,'');
   if(latin.length>1)return latin;

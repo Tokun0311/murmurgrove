@@ -22,7 +22,7 @@ export function cleanBundle(input){
   if(typeof n.name!=='string'||!n.name.trim()||n.name.length>300||typeof n.body!=='string'||n.body.length>100000)throw fail('A linked record needs a name and valid text.');
   if(n.type==='institutions'&&n.city!=null&&(typeof n.city!=='string'||n.city.length>120||/[\r\n]/.test(n.city)))throw fail('Invalid institution city.');
   const associations={};for(const field of Object.keys(associationFields[n.type]||{})){const values=n[field]||[];if(!Array.isArray(values)||values.some(v=>!slugOk(v)))throw fail('Invalid linked archive IDs');associations[field]=[...new Set(values)];}
-  return {...associations,type:n.type,slug:n.slug,name:n.name.trim(),body:n.body,...(n.type==='institutions'?{city:String(n.city||'').trim()}:{}),kind:['artist','collective','curator','writer','other'].includes(n.kind)?n.kind:'other',reviewed:n.reviewed===true};
+  return {...associations,type:n.type,slug:n.slug,name:n.name.trim(),body:n.body,...(n.type==='institutions'?{city:String(n.city||'').trim()}:{}),...(n.type==='people'?{nativeName:String(n.nativeName||'').trim(),alternativeNames:Array.isArray(n.alternativeNames)?n.alternativeNames:[]}:{}),kind:['artist','collective','curator','writer','other'].includes(n.kind)?n.kind:'other',reviewed:n.reviewed===true};
  });
 }
 async function snapshotTree(dir){const map=new Map();async function walk(p){for(const ent of await names(p)){const q=path.join(p,ent.name);if(ent.isSymbolicLink())throw fail('Unexpected symlink in research output; publication stopped.');if(ent.isDirectory())await walk(q);else if(ent.isFile())map.set(q,await fs.readFile(q));}}await walk(dir);return map;}
@@ -50,7 +50,7 @@ export async function publishBundle(p,c){
   for(const ent of await names(path.join(draftDir,n.type))){if(!ent.isFile()||!ent.name.endsWith('.json'))continue;let draft;try{draft=JSON.parse((await fs.readFile(path.join(draftDir,n.type,ent.name),'utf8')))}catch{throw fail('Unreadable private draft; check '+ent.name+' first.',409)}
    if(draft.slug===n.slug||variants({title:draft.fields?.name||draft.fields?.title,slug:draft.slug,fields:draft.fields}).includes(norm(n.name)))throw fail('Separate private draft already exists for '+n.name+'. Review it separately; it will not be overwritten or published.',409);
   }
-  const f=normalise(n.type,n.type==='concepts'?{title:n.name}:n.type==='people'?{name:n.name,kind:n.kind,linkedInstitutions:n.linkedInstitutions}:{name:n.name,city:n.city,linkedPeople:n.linkedPeople,linkedExhibitions:n.linkedExhibitions,linkedConcepts:n.linkedConcepts},{strict:true});
+  const f=normalise(n.type,n.type==='concepts'?{title:n.name}:n.type==='people'?{name:n.name,kind:n.kind,nativeName:n.nativeName,alternativeNames:n.alternativeNames,linkedInstitutions:n.linkedInstitutions}:{name:n.name,city:n.city,linkedPeople:n.linkedPeople,linkedExhibitions:n.linkedExhibitions,linkedConcepts:n.linkedConcepts},{strict:true});
   writes.push({file,old:null,raw:renderMd(n.type,f,n.body,null),isNew:true});
  }
  const exFile=getPaths(root,'exhibitions',p.slug).file,oldBytes=await read(exFile),old=oldBytes?.toString('utf8')??null;
