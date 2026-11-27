@@ -79,15 +79,32 @@ export function placeCurrentResearch({records, relations}, anchors, baselineLink
     for (const {linked, ids} of siblings.values()) {
       const origin = average(linked.map(id => positioned.get(id)));
       const radial = normalize(origin.map((value, i) => value - center[i]));
-      const axis = Math.abs(radial[1]) < .9 ? [0, 1, 0] : [1, 0, 0];
-      const tangent = normalize([radial[1] * axis[2] - radial[2] * axis[1],
-        radial[2] * axis[0] - radial[0] * axis[2], radial[0] * axis[1] - radial[1] * axis[0]]);
-      const binormal = normalize([radial[1]*tangent[2]-radial[2]*tangent[1], radial[2]*tangent[0]-radial[0]*tangent[2], radial[0]*tangent[1]-radial[1]*tangent[0]]);
-      const offset = hashId(linked.join('|')) / 4294967296 * Math.PI * 2;
-      for (const [index, id] of ids.entries()) {
-        const angle = offset + index * Math.PI * 2 / ids.length;
-        const distance = linked.length === 1 ? .15 : .10;
-        const rest = origin.map((value, i) => value + distance * (ids.length === 1 ? radial[i] : .35*radial[i] + .94*(tangent[i]*Math.cos(angle)+binormal[i]*Math.sin(angle))));
+      // Stable, porous 3D neighborhoods, not a planar ring or a fixed shell.
+      // Only documented neighbors determine the anchor; no synthetic edges.
+      const radius = (linked.length === 1 ? .15 : .10) *
+        Math.min(1.85, Math.max(1, Math.cbrt(ids.length / 3)));
+      const occupied = [...positioned.values(), ...[...additions.values()].map(a => a.rest)]
+        .filter(p => Math.hypot(...p.map((v,i)=>v-origin[i])) < radius*2.5);
+      const unit = key => (hashId(key)+.5)/4294967296;
+      const frac = x => x-Math.floor(x);
+      for (const id of ids) {
+        const seed = unit(id+'|volume');
+        let rest, best = -Infinity;
+        // Candidate search runs only on data refresh, never in the frame loop.
+        for(let j=0;j<32;j++){
+          const z = 2*frac(seed+j*.754877666246693)-1;
+          const angle = 2*Math.PI*frac(unit(id+'|angle')+j*.618033988749895);
+          const r = radius*Math.cbrt(.06+.94*frac(unit(id+'|radius')+j*.569840290998));
+          const xy = Math.sqrt(1-z*z);
+          const direction = [xy*Math.cos(angle),z,xy*Math.sin(angle)];
+          const candidate = origin.map((v,i)=>v+r*direction[i]+radius*.16*radial[i]);
+          let nearest = radius;
+          for(const p of occupied) nearest=Math.min(nearest,Math.hypot(...p.map((v,i)=>v-candidate[i])));
+          // Favor breathable spacing without pushing every point to the outside.
+          const score = Math.min(nearest,radius*.31) + radius*.07*unit(id+'|candidate|'+j);
+          if(score>best){best=score;rest=candidate;}
+        }
+        occupied.push(rest);
         additions.set(id, { origin, rest, wave });
       }
     }
