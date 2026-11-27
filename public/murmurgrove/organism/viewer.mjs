@@ -225,6 +225,7 @@ canvas.after(currentCanvas);
 const currentContext=currentCanvas.getContext('2d');
 let currentResearch=null,currentLayer=null,currentStart=0,currentPoints=new Map();
 let currentRequested=0;
+let currentAnimate=false;
 function fillFinder(archive){
  const select=$('recordSelect'),placeholder=select.options[0];
  const options=[...archive.values()].map(record=>{
@@ -248,10 +249,11 @@ async function refreshCurrentResearch(){
   const layer=placeCurrentResearch(research,anchors,links);
   const now=performance.now();
   if(currentLayer){
-   const previous=currentProjection(currentLayer,point=>point,now-currentStart,reducedMotionMedia.matches);
+   const previous=currentProjection(currentLayer,point=>point,now-currentStart,reducedMotionMedia.matches,{animate:currentAnimate});
    for(const [id,placement] of layer.additions)placement.previous=previous.get(id);
   }
   currentResearch={...research,hash:graph.graphHash};
+  currentAnimate=Boolean(currentLayer);
   currentLayer=layer;
   currentStart=now;
   if(selected&&!relationJourney&&!sourceView&&!lifePreviewEvent)showCard(selected);
@@ -269,7 +271,7 @@ function drawCurrentLayer(now,basePositions){
   return;
  }
  const reduced=reducedMotionMedia.matches;
- currentPoints=currentProjection(currentLayer,coords,now-currentStart,reduced);
+ currentPoints=currentProjection(currentLayer,coords,now-currentStart,reduced,{animate:currentAnimate,time:Date.now()/1000,mode,motion:(rest,moving)=>visibleOverviewMotion(rest,calmMagnifiedMotion(rest,moving,zoom),zoom,mode)});
  drawCurrentResearch(currentContext,currentLayer,currentPoints,id=>basePositions[nodeIndex.get(id)],
   {mode,zoom,clock:now-currentStart,reduced,selected});
 }

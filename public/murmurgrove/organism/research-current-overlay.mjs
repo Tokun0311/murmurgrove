@@ -8,6 +8,8 @@ function validAssociationProof(edge,proof){
 }
 import { EMERALD } from './emerald-palette.mjs';
 import { cubicBezierAt } from './relation-flow.mjs';
+import { breathingTime, opticalTime } from './movement-pacing.mjs';
+import { hashId } from './quiet-particles.mjs';
 
 const kinds = { exhibitions: 'exhibition', people: 'person', institutions: 'institution', concepts: 'concept', writing: 'writing' };
 const average = points => [0, 1, 2].map(axis => points.reduce((sum, p) => sum + p[axis], 0) / points.length);
@@ -80,10 +82,12 @@ export function placeCurrentResearch({records, relations}, anchors, baselineLink
       const axis = Math.abs(radial[1]) < .9 ? [0, 1, 0] : [1, 0, 0];
       const tangent = normalize([radial[1] * axis[2] - radial[2] * axis[1],
         radial[2] * axis[0] - radial[0] * axis[2], radial[0] * axis[1] - radial[1] * axis[0]]);
+      const binormal = normalize([radial[1]*tangent[2]-radial[2]*tangent[1], radial[2]*tangent[0]-radial[0]*tangent[2], radial[0]*tangent[1]-radial[1]*tangent[0]]);
+      const offset = hashId(linked.join('|')) / 4294967296 * Math.PI * 2;
       for (const [index, id] of ids.entries()) {
-        const angle = ids.length === 1 ? 0 : ((index / (ids.length - 1)) - .5) * 1.7;
+        const angle = offset + index * Math.PI * 2 / ids.length;
         const distance = linked.length === 1 ? .15 : .10;
-        const rest = origin.map((value, i) => value + distance * (radial[i] * Math.cos(angle) + tangent[i] * Math.sin(angle)));
+        const rest = origin.map((value, i) => value + distance * (ids.length === 1 ? radial[i] : .35*radial[i] + .94*(tangent[i]*Math.cos(angle)+binormal[i]*Math.sin(angle))));
         additions.set(id, { origin, rest, wave });
       }
     }
@@ -108,16 +112,21 @@ export function placeCurrentResearch({records, relations}, anchors, baselineLink
   return { additions, edges, activity, unplaced: remaining.length };
 }
 
-export function currentProjection(layer, coords, elapsed, reduced) {
+export function currentProjection(layer, coords, elapsed, reduced, {animate=false, time=0, mode='Whole', motion=null}={}) {
   const points = new Map();
+  const breath=breathingTime(time,mode), waveClock=opticalTime(time,mode);
   for (const [id, {origin, rest, wave, previous}] of layer.additions) {
     const delay = previous ? 0 : wave * 650;
-    const age = reduced ? 1 : Math.max(0, Math.min(1, (elapsed - delay) / 2200));
+    const age = reduced || !animate ? 1 : Math.max(0, Math.min(1, (elapsed - delay) / 2200));
     const blend = age * age * (3 - 2 * age);
     const from = previous?.point || origin;
-    const startGrowth = previous?.growth || 0;
-    const growth = startGrowth + (1 - startGrowth) * blend;
-    points.set(id, { point: coords(rest.map((value, i) => from[i] + (value - from[i]) * blend)), growth });
+    const growth = (previous?.growth || 0) + (1 - (previous?.growth || 0)) * blend;
+    const p=rest.map((value,i)=>from[i]+(value-from[i])*blend);
+    const phase=hashId(id)/4294967296*Math.PI*2;
+    const amplitude=mode==='Movement'?.0054:.0045;
+    const local=Math.sin(waveClock*.18-p[0]*3.5-p[1]*1.7+phase*.22);
+    const moving=reduced?p:p.map((value,i)=>value+growth*amplitude*(i===0?.45*Math.sin(breath*.43+phase)+.55*local:i===1?.45*Math.cos(breath*.38+phase)+.55*local:.4*local));
+    points.set(id,{point:motion&&!reduced?motion(coords(p),coords(moving)):coords(p),growth});
   }
   return points;
 }
