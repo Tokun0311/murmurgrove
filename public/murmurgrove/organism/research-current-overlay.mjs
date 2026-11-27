@@ -7,9 +7,28 @@ function validAssociationProof(edge,proof){
   return ['people','institutions','exhibitions','concepts','writing'].includes(sourceType)&&!!targetType&&other.startsWith(targetType+':')&&(proof.field!=='curators'||sourceType==='exhibitions');
 }
 import { EMERALD } from './emerald-palette.mjs';
-import { cubicBezierAt } from './relation-flow.mjs';
+import { cubicBezierAt, flowSamplesForRelation } from './relation-flow.mjs';
 import { breathingTime, opticalTime } from './movement-pacing.mjs';
 import { hashId } from './quiet-particles.mjs';
+
+import { mangroveControls } from './organic-interaction.mjs';
+export function organicPosition(p,time,mode,entry,main=true){
+ const breathClock=breathingTime(time,mode),waveClock=opticalTime(time,mode);
+ const depth=entry.density,phase=Math.atan2(entry.tangent[1],entry.tangent[0]);
+ // Traveling, space-dependent direction-field phase: neighbors do not all shake in place.
+ // The configured Movement wave clock keeps a low base frequency for legible propagation.
+ const localWave=Math.sin(waveClock*.18 - p[0]*3.5 - p[1]*1.7 + phase*.22);
+ const breathing=Math.sin(breathClock*.32+phase*.20)*(.0022+Math.min(.005,depth*.00025));
+ const amplitude=main?(mode==='Movement'?.0054:.0045):.0028;
+ const direction=entry.tangent;
+ // Deliberately slow the tiny node displacement: the fast directional flow lives
+ // on source-backed Bézier curves, not in untrackable high-frequency jitter.
+ const u=Math.sin(breathClock*.43+phase+p[0]*2.8+p[2]*.7);
+ const v=Math.cos(breathClock*.38+phase*.9+p[1]*3.4);
+ return [p[0]+direction[1]*amplitude*(.45*u+.55*localWave)+direction[0]*breathing,
+  p[1]-direction[0]*amplitude*(.45*v+.55*localWave)+direction[1]*breathing,
+  p[2]+(main?amplitude*.40:amplitude*.10)*localWave];
+}
 
 const kinds = { exhibitions: 'exhibition', people: 'person', institutions: 'institution', concepts: 'concept', writing: 'writing' };
 const average = points => [0, 1, 2].map(axis => points.reduce((sum, p) => sum + p[axis], 0) / points.length);
@@ -78,34 +97,27 @@ export function placeCurrentResearch({records, relations}, anchors, baselineLink
     }
     for (const {linked, ids} of siblings.values()) {
       const origin = average(linked.map(id => positioned.get(id)));
-      const radial = normalize(origin.map((value, i) => value - center[i]));
-      // Stable, porous 3D neighborhoods, not a planar ring or a fixed shell.
-      // Only documented neighbors determine the anchor; no synthetic edges.
-      const radius = (linked.length === 1 ? .15 : .10) *
-        Math.min(1.85, Math.max(1, Math.cbrt(ids.length / 3)));
-      const occupied = [...positioned.values(), ...[...additions.values()].map(a => a.rest)]
-        .filter(p => Math.hypot(...p.map((v,i)=>v-origin[i])) < radius*2.5);
-      const unit = key => (hashId(key)+.5)/4294967296;
-      const frac = x => x-Math.floor(x);
-      for (const id of ids) {
-        const seed = unit(id+'|volume');
-        let rest, best = -Infinity;
-        // Candidate search runs only on data refresh, never in the frame loop.
-        for(let j=0;j<32;j++){
-          const z = 2*frac(seed+j*.754877666246693)-1;
-          const angle = 2*Math.PI*frac(unit(id+'|angle')+j*.618033988749895);
-          const r = radius*Math.cbrt(.06+.94*frac(unit(id+'|radius')+j*.569840290998));
-          const xy = Math.sqrt(1-z*z);
-          const direction = [xy*Math.cos(angle),z,xy*Math.sin(angle)];
-          const candidate = origin.map((v,i)=>v+r*direction[i]+radius*.16*radial[i]);
-          let nearest = radius;
-          for(const p of occupied) nearest=Math.min(nearest,Math.hypot(...p.map((v,i)=>v-candidate[i])));
-          // Favor breathable spacing without pushing every point to the outside.
-          const score = Math.min(nearest,radius*.31) + radius*.07*unit(id+'|candidate|'+j);
+      // Distribute into the existing body's volume, biased toward actual links.
+      const base = [...anchors.values()];
+      const min=[0,1,2].map(k=>Math.min(...base.map(p=>p[k])));
+      const max=[0,1,2].map(k=>Math.max(...base.map(p=>p[k])));
+      const span=Math.hypot(...max.map((v,k)=>v-min[k]));
+      const occupied=[...positioned.values(),...[...additions.values()].map(a=>a.rest)];
+      const unit=key=>(hashId(key)+.5)/4294967296;
+      const frac=x=>x-Math.floor(x);
+      for(const id of ids){
+        const seed=unit(id+'|volume');let rest,best=-Infinity;
+        for(let j=0;j<64;j++){
+          const anchor=base[Math.floor(frac(seed+j*.61803398875)*base.length)];
+          const mix=.22+.65*frac(unit(id+'|mix')+j*.754877666);
+          const candidate=origin.map((v,k)=>v*(1-mix)+anchor[k]*mix+(frac(unit(id+'|axis'+k)+j*(.569840291+k*.117))*2-1)*span*.055);
+          let nearest=span;
+          for(const p of occupied)nearest=Math.min(nearest,Math.hypot(...p.map((v,k)=>v-candidate[k])));
+          const distance=Math.hypot(...candidate.map((v,k)=>v-origin[k]));
+          const score=Math.min(nearest,span*.055)-distance*.065+span*.008*unit(id+'|candidate'+j);
           if(score>best){best=score;rest=candidate;}
         }
-        occupied.push(rest);
-        additions.set(id, { origin, rest, wave });
+        occupied.push(rest);additions.set(id,{origin,rest,wave});
       }
     }
     for (const id of eligible) {
@@ -113,6 +125,19 @@ export function placeCurrentResearch({records, relations}, anchors, baselineLink
       remaining.splice(remaining.indexOf(id), 1);
     }
     wave++;
+  }
+  // Same local direction/density construction used by the original body.
+  for(const [id,placement] of additions){
+    const p=placement.rest,tangent=[0,0,0];let density=0;
+    for(const other of neighbors.get(id)){
+      const q=positioned.get(other);if(q)for(let k=0;k<3;k++)tangent[k]+=q[k]-p[k];
+    }
+    for(const [other,q] of positioned){if(other===id)continue;
+      const d2=q.reduce((sum,v,k)=>sum+(v-p[k])**2,0);
+      if(d2>=.55**2)continue;const weight=Math.exp(-d2/(2*(.55*.47)**2));density+=weight;
+      for(let k=0;k<3;k++)tangent[k]+=(q[k]-p[k])*weight*.24;
+    }
+    placement.field={tangent:normalize(tangent),density};
   }
   const baseline = new Set(baselineLinks.map(edge => edgeKey(edge.from, edge.to)));
   const visible = new Set(baseline);
@@ -132,37 +157,34 @@ export function placeCurrentResearch({records, relations}, anchors, baselineLink
 export function currentProjection(layer, coords, elapsed, reduced, {animate=false, time=0, mode='Whole', motion=null}={}) {
   const points = new Map();
   const breath=breathingTime(time,mode), waveClock=opticalTime(time,mode);
-  for (const [id, {origin, rest, wave, previous}] of layer.additions) {
+  for (const [id, {origin, rest, wave, previous, field}] of layer.additions) {
     const delay = previous ? 0 : wave * 650;
     const age = reduced || !animate ? 1 : Math.max(0, Math.min(1, (elapsed - delay) / 2200));
     const blend = age * age * (3 - 2 * age);
     const from = previous?.point || origin;
     const growth = (previous?.growth || 0) + (1 - (previous?.growth || 0)) * blend;
     const p=rest.map((value,i)=>from[i]+(value-from[i])*blend);
-    const phase=hashId(id)/4294967296*Math.PI*2;
-    const amplitude=mode==='Movement'?.0054:.0045;
-    const local=Math.sin(waveClock*.18-p[0]*3.5-p[1]*1.7+phase*.22);
-    const moving=reduced?p:p.map((value,i)=>value+growth*amplitude*(i===0?.45*Math.sin(breath*.43+phase)+.55*local:i===1?.45*Math.cos(breath*.38+phase)+.55*local:.4*local));
+    const moving=reduced?p:organicPosition(p,time,mode,field||{tangent:[1,0,0],density:0});
     points.set(id,{point:motion&&!reduced?motion(coords(p),coords(moving)):coords(p),growth});
   }
   return points;
 }
 
-export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, zoom, clock, reduced, selected }) {
+export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, zoom, clock, time=0, reduced, selected, field=()=>[0,0] }) {
   // MURMURGROVE_STABILITY_20261127
   const transform=ctx.getTransform();
   const w=ctx.canvas.width/Math.max(.01,transform.a),h=ctx.canvas.height/Math.max(.01,transform.d);
   const off=(x,y,r)=>x+r<0||y+r<0||x-r>w||y-r>h;
   ctx.clearRect(0, 0, w, h);
+  let index=0;
   for (const {from, to} of layer.edges) {
+    const flowIndex=index++;
     const a = points.get(from) || {point: baselinePoint(from), growth: 1};
     const b = points.get(to) || {point: baselinePoint(to), growth: 1};
     const opacity = Math.min(a.growth, b.growth);
     if (!a.point || !b.point || !opacity) continue;
     const p = a.point, q = b.point;
-    const dx = q[0] - p[0], dy = q[1] - p[1];
-    const c1 = [p[0] + dx / 3 - dy * .08, p[1] + dy / 3 + dx * .08];
-    const c2 = [q[0] - dx / 3 - dy * .08, q[1] - dy / 3 + dx * .08];
+    const [c1,c2]=mangroveControls(p,q,field(from),field(to),1,mode,breathingTime(time,mode));
     // A Bezier curve stays within its control-point convex hull.
     if(Math.max(p[0],q[0],c1[0],c2[0]) < -2 || Math.min(p[0],q[0],c1[0],c2[0]) > w+2 || Math.max(p[1],q[1],c1[1],c2[1]) < -2 || Math.min(p[1],q[1],c1[1],c2[1]) > h+2)continue;
     ctx.beginPath();
@@ -171,12 +193,11 @@ export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, z
     ctx.lineWidth = .48;
     ctx.strokeStyle = 'rgba(' + EMERALD.traces.living + ',' + opacity * (mode === 'Growth' ? .25 : .17) + ')';
     ctx.stroke();
-    if (mode === 'Movement' && !reduced) {
-      const glint = cubicBezierAt(p, c1, c2, q, (clock / 6500) % 1);
-      ctx.beginPath();
-      ctx.arc(glint[0], glint[1], .8, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + EMERALD.nodes.selected + ',' + opacity * .42 + ')';
-      ctx.fill();
+    if(!reduced)for(const sample of flowSamplesForRelation(flowIndex,time,mode)){
+      const glint=cubicBezierAt(p,c1,c2,q,sample.t);
+      if(off(glint[0],glint[1],2))continue;
+      ctx.beginPath();ctx.arc(glint[0],glint[1],sample.radius*Math.pow(zoom/.65,.12),0,Math.PI*2);
+      ctx.fillStyle='rgba('+EMERALD.traces.particle+','+opacity*sample.alpha+')';ctx.fill();
     }
   }
   for (const [id, {point, growth}] of points) {

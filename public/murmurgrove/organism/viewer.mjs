@@ -19,7 +19,7 @@ import {LIVED_KINDS,makeLivedDraft,validateSealedLivedEvidence,verifyLivedIndex,
 import {LIFE_RULE_VERSION,deriveLifeMorphology,lifeRecordMap,applyLifeOffset,eventReconstructionTimes} from './life-morphology.mjs';
 import {verifyLifeStateIndex,verifyLifeCapture} from './life-checkpoints.mjs';
 import {verifyWithdrawalIndex,withdrawalSet,filterWithdrawnEvidence,lifeCaptureIncludesWithdrawal} from './withdrawals.mjs';
-import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch,edgeKey} from './research-current-overlay.mjs';
+import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch,edgeKey,organicPosition} from './research-current-overlay.mjs?unified=1';
 const $=id=>document.getElementById(id);
 const canvas=$('stage'),ctx=canvas.getContext('2d',{alpha:false}),roles={
  concept:['Direction field',EMERALD.roles.concept],exhibition:['Observation chamber',EMERALD.roles.exhibition],
@@ -273,7 +273,7 @@ function drawCurrentLayer(now,basePositions){
  const reduced=reducedMotionMedia.matches;
  currentPoints=currentProjection(currentLayer,coords,now-currentStart,reduced,{animate:currentAnimate,time:Date.now()/1000,mode,motion:(rest,moving)=>visibleOverviewMotion(rest,calmMagnifiedMotion(rest,moving,zoom),zoom,mode)});
  drawCurrentResearch(currentContext,currentLayer,currentPoints,id=>basePositions[nodeIndex.get(id)],
-  {mode,zoom,clock:now-currentStart,reduced,selected});
+  {mode,zoom,clock:now-currentStart,time:reduced?0:Date.now()/1000,reduced,selected,field:id=>{const i=nodeIndex.get(id);const t=i===undefined?currentLayer.additions.get(id)?.field?.tangent:neighborData[i]?.tangent;const p=project(t||[0,0,0]);return [p[0],-p[1]];}});
 }
 function currentRest(id){
  return sourceView||lifePreviewEvent?null:currentLayer?.additions.get(id)?.rest;
@@ -408,20 +408,7 @@ function gaussian(n,p,time){
  const quietTime=time,breathClock=breathingTime(time,mode),waveClock=opticalTime(time,mode);
  const entry=neighborData[n],data=nodes[n],main=mainIds.has(data.id),isol=isolated.has(data.id);
  if(isol)return quietParticlePosition(data.id,p,quietTime); // independent and uncoupled, no acceleration
- const depth=entry.density,phase=Math.atan2(entry.tangent[1],entry.tangent[0]);
- // Traveling, space-dependent direction-field phase: neighbors do not all shake in place.
- // The configured Movement wave clock keeps a low base frequency for legible propagation.
- const localWave=Math.sin(waveClock*.18 - p[0]*3.5 - p[1]*1.7 + phase*.22);
- const breathing=Math.sin(breathClock*.32+phase*.20)*(.0022+Math.min(.005,depth*.00025));
- const amplitude=main?(mode==='Movement'?.0054:.0045):.0028;
- const direction=entry.tangent;
- // Deliberately slow the tiny node displacement: the fast directional flow lives
- // on source-backed Bézier curves, not in untrackable high-frequency jitter.
- const u=Math.sin(breathClock*.43+phase+p[0]*2.8+p[2]*.7);
- const v=Math.cos(breathClock*.38+phase*.9+p[1]*3.4);
- return [p[0]+direction[1]*amplitude*(.45*u+.55*localWave)+direction[0]*breathing,
-  p[1]-direction[0]*amplitude*(.45*v+.55*localWave)+direction[1]*breathing,
-  p[2]+(main?amplitude*.40:amplitude*.10)*localWave];
+ return organicPosition(p,time,mode,entry,main);
 }
 function positions(time){return nodes.map((n,i)=>{
  const recordState=lifeFields.get(n.id);
