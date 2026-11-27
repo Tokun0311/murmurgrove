@@ -165,8 +165,7 @@ function componentGroups(allNodes,edges){const ids=new Set(allNodes.map(n=>n.id)
  return groups.sort((a,b)=>b.length-a.length||a[0].localeCompare(b[0]));}
 function storedMemory(){try{const s=JSON.parse(sessionStorage.getItem(memoryKey)||'null');
  if(!s||s.sourceHash!==BASELINE_HASH||!Number.isFinite(s.zoom)||s.zoom<ZOOM_MIN||s.zoom>ZOOM_MAX||!['Whole','Growth','Movement'].includes(s.mode))return false;
- if(!Number.isFinite(s.angle)||!Number.isFinite(s.elevation))return false;
- angle=s.angle%(2*Math.PI);elevation=cl(s.elevation,-1.2,1.2);
+ if(Number.isFinite(s.angle))angle=s.angle;if(Number.isFinite(s.elevation))elevation=cl(s.elevation,-1.2,1.2);
  zoom=s.zoom;mode=s.mode;selected=s.selected&&nodeMap.has(s.selected)?s.selected:null;
  pendingSelection=!selected&&typeof s.selected==='string'?s.selected:null;
  pendingFollow=Boolean(pendingSelection&&s.followSelected);
@@ -626,17 +625,13 @@ function announceFirstPaint(){
 }
 let renderFailures=0;
 function clearTransientCamera(){
- activePointers.clear();activeGesture=null;touchPair=null;pinchGesture=null;touchOrbitTarget=null;
- panIntent=null;edgeReturnVelocity=[0,0];velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
- zoomGoal=null;zoomAnchor=null;followSelected=false;relationFocusId=null;entrance=null;
- if(relationJourney)cancelRelationJourney({dismiss:true});
- canvas.style.cursor='grab';
+ activePointers.clear();activeGesture=null;touchPair=null;pinchGesture=null;
+ panIntent=null;canvas.style.cursor='grab';
 }
 function render(now){
  try{renderFrame(now);renderFailures=0;}
  catch(error){
   renderFailures++;console.error('Murmurgrove frame failed:',error);
-  if(renderFailures===1){try{clearTransientCamera();angle=ENTRANCE_TARGET_ANGLE;elevation=ENTRANCE_TARGET_ELEVATION;zoom=DEFAULT_ZOOM;pan=[0,0];lastSafePan=[0,0];userFramedPan=false;showCard(null);resize();syncZoomDisplay();}catch(recoveryError){console.error('Camera recovery failed:',recoveryError);}}
   if(renderFailures>=3){const el=$('loadingError');el.style.display='block';el.textContent='Rendering interrupted. Click here to retry. Details are in the browser console.';el.style.pointerEvents='auto';el.onclick=()=>{el.style.display='none';el.onclick=null;renderFailures=0;lastFrameAt=0;requestAnimationFrame(render);};return;}
  }
  requestAnimationFrame(render);
@@ -1306,7 +1301,7 @@ function updateDebug(){
   '</strong><br>Activated Writing fibers: <strong>'+snapshot.fibers.length+'</strong><br>Mature cores: <strong>'+snapshot.propulsionCores.length+'</strong><br><br>';
 }
 
-function resize(){if(relationJourney)cancelRelationJourney({dismiss:true});const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1:1.5);
+function resize(){if(relationJourney)cancelRelationJourney({dismiss:true});const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
  currentCanvas.width=canvas.width;currentCanvas.height=canvas.height;currentContext?.setTransform(dpr,0,0,dpr,0,0);
  if(pendingPanNorm){pan=[pendingPanNorm[0]*W,pendingPanNorm[1]*H];pendingPanNorm=null;}
@@ -1514,15 +1509,13 @@ async function init(){
   // On the very first entry, play the guided overview once, even if a stale
   // camera happened to be stored by an earlier version of the site.
   const locate=requestedLocation(),firstVisit=!hasSeenEntrance();
-  // CAMERA_MEMORY_RESTORED_20261127
   if(firstVisit&&!locate){
    prepareEntrance();markEntranceSeen();
   }else if(!storedMemory()){
    // A return without a valid saved view gets a steady centered view, NOT
    // another introductory animation (e.g. archive data/version migration).
-   if(!locate){prepareEntrance();markEntranceSeen();}
-   else {entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
-    elevation=ENTRANCE_TARGET_ELEVATION;pan=[0,0];mode='Whole';}
+   entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
+   elevation=ENTRANCE_TARGET_ELEVATION;pan=[0,0];mode='Whole';
   }
   if(firstVisit)markEntranceSeen();
   // A panel opened during loading takes priority over remembered mobile history.
