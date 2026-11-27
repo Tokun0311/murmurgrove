@@ -1,3 +1,4 @@
+import {cleanPersonBoundary} from './people-order.mjs';
 // Display-only compatibility for records predating the explicit language fields.
 // Keys and original names must both match; an editor-supplied en: name takes precedence.
 const legacyInstitutions = {
@@ -32,6 +33,7 @@ function parts(name){
   return chunks;
 }
 export function recordNames(data={},type='',id=''){
+  if(type==='people')data={...data,name:cleanPersonBoundary(data.name),nativeName:cleanPersonBoundary(data.nativeName),sortName:cleanPersonBoundary(data.sortName),reading:cleanPersonBoundary(data.reading),alternativeNames:Array.isArray(data.alternativeNames)?data.alternativeNames.map(v=>typeof v==='string'?cleanPersonBoundary(v).replace(/^((?:zh|ja|en)\s*[:：])[\s\u200B\uFEFF]+/iu,'$1 '):v):data.alternativeNames};
   const raw=clean(data.name), fragments=parts(raw), tagged={}, other=[];
   for(const alias of Array.isArray(data.alternativeNames)?data.alternativeNames:[]){const m=tag(alias);if(m)tagged[m[1].toLowerCase()]=clean(m[2]);else other.push(clean(alias));}
   const fallback=type==='institutions'&&legacyInstitutions[id]?.[0]===raw?legacyInstitutions[id][1]:'';

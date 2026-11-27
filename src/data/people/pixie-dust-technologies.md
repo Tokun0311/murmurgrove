@@ -1,5 +1,5 @@
 ---
-name: "​ ​Pixie Dust Technologies"
+name: "Pixie Dust Technologies"
 kind: "other"
 ---
 

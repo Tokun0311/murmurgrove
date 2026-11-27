@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "86cb47127b932458d6c4338c7b2c702b6deac15dd79dcae3ea6892dcce18334f",
-  "generatedAt": "2026-11-27T08:53:41.321Z",
+  "graphHash": "91f284aee815bfc90fec76fafbab81106a04b0f929a1bece0c5ae7f9ec4ce3f5",
+  "generatedAt": "2026-11-27T09:01:19.435Z",
   "links": [
     {
       "source": "concepts:archival-practices",

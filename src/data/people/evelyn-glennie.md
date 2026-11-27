@@ -1,5 +1,5 @@
 ---
-name: "​ ​Evelyn Glennie"
+name: "Evelyn Glennie"
 kind: "other"
 ---
 

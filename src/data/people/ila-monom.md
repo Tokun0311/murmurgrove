@@ -1,5 +1,5 @@
 ---
-name: "​ ​ILĀ & MONOM"
+name: "ILĀ & MONOM"
 kind: "other"
 ---
 

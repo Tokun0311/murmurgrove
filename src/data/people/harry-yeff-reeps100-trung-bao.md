@@ -1,5 +1,5 @@
 ---
-name: "​ ​Harry Yeff (Reeps100) & Trung Bao"
+name: "Harry Yeff (Reeps100) & Trung Bao"
 kind: "other"
 ---
 

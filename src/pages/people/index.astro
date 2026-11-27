@@ -3,17 +3,13 @@ import Base from '../../layouts/Base.astro';
 import {getCollection} from 'astro:content';
 import {recordNames} from '../../lib/record-names.mjs';
 import {aliasesForPath} from '../../lib/archive-navigation.mjs';
-const items = (await getCollection('people')).sort((a,b)=>
-  (a.data.sortName || recordNames(a.data,'people',a.id).primary).localeCompare(b.data.sortName || recordNames(b.data,'people',b.id).primary, 'en')
-);
+import {comparePeople,peopleLetter} from '../../lib/people-order.mjs';
 const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-const normalize = (value) => (value || '').normalize('NFKC').trim();
-const latinKey = (item) => {
-  const value = normalize(item.data.sortName || recordNames(item.data,'people',item.id).primary);
-  const initial = value.match(/^[A-Za-z]/)?.[0]?.toUpperCase();
-  return initial && latin.includes(initial) ? initial : '';
-};
-const indexed = items.map(item=>({item,letter:latinKey(item),names:recordNames(item.data,'people',item.id)}));
+const indexed = (await getCollection('people')).map(item=>{
+  const names=recordNames(item.data,'people',item.id);
+  return {item,names,letter:peopleLetter(names.primary)};
+}).sort((a,b)=>comparePeople(a.names.primary,b.names.primary)||a.item.id.localeCompare(b.item.id,'en'));
+const items=indexed.map(x=>x.item);
 const usedLatin = new Set(indexed.map(x=>x.letter));
 ---
 <Base title="People & Collectives | murmurgrove" description="Browse the artists, curators and collectives connected to exhibition records in the murmurgrove research archive.">
@@ -68,7 +64,7 @@ const usedLatin = new Set(indexed.map(x=>x.letter));
   const count = document.querySelector<HTMLElement>('#people-result-count');
   const empty = document.querySelector<HTMLElement>('#people-empty');
   let selected = 'all';
-  const normalizeSearch=(value:string)=>value.normalize('NFKD').toLocaleLowerCase().replace(/[\p{M}\p{P}\p{Z}\s]/gu,'');
+  const normalizeSearch=(value:string)=>value.normalize('NFKD').toLocaleLowerCase().replace(/[\p{M}\p{P}\p{Z}\s\u200B\uFEFF]/gu,'');
   function updatePeople() {
     const q=normalizeSearch(search?.value||'');
     let shown=0;

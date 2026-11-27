@@ -1,5 +1,5 @@
 ---
-name: "​ ​Raymond Antrobus"
+name: "Raymond Antrobus"
 kind: "other"
 ---
 

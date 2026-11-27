@@ -1,5 +1,5 @@
 ---
-name: "​ ​Elsewhere in India"
+name: "Elsewhere in India"
 kind: "other"
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: "​ ​Nicola Privato"
+name: "Nicola Privato"
 kind: "other"
 ---
 

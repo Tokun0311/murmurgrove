@@ -1,5 +1,5 @@
 ---
-name: "​ ​Temporary Pleasure"
+name: "Temporary Pleasure"
 kind: "other"
 ---
 
