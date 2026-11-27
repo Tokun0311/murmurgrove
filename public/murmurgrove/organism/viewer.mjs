@@ -19,7 +19,7 @@ import {LIVED_KINDS,makeLivedDraft,validateSealedLivedEvidence,verifyLivedIndex,
 import {LIFE_RULE_VERSION,deriveLifeMorphology,lifeRecordMap,applyLifeOffset,eventReconstructionTimes} from './life-morphology.mjs';
 import {verifyLifeStateIndex,verifyLifeCapture} from './life-checkpoints.mjs';
 import {verifyWithdrawalIndex,withdrawalSet,filterWithdrawnEvidence,lifeCaptureIncludesWithdrawal} from './withdrawals.mjs';
-import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch,edgeKey,organicPosition} from './research-current-overlay.mjs?legibility=1';
+import {readCurrentResearch,placeCurrentResearch,currentProjection,drawCurrentResearch,edgeKey,organicPosition,paintCachedHalo} from './research-current-overlay.mjs?legibility=2-mobile-performance';
 const $=id=>document.getElementById(id);
 const canvas=$('stage'),ctx=canvas.getContext('2d',{alpha:false}),roles={
  concept:['Direction field',EMERALD.roles.concept],exhibition:['Observation chamber',EMERALD.roles.exhibition],
@@ -288,7 +288,7 @@ function drawCurrentLayer(now,basePositions){
  const reduced=reducedMotionMedia.matches;
  currentPoints=currentProjection(currentLayer,coords,now-currentStart,reduced,{animate:currentAnimate,time:Date.now()/1000,mode,motion:(rest,moving,id)=>readingMotion(id,rest,visibleOverviewMotion(rest,calmMagnifiedMotion(rest,moving,zoom),zoom,mode))});
  drawCurrentResearch(currentContext,currentLayer,currentPoints,id=>basePositions[nodeIndex.get(id)],
-  {mode,zoom,clock:now-currentStart,time:reduced?0:Date.now()/1000,reduced,selected,nodeOptics,edgeOptics,field:id=>{const i=nodeIndex.get(id);const t=i===undefined?currentLayer.additions.get(id)?.field?.tangent:neighborData[i]?.tangent;const p=project(t||[0,0,0]);return [p[0],-p[1]];}});
+  {mode,zoom,clock:now-currentStart,time:reduced?0:Date.now()/1000,reduced,selected,nodeOptics,edgeOptics,cacheHalos:MOBILE_HOME,field:id=>{const i=nodeIndex.get(id);const t=i===undefined?currentLayer.additions.get(id)?.field?.tangent:neighborData[i]?.tangent;const p=project(t||[0,0,0]);return [p[0],-p[1]];}});
 }
 function currentRest(id){
  return sourceView||lifePreviewEvent?null:currentLayer?.additions.get(id)?.rest;
@@ -472,6 +472,8 @@ function readingMotion(id,rest,moving){
 }
 function avgColor(a,b){return a;} // no blending of identities, relation style expresses evidence only
 function outsideCurve(a,b,c,d){return Math.max(a[0],b[0],c[0],d[0])<-2||Math.min(a[0],b[0],c[0],d[0])>W+2||Math.max(a[1],b[1],c[1],d[1])<-2||Math.min(a[1],b[1],c[1],d[1])>H+2;}
+const veilStops=[[0,EMERALD.veil.center,1],[.54,EMERALD.veil.mid,.35],[1,EMERALD.veil.edge,0]];
+const glowStops=new Map();
 function drawBackground(time,pos){
  ctx.fillStyle=EMERALD.paper;ctx.fillRect(0,0,W,H);
  // Optical density derived from nodes only. No line may appear without a real relation.
@@ -482,9 +484,10 @@ function drawBackground(time,pos){
   const spread=(mode==='Growth'?20:mode==='Movement'?23:19)*Math.sqrt(zoom/ZOOM_BASE);
   const radius=cl(spread*(.75+Math.min(2.8,d*.13)),9,160);
   if(point[0]+radius<0||point[0]-radius>W||point[1]+radius<0||point[1]-radius>H)continue;
-  const gradient=ctx.createRadialGradient(point[0],point[1],1,point[0],point[1],radius);
   const quietLens=selected&&isolated.has(selected)&&zoom>=8?.16:1;
   const power=(mode==='Movement'?.022:mode==='Growth'?.026:.023)*Math.min(1.25,d/3)*quietLens*nodeOptics(n.id,point)*(mode==='Whole'?.72:1);
+  if(MOBILE_HOME&&paintCachedHalo(ctx,point[0],point[1],radius,power,veilStops))continue;
+  const gradient=ctx.createRadialGradient(point[0],point[1],1,point[0],point[1],radius);
   gradient.addColorStop(0,`rgba(${EMERALD.veil.center},${power})`);gradient.addColorStop(.54,`rgba(${EMERALD.veil.mid},${power*.35})`);gradient.addColorStop(1,`rgba(${EMERALD.veil.edge},0)`);
   ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(point[0],point[1],radius,0,Math.PI*2);ctx.fill();
  }
@@ -495,13 +498,14 @@ function drawLinks(pos,time){
  time=breathClock; // slow organic shape breathing, never fast local twitch
  const quietLens=selected&&isolated.has(selected)&&zoom>=8?cl(1-(zoom-8)/14,.10,1):1;
  const fieldScreen=neighborData.map(v=>{const p=project(v.tangent);return [p[0],-p[1]];});
+ const coreCurves=[];
  // 158 true, unactivated metadata relations. Multiple hairline passes still
  // reference the SAME source link and share the exact two real endpoint IDs.
  links.forEach((l,index)=>{
   if(!currentBaselineVisible(l))return;
   const a=nodeMap.get(l.from),b=nodeMap.get(l.to),ai=nodeIndex.get(l.from),bi=nodeIndex.get(l.to);
-  const p=pos[ai],q=pos[bi],ageA=daySpan(a.record?.occurredOn),ageB=daySpan(b.record?.occurredOn),age=ageA??ageB??0;
-  const old=mode==='Growth'&&age>90;
+  const p=pos[ai],q=pos[bi];
+  const old=mode==='Growth'&&(daySpan(a.record?.occurredOn)??daySpan(b.record?.occurredOn)??0)>90;
   const historyAlpha=activeHistoryContext?(activeHistoryContext.linkIndices.has(index)?2.5:.22):1;
   const sourceAlpha=(mode==='Growth'?.34:mode==='Movement'?.14:.21)*quietLens*historyAlpha*edgeOptics(l.from,l.to,p,q);
   const ebb=.91+.09*Math.sin(breathClock*.27+index*.14);
@@ -509,7 +513,9 @@ function drawLinks(pos,time){
   for(let k=0;k<(smallTouchViewport?2:3);k++){
    if(mode==='Whole'&&!activeHistoryContext&&zoom<1.25&&k!==1)continue;
    const [p1,p2]=mangroveControls(p,q,fieldScreen[ai],fieldScreen[bi],k,mode,time);
-   if(outsideCurve(p,p1,p2,q))continue;
+   const outside=outsideCurve(p,p1,p2,q);
+   if(k===1)coreCurves[index]={p1,p2,outside};
+   if(outside)continue;
    const alpha=sourceAlpha*(k===1?.52:.20)*ebb;
    ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.bezierCurveTo(p1[0],p1[1],p2[0],p2[1],q[0],q[1]);
    ctx.lineWidth=k===1?.58:.32;
@@ -517,15 +523,15 @@ function drawLinks(pos,time){
    ctx.stroke();
   }
  });
+ return {fieldScreen,coreCurves};
 }
 /** One or two extremely small optical glints travel ON each verified metadata
  * relationship. No free-floating dot clouds and no inferred or fake lines.
  * The moving glints signify a reading mode, not an activated life event.
  */
-function drawRelationFlow(pos,time){
+function drawRelationFlow(pos,time,{fieldScreen,coreCurves}){
  const strandTime=breathingTime(time,mode); // same Bézier controls as drawLinks
  if(selected&&isolated.has(selected)&&zoom>=12)return; // isolated close-up: no unrelated glints
- const fieldScreen=neighborData.map(v=>{const p=project(v.tangent);return [p[0],-p[1]];});
  links.forEach((link,index)=>{
   if(!currentBaselineVisible(link))return;
   if(activeHistoryContext&&!activeHistoryContext.linkIndices.has(index))return;
@@ -534,10 +540,12 @@ function drawRelationFlow(pos,time){
   const a=pos[ai],b=pos[bi];
   const opticalWeight=edgeOptics(link.from,link.to,a,b);
   // Both the moving light and its trail are sampled ON this one verified link.
-  const [c1,c2]=mangroveControls(a,b,fieldScreen[ai],fieldScreen[bi],1,mode,strandTime);
-  if(outsideCurve(a,c1,c2,b))return;
-  const recent=Math.max(exhibitionGlow(nodes[ai]),exhibitionGlow(nodes[bi]),
-    datedLocalPulse(nodes[ai],time),datedLocalPulse(nodes[bi],time));
+  const cached=coreCurves[index];
+  if(cached?.outside)return;
+  const [c1,c2]=cached?[cached.p1,cached.p2]:mangroveControls(a,b,fieldScreen[ai],fieldScreen[bi],1,mode,strandTime);
+  if(!cached&&outsideCurve(a,c1,c2,b))return;
+  const recent=mode==='Movement'?Math.max(exhibitionGlow(nodes[ai]),exhibitionGlow(nodes[bi]),
+    datedLocalPulse(nodes[ai],time),datedLocalPulse(nodes[bi],time)):0;
   // flowSamplesForRelation receives REAL seconds. It applies the configured optical
   // speed exactly once, preventing the 100× aliasing of Phase 2.6.7.
   for(const sample of flowSamplesForRelation(index,time,mode,recent)){
@@ -596,7 +604,12 @@ function drawSourceReading(){
  }
  ctx.restore();
 }
-function glowAt(x,y,r,alpha,color){const gradient=ctx.createRadialGradient(x,y,0,x,y,r);
+function glowAt(x,y,r,alpha,color){
+ if(MOBILE_HOME){
+  let stops=glowStops.get(color);if(!stops){stops=[[0,color,1],[.27,color,.38],[1,color,0]];glowStops.set(color,stops);}
+  if(paintCachedHalo(ctx,x,y,r,alpha,stops))return;
+ }
+ const gradient=ctx.createRadialGradient(x,y,0,x,y,r);
  gradient.addColorStop(0,`rgba(${color},${alpha})`);gradient.addColorStop(.27,`rgba(${color},${alpha*.38})`);gradient.addColorStop(1,`rgba(${color},0)`);
  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=gradient;ctx.fill();}
 /** Nearby source-verified exhibition observations drive optical wave density.
@@ -618,7 +631,7 @@ function drawNodes(pos,time){
   if(p[0]<-50||p[0]>W+50||p[1]<-50||p[1]>H+50)continue;
   ctx.globalAlpha=nodeOptics(n.id,p);
   const glow=exhibitionGlow(n),pulse=glow*(mode==='Movement'?1.55:mode==='Growth'?.27:.78);
-  const aged=daySpan(n.record?.occurredOn);
+  const aged=mode==='Growth'&&n.kind==='exhibition'?daySpan(n.record?.occurredOn):null;
   if(mode==='Growth'&&n.kind==='exhibition'&&aged!==null&&aged>90){
    const archivalAgeOnly=cl(aged/330,0,1);
    glowAt(p[0],p[1],cl((9+archivalAgeOnly*15)*Math.sqrt(zoom/ZOOM_BASE),8,56),archivalAgeOnly*.072,EMERALD.glows.sediment);
@@ -746,7 +759,7 @@ function renderFrame(now){const time=(lifePreviewEvent||reducedMotionMedia.match
    lastFrameScreenNodes=null;
    const pos=viewPositions.map(coords);drawSourceReading();drawCurrentLayer(now,pos);if(selected)positionCard(pos);
   }else{
-   updateReadingLens(dt);const pos=positions(time);drawBackground(time,pos);drawLinks(pos,time);drawRelationFlow(pos,time);drawNodes(pos,time);drawLivedEvidenceMarks(pos,time);drawCurrentLayer(now,pos);if(selected)positionCard(pos);
+   updateReadingLens(dt);const pos=positions(time);drawBackground(time,pos);const linkFrame=drawLinks(pos,time);drawRelationFlow(pos,time,linkFrame);drawNodes(pos,time);drawLivedEvidenceMarks(pos,time);drawCurrentLayer(now,pos);if(selected)positionCard(pos);
    lastFrameScreenNodes=pos;
   }
   lastFrameRenderedAt=new Date().toISOString();lastFrameCamera={mode,angle,elevation,zoom,pan:[...pan],selectedId:nodeMap.has(selected)?selected:null};
@@ -951,7 +964,8 @@ function requestZoom(value,anchor=anchorPoint(),{keepFollow=false}={}){
  if(isMobileOverview(zoomGoal)||(!MOBILE_HOME&&zoomGoal<=1))userFramedPan=false;
 }
 function syncZoomDisplay(){
- $('zoomLabel').textContent=Math.round(zoom*100)+'%';
+ const label=$('zoomLabel'),value=Math.round(zoom*100)+'%';
+ if(label.textContent!==value)label.textContent=value;
  document.body.classList.toggle('deep',zoom>=2);
 }
 function stepCamera(dt){
@@ -1355,7 +1369,7 @@ function updateDebug(){
   '</strong><br>Activated Writing fibers: <strong>'+snapshot.fibers.length+'</strong><br>Mature cores: <strong>'+snapshot.propulsionCores.length+'</strong><br><br>';
 }
 
-function resize(){if(relationJourney)cancelRelationJourney({dismiss:true});const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
+function resize(){if(relationJourney)cancelRelationJourney({dismiss:true});const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,MOBILE_HOME?1:smallTouchViewport?1.2:1.5);
  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
  currentCanvas.width=canvas.width;currentCanvas.height=canvas.height;currentContext?.setTransform(dpr,0,0,dpr,0,0);
  if(pendingPanNorm){pan=[pendingPanNorm[0]*W,pendingPanNorm[1]*H];pendingPanNorm=null;}

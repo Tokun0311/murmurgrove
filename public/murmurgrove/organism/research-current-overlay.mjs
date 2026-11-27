@@ -12,6 +12,29 @@ import { breathingTime, opticalTime } from './movement-pacing.mjs';
 import { hashId } from './quiet-particles.mjs';
 
 import { mangroveControls } from './organic-interaction.mjs';
+
+// Mobile-only reusable optical texture. A bounded cache stores only the fixed
+// palette, not records, camera positions or time. Alpha/size remain per draw.
+const haloSprites=new Map();
+export function paintCachedHalo(ctx,x,y,r,alpha,stops){
+  if(!(r>0)||!(alpha>0))return;
+  const key=stops;
+  let sprite=haloSprites.get(key);
+  if(sprite===undefined){
+    sprite=document.createElement('canvas');sprite.width=sprite.height=256;
+    const paint=sprite.getContext('2d');
+    if(!paint)return false;
+    const gradient=paint.createRadialGradient(128,128,0,128,128,128);
+    for(const [offset,color,opacity] of stops)gradient.addColorStop(offset,`rgba(${color},${opacity})`);
+    paint.fillStyle=gradient;paint.fillRect(0,0,256,256);
+    if(haloSprites.size<16)haloSprites.set(key,sprite);
+  }
+  const previous=ctx.globalAlpha;
+  try{ctx.globalAlpha=previous*alpha;ctx.drawImage(sprite,x-r,y-r,r*2,r*2);}
+  finally{ctx.globalAlpha=previous;}
+  return true;
+}
+const activityHaloStops=[[0,'0,136,78',1],[1,'0,136,78',0]];
 export function organicPosition(p,time,mode,entry,main=true){
  const breathClock=breathingTime(time,mode),waveClock=opticalTime(time,mode);
  const depth=entry.density,phase=Math.atan2(entry.tangent[1],entry.tangent[0]);
@@ -170,7 +193,7 @@ export function currentProjection(layer, coords, elapsed, reduced, {animate=fals
   return points;
 }
 
-export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, zoom, clock, time=0, reduced, selected, nodeOptics=()=>1, edgeOptics=()=>1, field=()=>[0,0] }) {
+export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, zoom, clock, time=0, reduced, selected, nodeOptics=()=>1, edgeOptics=()=>1, field=()=>[0,0], cacheHalos=false }) {
   // MURMURGROVE_STABILITY_20261127
   const transform=ctx.getTransform();
   const w=ctx.canvas.width/Math.max(.01,transform.a),h=ctx.canvas.height/Math.max(.01,transform.d);
@@ -226,6 +249,7 @@ export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, z
     if(off(x,y,radius))continue;
     const ebb = reduced ? 1 : .9 + .1 * Math.sin(clock / 11000 + x * .001);
     const alpha = (.014 + Math.min(.042, count * .004)) * ebb * (current?.growth ?? 1) * nodeOptics(id,point) * (mode==='Whole'?.65:1);
+    if(cacheHalos&&paintCachedHalo(ctx,x,y,radius,alpha,activityHaloStops))continue;
     const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
     gradient.addColorStop(0, 'rgba(0,136,78,' + alpha + ')');
     gradient.addColorStop(1, 'rgba(0,136,78,0)');
