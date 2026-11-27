@@ -374,6 +374,22 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         if(u.pathname==='/api/draft'){
           const file=path.join(draftDir,type,`${slug}.json`);
           const data={type,slug,fields,body,hash:p.hash||null,wordOriginalSha:typeof p.wordOriginalSha==='string'&&/^[a-f0-9]{64}$/.test(p.wordOriginalSha)?p.wordOriginalSha:null,originalTextSha,...(type==='exhibitions'?{bundle:cleanBundle(p.bundle)}:{}),updatedAt:new Date().toISOString()};
+          // MG_CONNECTION_DRAFT_V1
+          if(p.createOnly===true){
+            await manager.assertAvailable(type,slug);
+            const name=String(fields.name||fields.title||'').trim();
+            if(!name||name.length>300)throw apiError(422,'Enter a name (up to 300 characters).');
+            const norm=v=>String(v||'').normalize('NFKC').toLowerCase().replace(/[\s\p{P}\p{S}]+/gu,'');
+            const variants=f=>[f.name,f.title,f.nativeName,f.reading,f.sortName,...(f.alternativeNames||[])].map(norm).filter(Boolean);
+            const keys=new Set(variants(fields));if(!keys.size)throw apiError(422,'Enter a valid name.');
+            const publicRows=await recordList(root,type);
+            const meta=type==='concepts'?await readConceptMeta(root):{};
+            if(publicRows.some(row=>row.slug===slug||[...variants(row.fields),...(meta[row.slug]?.aliases||[]).map(norm)].some(v=>keys.has(v))))throw apiError(409,'A matching archive record already exists. Search and link it instead.');
+            const dir=path.dirname(file);await fsp.mkdir(dir,{recursive:true});
+            for(const fn of await fsp.readdir(dir)){if(!fn.endsWith('.json'))continue;const old=JSON.parse(await fsp.readFile(path.join(dir,fn),'utf8'));if(old.slug===slug||variants(old.fields||{}).some(v=>keys.has(v)))throw apiError(409,'A matching private draft already exists. Search and link it instead.');}
+            try{await fsp.writeFile(file,JSON.stringify(data,null,2)+'\n',{flag:'wx',mode:0o600});}catch(e){if(e.code==='EEXIST')throw apiError(409,'Private draft already exists');throw e;}
+            return json(res,201,{ok:true,kind:'draft',slug});
+          }
           await saveAtomic(file,JSON.stringify(data,null,2)+'\n');return json(res,200,{ok:true,kind:'draft',relativePath:'murmurgrove-editor/.private/drafts/'+type+'/'+slug+'.json'});
         }
         await manager.assertAvailable(type,slug);
