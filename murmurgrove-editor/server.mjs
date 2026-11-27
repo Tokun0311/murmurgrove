@@ -10,7 +10,8 @@ import { analyzeExhibition, validateAiSuggestions, buildAiPrompt, validateNewRec
 import {extractDocx} from './word-import.mjs';
 import {metadataSuggestions} from './profile-metadata.mjs';
 import {createRecordManager} from './record-management.mjs';
-import {cleanBundle,publishBundle} from './bundle.mjs';
+import {cleanBundle,publishBundle,candidateFromDraft} from './bundle.mjs';
+import {STAGE_TYPES} from './assets/bundle-links.mjs';
 // MURMURGROVE_EXHIBITION_FIRST_V12
 import {listQuestions,createQuestion,appendQuestion,annotateRevision,readRevisionNotes} from './research-continuity.mjs';
 import {assessClaims,readArchive,buildGraph,answerQuestion,groundedPrompt,readEvents,activeRelations,validateClaim,appendEvent,readConceptMeta,updateConceptMeta,mergeConcept,syncGraph,hash as digest,slugValid} from './research-core.mjs';
@@ -171,7 +172,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
   let updateQueue=Promise.resolve();
   async function serializeWrite(fn){const prior=updateQueue;let release;updateQueue=new Promise(resolve=>release=resolve);await prior;try{return await fn()}finally{release()}}
   const manager=createRecordManager({root,privateDir,types:[...ALLOWED_TYPES],relations:RELATIONS,requireType,requireSlug,getPaths,splitMd,blocksOf,readFields,renderValue,exists,saveAtomic,sha,syncGraph,apiError});
-  const files={'/':{file:'index.html',mime:'text/html; charset=utf-8'},'/assets/editor.css':{file:'assets/editor.css',mime:'text/css; charset=utf-8'},'/assets/editor.js':{file:'assets/editor.js',mime:'application/javascript; charset=utf-8'},'/assets/research.js':{file:'assets/research.js',mime:'application/javascript; charset=utf-8'}};
+  const files={'/':{file:'index.html',mime:'text/html; charset=utf-8'},'/assets/editor.css':{file:'assets/editor.css',mime:'text/css; charset=utf-8'},'/assets/editor.js':{file:'assets/editor.js',mime:'application/javascript; charset=utf-8'},'/assets/bundle-links.mjs':{file:'assets/bundle-links.mjs',mime:'application/javascript; charset=utf-8'},'/assets/research.js':{file:'assets/research.js',mime:'application/javascript; charset=utf-8'}};
   async function readCatalog(){
     const entries=await Promise.all(['people','institutions','concepts','exhibitions'].map(t=>recordList(root,t)));
     const cmeta=await readConceptMeta(root);
@@ -225,7 +226,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug'));
         const file=path.join(draftDir,type,`${slug}.json`);if(!await exists(file))throw apiError(404,'Draft not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
       }
-      if(req.method==='POST'&&['/api/profile-suggestions','/api/record-withdraw','/api/record-delete','/api/record-restore','/api/geography-add','/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
+      if(req.method==='POST'&&['/api/profile-suggestions','/api/record-withdraw','/api/record-delete','/api/record-restore','/api/geography-add','/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/bundle-inspect','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
         const expectedOrigin=`http://127.0.0.1:${server.address().port}`;
         if(req.headers.origin!==expectedOrigin||req.headers['x-editor-token']!==token)throw apiError(403,'Untrusted request');
         const p=await readJSON(req,u.pathname==='/api/import-word'?12*1024*1024:1024*1024);
@@ -361,6 +362,17 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
           try{await fsp.writeFile(draft,JSON.stringify(doc,null,2)+'\n',{flag:'wx'});}catch(e){if(e.code==='EEXIST')throw apiError(409,'Private draft already exists');throw e;}
           return json(res,201,{ok:true,kind:'private-proposed-record',type,slug,relativePath:'murmurgrove-editor/.private/drafts/'+type+'/'+slug+'.json',warning:'Only a private draft was created. Review and publish separately, then link back to the exhibition.'});
         }
+        // Local-only read: find public records or recover reviewable copies of linked private drafts.
+        if(u.pathname==='/api/bundle-inspect'){
+          if(!Array.isArray(p.refs)||p.refs.length>5000)throw apiError(422,'Invalid linked record list');
+          const items=[];for(const r of p.refs){const type=requireType(r?.type),slug=requireSlug(r?.slug);
+            if(await exists(getPaths(root,type,slug).file)){items.push({type,slug,status:'existing'});continue;}
+            const file=path.join(draftDir,type,slug+'.json');
+            if(!await exists(file)){items.push({type,slug,status:'missing'});continue;}
+            if(!STAGE_TYPES.includes(type)){items.push({type,slug,status:'separate',message:'Review and publish this linked Exhibition or Writing draft separately.'});continue;}
+            try{const bytes=await fsp.readFile(file);items.push({type,slug,status:'draft',candidate:candidateFromDraft(type,slug,bytes,sha)});}catch(e){items.push({type,slug,status:'separate',message:e.status?e.message:'Linked private draft could not be read.'});}
+          }return json(res,200,{items});
+        }
         if(u.pathname==='/api/bundle-publish')return await serializeWrite(async()=>{await manager.assertAvailable(p.type,p.slug);for(const n of p.bundle||[])await manager.assertAvailable(n.type,n.slug);return json(res,200,await publishBundle(p,{root,privateDir,draftDir,backupDir,normalise,getPaths,recordList,readCatalog,readConceptMeta,renderMd,saveAtomic,syncGraph,sha,exists}));});
         return await serializeWrite(async()=>{
         const type=requireType(p.type),slug=requireSlug(p.slug),paths=getPaths(root,type,slug);
@@ -373,7 +385,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         if(originalTextSha&&!await exists(path.join(privateDir,'originals',`text-${originalTextSha}.txt`)))throw apiError(422,'Original text snapshot is missing on this computer. Capture it again before saving.');
         if(u.pathname==='/api/draft'){
           const file=path.join(draftDir,type,`${slug}.json`);
-          const data={type,slug,fields,body,hash:p.hash||null,wordOriginalSha:typeof p.wordOriginalSha==='string'&&/^[a-f0-9]{64}$/.test(p.wordOriginalSha)?p.wordOriginalSha:null,originalTextSha,...(type==='exhibitions'?{bundle:cleanBundle(p.bundle)}:{}),updatedAt:new Date().toISOString()};
+          const data={type,slug,fields,body,hash:p.hash||null,wordOriginalSha:typeof p.wordOriginalSha==='string'&&/^[a-f0-9]{64}$/.test(p.wordOriginalSha)?p.wordOriginalSha:null,originalTextSha,...(p.bundle?.length||type==='exhibitions'?{bundle:cleanBundle(p.bundle)}:{}),updatedAt:new Date().toISOString()};
           // MG_CONNECTION_DRAFT_V1
           if(p.createOnly===true){
             await manager.assertAvailable(type,slug);

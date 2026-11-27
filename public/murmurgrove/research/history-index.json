@@ -458,5 +458,50 @@
     "edgeCount": 256,
     "priorHash": "f5536abe70c93dee07c4e452f0cdd694a9ec77b46d0a69053b8051a74c821309",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T04-21-03-091Z-ae2910f7bcaa.json",
+    "graphHash": "ae2910f7bcaa2ad0346341fc9a5c178395caf8f7467745022af3a11c9db1db77",
+    "at": "2026-11-27T04:21:03.063Z",
+    "added": [],
+    "changed": [
+      "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+    ],
+    "removed": [],
+    "recordCount": 228,
+    "edgeCount": 256,
+    "priorHash": "783c1310638249a6317ddf42461f2deda3df5c2277f78c54f234bbac2494ed31",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T04-21-46-355Z-4e493bd3039a.json",
+    "graphHash": "4e493bd3039ab47a5e76d7c06dee859da4edaf10b82cfdac620c19b455585e18",
+    "at": "2026-11-27T04:21:46.340Z",
+    "added": [],
+    "changed": [
+      "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor"
+    ],
+    "removed": [],
+    "recordCount": 228,
+    "edgeCount": 257,
+    "priorHash": "ae2910f7bcaa2ad0346341fc9a5c178395caf8f7467745022af3a11c9db1db77",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T04-27-20-361Z-0fef638d2c94.json",
+    "graphHash": "0fef638d2c94411ff2b2a683ceca3f486d539b47f33578c0c685ada7c8efd8ce",
+    "at": "2026-11-27T04:27:20.353Z",
+    "added": [
+      "people:ekow-eshun",
+      "concepts:concepts-ec7c21229b78c3f0"
+    ],
+    "changed": [
+      "exhibitions:2026-11-08-62"
+    ],
+    "removed": [],
+    "recordCount": 230,
+    "edgeCount": 264,
+    "priorHash": "4e493bd3039ab47a5e76d7c06dee859da4edaf10b82cfdac620c19b455585e18",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]

@@ -12,7 +12,17 @@ relatedInstitutions: ["somerset-house-studios","institute-of-contemporary-arts-i
 exhibitionStart: "2026-11-22"
 exhibitionEnd: "2026-11-22"
 verification: "recorded"
+engagement: "visited"
+recordedOn: "2026-11-27"
+curators: []
+sources: []
+linkedPeople: []
+linkedInstitutions: []
+linkedExhibitions: ["2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"]
+linkedConcepts: []
+linkedWriting: []
 ---
+
 
 14:00–14:50   MUTEK.JP Pro Conference
 

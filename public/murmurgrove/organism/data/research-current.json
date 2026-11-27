@@ -1,8 +1,8 @@
 {
   "schema": "murmurgrove.read-only-research-optics.1",
   "mode": "DERIVED_CURRENT_SOURCE_READING",
-  "graphHash": "783c1310638249a6317ddf42461f2deda3df5c2277f78c54f234bbac2494ed31",
-  "generatedAt": "2026-11-27T02:47:31.803Z",
+  "graphHash": "0fef638d2c94411ff2b2a683ceca3f486d539b47f33578c0c685ada7c8efd8ce",
+  "generatedAt": "2026-11-27T04:27:20.353Z",
   "links": [
     {
       "source": "exhibitions:2026-01-07-02",
@@ -916,13 +916,48 @@
     },
     {
       "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:collective-practices",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:concepts-ec7c21229b78c3f0",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:material-and-memory",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:memory-and-place",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:performance",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
       "target": "concepts:politics-of-representation",
+      "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:sound-and-technology",
       "kind": "recorded-link"
     },
     {
       "source": "exhibitions:2026-11-08-62",
       "target": "institutions:space-un",
       "kind": "recorded-link"
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "people:ekow-eshun",
+      "kind": "archive-association"
     },
     {
       "source": "exhibitions:2026-11-08-62",
@@ -1026,6 +1061,11 @@
     },
     {
       "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "kind": "archive-association"
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
       "target": "institutions:barbican-centre",
       "kind": "recorded-link"
     },
@@ -1117,7 +1157,7 @@
     {
       "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
       "target": "people:luke-kemp",
-      "kind": "recorded-link"
+      "kind": "archive-association"
     },
     {
       "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
@@ -1287,11 +1327,11 @@
   ],
   "activity": {
     "exhibitions:2026-01-07-02": 3,
-    "concepts:sound-and-technology": 8,
+    "concepts:sound-and-technology": 9,
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
-    "concepts:memory-and-place": 4,
+    "concepts:memory-and-place": 5,
     "institutions:artizon-museum": 1,
     "people:shiga-lieko": 1,
     "people:yamashiro-chikako": 1,
@@ -1313,7 +1353,7 @@
     "concepts:moving-image": 3,
     "institutions:tokyo-photographic-art-museum": 3,
     "exhibitions:2026-02-13-09": 3,
-    "concepts:performance": 8,
+    "concepts:performance": 9,
     "institutions:tokyo-metropolitan-theatre": 2,
     "people:saeborg": 1,
     "exhibitions:2026-02-14-10": 2,
@@ -1364,7 +1404,7 @@
     "people:elia-nurvista": 1,
     "exhibitions:2026-05-06-27": 2,
     "exhibitions:2026-05-16-28": 3,
-    "concepts:collective-practices": 2,
+    "concepts:collective-practices": 3,
     "institutions:midori-so": 1,
     "people:ruangrupa": 1,
     "exhibitions:2026-05-23-29": 2,
@@ -1378,7 +1418,7 @@
     "institutions:hinodecho-waikiki-studio": 1,
     "people:fuse-rintaro": 1,
     "exhibitions:2026-06-13-33": 5,
-    "concepts:material-and-memory": 2,
+    "concepts:material-and-memory": 3,
     "institutions:mori-art-museum": 1,
     "people:theaster-gates": 1,
     "exhibitions:2026-06-27-34": 3,
@@ -1459,8 +1499,10 @@
     "exhibitions:2026-11-06-61": 3,
     "institutions:seeen": 1,
     "people:nawa-kohei": 1,
-    "exhibitions:2026-11-08-62": 3,
+    "exhibitions:2026-11-08-62": 10,
+    "concepts:concepts-ec7c21229b78c3f0": 1,
     "institutions:space-un": 1,
+    "people:ekow-eshun": 1,
     "people:julianknxx": 1,
     "exhibitions:2026-11-08-63": 6,
     "institutions:art-week-tokyo": 1,
@@ -1469,7 +1511,8 @@
     "institutions:arts-council-tokyo": 1,
     "institutions:watari-um-the-watari-museum-of-contemporary-art": 1,
     "people:nam-june-paik": 1,
-    "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 39,
+    "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 40,
+    "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor": 17,
     "institutions:barbican-centre": 3,
     "institutions:british-council": 2,
     "institutions:mon-takanawa-the-museum-of-narratives": 3,
@@ -1504,7 +1547,6 @@
     "people:trans-voices": 1,
     "people:yuki-anai": 3,
     "people:yuri-suzuki": 1,
-    "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor": 16,
     "institutions:factory-international": 1,
     "institutions:institute-of-contemporary-arts-ica": 1,
     "institutions:somerset-house-studios": 1,

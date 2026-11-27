@@ -1,10 +1,10 @@
 {
   "schema": "murmurgrove.current-research.1",
   "provenance": "DERIVED_FROM_PUBLISHED_ARCHIVE_NOT_A_LIVED_BODY",
-  "generatedAt": "2026-11-27T02:47:31.803Z",
-  "sourceDigest": "0ee8af6995b649f04e4e573447efc37b66edfbb69a73b8552f16d6928a73ea75",
+  "generatedAt": "2026-11-27T04:27:20.353Z",
+  "sourceDigest": "82bba5c52b419071ad7e90ad61e7c915a0731f467e5897e264c86423e5f29aac",
   "relationDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "graphHash": "783c1310638249a6317ddf42461f2deda3df5c2277f78c54f234bbac2494ed31",
+  "graphHash": "0fef638d2c94411ff2b2a683ceca3f486d539b47f33578c0c685ada7c8efd8ce",
   "records": [
     {
       "type": "exhibitions",
@@ -1126,11 +1126,11 @@
       "type": "exhibitions",
       "id": "2026-11-08-62",
       "key": "exhibitions:2026-11-08-62",
-      "title": "SPACE UN｜Julian Knxx《How Much Light Must I Consume?》",
+      "title": "Julian Knxx《How Much Light Must I Consume?》",
       "path": "/exhibitions/2026-11-08-62/",
-      "contentHash": "728f6a22b5d280fd1d74100b77e787808d94bca6e2b4b9bfbd7c7f12747c76c7",
-      "summary": "2026年参观记录。此页面保存观展时间、机构及关联研究对象。",
-      "text": "2026年参观记录。此页面保存观展时间、机构及关联研究对象。",
+      "contentHash": "0c0aeb981ff265d9f5d264a62c58c835c2c2d9b62f04746664da84dd14707422",
+      "summary": "",
+      "text": "",
       "date": "2026-11-08",
       "engagement": "visited",
       "visitedOn": "2026-11-08",
@@ -1182,7 +1182,7 @@
       "key": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
       "title": "Feel the Sound Sound: reaches the body before it reaches the ear",
       "path": "/exhibitions/2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear/",
-      "contentHash": "2a6c7b9a9d5439156c03223d210f9a3f9f8a341385ff92c1477d3201dbe9b6dc",
+      "contentHash": "3570a4b76f64ba3a7ab8bf75720253b03ad9ebdf1aea6cbd76c28de7e4c8bd57",
       "summary": "",
       "text": "",
       "date": "2026-11-22",
@@ -1200,7 +1200,7 @@
       "key": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
       "title": "Where Art and Music Meet Technology: New Possibilities for Creative Collaboration",
       "path": "/exhibitions/2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor/",
-      "contentHash": "4af07393259b7fce666d888eb883b993cdd74beec81de40e2c6b816651850de0",
+      "contentHash": "a7101bc1413b9c445bd417f5340a53d97453838720e0e0d52b28730af682d853",
       "summary": "14:00–14:50 MUTEK.JP Pro Conference Exploring New Possibilities for Creative Collaboration and International Cultural Exchange at the Intersection of Art, Music, and Technology: This special session brings together leading cultural professionals from the UK to explore how technology is transforming music and visual art, and the new creative possibilities emerging when artists engage with technology. The discussion will also examine opportunities for cross-",
       "text": "14:00–14:50   MUTEK.JP Pro Conference\n\nExploring New Possibilities for Creative Collaboration and International Cultural Exchange at the Intersection of Art, Music, and Technology: This special session brings together leading cultural professionals from the UK to explore how technology is transforming music and visual art, and the new creative possibilities emerging when artists engage with technology.\n\nThe discussion will also examine opportunities for cross-border collaboration, the development of artist communities, and how international networks can support the future of arts and culture.",
       "date": "2026-11-22",
@@ -1356,6 +1356,21 @@
       "contentHash": "5eec7155428a1c03c102252baa431ec719a2e7c50d5a6a1289b2a9090ec60716",
       "summary": "",
       "text": "",
+      "date": "",
+      "conceptStage": null,
+      "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "people",
+      "id": "ekow-eshun",
+      "key": "people:ekow-eshun",
+      "title": "Ekow Eshun",
+      "path": "/people/ekow-eshun/",
+      "contentHash": "75c85d41b327ca761c6f5d0a351e061176b04ea32a5d8ac40666ad518cc0c9d8",
+      "summary": "Ekow Eshun（1968–） 是英国籍加纳裔策展人、作家、文化评论家及广播人，也是英国当代艺术界研究黑人视觉文化、非洲离散经验与文化身份的重要人物。 他的实践横跨当代艺术、文学、电影、流行文化与社会政治研究。",
+      "text": "Ekow Eshun（1968–） 是英国籍加纳裔策展人、作家、文化评论家及广播人，也是英国当代艺术界研究黑人视觉文化、非洲离散经验与文化身份的重要人物。\n他的实践横跨当代艺术、文学、电影、流行文化与社会政治研究。",
       "date": "",
       "conceptStage": null,
       "aliases": [],
@@ -3454,6 +3469,23 @@
       "date": "",
       "conceptStage": "unclassified",
       "aliases": [],
+      "conceptReading": "",
+      "mergedInto": null
+    },
+    {
+      "type": "concepts",
+      "id": "concepts-ec7c21229b78c3f0",
+      "key": "concepts:concepts-ec7c21229b78c3f0",
+      "title": "后殖民主义",
+      "path": "/concepts/concepts-ec7c21229b78c3f0/",
+      "contentHash": "c22bbf74124909ff4cb5c40014efdbcc3d177fddbd464c39e736c2bbe2bf6d58",
+      "summary": "后殖民主义（Postcolonialism） 是一种研究殖民主义及其延续性影响的思想传统与批判理论。它关注的不仅是殖民统治本身，更是殖民统治结束之后，权力如何继续存在于文化、语言、知识、身份、经济与制度之中。",
+      "text": "后殖民主义（Postcolonialism） 是一种研究殖民主义及其延续性影响的思想传统与批判理论。它关注的不仅是殖民统治本身，更是殖民统治结束之后，权力如何继续存在于文化、语言、知识、身份、经济与制度之中。",
+      "date": "",
+      "conceptStage": "unclassified",
+      "aliases": [
+        "Postcolonialism"
+      ],
       "conceptReading": "",
       "mergedInto": null
     },
@@ -5707,7 +5739,73 @@
     },
     {
       "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:collective-practices",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:concepts-ec7c21229b78c3f0",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:material-and-memory",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:memory-and-place",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:performance",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
       "target": "concepts:politics-of-representation",
+      "kind": "recorded-link",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "concepts:sound-and-technology",
       "kind": "recorded-link",
       "provenance": [
         {
@@ -5724,6 +5822,18 @@
         {
           "method": "frontmatter",
           "source": "exhibitions:2026-11-08-62"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-08-62",
+      "target": "people:ekow-eshun",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-08-62",
+          "field": "curators"
         }
       ]
     },
@@ -5949,6 +6059,18 @@
     },
     {
       "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+      "target": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+      "kind": "archive-association",
+      "provenance": [
+        {
+          "method": "frontmatter",
+          "source": "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor",
+          "field": "linkedExhibitions"
+        }
+      ]
+    },
+    {
+      "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
       "target": "institutions:barbican-centre",
       "kind": "recorded-link",
       "provenance": [
@@ -6148,11 +6270,12 @@
     {
       "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
       "target": "people:luke-kemp",
-      "kind": "recorded-link",
+      "kind": "archive-association",
       "provenance": [
         {
           "method": "frontmatter",
-          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear"
+          "source": "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear",
+          "field": "curators"
         }
       ]
     },
@@ -6525,11 +6648,11 @@
   "concepts": {},
   "activity": {
     "exhibitions:2026-01-07-02": 3,
-    "concepts:sound-and-technology": 8,
+    "concepts:sound-and-technology": 9,
     "institutions:hosoo-gallery": 2,
     "people:carsten-nicolai": 1,
     "exhibitions:2026-01-08-03": 4,
-    "concepts:memory-and-place": 4,
+    "concepts:memory-and-place": 5,
     "institutions:artizon-museum": 1,
     "people:shiga-lieko": 1,
     "people:yamashiro-chikako": 1,
@@ -6551,7 +6674,7 @@
     "concepts:moving-image": 3,
     "institutions:tokyo-photographic-art-museum": 3,
     "exhibitions:2026-02-13-09": 3,
-    "concepts:performance": 8,
+    "concepts:performance": 9,
     "institutions:tokyo-metropolitan-theatre": 2,
     "people:saeborg": 1,
     "exhibitions:2026-02-14-10": 2,
@@ -6602,7 +6725,7 @@
     "people:elia-nurvista": 1,
     "exhibitions:2026-05-06-27": 2,
     "exhibitions:2026-05-16-28": 3,
-    "concepts:collective-practices": 2,
+    "concepts:collective-practices": 3,
     "institutions:midori-so": 1,
     "people:ruangrupa": 1,
     "exhibitions:2026-05-23-29": 2,
@@ -6616,7 +6739,7 @@
     "institutions:hinodecho-waikiki-studio": 1,
     "people:fuse-rintaro": 1,
     "exhibitions:2026-06-13-33": 5,
-    "concepts:material-and-memory": 2,
+    "concepts:material-and-memory": 3,
     "institutions:mori-art-museum": 1,
     "people:theaster-gates": 1,
     "exhibitions:2026-06-27-34": 3,
@@ -6697,8 +6820,10 @@
     "exhibitions:2026-11-06-61": 3,
     "institutions:seeen": 1,
     "people:nawa-kohei": 1,
-    "exhibitions:2026-11-08-62": 3,
+    "exhibitions:2026-11-08-62": 10,
+    "concepts:concepts-ec7c21229b78c3f0": 1,
     "institutions:space-un": 1,
+    "people:ekow-eshun": 1,
     "people:julianknxx": 1,
     "exhibitions:2026-11-08-63": 6,
     "institutions:art-week-tokyo": 1,
@@ -6707,7 +6832,8 @@
     "institutions:arts-council-tokyo": 1,
     "institutions:watari-um-the-watari-museum-of-contemporary-art": 1,
     "people:nam-june-paik": 1,
-    "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 39,
+    "exhibitions:2026-11-27-feel-the-sound-sound-reaches-the-body-before-it-reaches-the-ear": 40,
+    "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor": 17,
     "institutions:barbican-centre": 3,
     "institutions:british-council": 2,
     "institutions:mon-takanawa-the-museum-of-narratives": 3,
@@ -6742,7 +6868,6 @@
     "people:trans-voices": 1,
     "people:yuki-anai": 3,
     "people:yuri-suzuki": 1,
-    "exhibitions:2026-11-27-where-art-and-music-meet-technology-new-possibilities-for-creative-collabor": 16,
     "institutions:factory-international": 1,
     "institutions:institute-of-contemporary-arts-ica": 1,
     "institutions:somerset-house-studios": 1,
