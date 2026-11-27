@@ -315,7 +315,8 @@ function boundPanToOrganism(requested,previous=lastSafePan){
  // Explicit navigation may visit a genuine peripheral node even when the
  // normal free-pan density constraint would hold the camera in the main body.
  if(relationFocusId===selected&&followSelected&&canLocateRelation(selected)&&!activeGesture&&!touchPair)return requested;
- if(MOBILE_HOME){
+ // At close range both desktop and mobile must be able to cross sparse interior space.
+ if(MOBILE_HOME||zoom>1){
   const scale=baseScale*zoom/ZOOM_BASE;
   const screen=p=>{const a=project(p);return [W*.5+(a[0]-center[0])*scale,H*.48-(a[1]-center[1])*scale];};
   const points=viewPositions.filter((p,i)=>!sourceView||sourceView.structure.projectedIds.has(nodes[i].id)).map(screen);

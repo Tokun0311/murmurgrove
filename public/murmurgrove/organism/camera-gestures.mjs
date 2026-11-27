@@ -28,7 +28,7 @@ export function calmMagnifiedMotion(rest,moving,zoom){
  return [rest[0]+dx*gain,rest[1]+dy*gain,moving[2]];
 }
 
-/** Continuous screen-space bounds for mobile exploration. Empty interior
+/** Continuous screen-space bounds for mobile and magnified desktop exploration. Empty interior
  * space is intentional: sparse nodes must not create disconnected pan zones. */
 export function mobilePanBounds(requested,points,width,height){
  if(!points.length)return [...requested];
