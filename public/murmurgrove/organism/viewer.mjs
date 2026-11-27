@@ -163,7 +163,7 @@ function springToEdge(position,safe,dt){
 const smallTouchViewport=matchMedia('(pointer:coarse)').matches;
 const reducedMotionMedia=matchMedia('(prefers-reduced-motion: reduce)');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function loadJSON(file){const r=await fetch('./data/'+file+'.json',{cache:'no-store'});if(!r.ok)throw Error(`${file}: HTTP ${r.status}`);return r.json();}
+async function loadJSON(file){const r=await fetch('./data/'+file+'.json',{cache:'no-cache'});if(!r.ok)throw Error(`${file}: HTTP ${r.status}`);return r.json();}
 const canonical=x=>Array.isArray(x)?x.map(canonical):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,canonical(x[k])])):x;
 async function sha(x,{ordered=false}={}){const bytes=new TextEncoder().encode(JSON.stringify(ordered?x:canonical(x)));return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');}
 async function shaRawText(value){const bytes=new TextEncoder().encode(value);return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');}
@@ -471,6 +471,7 @@ function readingMotion(id,rest,moving){
  return [rest[0]+(moving[0]-rest[0])*amount,rest[1]+(moving[1]-rest[1])*amount,moving[2]];
 }
 function avgColor(a,b){return a;} // no blending of identities, relation style expresses evidence only
+function outsideCurve(a,b,c,d){return Math.max(a[0],b[0],c[0],d[0])<-2||Math.min(a[0],b[0],c[0],d[0])>W+2||Math.max(a[1],b[1],c[1],d[1])<-2||Math.min(a[1],b[1],c[1],d[1])>H+2;}
 function drawBackground(time,pos){
  ctx.fillStyle=EMERALD.paper;ctx.fillRect(0,0,W,H);
  // Optical density derived from nodes only. No line may appear without a real relation.
@@ -480,6 +481,7 @@ function drawBackground(time,pos){
   const d=neighborData[i].density;if(d<.8)continue;
   const spread=(mode==='Growth'?20:mode==='Movement'?23:19)*Math.sqrt(zoom/ZOOM_BASE);
   const radius=cl(spread*(.75+Math.min(2.8,d*.13)),9,160);
+  if(point[0]+radius<0||point[0]-radius>W||point[1]+radius<0||point[1]-radius>H)continue;
   const gradient=ctx.createRadialGradient(point[0],point[1],1,point[0],point[1],radius);
   const quietLens=selected&&isolated.has(selected)&&zoom>=8?.16:1;
   const power=(mode==='Movement'?.022:mode==='Growth'?.026:.023)*Math.min(1.25,d/3)*quietLens*nodeOptics(n.id,point)*(mode==='Whole'?.72:1);
@@ -507,6 +509,7 @@ function drawLinks(pos,time){
   for(let k=0;k<(smallTouchViewport?2:3);k++){
    if(mode==='Whole'&&!activeHistoryContext&&zoom<1.25&&k!==1)continue;
    const [p1,p2]=mangroveControls(p,q,fieldScreen[ai],fieldScreen[bi],k,mode,time);
+   if(outsideCurve(p,p1,p2,q))continue;
    const alpha=sourceAlpha*(k===1?.52:.20)*ebb;
    ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.bezierCurveTo(p1[0],p1[1],p2[0],p2[1],q[0],q[1]);
    ctx.lineWidth=k===1?.58:.32;
@@ -532,6 +535,7 @@ function drawRelationFlow(pos,time){
   const opticalWeight=edgeOptics(link.from,link.to,a,b);
   // Both the moving light and its trail are sampled ON this one verified link.
   const [c1,c2]=mangroveControls(a,b,fieldScreen[ai],fieldScreen[bi],1,mode,strandTime);
+  if(outsideCurve(a,c1,c2,b))return;
   const recent=Math.max(exhibitionGlow(nodes[ai]),exhibitionGlow(nodes[bi]),
     datedLocalPulse(nodes[ai],time),datedLocalPulse(nodes[bi],time));
   // flowSamplesForRelation receives REAL seconds. It applies the configured optical
@@ -676,6 +680,7 @@ function clearTransientCamera(){
  panIntent=null;canvas.style.cursor='grab';
 }
 function render(now){
+ if(document.hidden){lastFrameAt=0;requestAnimationFrame(render);return;}
  try{renderFrame(now);renderFailures=0;}
  catch(error){
   renderFailures++;console.error('Murmurgrove frame failed:',error);
@@ -906,7 +911,9 @@ function selectAndFollow(id,{magnify=true}={}){
  }
  followSelected=zoom>1||zoomGoal>1;saveMemory();
 }
-function positionCard(pos){if(relationJourney)return;const i=nodeIndex.get(selected);
+const mobileCardMedia=matchMedia('(max-width:650px)');
+function positionCard(pos){if(relationJourney)return;
+ if(mobileCardMedia.matches){document.body.classList.toggle('deep',zoom>=2);return;}const i=nodeIndex.get(selected);
  const p=i===undefined?currentPoints.get(selected)?.point:followSelected&&zoom>=8?coords(viewPositions[i]):pos[i];
  if(!p)return;
  const card=$('card'),width=card.offsetWidth||160,height=card.offsetHeight||100;

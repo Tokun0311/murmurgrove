@@ -433,6 +433,24 @@ html body #debugPanel .interaction-guide p{margin:7px 0}
 #card .relation-group .relation-location-note{white-space:normal}
 #card .relation-group small{font-size:9px;color:#789184}
 @media(pointer:coarse){#card .relation-disclosure summary{min-height:36px}#card .relation-group li{font-size:12px;line-height:1.8}}
+
+/* Mobile record reading: compact, stationary, open-edged, outside the lens centre. */
+@media(max-width:650px){
+ html body #card,html body #card:has(.relation-disclosure[open]){
+  left:max(12px,env(safe-area-inset-left)) !important;right:max(12px,env(safe-area-inset-right)) !important;
+  top:auto !important;bottom:calc(max(19px,env(safe-area-inset-bottom)) + 50px) !important;
+  width:auto!important;min-width:0;max-width:none!important;max-height:min(24dvh,155px);
+  padding:4px 12px 7px;box-sizing:border-box;overflow-y:auto;touch-action:pan-y;
+  background:linear-gradient(to bottom,rgba(251,253,250,.72),rgba(251,253,250,.96) 22%,rgba(251,253,250,.98) 82%,rgba(251,253,250,.68)) !important;
+ }
+ html body #card:has(.relation-disclosure[open]){max-height:min(38dvh,250px);}
+ html body #card .top{min-height:22px;}
+ html body #card .close{min-width:44px;min-height:36px;font-size:20px;line-height:1;}
+ html body #card .card-title{margin:0 0 2px;font-size:13px;line-height:1.35;}
+ html body #card .connected{margin-top:2px;}
+ html body #card .relation-disclosure summary{min-height:32px;}
+ html body #card .relation-groups{max-height:min(18dvh,120px);}
+}
 </style><script>document.documentElement.classList.toggle("embedded",new URLSearchParams(location.search).has("embedded"));document.documentElement.classList.add("public-site");</script></head><body>
 <canvas id="stage" role="img" aria-label="A living network grown from documented archive records. Select a particle to focus, then follow the title in its card to read the source."></canvas>
 <div id="hint" aria-hidden="true"><span class="desktop-hint">Drag to orbit · Scroll to explore · Shift + drag to turn</span><span class="touch-hint">Drag with one finger · Spread both fingers to zoom · Hold one to orbit</span></div>
@@ -530,7 +548,7 @@ html body #debugPanel .interaction-guide p{margin:7px 0}
   document.addEventListener('murmurgrove:close-viewer-panel', () => setPanel(null));
 })();
 </script>
-<script type="module" src="./viewer.mjs?research=6-living-legibility"></script>
+<script type="module" src="./viewer.mjs?research=7-compact-performance"></script>
 <script>
 // Same-origin event bridge: the murmurgrove masthead keeps its single original
 // cursor trail, even while pointer events are delivered to this iframe.
