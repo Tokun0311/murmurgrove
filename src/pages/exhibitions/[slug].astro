@@ -33,7 +33,7 @@ const day=archiveDay(item.data);
       {mode==='visited'&&item.data.researchOn&&<div><dt>Research date</dt><dd>{item.data.researchOn.toISOString().slice(0,10)}</dd></div>}
       {item.data.plannedOn&&<div><dt>Expected visit</dt><dd>{item.data.plannedOn.toISOString().slice(0,10)}</dd></div>}
       {item.data.recordedOn&&<div><dt>Record date</dt><dd>{item.data.recordedOn.toISOString().slice(0,10)}</dd></div>}
-      {item.data.researchSources&&<div><dt>Research sources</dt><dd>{item.data.researchSources}</dd></div>
+      {item.data.researchSources&&<div><dt>Research sources</dt><dd>{item.data.researchSources}</dd></div>}
       {(item.data.exhibitionStart || item.data.exhibitionEnd) && <div><dt>{item.data.exhibitionStart && item.data.exhibitionEnd ? 'Exhibition period' : item.data.exhibitionStart ? 'Exhibition start' : 'Exhibition end'}</dt><dd>{[item.data.exhibitionStart,item.data.exhibitionEnd].filter(Boolean).map(d=>d!.toISOString().slice(0,10)).join(' – ')}</dd></div>}
       {item.data.verification==='needs-review' && <div><dt>Archive status</dt><dd>Details to verify</dd></div>}
       {inst && <div><dt>Institution</dt><dd><a href={`/institutions/${inst.id}/`}>{inst.data.name}</a></dd></div>}
