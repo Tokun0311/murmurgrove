@@ -8,6 +8,8 @@ institutionTypes: []
 sources: []
 linkedInstitutions: []
 linkedWriting: []
+city: "Tokyo"
+country: "Japan"
 ---
 
 ShugoArts 是一家于2000年在东京成立的当代艺术商业画廊，由佐谷周吾（Shugo Satani）创立。其发展建立在创始人此前于父亲佐谷和彦经营的佐谷画廊（Satani Gallery）积累的经验之上，延续了日本战后及当代艺术推广的历史脉络。

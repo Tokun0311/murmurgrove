@@ -692,5 +692,21 @@
     "edgeCount": 389,
     "priorHash": "70bc6b6d90ce2983d9a7dd508f65797b400ba5c6da2cbecd47bbe90fee87ce25",
     "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
+  },
+  {
+    "file": "versions/2026-11-27T07-37-51-858Z-0d3bc52c274b.json",
+    "graphHash": "0d3bc52c274bd01f86dc43f7144a691b421a53b9b838dda1671876a47eedbd75",
+    "at": "2026-11-27T07:37:51.855Z",
+    "added": [],
+    "changed": [
+      "institutions:rockbund-art-museum",
+      "institutions:shugoarts",
+      "institutions:waitingroom"
+    ],
+    "removed": [],
+    "recordCount": 345,
+    "edgeCount": 389,
+    "priorHash": "69726b4f74194be15e04c0aa1750e3b15e63cbac3fe944ba9f23a63c090f22bf",
+    "kind": "SOURCE_INDEX_REVISION_NOT_LIVED_MORPHOLOGY"
   }
 ]

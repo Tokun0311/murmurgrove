@@ -8,6 +8,8 @@ institutionTypes: []
 sources: []
 linkedInstitutions: []
 linkedWriting: []
+city: "Tokyo"
+country: "Japan"
 ---
 
 WAITINGROOM 是一家位于日本东京的当代艺术商业画廊，由芦川朋子（Tomoko Ashikawa）于2010年秋在惠比寿创立，2017年迁至江户川桥与神乐坂地区。

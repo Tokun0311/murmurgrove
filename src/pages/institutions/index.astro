@@ -4,6 +4,7 @@ import {getCollection} from 'astro:content';
 const sourceItems=await getCollection('institutions');
 
 import cityRegistry from '../../lib/geographic-index.json';
+import {groupCountries} from '../../lib/institution-geography.mjs';
 const cityMeta: Record<string,{lon:number;lat:number;country:string;aliases?:string[]}> = cityRegistry;
 const cityKey=(s:string)=>s.normalize('NFKC').trim().toLowerCase();
 const names=new Map(Object.entries(cityMeta).flatMap(([city,meta])=>[city,...(meta.aliases||[])].map(alias=>[cityKey(alias),city] as const)));
@@ -11,6 +12,8 @@ const items=sourceItems.map(item=>({...item,data:{...item.data,city:item.data.ci
 
 const countryOrder = ['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand','Germany','Denmark','United Kingdom','France'];
 const cityOrder = Object.keys(cityMeta);
+// Keep existing country order; new countries follow in alphabetical order.
+const countryRank=(country:string)=>{const i=countryOrder.indexOf(country);return i===-1?countryOrder.length:i;};
 const countryEntries = Object.entries(
   Object.groupBy(
     items.filter((item) => item.data.city && cityMeta[item.data.city]?.country),
@@ -22,7 +25,8 @@ const countryEntries = Object.entries(
   cities: Object.entries(Object.groupBy(entries, item => item.data.city))
     .map(([city, cityEntries]) => ({city, entries: cityEntries.sort((a,b)=>a.data.name.localeCompare(b.data.name))}))
     .sort((a,b)=>cityOrder.indexOf(a.city)-cityOrder.indexOf(b.city)),
-})).sort((a,b)=>countryOrder.indexOf(a.country)-countryOrder.indexOf(b.country));
+})).sort((a,b)=>countryRank(a.country)-countryRank(b.country)||a.country.localeCompare(b.country,'en'));
+const geographicGroups=groupCountries(countryEntries);
 // One representative marker per country, weighted toward documented institutions.
 // Compute a spherical mean so positions remain stable even near the date line.
 const countryMarkers = countryEntries.map(({country,cities,entries}) => {
@@ -110,16 +114,18 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
       <aside class="geo-index" aria-label="Browse institutions by location">
         <p class="mobile-geo-hint">Dots · archived countries</p>
         <button type="button" class="geo-all-button is-active" data-jump-country="all" aria-pressed="true">All <span>{items.length}</span></button>
-        <div class="geo-index-group"><h2>Asia</h2>
-          {countryEntries.filter(g=>['Japan','South Korea','Hong Kong','Singapore','Indonesia','Thailand'].includes(g.country)).map(({country,cities,entries})=>(
-            <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
-          ))}
-        </div>
-        <div class="geo-index-group"><h2>Europe</h2>
-          {countryEntries.filter(g=>['Germany','Denmark','United Kingdom','France'].includes(g.country)).map(({country,cities,entries})=>(
-            <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
-          ))}
-        </div>
+        {geographicGroups.map(({region,entries:regionEntries})=>(
+          <div class="geo-index-group"><h2>{region}</h2>
+            {regionEntries.map(({country,cities,entries})=>(
+              <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country={country} aria-pressed="false"><span>{country}</span><small>{entries.length}</small></button><p>{cities.map(c=>c.city).join(' · ')}</p></div>
+            ))}
+          </div>
+        ))}
+        {unmapped.length>0&&(
+          <div class="geo-index-group"><h2>Unclassified</h2>
+            <div class="geo-country"><button type="button" class="geo-country-button" data-jump-country="unmapped" aria-pressed="false"><span>Location not yet specified</span><small>{unmapped.length}</small></button></div>
+          </div>
+        )}
       </aside>
       </div>
     </section>
@@ -391,8 +397,10 @@ const unmapped = items.filter(item => !item.data.city || !cityMeta[item.data.cit
   // Country dots and country names deliberately share exactly the same selection path.
   function selectCountry(country:string){
     filterCountry(country);
-    focusGlobeCountry(country);
-    focusMobileCountry(country);
+    // Unclassified entries have no map location; keep the overview camera.
+    const mapCountry=country==='unmapped'?'all':country;
+    focusGlobeCountry(mapCountry);
+    focusMobileCountry(mapCountry);
   }
   geoButtons.forEach(button=>button.addEventListener('click',()=>{
     selectCountry(button.dataset.jumpCountry||'all');

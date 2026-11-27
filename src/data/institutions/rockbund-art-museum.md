@@ -8,6 +8,8 @@ institutionTypes: []
 sources: []
 linkedInstitutions: []
 linkedWriting: []
+city: "Shanghai"
+country: "China"
 ---
 
 上海外滩美术馆（RAM）是一家位于中国上海的非营利当代艺术机构，于2010年正式开放。美术馆坐落于原上海亚洲文会大楼内，将具有殖民历史背景的建筑转化为当代艺术生产、展示与公共讨论的场所。
