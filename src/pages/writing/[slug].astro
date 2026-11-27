@@ -1,4 +1,7 @@
 ---
+import ArchiveProfile from "../../components/ArchiveProfile.astro";
+import ResearchContinuity from "../../components/ResearchContinuity.astro";
+import ArchiveSources from "../../components/ArchiveSources.astro";
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
 export async function getStaticPaths(){
@@ -15,6 +18,6 @@ const {Content}=await render(post);
     <p class="eyebrow">{post.data.date.toISOString().slice(0,10)} / {post.data.type} / {post.data.language}</p>
     <p class="lead">{post.data.description}</p>
     {post.data.tags.length>0&&<div class="tags">{post.data.tags.map(t=><span class="tag">{t}</span>)}</div>}
-    <div class="prose"><Content/></div>
+    <ArchiveProfile data={post.data} type="writing"/><div class="prose"><Content/></div><ArchiveSources sources={post.data.sources}/><ResearchContinuity type="writing" id={post.id}/>
   </article>
 </Base>

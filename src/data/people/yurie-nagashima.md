@@ -3,6 +3,7 @@ name: Nagashima Yurie / 長島有里枝
 reading: ながしまゆりえ
 sortName: Nagashima Yurie
 kind: artist
+nativeName: "長島有里枝"
 ---
 
 日本摄影师与作家，以家庭、自我呈现和性别经验为主题，持续反思摄影中的观看方式。

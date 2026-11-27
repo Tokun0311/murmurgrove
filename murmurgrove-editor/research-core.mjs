@@ -134,10 +134,11 @@ function relationEdges(records,approved,conceptMeta={}){const byKey=new Map(reco
  }
  // Explicit editor-selected associations, not inferred employment or participation.
  for(const r of records){
-  const fields=r.type==='people'?[['linkedInstitutions','institutions']]:r.type==='institutions'?[['linkedPeople','people'],['linkedExhibitions','exhibitions'],['linkedConcepts','concepts']]:[];
+  const fields=[['linkedPeople','people'],['linkedInstitutions','institutions'],['linkedExhibitions','exhibitions'],['linkedConcepts','concepts'],['linkedWriting','writing'],['curators','people']];
   for(const [field,type] of fields)for(const id of Array.isArray(r.fields[field])?r.fields[field]:[]){
    if(!slugValid(id))continue;const target=recordKey(type,id);
    if(type==='exhibitions'&&edges.has(`${target}|${r.key}|recorded-link`))continue;
+   if(field!=='curators'&&r.type==='exhibitions'&&edges.has(`${r.key}|${target}|recorded-link`))continue;
    const [a,b]=[r.key,target].sort();add(a,b,'archive-association',{method:'frontmatter',source:r.key,field});
   }
  }
@@ -146,7 +147,7 @@ function relationEdges(records,approved,conceptMeta={}){const byKey=new Map(reco
 }
 function publishedAliases(fields, concept){
  const list=value=>Array.isArray(value)?value:[value];
- return [...new Set([fields.reading,fields.sortName,...list(fields.aliases),...list(fields.alternativeNames),...(concept?.aliases||[])]
+ return [...new Set([fields.nativeName,fields.reading,fields.sortName,...list(fields.aliases),...list(fields.alternativeNames),...(concept?.aliases||[])]
   .filter(value=>typeof value==='string'&&value.trim()).map(value=>value.trim()))];
 }
 export async function buildGraph(root){const records=await readArchive(root),events=await readEvents(root),assessed=assessClaims(records,activeRelations(events)),claims=assessed.filter(c=>c.reviewStatus==='current'),conceptMeta=await readConceptMeta(root),edges=relationEdges(records,claims,conceptMeta);

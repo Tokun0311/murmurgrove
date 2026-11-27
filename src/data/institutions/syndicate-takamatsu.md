@@ -5,6 +5,7 @@ address: "〒760-0047 香川県高松市塩屋町9-9 渡辺ビル2F西"
 addressStatus: verified
 addressSource: https://syndicate-tak.com/about
 locationType: site
+website: "https://syndicate-tak.com/about"
 ---
 
 SYNDICATE 是位于日本香川县高松市的艺术家运营独立画廊与工作空间，2021年12月成立。空间举办日本国内外艺术家的展览，并销售艺术作品及出版物。

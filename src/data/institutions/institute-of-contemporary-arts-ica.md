@@ -1,6 +1,8 @@
 ---
 name: "Institute of Contemporary Arts (ICA)"
 city: "London"
+website: "https://www.ica.art/"
+institutionTypes: ["独立非营利性艺术机构","注册慈善机构","跨学科文化中心"]
 ---
 
 Institute of Contemporary Arts（ICA）是位于英国伦敦的独立非营利性当代艺术机构，由艺术家、诗人、批评家及文化界人士于1946年发起成立，主要创始人包括艺术家 Roland Penrose、艺术批评家 Herbert Read 等。1968年迁至伦敦 The Mall 的现址。机构诞生于英国战后文化重建的背景下，旨在为先锋艺术实践与实验性思想提供独立的公共空间。

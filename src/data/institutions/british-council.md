@@ -1,6 +1,9 @@
 ---
 name: "British Council"
 city: "London"
+website: "https://www.britishcouncil.org/"
+institutionTypes: ["国际文化交流机构","非部门公共机构","注册慈善机构"]
+foundedYear: "1934"
 ---
 
 British Council（英国文化教育协会）

@@ -4,6 +4,8 @@ city: "Manchester"
 linkedPeople: []
 linkedExhibitions: []
 linkedConcepts: []
+website: "https://factoryinternational.org/"
+institutionTypes: ["非营利性综合艺术机构","艺术生产平台","国际艺术节运营机构"]
 ---
 
 

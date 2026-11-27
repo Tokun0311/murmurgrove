@@ -1,9 +1,10 @@
 function validAssociationProof(edge,proof){
   if(proof.method!=='frontmatter'||![edge.source,edge.target].includes(proof.source))return false;
   const other=proof.source===edge.source?edge.target:edge.source;
-  const allowed={linkedInstitutions:['people','institutions'],linkedPeople:['institutions','people'],linkedExhibitions:['institutions','exhibitions'],linkedConcepts:['institutions','concepts']};
-  const pair=Object.hasOwn(allowed,proof.field)?allowed[proof.field]:null;
-  return !!pair&&proof.source.startsWith(pair[0]+':')&&other.startsWith(pair[1]+':');
+  const allowed={linkedInstitutions:'institutions',linkedPeople:'people',linkedExhibitions:'exhibitions',linkedConcepts:'concepts',linkedWriting:'writing',curators:'people'};
+  const sourceType=proof.source.split(':')[0];
+  const targetType=Object.hasOwn(allowed,proof.field)?allowed[proof.field]:null;
+  return ['people','institutions','exhibitions','concepts','writing'].includes(sourceType)&&!!targetType&&other.startsWith(targetType+':')&&(proof.field!=='curators'||sourceType==='exhibitions');
 }
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -21,6 +22,7 @@ export function buildArchiveNavigation(graph, nav, snapshot) {
     const kind=Object.hasOwn(kinds,row.type)&&kinds[row.type];
     if(!kind||typeof row.id!=='string'||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(row.id)||row.key!==row.type+':'+row.id||row.path!=='/'+row.type+'/'+row.id+'/'||typeof row.title!=='string'||!row.title.trim()||!/^[a-f0-9]{64}$/.test(row.contentHash))return {aliases:new Map(),locations:new Map()};
     const id=kind+':'+row.id;
+    if(row.engagement==='planned')continue;
     if(records.has(id))return {aliases:new Map(),locations:new Map()};
     records.set(id,row);keys.set(row.key,id);
     aliases.set(row.path,Array.isArray(row.aliases)?row.aliases.filter(a=>typeof a==='string'):[]);

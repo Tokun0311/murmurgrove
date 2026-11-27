@@ -1,4 +1,7 @@
 ---
+import geography from "../../lib/geographic-index.json";
+import ArchiveProfile from "../../components/ArchiveProfile.astro";
+import ArchiveSources from "../../components/ArchiveSources.astro";
 import {archiveDay,engagementLabel} from '../../lib/exhibition-engagement.mjs';
 import Base from '../../layouts/Base.astro';
 import OrganismLink from '../../components/OrganismLink.astro';
@@ -8,6 +11,8 @@ import {currentExhibitionIds} from '../../lib/current-research.mjs';
 export async function getStaticPaths(){return (await getCollection('institutions')).map(item=>({params:{slug:item.id},props:{item}}));}
 const {item}=Astro.props;
 const {Content}=await render(item);
+const city=Object.entries(geography).find(([name,meta])=>[name,...(meta.aliases||[])].some(n=>n.normalize("NFKC").toLowerCase()===String(item.data.city||"").normalize("NFKC").toLowerCase()));
+const country=item.data.country||city?.[1].country;
 const relatedIds=currentExhibitionIds('institutions:'+item.id);
 const exhibitions=(await getCollection('exhibitions')).filter(e=>relatedIds.has(e.id)).sort((a,b)=>archiveDay(b.data).localeCompare(archiveDay(a.data)));
 ---
@@ -16,9 +21,9 @@ const exhibitions=(await getCollection('exhibitions')).filter(e=>relatedIds.has(
     {item.data.associatedProject && <p><strong>Related programme</strong> · {item.data.associatedProject}</p>}
     {item.data.venueName && item.data.venueName!==item.data.name && <p><strong>Venue</strong> · {item.data.venueName}</p>}
     {item.data.venueAddress && <p><strong>Recorded venue address</strong> · {item.data.venueAddress} {item.data.venueStatus==='reference' && <em>(historical reference; not confirmed as this event’s venue)</em>}</p>}
-    <p><strong>Location</strong> · {item.data.city || 'Not specified'}</p>
+    {(item.data.city||country) && <p><strong>Location</strong> · {[item.data.city,country].filter(Boolean).join(" · ")}</p>}
     {item.data.address ? <p><strong>Address</strong> · {item.data.address} {item.data.addressSource && <a href={item.data.addressSource} target="_blank" rel="noopener noreferrer">Source</a>}</p> :
-      <p><strong>Street address</strong> · {item.data.locationType === 'variable' ? 'Multiple / non-fixed venues; see recorded venue above if available' : 'Not yet verified (city only)'}</p>}
-  </div><div class="prose"><Content/></div>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{archiveDay(e.data)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}<ResearchContinuity type="institutions" id={item.id}/></article></Base>
+      item.data.locationType === 'variable' && <p><strong>Location type</strong> · Multiple / non-fixed venues</p>}
+  </div><ArchiveProfile data={{...item.data,country:undefined}} type="institutions"/><div class="prose"><Content/></div><ArchiveSources sources={item.data.sources}/>{exhibitions.length>0 && <section><h2>Related exhibitions &amp; events</h2><ol class="archive-list">{exhibitions.map(e=><li class="archive-entry"><time>{archiveDay(e.data)}</time><a href={`/exhibitions/${e.id}/`}>{e.data.title}</a></li>)}</ol></section>}<ResearchContinuity type="institutions" id={item.id}/></article></Base>
 
 <style>.institution-location-info{margin:1rem 0 2rem;color:var(--quiet);font-size:.85rem;line-height:1.7}.institution-location-info p{margin:.15rem 0}.institution-location-info strong{font-weight:500;color:var(--ink)}.institution-location-info a{margin-left:.45rem;text-underline-offset:3px}</style>

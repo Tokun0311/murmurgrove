@@ -3,6 +3,7 @@ name: Yanagi Yukinori / 柳幸典
 reading: やなぎゆきのり
 sortName: Yanagi Yukinori
 kind: artist
+nativeName: "柳幸典"
 ---
 
 日本当代艺术家，以国旗、货币、蚂蚁和空间装置讨论国家、边界、身份及历史记忆。

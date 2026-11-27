@@ -1,9 +1,10 @@
 function validAssociationProof(edge,proof){
   if(proof.method!=='frontmatter'||![edge.source,edge.target].includes(proof.source))return false;
   const other=proof.source===edge.source?edge.target:edge.source;
-  const allowed={linkedInstitutions:['people','institutions'],linkedPeople:['institutions','people'],linkedExhibitions:['institutions','exhibitions'],linkedConcepts:['institutions','concepts']};
-  const pair=Object.hasOwn(allowed,proof.field)?allowed[proof.field]:null;
-  return !!pair&&proof.source.startsWith(pair[0]+':')&&other.startsWith(pair[1]+':');
+  const allowed={linkedInstitutions:'institutions',linkedPeople:'people',linkedExhibitions:'exhibitions',linkedConcepts:'concepts',linkedWriting:'writing',curators:'people'};
+  const sourceType=proof.source.split(':')[0];
+  const targetType=Object.hasOwn(allowed,proof.field)?allowed[proof.field]:null;
+  return ['people','institutions','exhibitions','concepts','writing'].includes(sourceType)&&!!targetType&&other.startsWith(targetType+':')&&(proof.field!=='curators'||sourceType==='exhibitions');
 }
 import { EMERALD } from './emerald-palette.mjs';
 import { cubicBezierAt } from './relation-flow.mjs';

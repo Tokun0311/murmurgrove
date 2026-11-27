@@ -1,6 +1,8 @@
 ---
 name: "Barbican Centre"
 city: "London"
+website: "https://www.barbican.org.uk/"
+institutionTypes: ["综合性公共文化艺术机构"]
 ---
 
 Barbican Centre（巴比肯艺术中心）

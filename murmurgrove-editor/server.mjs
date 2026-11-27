@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { analyzeExhibition, validateAiSuggestions, buildAiPrompt, validateNewRecordProposals } from './analyzer.mjs';
 import {extractDocx} from './word-import.mjs';
+import {metadataSuggestions} from './profile-metadata.mjs';
 import {createRecordManager} from './record-management.mjs';
 import {cleanBundle,publishBundle} from './bundle.mjs';
 // MURMURGROVE_EXHIBITION_FIRST_V12
@@ -16,14 +17,14 @@ import {assessClaims,readArchive,buildGraph,answerQuestion,groundedPrompt,readEv
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const TYPE_FIELDS = {
-  exhibitions: { required: ['title','region','location','kind'], optional: ['visitedOn','engagement','researchOn','plannedOn','recordedOn','researchSources','dateLabel','artists','concepts','institution','relatedInstitutions','exhibitionStart','exhibitionEnd','verification'] },
-  people: { required: ['name'], optional: ['kind','reading','sortName','nativeName','alternativeNames','linkedInstitutions'] },
-  institutions: { required: ['name'], optional: ['city','longitude','latitude','locationType','address','addressStatus','addressSource','venueName','venueAddress','venueStatus','associatedProject','linkedPeople','linkedExhibitions','linkedConcepts'] },
-  concepts: { required: ['title'], optional: [] },
-  writing: { required: ['title','date','description'], optional: ['type','language','tags','draft'] }
+  exhibitions: { required: ['title','region','location','kind'], optional: ['visitedOn','engagement','researchOn','plannedOn','recordedOn','researchSources','dateLabel','artists','concepts','institution','relatedInstitutions','exhibitionStart','exhibitionEnd','verification','website','curators','sources','linkedPeople','linkedInstitutions','linkedExhibitions','linkedConcepts','linkedWriting'] },
+  people: { required: ['name'], optional: ['kind','reading','sortName','nativeName','alternativeNames','linkedInstitutions','birthYear','deathYear','birthplace','basedIn','practiceFields','website','roles','sources','linkedPeople','linkedExhibitions','linkedConcepts','linkedWriting'] },
+  institutions: { required: ['name'], optional: ['city','longitude','latitude','locationType','address','addressStatus','addressSource','venueName','venueAddress','venueStatus','associatedProject','linkedPeople','linkedExhibitions','linkedConcepts','nativeName','alternativeNames','foundedYear','closedYear','country','institutionTypes','website','sources','linkedInstitutions','linkedWriting'] },
+  concepts: { required: ['title'], optional: ['nativeName','alternativeNames','theoreticalSource','sources','linkedPeople','linkedInstitutions','linkedExhibitions','linkedConcepts','linkedWriting'] },
+  writing: { required: ['title','date','description'], optional: ['type','language','tags','draft','website','sources','linkedPeople','linkedInstitutions','linkedExhibitions','linkedConcepts','linkedWriting'] }
 };
-const RELATIONS = {artists:'people',concepts:'concepts',institution:'institutions',relatedInstitutions:'institutions',linkedInstitutions:'institutions',linkedPeople:'people',linkedExhibitions:'exhibitions',linkedConcepts:'concepts'};
-const ARRAY_KEYS = new Set(['artists','concepts','relatedInstitutions','tags','alternativeNames','linkedInstitutions','linkedPeople','linkedExhibitions','linkedConcepts']);
+const RELATIONS = {artists:'people',concepts:'concepts',institution:'institutions',relatedInstitutions:'institutions',linkedInstitutions:'institutions',linkedPeople:'people',linkedExhibitions:'exhibitions',linkedConcepts:'concepts',linkedWriting:'writing',curators:'people'};
+const ARRAY_KEYS = new Set(['artists','concepts','relatedInstitutions','tags','alternativeNames','linkedInstitutions','linkedPeople','linkedExhibitions','linkedConcepts','linkedWriting','curators','practiceFields','roles','institutionTypes','sources']);
 const BOOL_KEYS = new Set(['draft']);
 const NUMBER_KEYS = new Set(['latitude','longitude']);
 const ALLOWED_TYPES = new Set(Object.keys(TYPE_FIELDS));
@@ -77,7 +78,7 @@ function normalise(type,submitted,{strict=false}={}){
   if(!submitted||typeof submitted!=='object'||Array.isArray(submitted))throw Object.assign(new Error('Invalid form data'),{status:400});
   for(const k of [...f.required,...f.optional]){
     let v=submitted[k];
-    if(ARRAY_KEYS.has(k)){if(v===undefined||v===null)v=[];if(!Array.isArray(v)||v.some(x=>typeof x!=='string'||!slugOk(x)&&!['tags','alternativeNames'].includes(k)))throw Object.assign(new Error('Invalid '+k+' values'),{status:400});fields[k]=[...new Set(v.map(x=>x.trim()).filter(Boolean))];}
+    if(ARRAY_KEYS.has(k)){if(v===undefined||v===null)v=[];if(!Array.isArray(v)||v.some(x=>typeof x!=='string'||!slugOk(x)&&!['tags','alternativeNames','practiceFields','roles','institutionTypes','sources'].includes(k)))throw Object.assign(new Error('Invalid '+k+' values'),{status:400});fields[k]=[...new Set(v.map(x=>x.trim()).filter(Boolean))];}
     else if(BOOL_KEYS.has(k)){fields[k]=v===true;}
     else if(NUMBER_KEYS.has(k)){
       if(v===''||v===null||v===undefined)continue;
@@ -88,6 +89,9 @@ function normalise(type,submitted,{strict=false}={}){
     }
   }
   if(strict){
+    if(fields.website&&!/^https?:\/\/[^\s]+$/i.test(fields.website))throw apiError(422,'Website must be an http(s) URL');
+    for(const k of ['birthYear','deathYear','foundedYear','closedYear'])if(fields[k]&&!/^\d{4}$/.test(fields[k]))throw apiError(422,'Use a four-digit year: '+k);
+    if(fields.birthYear&&fields.deathYear&&fields.birthYear>fields.deathYear||fields.foundedYear&&fields.closedYear&&fields.foundedYear>fields.closedYear)throw apiError(422,'End year precedes start year');
     for(const k of f.required)if(!fields[k])throw Object.assign(new Error('Required: '+k),{status:422});
     if(type==='exhibitions'){
       fields.engagement ||= 'visited';
@@ -221,7 +225,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         const type=requireType(u.searchParams.get('type')),slug=requireSlug(u.searchParams.get('slug'));
         const file=path.join(draftDir,type,`${slug}.json`);if(!await exists(file))throw apiError(404,'Draft not found');return json(res,200,JSON.parse(await fsp.readFile(file,'utf8')));
       }
-      if(req.method==='POST'&&['/api/record-withdraw','/api/record-delete','/api/record-restore','/api/geography-add','/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
+      if(req.method==='POST'&&['/api/profile-suggestions','/api/record-withdraw','/api/record-delete','/api/record-restore','/api/geography-add','/api/questions-list','/api/question-create','/api/question-append','/api/revision-note','/api/revision-list','/api/recovery-save','/api/recovery-delete','/api/analyze','/api/ai-prompt','/api/ai-review','/api/new-review','/api/candidate-draft','/api/draft','/api/publish','/api/bundle-publish','/api/delete-draft','/api/capture-original','/api/import-word','/api/ask','/api/ask-local-ai','/api/grounded-prompt','/api/relation-preview','/api/relation-approve','/api/relation-withdraw','/api/concept-meta','/api/concept-merge','/api/sync-research'].includes(u.pathname)){
         const expectedOrigin=`http://127.0.0.1:${server.address().port}`;
         if(req.headers.origin!==expectedOrigin||req.headers['x-editor-token']!==token)throw apiError(403,'Untrusted request');
         const p=await readJSON(req,u.pathname==='/api/import-word'?12*1024*1024:1024*1024);
@@ -242,6 +246,7 @@ export async function createEditor({root=path.resolve(here,'..'),port=4317,openB
         if(u.pathname==='/api/question-append')return await serializeWrite(async()=>json(res,200,{question:await appendQuestion(root,privateDir,p)}));
         if(u.pathname==='/api/revision-list'){const type=requireType(p.type),id=requireSlug(p.id);return json(res,200,{entries:await readRevisionNotes(root,type,id)});}
         if(u.pathname==='/api/revision-note')return await serializeWrite(async()=>json(res,200,{entry:await annotateRevision(root,p)}));
+        if(u.pathname==='/api/profile-suggestions'){requireType(p.type);return json(res,200,{suggestions:metadataSuggestions(p.type,p.fields||{},p.body||'')});}
         if(u.pathname==='/api/recovery-save'||u.pathname==='/api/recovery-delete')return await serializeWrite(async()=>{
           const id=recoveryId(p.id),file=recoveryFile(id);
           if(u.pathname==='/api/recovery-delete'){await fsp.rm(file,{force:true});return json(res,200,{ok:true});}

@@ -4,6 +4,9 @@ city: "Tokyo"
 linkedPeople: []
 linkedExhibitions: []
 linkedConcepts: []
+website: "https://www.artscouncil-tokyo.jp/"
+institutionTypes: ["公共文化政策实施机构","艺术资助机构","艺术项目运营机构"]
+foundedYear: "2012"
 ---
 
 Arts Council Tokyo 成立于2012年11月1日，是隶属于公益财团法人东京都历史文化财团（Tokyo Metropolitan Foundation for History and Culture）的公共艺术文化支援机构。其设立源于东京艺术文化评议会（東京芸術文化評議会）关于完善东京都文化振兴政策与艺术创作环境的政策讨论，旨在推动东京成为具有国际影响力的艺术文化城市。

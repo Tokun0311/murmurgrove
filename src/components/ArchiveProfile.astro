@@ -1,0 +1,17 @@
+---
+const {data,type}=Astro.props;
+const validUrl=(v:unknown):v is string=>typeof v==='string'&&/^https?:\/\/[^\s<>]+$/i.test(v);
+const life=(a?:string,b?:string)=>a&&b?`${a}–${b}`:a?`Born ${a}`:b?`Died ${b}`:'';
+const existence=(a?:string,b?:string)=>a&&b?`${a}–${b}`:a?`Founded ${a}`:b?`Closed ${b}`:'';
+const list=(v:unknown)=>Array.isArray(v)?v.join(' · '):'';
+const facts=type==='people'?[['Life',life(data.birthYear,data.deathYear)],['Birthplace',data.birthplace],['Based in',data.basedIn],['Practice',list(data.practiceFields)],['Other roles',list(data.roles)]]:type==='institutions'?[['Years',existence(data.foundedYear,data.closedYear)],['Country',data.country],['Type',list(data.institutionTypes)]]:type==='concepts'?[['Theoretical context',data.theoreticalSource]]:[];
+const alias=type!=='people'&&data.nativeName&&!String(data.name||data.title).includes(data.nativeName)?data.nativeName:'';
+const hasAliases=type!=='people'&&data.alternativeNames?.length>0;
+---
+{alias && <p class="lead">{alias}</p>}
+{hasAliases && <p class="note">{data.alternativeNames.join(' · ')}</p>}
+{(facts.some(([,v])=>v)||validUrl(data.website)) && <dl class="archive-profile">
+  {facts.filter(([,v])=>v).map(([label,value])=><div><dt>{label}</dt><dd>{value}</dd></div>)}
+  {validUrl(data.website) && <div><dt>Website</dt><dd><a href={data.website} target="_blank" rel="noopener noreferrer">{data.website}</a></dd></div>}
+</dl>}
+<style>.archive-profile{display:grid;gap:7px;margin:1rem 0 1.65rem;font-size:.85rem;line-height:1.65}.archive-profile div{display:grid;grid-template-columns:minmax(75px,110px) minmax(0,1fr);gap:12px}.archive-profile dt{color:var(--quiet)}.archive-profile dd{margin:0;overflow-wrap:anywhere}.archive-profile a{text-underline-offset:3px}@media(max-width:480px){.archive-profile div{grid-template-columns:80px minmax(0,1fr);gap:8px}}</style>

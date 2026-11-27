@@ -1,6 +1,8 @@
 ---
 name: "Somerset House Studios"
 city: "London"
+institutionTypes: ["实验性艺术生产平台","艺术家驻留及跨学科创作中心"]
+foundedYear: "2016"
 ---
 
 Somerset House Studios 成立于2016年10月，位于英国伦敦市中心的 Somerset House，由 Somerset House Trust 设立，是一个以跨学科艺术实践、实验性创作及艺术家发展为核心的文化平台。其空间由原英国税务部门办公场所改造而成，设立背景与伦敦艺术家面临的工作空间短缺及租金上涨问题密切相关。

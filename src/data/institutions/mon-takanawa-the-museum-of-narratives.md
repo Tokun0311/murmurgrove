@@ -1,6 +1,7 @@
 ---
 name: "MoN Takanawa:The Museum of Narratives"
 city: "Tokyo"
+website: "https://montakanawa.jp/"
 ---
 
 MoN Takanawa（モン タカナワ）は、2026年3月28日に東京都港区のTAKANAWA GATEWAY CITY内に開館した複合型文化施設である。一般財団法人JR東日本文化創造財団が企画・運営を担い、日本の文化を100年先の未来へと継承するとともに、新たな文化の創造と発信を目指している。

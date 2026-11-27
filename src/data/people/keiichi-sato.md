@@ -3,6 +3,7 @@ name: Sato Keiichi / 佐藤恵一
 reading: さとうけいいち
 sortName: Sato Keiichi
 kind: organizer
+nativeName: "佐藤恵一"
 ---
 
 与福冈独立艺术空间 IAF SHOP* 相关的艺术从业者。相关记录涉及关于独立空间运营及地方艺术生态的交流。

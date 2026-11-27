@@ -4,6 +4,8 @@ city: "Tokyo"
 linkedPeople: []
 linkedExhibitions: []
 linkedConcepts: []
+website: "https://www.watarium.co.jp/"
+institutionTypes: ["私立当代艺术美术馆"]
 ---
 
 WATARI-UM 是位于日本东京都涩谷区神宫前的私人当代艺术美术馆，于1990年开馆。其前身为渡边和子（Shizuko Watari）于1972年创立的 Galerie Watari。该画廊长期致力于日本与欧美当代艺术之间的交流，并逐步发展为具有独立策展实践与国际艺术网络的美术馆。

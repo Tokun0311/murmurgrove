@@ -1,0 +1,13 @@
+// Extract only explicitly labelled statements in the existing record. No network or inferred relationships.
+const validUrl=v=>/^https?:\/\/[^\s<>]+$/i.test(v);
+const labels={website:['官方网站','官网','公式サイト','Official website','Website'],nativeName:['原文姓名','原文名称','Native name'],birthplace:['出生地','Birthplace'],basedIn:['活动所在地','Based in'],practiceFields:['主要领域','Fields of practice'],institutionTypes:['机构类型','Institution type','Institution types'],birthYear:['出生年份','Birth year'],deathYear:['去世年份','Death year'],foundedYear:['成立时间','成立年份','Founded'],closedYear:['关闭年份','Closed'],theoreticalSource:['理论来源','Theoretical context'],address:['地址','详细地址','Address'],country:['国家','Country']};
+const peopleKeys=['website','nativeName','birthplace','basedIn','practiceFields','birthYear','deathYear'];
+const institutionKeys=['website','nativeName','institutionTypes','foundedYear','closedYear','address','country'];
+const allowed={people:peopleKeys,institutions:institutionKeys,concepts:['nativeName','theoreticalSource'],exhibitions:['website'],writing:['website']};
+function entries(body){return String(body||'').split(/\r?\n/).flatMap(line=>{const m=line.replace(/^\s*[-*]\s+/,'').replaceAll('**','').trim().match(/^([^:：]+)[:：]\s*(.+)$/);return m?[[m[1].trim().toLowerCase(),m[2].trim()]]:[];});}
+function valueFor(rows,names){const values=[...new Set(rows.filter(([label])=>names.some(n=>n.toLowerCase()===label)).map(([,v])=>v))];return values.length===1?values[0]:null;}
+export function metadataSuggestions(type,fields,body){const out={},rows=entries(body);for(const key of allowed[type]||[]){if(fields[key]!==undefined&&fields[key]!==null)continue;let v=valueFor(rows,labels[key]);if(!v)continue;if(key==='website'){const m=v.match(/^\[[^\]]+\]\((https?:\/\/[^\s)]+)\)$/);v=m?m[1]:v;if(!validUrl(v))continue;}else if(/Year$/.test(key)){const m=v.match(/^(\d{4})(?:年(?:\d{1,2}月(?:\d{1,2}日)?)?)?$/);if(!m)continue;v=m[1];}else if(['practiceFields','institutionTypes'].includes(key)){v=v.split(/[,，、；;]/).map(x=>x.trim()).filter(Boolean);}if(v.length)out[key]=v;}
+ if(type==='people'){const life=valueFor(rows,['生卒年份','Life dates']);const m=life?.match(/^(\d{4})\s*[–—-]\s*(\d{4})$/);if(m&&Number(m[1])<=Number(m[2])){if(fields.birthYear==null)out.birthYear=m[1];if(fields.deathYear==null)out.deathYear=m[2];}const n=String(fields.name||'').match(/^([^/]+) \/ ([^/]+)$/);if(n&&/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(n[2])&&fields.nativeName==null&&!out.nativeName)out.nativeName=n[2];}
+ if(fields.sources==null){const refs=[...new Set(rows.filter(([label])=>['资料来源','参考资料','sources','source','references','出典'].includes(label)).map(([,v])=>v))];if(refs.length)out.sources=refs;}
+ return out;
+}

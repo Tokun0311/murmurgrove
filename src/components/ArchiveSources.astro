@@ -1,0 +1,6 @@
+---
+const {sources=[]}=Astro.props;
+const safe=(s:string)=>/^https?:\/\/[^\s<>]+$/i.test(s);
+---
+{sources.length>0 && <details class="archive-sources"><summary>Sources</summary><ul>{sources.map((s:string)=><li>{safe(s)?<a href={s} target="_blank" rel="noopener noreferrer">{s}</a>:s}</li>)}</ul></details>}
+<style>.archive-sources{margin:26px 0;color:var(--quiet);font-size:.85rem;line-height:1.7}.archive-sources summary{cursor:pointer}.archive-sources ul{padding-left:1.1em}.archive-sources li{overflow-wrap:anywhere;margin:.4em 0}</style>

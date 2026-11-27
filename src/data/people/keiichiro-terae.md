@@ -3,6 +3,7 @@ name: Terae Keiichiro / 寺江圭一朗
 reading: てらえけいいちろう
 sortName: Terae Keiichiro
 kind: artist
+nativeName: "寺江圭一朗"
 ---
 
 参与东爪哇双年展相关项目的艺术从业者。相关记录涉及有关地方生活、驻留与艺术活动组织方式的交流。

@@ -167,3 +167,10 @@ body[data-workspace=research] .sidebar{opacity:.85}.maintenance-label{font-size:
 
 /* Research Continuity: text, evidence and dated reflections, not another dashboard. */
 .continuity-section{margin:18px 0 28px;min-width:0}.continuity-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}.continuity-heading h2{margin:0}.continuity-section select{min-width:0;max-width:100%}.continuity-section .atelier-actions select{flex:1 1 220px}.continuity-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.7}.review-suspended{color:#a36a29;font-size:12px}.continuity-section [hidden]{display:none!important}.continuity-section summary{cursor:pointer;color:var(--green);font-weight:600}.continuity-section .source-hit{border-bottom:1px solid var(--line)}
+
+/* Progressive archive details: open typography, no new cards or closed borders. */
+#advanced-fields-wrap,#profile-sources,#connections-fold{border:0;border-top:1px solid rgba(24,103,72,.22);border-radius:0;padding:12px 0;margin:12px 0;background:transparent}
+#advanced-fields-wrap>summary,#profile-sources>summary,#connections-fold>summary{cursor:pointer;color:var(--ink);font-weight:500;padding:5px 0}
+#connections-fold .association-editor{margin-top:12px}#connections-fold .relation-field{margin:10px 0;padding:8px 0;border:0;border-top:1px solid rgba(24,103,72,.16)}
+#source-fields textarea{width:100%;resize:vertical}#profile-extract{margin:8px 16px 4px 0}
+#connect-phase.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
