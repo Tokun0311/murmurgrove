@@ -27,11 +27,9 @@ import Base from '../layouts/Base.astro';
   const organismHome = document.querySelector('.grove-home');
   // Controls are native buttons inside the viewer. Their painted glyphs and
   // pointer targets share one document; do not create parent hit proxies.
-  let revealTimeout;
-  organismFrame?.addEventListener('load', () => {
-    // If verification fails, reveal the iframe's own readable error panel.
-    revealTimeout = window.setTimeout(() => organismHome?.classList.add('is-ready'), 10000);
-  });
+  // MURMURGROVE_STABILITY_20261127
+  // Arm even if the iframe load event already fired from cache.
+  let revealTimeout = window.setTimeout(() => organismHome?.classList.add('is-ready'), 10000);
   window.addEventListener('message', (event) => {
     if (event.origin !== window.location.origin ||
         event.source !== organismFrame?.contentWindow) return;

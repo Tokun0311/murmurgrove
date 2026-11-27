@@ -294,10 +294,15 @@ function exhibitionGlow(n){
  }
  return glowById.get(n.id)||0;
 }
-function project(p){const cy=Math.cos(angle),sy=Math.sin(angle),ce=Math.cos(elevation),se=Math.sin(elevation);
+// MURMURGROVE_STABILITY_20261127
+let projectionAngle=NaN,projectionElevation=NaN,cy=1,sy=0,ce=1,se=0;
+function project(p){if(projectionAngle!==angle||projectionElevation!==elevation){projectionAngle=angle;projectionElevation=elevation;cy=Math.cos(angle);sy=Math.sin(angle);ce=Math.cos(elevation);se=Math.sin(elevation);}
  const x=p[0]*cy-p[2]*sy,z=p[0]*sy+p[2]*cy;
  return [x,p[1]*ce-z*se,z*ce+p[1]*se];}
-function reframe(){const projected=viewPositions.map(project);
+let frameGeometry=null;
+function reframe(){if(frameGeometry&&frameGeometry.positions===viewPositions&&frameGeometry.angle===angle&&frameGeometry.elevation===elevation&&frameGeometry.width===W&&frameGeometry.height===H)return;
+ frameGeometry={positions:viewPositions,angle,elevation,width:W,height:H};
+ const projected=viewPositions.map(project);
  const xs=projected.map(p=>p[0]),ys=projected.map(p=>p[1]);
  const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
  center=[(xmin+xmax)/2,(ymin+ymax)/2];baseScale=Math.min((W*.89)/Math.max(.3,xmax-xmin),(H*.58)/Math.max(.3,ymax-ymin));
@@ -618,7 +623,24 @@ function announceFirstPaint(){
   window.parent.postMessage({type:'murmurgrove:first-painted-frame'},location.origin);
  }));
 }
-function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0:Date.now()/1000;
+let renderFailures=0;
+function clearTransientCamera(){
+ activePointers.clear();activeGesture=null;touchPair=null;pinchGesture=null;touchOrbitTarget=null;
+ panIntent=null;edgeReturnVelocity=[0,0];velocityPan=[0,0];velocityAngle=0;velocityElevation=0;
+ zoomGoal=null;zoomAnchor=null;followSelected=false;relationFocusId=null;entrance=null;
+ if(relationJourney)cancelRelationJourney({dismiss:true});
+ canvas.style.cursor='grab';
+}
+function render(now){
+ try{renderFrame(now);renderFailures=0;}
+ catch(error){
+  renderFailures++;console.error('Murmurgrove frame failed:',error);
+  if(renderFailures===1){try{clearTransientCamera();angle=ENTRANCE_TARGET_ANGLE;elevation=ENTRANCE_TARGET_ELEVATION;zoom=DEFAULT_ZOOM;pan=[0,0];lastSafePan=[0,0];userFramedPan=false;showCard(null);resize();syncZoomDisplay();}catch(recoveryError){console.error('Camera recovery failed:',recoveryError);}}
+  if(renderFailures>=3){const el=$('loadingError');el.style.display='block';el.textContent='Rendering interrupted. Click here to retry. Details are in the browser console.';el.style.pointerEvents='auto';el.onclick=()=>{el.style.display='none';el.onclick=null;renderFailures=0;lastFrameAt=0;requestAnimationFrame(render);};return;}
+ }
+ requestAnimationFrame(render);
+}
+function renderFrame(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0:Date.now()/1000;
  if(ready){
   const dt=lastFrameAt?cl(now-lastFrameAt,0,80):16;lastFrameAt=now;
   stepCamera(dt);
@@ -677,13 +699,12 @@ function render(now){const time=(lifePreviewEvent||reducedMotionMedia.matches)?0
    const pos=viewPositions.map(coords);drawSourceReading();drawCurrentLayer(now,pos);if(selected)positionCard(pos);
   }else{
    const pos=positions(time);drawBackground(time,pos);drawLinks(pos,time);drawRelationFlow(pos,time);drawNodes(pos,time);drawLivedEvidenceMarks(pos,time);drawCurrentLayer(now,pos);if(selected)positionCard(pos);
-   lastFrameScreenNodes=pos.map((p,i)=>[nodes[i].id,Number(p[0].toFixed(4)),Number(p[1].toFixed(4))]);
+   lastFrameScreenNodes=pos;
   }
   lastFrameRenderedAt=new Date().toISOString();lastFrameCamera={mode,angle,elevation,zoom,pan:[...pan],selectedId:nodeMap.has(selected)?selected:null};
   announceFirstPaint();
   frames++;if(now-lastFpsAt>950){fps=Math.round(frames*1000/(now-lastFpsAt));lastFpsAt=now;frames=0;updateDebug();}
  }
- requestAnimationFrame(render);
 }
 function chooseMode(next){if(!['Whole','Growth','Movement'].includes(next))return;mode=next;
  for(const b of document.querySelectorAll('#mode button'))b.setAttribute('aria-pressed',String(b.dataset.mode===mode));saveMemory();updateDebug();}
@@ -1074,6 +1095,7 @@ async function enterSourceReading(checkpointId,action){
  * It cannot be promoted into a biological life event or retroactive body.
  * Exporting from the browser never silently changes the Git repository.
  */
+function captureScreenNodes(pos){return pos?.map((p,i)=>[nodes[i].id,Number(p[0].toFixed(4)),Number(p[1].toFixed(4))])||[];}
 async function exportPresentFrame(){
  const button=$('frameCapture'),message=$('frameCaptureStatus');
  if(sourceView||lifePreviewEvent){message.textContent='Exit source reading or rule playback before capturing a current frame.';return;}
@@ -1090,13 +1112,14 @@ async function exportPresentFrame(){
   // The screenshot and recorded metadata both refer to the last completed
   // frame. If a tab was asleep, refuse to turn an old canvas into a new event.
   if(Math.abs(Date.parse(recordedAt)-Date.parse(lastFrameRenderedAt))>3000)throw Error('The visual frame is stale; reopen this tab.');
+  const captured={frameRenderedAt:lastFrameRenderedAt,camera:structuredClone(lastFrameCamera),cssViewport:[W,H],pixelViewport:[canvas.width,canvas.height],screenNodes:captureScreenNodes(lastFrameScreenNodes)};
   const png=canvas.toDataURL('image/png');
   const raw=atob(png.slice('data:image/png;base64,'.length));
   const bytes=Uint8Array.from(raw,c=>c.charCodeAt(0));
   const pngSha256=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(n=>n.toString(16).padStart(2,'0')).join('');
-  const payload=opticalFramePayload({png,recordedAt,frameRenderedAt:lastFrameRenderedAt,
-   camera:lastFrameCamera,cssViewport:[W,H],pixelViewport:[canvas.width,canvas.height],
-   selectedId:lastFrameCamera.selectedId,screenNodes:lastFrameScreenNodes,rendererSha256:renderShaCache,archiveSourceEntryHash:base.entryHash,opticalGeometrySha256:base.opticalGeometry.sha256,
+  const payload=opticalFramePayload({png,recordedAt,frameRenderedAt:captured.frameRenderedAt,
+   camera:captured.camera,cssViewport:captured.cssViewport,pixelViewport:captured.pixelViewport,
+   selectedId:captured.camera.selectedId,screenNodes:captured.screenNodes,rendererSha256:renderShaCache,archiveSourceEntryHash:base.entryHash,opticalGeometrySha256:base.opticalGeometry.sha256,
    authoredEventCount:livedEvidence.length,lifeLedgerIndexHash:livedIndex.indexHash});
   const frame={...payload,pngSha256};frame.exportHash=await shaRawText(canonicalJSON(frame));
   const blob=new Blob([JSON.stringify(frame,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob);
@@ -1282,7 +1305,7 @@ function updateDebug(){
   '</strong><br>Activated Writing fibers: <strong>'+snapshot.fibers.length+'</strong><br>Mature cores: <strong>'+snapshot.propulsionCores.length+'</strong><br><br>';
 }
 
-function resize(){if(relationJourney)cancelRelationJourney({dismiss:true});const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1.2:1.5);
+function resize(){if(relationJourney)cancelRelationJourney({dismiss:true});const oldW=W,oldH=H,rect=canvas.getBoundingClientRect();W=Math.max(1,rect.width);H=Math.max(1,rect.height);dpr=Math.min(devicePixelRatio||1,smallTouchViewport?1:1.5);
  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
  currentCanvas.width=canvas.width;currentCanvas.height=canvas.height;currentContext?.setTransform(dpr,0,0,dpr,0,0);
  if(pendingPanNorm){pan=[pendingPanNorm[0]*W,pendingPanNorm[1]*H];pendingPanNorm=null;}
@@ -1450,6 +1473,8 @@ function initUI(){
  canvas.addEventListener('pointerup',e=>pointerEnd(e));
  canvas.addEventListener('pointercancel',e=>pointerEnd(e,true));
  canvas.addEventListener('lostpointercapture',e=>{if(activePointers.has(e.pointerId))pointerEnd(e,true);});
+ window.addEventListener('blur',()=>{if(activePointers.size||activeGesture||touchPair)clearTransientCamera();});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){if(activePointers.size||activeGesture||touchPair)clearTransientCamera();lastFrameAt=0;}});
  canvas.addEventListener('wheel',e=>{e.preventDefault();gestureHintDismiss();lastPointer=pointerHere(e);
   requestZoom((zoomGoal??zoom)*wheelFactor(e.deltaY,e.deltaMode,e.ctrlKey),lastPointer);},{passive:false});
  canvas.addEventListener('dblclick',e=>{e.preventDefault();gestureHintDismiss();lastPointer=pointerHere(e);
@@ -1488,9 +1513,11 @@ async function init(){
   // On the very first entry, play the guided overview once, even if a stale
   // camera happened to be stored by an earlier version of the site.
   const locate=requestedLocation(),firstVisit=!hasSeenEntrance();
+  let desktopReload=false;
+  try{const owner=window.parent!==window?window.parent:window;desktopReload=!MOBILE_HOME&&owner.performance.getEntriesByType('navigation')[0]?.type==='reload';}catch{}
   if(firstVisit&&!locate){
    prepareEntrance();markEntranceSeen();
-  }else if(!storedMemory()){
+  }else if(desktopReload||!storedMemory()){
    // A return without a valid saved view gets a steady centered view, NOT
    // another introductory animation (e.g. archive data/version migration).
    entrance=null;zoom=DEFAULT_ZOOM;angle=ENTRANCE_TARGET_ANGLE;
@@ -1530,7 +1557,7 @@ async function init(){
   if(firstVisit&&!locate&&!reducedMotionMedia.matches){document.body.classList.add('hint');setTimeout(()=>document.body.classList.remove('hint'),6500);}
   window.__MURMUR_REAL__={baselineHash:BASELINE_HASH,nodes:174,metadataLinks:158,isolatedRecords:20,interiorQuietDisplayPositions:20,zoomMaximum:ZOOM_MAX,zoomMinimum:ZOOM_MIN,zoomDefault:DEFAULT_ZOOM,get entrance(){return {active:!!entrance,holdMs:ENTRANCE_HOLD_MS,durationMs:ENTRANCE_MOVE_MS};},get isMobileOverview(){return isMobileOverview();},
     get camera(){return {angle,elevation,zoom,pan:[...pan],selected,followSelected};},get relationJourney(){return relationJourney?{id:relationJourney.id,elapsed:relationJourney.elapsed,duration:relationJourney.duration}:null;},
-    get screenNodes(){return lastFrameScreenNodes?.map(x=>[x[0],x[1],x[2]])||[];},
+    get screenNodes(){return captureScreenNodes(lastFrameScreenNodes);},
     approvedLifeEvents:livedEvidence.length,authoredEvidenceTraces:livedTraces.size,activatedWritingFibers:0,matureCores:0,lifeRuleVersion:LIFE_RULE_VERSION,derivedLifeEvents:lifeNowState.authoredEventsUsed,
     get lifeReading(){return {asOf:lifeActiveState?.asOf,eventsUsed:lifeActiveState?.authoredEventsUsed||0,activeRecords:lifeActiveState?.activeRecords||0,sedimentaryRecords:lifeActiveState?.sedimentaryRecords||0,previewIsRuleReconstruction:Boolean(lifePreviewEvent),activatedFibers:0,matureCores:0};},datedExhibitionRecords:observationLedger.length,observationalMonths:observationGroups.length,chronicleVersions:chronicleIndex.entries.length,recordedOpticalFrames:opticalFrameIndex.entries.length,livedActs:livedEvidence.length,withdrawnActs:withdrawnIds.size,sealedDerivedLifeStates:lifeStateIndex.entries.filter(e=>!lifeCaptureIncludesWithdrawal(e.sourceEventHead,livedIndex,withdrawalIndex,e.excludedEventIds)).length,verifiedHistoricalMorphologies:0,
     get currentResearch(){return currentResearch&&{records:currentResearch.records.size,relations:currentResearch.relations.length,

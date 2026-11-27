@@ -123,7 +123,11 @@ export function currentProjection(layer, coords, elapsed, reduced) {
 }
 
 export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, zoom, clock, reduced, selected }) {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  // MURMURGROVE_STABILITY_20261127
+  const transform=ctx.getTransform();
+  const w=ctx.canvas.width/Math.max(.01,transform.a),h=ctx.canvas.height/Math.max(.01,transform.d);
+  const off=(x,y,r)=>x+r<0||y+r<0||x-r>w||y-r>h;
+  ctx.clearRect(0, 0, w, h);
   for (const {from, to} of layer.edges) {
     const a = points.get(from) || {point: baselinePoint(from), growth: 1};
     const b = points.get(to) || {point: baselinePoint(to), growth: 1};
@@ -133,6 +137,8 @@ export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, z
     const dx = q[0] - p[0], dy = q[1] - p[1];
     const c1 = [p[0] + dx / 3 - dy * .08, p[1] + dy / 3 + dx * .08];
     const c2 = [q[0] - dx / 3 - dy * .08, q[1] - dy / 3 + dx * .08];
+    // A Bezier curve stays within its control-point convex hull.
+    if(Math.max(p[0],q[0],c1[0],c2[0]) < -2 || Math.min(p[0],q[0],c1[0],c2[0]) > w+2 || Math.max(p[1],q[1],c1[1],c2[1]) < -2 || Math.min(p[1],q[1],c1[1],c2[1]) > h+2)continue;
     ctx.beginPath();
     ctx.moveTo(p[0], p[1]);
     ctx.bezierCurveTo(...c1, ...c2, q[0], q[1]);
@@ -151,6 +157,7 @@ export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, z
     if (!growth) continue;
     const kind = id.split(':')[0];
     const radius = Math.min(5, Math.pow(zoom / .65, .23) * (mode === 'Growth' ? 1.45 : 1.17));
+    if(off(point[0],point[1],radius+7))continue;
     ctx.beginPath();
     ctx.arc(point[0], point[1], radius, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(' + (EMERALD.nodes[kind] || EMERALD.nodes.person) + ',' + growth * .55 + ')';
@@ -169,6 +176,7 @@ export function drawCurrentResearch(ctx, layer, points, baselinePoint, { mode, z
     if (!point || current?.growth === 0) continue;
     const [x,y] = point;
     const radius = 2.2 * Math.min(17, 4 + Math.log1p(count) * 3.1);
+    if(off(x,y,radius))continue;
     const ebb = reduced ? 1 : .9 + .1 * Math.sin(clock / 11000 + x * .001);
     const alpha = (.014 + Math.min(.042, count * .004)) * ebb * (current?.growth ?? 1);
     const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
